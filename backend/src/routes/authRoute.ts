@@ -5,7 +5,6 @@ import { verifyJWT } from "../middlewares/authenticate";
 
 const router = Router()
 
-// router.post("/register", register)
 router.post("/register", verifyJWT,register)
 router.post("/login", login)
 
