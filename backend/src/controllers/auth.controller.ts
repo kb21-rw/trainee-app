@@ -18,7 +18,7 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 
 const secret = process.env.ACCESS_TOKEN_KEY || "";
-const ACCESS_TOKEN_EXPIRATION = 5 * 60 * 1000; // 5 minutes
+const ACCESS_TOKEN_EXPIRATION ="5m"; // 5 minutes
 
 export const register = async (req: any, res: Response) => {
   let newUser;
@@ -224,5 +224,19 @@ export const assignCoach = async (req: any, res: Response) => {
     return res.status(200).send("coach was assigned succesfully");
   } catch (error) {
     res.status(400).send(error);
+  }
+};
+
+
+export const deleteUser = async (req: any, res: Response) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    return res.status(200).send("User deleted successfully");
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
   }
 };

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { login, register, getUserProfile,assignCoach, get_coaches, get_trainees, updateUserProfile } from "../controllers/auth.controller";
+import { login, register, getUserProfile,assignCoach, get_coaches, get_trainees, updateUserProfile, deleteUser } from "../controllers/auth.controller";
 import { verifyJWT } from "../middlewares/authenticate";
 
 
@@ -13,5 +13,7 @@ router.patch("/assign-coach/:id",verifyJWT, assignCoach)
 
 router.get("/profile", verifyJWT, getUserProfile);
 router.put("/profile", verifyJWT, updateUserProfile);
+
+router.delete('/users/:userId', deleteUser);
 
 export default router
