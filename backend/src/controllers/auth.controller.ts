@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {
   registerSchema,
   loginSchema,
+  ProfileSchema,
   coachAssignSchema
 } from "../validations/authValidation";
 import User from "../models/User";
@@ -76,6 +77,54 @@ export const login = async (req: Request, res: Response) => {
     return res.status(200).send({ accessToken });
   } catch (error) {
     return res.status(400).send(error);
+  }
+};
+
+
+export const getUserProfile = async (req: any, res: Response) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    return res.status(200).send(user);
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
+};
+
+export const updateUserProfile = async (req: any, res: Response) => {
+  try {
+    const userId = req.user.id;
+    const { name, email, password } = req.body;
+
+    const validationResult = ProfileSchema.validate({ name, email, password });
+    if (validationResult.error) {
+      return res.status(400).send(validationResult.error.details[0].message);
+    }
+
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    if (name) {
+      user.name = name;
+    }
+    if (email) {
+      user.email = email;
+    }
+    if (password) {
+      const hashedPassword = await hash(password, 10);
+      user.password = hashedPassword;
+    }
+
+    await user.save();
+
+    return res.status(200).send(user);
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
   }
 };
 export const get_coaches = async (req: any, res: Response) => {
