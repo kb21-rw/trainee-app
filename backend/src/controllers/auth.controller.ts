@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import {
   registerSchema,
   loginSchema,
-  ProfileSchema
+  ProfileSchema,
   coachAssignSchema
 } from "../validations/authValidation";
 import User from "../models/User";
