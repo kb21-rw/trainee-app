@@ -18,7 +18,7 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 
 const secret = process.env.ACCESS_TOKEN_KEY || "";
-const ACCESS_TOKEN_EXPIRATION = 5 * 60 * 1000; // 5 minutes
+const ACCESS_TOKEN_EXPIRATION ="5m"; // 5 minutes
 
 export const register = async (req: any, res: Response) => {
   let newUser;
