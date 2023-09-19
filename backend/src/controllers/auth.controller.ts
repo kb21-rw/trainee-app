@@ -226,3 +226,17 @@ export const assignCoach = async (req: any, res: Response) => {
     res.status(400).send(error);
   }
 };
+
+
+export const deleteUser = async (req: any, res: Response) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    return res.status(200).send("User deleted successfully");
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
+};
