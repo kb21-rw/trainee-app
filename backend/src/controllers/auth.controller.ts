@@ -101,18 +101,3 @@ export const assignCoach = async (req: any, res: Response) => {
     res.status(400).send(error);
   }
 };
-export const get_trainees = async (req:any, res:Response)=>{
-  try{
-   const trainees = await User.aggregate([{$match:{role:"TRAINEE"}},
-   {$lookup:{
-    from: "users",
-    localField: "coach",
-    foreignField: "_id",
-    as: "coachedBy"
-   }}])
-  return res.status(200).json(trainees)
-  }
-  catch(error){
-    return res.status(400).send("Failed to fetch all trainees")
-  }
-}
