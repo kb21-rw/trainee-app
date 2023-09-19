@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, ObjectId } from "mongoose";
 
 const UserSchema = new Schema({
     name: String,
@@ -16,7 +16,8 @@ const UserSchema = new Schema({
         enum: ["ADMIN","COACH","TRAINEE"]
     },
     coach: {
-        type:String,
+        type: Schema.Types.ObjectId,
+        ref: 'User'
     }
 }, {timestamps:{}})
 
