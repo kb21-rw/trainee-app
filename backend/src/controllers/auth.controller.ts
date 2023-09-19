@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import {
   registerSchema,
-  loginSchema
+  loginSchema,
+  ProfileSchema
 } from "../validations/authValidation";
 import User from "../models/User";
 import {
@@ -92,6 +93,12 @@ export const updateUserProfile = async (req: any, res: Response) => {
   try {
     const userId = req.user.id;
     const { name, email, password } = req.body;
+
+    const validationResult = ProfileSchema.validate({ name, email, password });
+    if (validationResult.error) {
+      return res.status(400).send(validationResult.error.details[0].message);
+    }
+
 
     const user = await User.findById(userId);
     if (!user) {
