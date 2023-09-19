@@ -230,7 +230,7 @@ export const assignCoach = async (req: any, res: Response) => {
 
 export const deleteUser = async (req: any, res: Response) => {
   try {
-    const userId = req.user.id;
+    const userId = req.params.userId;
     const user = await User.findByIdAndDelete(userId);
     if (!user) {
       return res.status(404).send("User not found");

@@ -14,6 +14,6 @@ router.patch("/assign-coach/:id",verifyJWT, assignCoach)
 router.get("/profile", verifyJWT, getUserProfile);
 router.put("/profile", verifyJWT, updateUserProfile);
 
-router.delete("/user", verifyJWT, deleteUser);
+router.delete('/users/:userId', deleteUser);
 
 export default router
