@@ -73,3 +73,45 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).send(error);
   }
 };
+
+
+export const getUserProfile = async (req: any, res: Response) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    return res.status(200).send(user);
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
+};
+
+export const updateUserProfile = async (req: any, res: Response) => {
+  try {
+    const userId = req.user.id;
+    const { name, email, password } = req.body;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    if (name) {
+      user.name = name;
+    }
+    if (email) {
+      user.email = email;
+    }
+    if (password) {
+      const hashedPassword = await hash(password, 10);
+      user.password = hashedPassword;
+    }
+
+    await user.save();
+
+    return res.status(200).send(user);
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
+};
