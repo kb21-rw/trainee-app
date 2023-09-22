@@ -20,3 +20,6 @@ export const ProfileSchema = Joi.object({
 export const coachAssignSchema = Joi.object({
   coachId: Joi.string().required()
 });
+export const resetPasswordSchema = Joi.object({
+  email: Joi.string().email().required()
+})
