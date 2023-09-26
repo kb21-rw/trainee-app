@@ -2,6 +2,7 @@ import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} fr
 import Error from "./components/Error"
 import Layout from "./components/Layout"
 import NotFound from "./pages/NotFound"
+import Login, {action as loginAction} from "./pages/Login"
 
 export default function App() {
   const router = createBrowserRouter(createRoutesFromElements(
@@ -13,6 +14,7 @@ export default function App() {
 <Route path="/administer-coach" element={<h1>Administer coach page</h1>}/>
 <Route path="/profile-settings" element={<h1>profile settings page</h1>}/>
     </Route>
+    <Route path="/login" element={<Login/>} action={loginAction}/>
     <Route path="*" element={<NotFound/>}/>
     </Route>
   ))
