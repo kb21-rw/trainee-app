@@ -11,7 +11,7 @@ export const login = async (credentials) => {
       body: JSON.stringify(credentials),
     });
     const result = await response.json();
-    return { result, ok: response.ok, status: response.status };
+    return { ...result, ok: response.ok, status: response.status };
   } catch (error) {
     throw error;
   }

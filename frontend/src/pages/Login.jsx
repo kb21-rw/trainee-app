@@ -9,10 +9,11 @@ export const action = async ({ request }) => {
   const email = formData.get("email");
   const password = formData.get("password");
   const response = await login({ email, password });
+  const pathName = new URL(request.url).searchParams.get("redirectTo")||""
   if (response.status === 200) {
     const accessToken = response.result.accessToken;
     cookies.set("jwt", accessToken);
-    return redirect("/");
+    return redirect(pathName);
   }
   return response.result;
 };
@@ -20,7 +21,7 @@ export const action = async ({ request }) => {
 const Login = () => {
   const error = useActionData();
   return (
-    <Form method="post">
+    <Form method="post" replace>
       <input className="border outline-none" type="email" name="email" />
       <input className="border outline-none" type="password" name="password" />
       <button>Login</button>

@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, useNavigate, useLocation } from 'react-router-dom'
 import Cookies from 'universal-cookie'
 
 const Layout = () => {
   const cookies = new Cookies()
   const jwt = cookies.get("jwt")
   const navigate = useNavigate()
+  const location = useLocation()
+  const pathname = location.pathname
   useEffect(()=>{
-
     if(!jwt){
-      navigate("/login")
+      navigate(`/login?redirectTo=${pathname}`)
     
     }
   },[jwt])
