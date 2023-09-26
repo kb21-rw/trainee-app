@@ -53,22 +53,22 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const result = yield authValidation_1.loginSchema.validateAsync(req.body);
         const user = yield User_1.default.findOne({ email: result.email });
         if (!user) {
-            return res.status(403).send("User not found");
+            return res.status(403).json({ message: "User not found" });
         }
         if (user.role === "TRAINEE") {
-            return res.status(403).send("Trainees are not allowed to login");
+            return res.status(403).json({ message: "Trainees are not allowed to login" });
         }
         const match = yield (0, bcryptjs_1.compare)(result.password, user.password);
         if (!match) {
-            return res.status(403).send("Invalid credential");
+            return res.status(403).json({ message: "Invalid credential" });
         }
         const accessToken = jsonwebtoken_1.default.sign({ id: user._id, name: user.name, email: user.email, role: user.role }, secret, {
             expiresIn: ACCESS_TOKEN_EXPIRATION,
         });
-        return res.status(200).send({ accessToken });
+        return res.status(200).cookie("access_token", accessToken, { httpOnly: true, secure: process.env.NODE_ENV === "production" }).json({ accessToken });
     }
     catch (error) {
-        return res.status(400).send(error);
+        return res.status(400).json({ error });
     }
 });
 exports.login = login;
@@ -116,109 +116,107 @@ const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.updateUserProfile = updateUserProfile;
-const get_coaches = (req, res) =>
-  __awaiter(void 0, void 0, void 0, function* () {
+const get_coaches = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-      const { role } = req.user;
-      if (role !== "ADMIN") {
-        return res.status(403).send("Not allowed to view coaches");
-      }
-      const coaches = yield User_1.default.aggregate([
-        {
-          $match: { role: "COACH" }, // Filter coach users
-        },
-        {
-          $lookup: {
-            from: "users",
-            localField: "_id",
-            foreignField: "coach",
-            as: "trainees",
-          },
-        },
-        {
-          $project: {
-            _id: 1,
-            name: 1,
-            email: 1,
-            role: 1,
-            trainees: {
-              _id: 1,
-              name: 1,
-              email: 1,
-              role: 1,
+        const { role } = req.user;
+        if (role !== "ADMIN") {
+            return res.status(403).send("Not allowed to view coaches");
+        }
+        const coaches = yield User_1.default.aggregate([
+            {
+                $match: { role: "COACH" }, // Filter coach users
             },
-          },
-        },
-      ]);
-      return res.status(200).json(coaches);
-    } catch (error) {
-      res.status(400).send(400);
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "coach",
+                    as: "trainees",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    email: 1,
+                    role: 1,
+                    trainees: {
+                        _id: 1,
+                        name: 1,
+                        email: 1,
+                        role: 1,
+                    },
+                },
+            },
+        ]);
+        return res.status(200).json(coaches);
     }
-  });
+    catch (error) {
+        res.status(400).send(400);
+    }
+});
 exports.get_coaches = get_coaches;
-const get_trainees = (req, res) =>
-  __awaiter(void 0, void 0, void 0, function* () {
+const get_trainees = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-      const trainees = yield User_1.default.aggregate([
-        { $match: { role: "TRAINEE" } },
-        {
-          $lookup: {
-            from: "users",
-            localField: "coach",
-            foreignField: "_id",
-            as: "coach",
-          },
-        },
-        {
-          $project: {
-            _id: 1,
-            name: 1,
-            email: 1,
-            role: 1,
-            coach: {
-              _id: 1,
-              name: 1,
-              email: 1,
-              role: 1,
+        const trainees = yield User_1.default.aggregate([
+            { $match: { role: "TRAINEE" } },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "coach",
+                    foreignField: "_id",
+                    as: "coach",
+                },
             },
-          },
-        },
-        { $unwind: "$coach" },
-      ]);
-      return res.status(200).json(trainees);
-    } catch (error) {
-      res.status(400).send("failed to get trainees ");
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    email: 1,
+                    role: 1,
+                    coach: {
+                        _id: 1,
+                        name: 1,
+                        email: 1,
+                        role: 1,
+                    },
+                },
+            },
+            { $unwind: "$coach" },
+        ]);
+        return res.status(200).json(trainees);
     }
-  });
+    catch (error) {
+        res.status(400).send("failed to get trainees ");
+    }
+});
 exports.get_trainees = get_trainees;
-const assignCoach = (req, res) =>
-  __awaiter(void 0, void 0, void 0, function* () {
+const assignCoach = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
     try {
-      const { role } = req.user;
-      if (role !== "ADMIN") {
-        return res.status(400).send("Only admins can assign coach to trainees");
-      }
-      const result = yield authValidation_1.coachAssignSchema.validateAsync(
-        req.body
-      );
-      const user = yield User_1.default.findById(id);
-      if (user.role !== "TRAINEE") {
-        return res.status(403).send("coach is assigned only to trainee");
-      }
-      const coach = yield User_1.default.findById(result.coachId);
-      if (coach.role !== "COACH") {
-        return res
-          .status(403)
-          .send("only user with coach role can be assigned to be a coach");
-      }
-      user.coach = coach._id;
-      yield user.save();
-      return res.status(200).send("coach was assigned succesfully");
-    } catch (error) {
-      res.status(400).send(error);
+        const { role } = req.user;
+        if (role !== "ADMIN") {
+            return res.status(400).send("Only admins can assign coach to trainees");
+        }
+        const result = yield authValidation_1.coachAssignSchema.validateAsync(req.body);
+        const user = yield User_1.default.findById(id);
+        if (user.role !== "TRAINEE") {
+            return res.status(403).send("coach is assigned only to trainee");
+        }
+        const coach = yield User_1.default.findById(result.coachId);
+        if (coach.role !== "COACH") {
+            return res
+                .status(403)
+                .send("only user with coach role can be assigned to be a coach");
+        }
+        user.coach = coach._id;
+        yield user.save();
+        return res.status(200).send("coach was assigned succesfully");
     }
-  });
+    catch (error) {
+        res.status(400).send(error);
+    }
+});
 exports.assignCoach = assignCoach;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
