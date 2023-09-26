@@ -2,6 +2,8 @@ import express from "express";
 import dotenv from "dotenv"
 import mongoose from "mongoose";
 import authRoute from "./routes/authRoute"
+import cors from "cors"
+import cookieParser from 'cookie-parser';
 
 dotenv.config()
 const PORT = process.env.PORT || 5000
@@ -14,5 +16,7 @@ mongoose.connection.once("open",()=>{
         console.log(`The app is running on port ${PORT}`)
     })
 })
+app.use(cors({origin:"*", credentials:true}))
+app.use(cookieParser())
 app.use(express.json())
 app.use("/auth", authRoute)
