@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import OpenEye from "../../../public/OpenEye";
 import ClosedEye from "../../../public/ClosedEye";
 
-const InputField = ({ label, type, placeholder, name }) => {
+const InputField = ({ label, type, placeholder, name }:{ label:string, type:string, placeholder:string, name:string }) => {
   const [show, setShow] = useState<boolean>(false);
   const passwordIcon = () => {
     return show ? <OpenEye /> : <ClosedEye />;
@@ -13,12 +13,12 @@ const InputField = ({ label, type, placeholder, name }) => {
         {label}:
       </label>
       <div
-        className={`w-full border border-gray-200 flex justify-between  rounded-xl p-3`}
+        className={`w-full border border-gray-200 flex justify-between  rounded-xl px-3 h-14`}
       >
         <input
           type={show ? "text" : type}
           name={name}
-          className="placeholder:text-lg outline-none border-none h-full flex-1"
+          className="placeholder:text-lg outline-none border-none h-full flex-1 accent-white"
           placeholder={placeholder}
         />
 

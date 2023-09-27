@@ -8,7 +8,9 @@ import Error from "./components/Error";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 import Login, { action as loginAction } from "./pages/Login";
-import React from "react";
+import React, {createContext, useState} from "react";
+
+export const authContext = createContext<any>(null)
 
 export default function App() {
   const router = createBrowserRouter(
@@ -32,5 +34,9 @@ export default function App() {
       </Route>
     )
   );
-  return <RouterProvider router={router} />;
+  const [user, setUser] = useState(null)
+  return (
+  <authContext.Provider value={{user, setUser}}>
+  <RouterProvider router={router} />
+  </authContext.Provider>);
 }
