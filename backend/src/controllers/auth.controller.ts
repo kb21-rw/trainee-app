@@ -74,7 +74,7 @@ export const login = async (req: Request, res: Response) => {
         expiresIn: ACCESS_TOKEN_EXPIRATION,
       }
     );
-    return res.status(200).send({ accessToken });
+    return res.status(200).cookie("access_token", accessToken, {httpOnly:true, secure:process.env.NODE_ENV==="production"}).json({ accessToken });
   } catch (error) {
     return res.status(400).send(error);
   }
