@@ -23,9 +23,9 @@ export const action = async ({ request }) => {
 const Login = () => {
   // const error = useActionData();
   return (
-    <Form method="post" replace className="flex flex-col h-screen justify-center gap-16 items-center w-1/3 mx-auto">
+    <Form method="post" replace className="flex flex-col h-screen justify-center gap-5 md:gap-16 items-center px-5 sm:px-10 md:p-0 md:w-2/3 lg:w-2/5 mx-auto">
       <H1>Member login</H1>
-      <div className="space-y-10 w-full">
+      <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
       <InputField name="email" type="email" label="Email" placeholder="example@gmail.com"/>
       <InputField name="password" type="password" label="Password" placeholder="password"/>
       </div>
