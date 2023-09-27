@@ -1,4 +1,4 @@
-import { Form, redirect } from "react-router-dom";
+import { Form, Link, redirect } from "react-router-dom";
 import { login } from "../services/api";
 import Cookies from "universal-cookie";
 import { H1 } from "../components/ui/Typography";
@@ -31,6 +31,9 @@ const Login = () => {
       </div>
     
       <Button>Login</Button>
+      <div className="self-end">Forgot password? <Link to="/reset-password"  className="text-primary">
+        Reset
+      </Link></div>
     </Form>
   );
 };
