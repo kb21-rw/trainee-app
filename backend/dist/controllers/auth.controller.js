@@ -53,22 +53,22 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const result = yield authValidation_1.loginSchema.validateAsync(req.body);
         const user = yield User_1.default.findOne({ email: result.email });
         if (!user) {
-            return res.status(403).send("User not found");
+            return res.status(403).json({ message: "User not found" });
         }
         if (user.role === "TRAINEE") {
-            return res.status(403).send("Trainees are not allowed to login");
+            return res.status(403).json({ message: "Trainees are not allowed to login" });
         }
         const match = yield (0, bcryptjs_1.compare)(result.password, user.password);
         if (!match) {
-            return res.status(403).send("Invalid credential");
+            return res.status(403).json({ message: "Invalid credential" });
         }
         const accessToken = jsonwebtoken_1.default.sign({ id: user._id, name: user.name, email: user.email, role: user.role }, secret, {
             expiresIn: ACCESS_TOKEN_EXPIRATION,
         });
-        return res.status(200).send({ accessToken });
+        return res.status(200).cookie("access_token", accessToken, { httpOnly: true, secure: process.env.NODE_ENV === "production" }).json({ accessToken });
     }
     catch (error) {
-        return res.status(400).send(error);
+        return res.status(400).json({ error });
     }
 });
 exports.login = login;
@@ -120,7 +120,6 @@ const get_coaches = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const { role } = req.user;
         if (role !== "ADMIN") {
-            console.log(role);
             return res.status(403).send("Not allowed to view coaches");
         }
         const coaches = yield User_1.default.aggregate([
@@ -205,7 +204,6 @@ const assignCoach = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
             return res.status(403).send("coach is assigned only to trainee");
         }
         const coach = yield User_1.default.findById(result.coachId);
-        console.log({ coach });
         if (coach.role !== "COACH") {
             return res
                 .status(403)
