@@ -32,7 +32,7 @@ const Layout = () => {
         </div>
         <div className='flex items-center gap-20'>
           {<NavLink to="/profile-settings" className={({ isActive }) => `text-xl font-medium ${isActive ? "text-primary-dark" : "text-secondary-dark"}`}>{user?.name}</NavLink>}
-          <button className='text-xl font-medium text-secondary-dark' onClick={()=>{cookies.remove("jwt"); navigate("/login")}}>logout</button>
+          <button className='text-xl font-medium text-secondary-dark' onClick={()=>{cookies.remove("jwt"); setUser(null); navigate("/login")}}>logout</button>
         </div>
       </nav>
       <Outlet />

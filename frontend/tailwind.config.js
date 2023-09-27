@@ -6,6 +6,8 @@ export default {
       colors: {
         "primary-dark": "#0077B6",
         "secondary-dark": "#070412",
+        "error-light": "#FEE2E2",
+        "error-dark": "#AF5356",
       },
     },
   },
