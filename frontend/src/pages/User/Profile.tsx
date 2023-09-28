@@ -26,7 +26,6 @@ export const action = async ({ request }: any) => {
 
     return response;
   } catch (error) {
-    console.log(error);
     console.error("Error:", error);
   }
 };
@@ -35,7 +34,6 @@ const Profile = () => {
   const { user } = useContext(authContext);
   const navigation = useNavigation()
   const response: any = useActionData()
-  console.log(response);
 
   return (
     <Form
