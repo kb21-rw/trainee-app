@@ -18,7 +18,7 @@ export const login = async (credentials: {email:FormDataEntryValue | null, passw
 };
 
 
-export const updateUserProfile = async (accessToken, credentials) => {
+export const updateUserProfile = async (accessToken:any, credentials:any) => {
   try {
     const response = await fetch(`${api_url}/auth/profile`, {
       method: "put",
