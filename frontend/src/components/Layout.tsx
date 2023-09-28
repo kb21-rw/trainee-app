@@ -23,7 +23,7 @@ const Layout = () => {
   },[jwt])
   const menu = user?.role==="ADMIN"&&adminMenu || user?.role ==="COACH" &&coachMenu ||[]
   return (
-    <div className='px-8 py-4 max-w-[1920px] mx-auto'>
+    <div className='px-16 py-4 max-w-[1920px] mx-auto'>
       <nav className='flex items-center justify-between'>
         <div className='flex items-center gap-20'>
           {menu.map((element, index) => <NavLink key={index} to={element.link} className={({ isActive }) => `text-xl font-medium ${isActive ? "text-primary-dark" : "text-secondary-dark"}`} end>{element.title}</NavLink>)
