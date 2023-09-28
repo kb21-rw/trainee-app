@@ -16,3 +16,22 @@ export const login = async (credentials: {email:FormDataEntryValue | null, passw
     throw error;
   }
 };
+
+export const updateProfile = async (credentials: {email:FormDataEntryValue | null, name:FormDataEntryValue | null, password:FormDataEntryValue | null}, accessToken:string) => {
+  try {
+    const response = await fetch(`${api_url}/auth/profile`, {
+      method: "put",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      authorization: `Bearer ${accessToken}`
+      },
+      body: JSON.stringify(credentials),
+    });
+    console.log({response})
+    const result = await response.json();
+    return { ...result, ok: response.ok, status: response.status };
+  } catch (error) {
+    throw error;
+  }
+};

@@ -9,6 +9,7 @@ import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 import Login, { action as loginAction } from "./pages/Login";
 import React, {createContext, useState} from "react";
+import ProfileSettings, {action as profileUpdateAction} from "./pages/ProfileSettings";
 
 export const authContext = createContext<any>(null)
 
@@ -26,7 +27,8 @@ export default function App() {
           />
           <Route
             path="/profile-settings"
-            element={<h1>profile settings page</h1>}
+            element={<ProfileSettings/>}
+            action={profileUpdateAction}
           />
         </Route>
         <Route path="/login" element={<Login />} action={loginAction} />
