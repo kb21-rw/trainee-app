@@ -8,9 +8,10 @@ import Error from "./components/Error";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
 import Login, { action as loginAction } from "./pages/Login";
-import React, {createContext, useState} from "react";
+import React, { createContext, useState } from "react";
+import Profile, { action as profileAction } from "./pages/User/Profile";
 
-export const authContext = createContext<any>(null)
+export const authContext = createContext<any>(null);
 
 export default function App() {
   const router = createBrowserRouter(
@@ -26,7 +27,8 @@ export default function App() {
           />
           <Route
             path="/profile-settings"
-            element={<h1>profile settings page</h1>}
+            element={<Profile />}
+            action={profileAction}
           />
         </Route>
         <Route path="/login" element={<Login />} action={loginAction} />
@@ -34,9 +36,10 @@ export default function App() {
       </Route>
     )
   );
-  const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null);
   return (
-  <authContext.Provider value={{user, setUser}}>
-  <RouterProvider router={router} />
-  </authContext.Provider>);
+    <authContext.Provider value={{ user, setUser }}>
+      <RouterProvider router={router} />
+    </authContext.Provider>
+  );
 }
