@@ -11,12 +11,12 @@ const accessKey = process.env.ACCESS_TOKEN_KEY || "";
 const verifyJWT = (req, res, next) => {
     const authHeader = req.headers.authorization;
     if (!(authHeader === null || authHeader === void 0 ? void 0 : authHeader.startsWith("Bearer "))) {
-        return res.status(401).send("User not logged in");
+        return res.status(401).json({ message: "User not logged in" });
     }
     const token = authHeader.split(" ")[1];
     (0, jsonwebtoken_1.verify)(token, accessKey, (err, decoded) => {
         if (err) {
-            return res.status(403).send("access token not valid");
+            return res.status(403).json({ message: "access token not valid" });
         }
         req.user = decoded;
         next();

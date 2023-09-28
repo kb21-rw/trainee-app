@@ -101,13 +101,13 @@ export const updateUserProfile = async (req: any, res: Response) => {
 
     const validationResult = ProfileSchema.validate({ name, email, password });
     if (validationResult.error) {
-      return res.status(400).send(validationResult.error.details[0].message);
+      return res.status(400).json({message:validationResult.error.details[0].message});
     }
 
 
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).json({message:"User not found"});
     }
     if (name) {
       user.name = name;
@@ -122,9 +122,9 @@ export const updateUserProfile = async (req: any, res: Response) => {
 
     await user.save();
 
-    return res.status(200).send(user);
+    return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).json({message:"Internal Server Error"});
   }
 };
 export const get_coaches = async (req: any, res: Response) => {
