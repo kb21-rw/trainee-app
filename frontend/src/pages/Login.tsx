@@ -1,5 +1,12 @@
 import React from "react";
-import { Form, Link, redirect, useNavigation, ActionFunction, useActionData } from "react-router-dom";
+import {
+  Form,
+  Link,
+  redirect,
+  useNavigation,
+  ActionFunction,
+  useActionData
+} from "react-router-dom";
 import { login } from "../services/api";
 import Cookies from "universal-cookie";
 import { H1 } from "../components/ui/Typography";
@@ -7,7 +14,7 @@ import Button from "../components/ui/Button";
 import InputField from "../components/ui/InputField";
 import Loader from "../components/ui/Loader";
 
-export const action:ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request }) => {
   const cookies = new Cookies();
   const formData = await request.formData();
   const email = formData.get("email");
@@ -23,8 +30,8 @@ export const action:ActionFunction = async ({ request }) => {
 };
 
 const Login = () => {
-  const error: any = useActionData()
-  console.log({error})
+  const error: any = useActionData();
+  console.log({ error });
   const navigation = useNavigation();
   return (
     <Form
@@ -35,7 +42,10 @@ const Login = () => {
       <H1>Member login</H1>
       {navigation.state === "submitting" && <Loader />}
       <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
-      {error && <div className="py-2 bg-error-light text-error-dark flex justify-center items-center rounded-lg">{error.message}</div>}
+        {error &&
+          <div className="py-2 bg-error-light text-error-dark flex justify-center items-center rounded-lg">
+            {error.message}
+          </div>}
         <InputField
           name="email"
           type="email"

@@ -13,7 +13,7 @@ const InputField = ({
   type: string;
   placeholder: string;
   name: string;
-  styles: any;
+  styles?: string;
 }) => {
   const [show, setShow] = useState<boolean>(false);
   const passwordIcon = () => {
