@@ -2,6 +2,7 @@ import React from 'react'
 import Button from '../components/ui/Button'
 import Plus from "../assets/Plus"
 import TableHeader from '../components/ui/TableHeader'
+import UserTable from '../components/table/UserTable'
 
 const TraineesInfo = () => {
   return (
@@ -14,6 +15,8 @@ const TraineesInfo = () => {
             </Button>
         </div>
             <TableHeader/>
+           <UserTable/>
+            
     </div>
   )
 }
