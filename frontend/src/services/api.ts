@@ -23,7 +23,7 @@ export const updateUserProfile = async (accessToken:any, credentials:any) => {
     const response = await fetch(`${api_url}/auth/profile`, {
       method: "put",
       headers: {
-        "Authorization" : `Bearer ${accessToken}`,
+        authorization : `Bearer ${accessToken}`,
         Accept: "application/json, text/plain, */*",
         "Content-Type": "application/json",
       },

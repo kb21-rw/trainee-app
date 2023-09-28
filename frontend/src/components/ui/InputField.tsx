@@ -7,13 +7,15 @@ const InputField = ({
   type,
   placeholder,
   name,
-  styles
+  styles,
+  defaultValue
 }: {
   label: string;
   type: string;
   placeholder: string;
   name: string;
   styles?: string;
+  defaultValue?: string;
 }) => {
   const [show, setShow] = useState<boolean>(false);
   const passwordIcon = () => {
@@ -33,6 +35,7 @@ const InputField = ({
           name={name}
           className="placeholder:text-lg outline-none border-none h-full flex-1"
           placeholder={placeholder}
+          defaultValue={defaultValue}
         />
 
         {type === "password" &&
