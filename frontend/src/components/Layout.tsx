@@ -23,7 +23,7 @@ const Layout = () => {
   },[jwt])
   const menu = user?.role==="ADMIN"&&adminMenu || user?.role ==="COACH" &&coachMenu ||[]
   return (
-    <div className='px-8 py-4 max-w-[1920px] mx-auto'>
+    <div className='px-8 py-4 max-w-[1920px] mx-auto h-screen flex flex-col '>
       <nav className='flex items-center justify-between'>
         <div className='flex items-center gap-20'>
           {menu.map((element, index) => <NavLink key={index} to={element.link} className={({ isActive }) => `text-xl font-medium ${isActive ? "text-primary-dark" : "text-secondary-dark"}`} end>{element.title}</NavLink>)
@@ -35,7 +35,9 @@ const Layout = () => {
           <button className='text-xl font-medium text-secondary-dark' onClick={()=>{cookies.remove("jwt"); setUser(null); navigate("/login")}}>logout</button>
         </div>
       </nav>
+      <div className='flex-1'>
       <Outlet />
+      </div>
     </div>
   )
 }
