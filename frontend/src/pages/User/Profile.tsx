@@ -43,12 +43,15 @@ const Profile = () => {
       className="flex flex-col h-full justify-center gap-5 md:gap-16 items-center px-5 sm:px-10 md:p-0 md:w-2/3 lg:w-2/5 mx-auto"
     >
       {navigation.state === "submitting" && <Loader />}
-      {response && 
-      (response?.ok ? 
-      <Alert type="success">Profile update succesfully</Alert> : 
-      <Alert type="error">{response?.message || "Failed to update the profile"}</Alert>
-      )}
-      {/* {!response?.ok && <Alert type={"error"}> Your token session has expired</Alert>} */}
+      {response ? (
+  response.ok ? (
+    <Alert type="success">Profile update successfully</Alert>
+  ) : (
+    <Alert type="error">{response.message || "Failed to update the profile"}</Alert>
+  )
+) : (
+"")}
+
       <H1>Profile settings</H1>
       <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
         <InputField
