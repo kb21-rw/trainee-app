@@ -42,13 +42,13 @@ const Profile = () => {
     >
       {navigation.state === "submitting" && <Loader />}
       {response ? (
-  response.ok ? (
-    <Alert type="success">Profile update successfully</Alert>
-  ) : (
-    <Alert type="error">{response.message || "Failed to update the profile"}</Alert>
-  )
-) : (
-"")}
+        response.ok ? (
+          <Alert type="success">Profile update successfully</Alert>
+        ) : (
+          <Alert type="error">{response.message || "Failed to update the profile"}</Alert>
+        )
+      ) : (
+        "")}
 
       <H1>Profile settings</H1>
       <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
@@ -76,7 +76,9 @@ const Profile = () => {
           placeholder="password"
         />
       </div>
+      <div className="w-2/3 ml-auto">
       <Button>Save</Button>
+      </div>
     </Form>
   );
 };

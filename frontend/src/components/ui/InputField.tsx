@@ -28,7 +28,7 @@ const InputField = ({
       </label>
       <div
         className={`${styles &&
-          "!w-2/3"} w-full border border-gray-200 flex justify-between rounded-xl p-3`}
+          "!w-2/3"} w-full h-full border border-gray-200 flex justify-between rounded-xl p-3`}
       >
         <input
           type={show ? "text" : type}
