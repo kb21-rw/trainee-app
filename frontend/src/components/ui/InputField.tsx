@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import OpenEye from "../../../public/OpenEye";
-import ClosedEye from "../../../public/ClosedEye";
+import OpenEye from "../../assets/OpenEye";
+import ClosedEye from "../../assets/ClosedEye";
 
 const InputField = ({ label, type, placeholder, name }:{ label:string, type:string, placeholder:string, name:string }) => {
   const [show, setShow] = useState<boolean>(false);
