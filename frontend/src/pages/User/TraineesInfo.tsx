@@ -1,26 +1,25 @@
 import React from 'react'
-import Button from '../components/ui/Button'
-import Plus from "../assets/Plus"
-import Sort from "../assets/Sort";
-import Edit from '../assets/Edit'
-import Delete from '../assets/Delete'
+import Button from '../../components/ui/Button'
+import Plus from "../../assets/Plus"
+import Sort from "../../assets/Sort";
+import Edit from '../../assets/Edit'
+import Delete from '../../assets/Delete'
 import Cookies from "universal-cookie"
-import Loader from '../components/ui/Loader'
-import { useGetAllCoachesQuery } from '../features/user/apiSlice';
+import Loader from '../../components/ui/Loader'
+import { useGetAllTraineesQuery } from '../../features/user/apiSlice';
 
 
-const CoachesInfo = () => {
+const TraineesInfo = () => {
   const cookies = new Cookies()
   const jwt = cookies.get("jwt")
-  const coachesData = useGetAllCoachesQuery(jwt)
-  console.log({coachesData})
+  const trainerData = useGetAllTraineesQuery(jwt)
   return (
     <div className='py-8'>
         <div className='flex justify-end items-center my-6'>
         
         <Button variant='small'>
             <Plus/>
-            <span>Add coache</span>
+            <span>Add trainee</span>
             </Button>
         </div><div className="flex items-center justify-between">
       <div className="flex w-full  items-center max-w-xl px-1 py-1 h-[58px] border border-[#DBD5E0] rounded-xl">
@@ -36,7 +35,7 @@ const CoachesInfo = () => {
       <div className="flex gap-2 items-center">
           <Sort />
           <span className="text-base font-normal text-[#5B576A]">
-            Sort coaches by:
+            Sort trainees by:
           </span>
         </div>
         <select name="sort" className="forms-select outline-none bg-white gap-32 w-20 block py-2 ">
@@ -48,9 +47,9 @@ const CoachesInfo = () => {
         
       <label className="flex gap-6 items-center">
           <span className="text-base font-normal text-[#5B576A]">
-            Coaches per page:
+            Trainees per page:
           </span>
-        <select name="coachePerPage" className="forms-select outline-none bg-white gap-32 w-12 block py-2 ">
+        <select name="traineePerPage" className="forms-select outline-none bg-white gap-32 w-12 block py-2 ">
           <option selected>20</option>
           <option>30</option>
           <option>40</option>
@@ -62,22 +61,20 @@ const CoachesInfo = () => {
             <table className='w-full my-8'>
         <thead className='bg-[#0077B6] bg-opacity-20 h-20'>
             <tr className=''>
-                <th className='rounded-l-xl ' colSpan={1}>No</th>
-                <th colSpan={1}>Name</th>
-                <th colSpan={1}>Email</th>
-                <th colSpan={1}>Coach</th>
-                <th className="rounded-r-xl" colSpan={1}>Action</th>
+                <td className='rounded-l-xl pl-12 font-semibold'>No</td>
+                <td className='pl-12 font-semibold'>Name</td>
+                <td className='pl-12 font-semibold'>Coach</td>
+                <td className="rounded-r-xl pl-12 font-semibold">Action</td>
                 
             </tr>
         </thead>
-          {coachesData.status==="pending"?<div className='flex w-screen items-center justify-center h-[50vh]'><Loader/></div>:
+          {trainerData.status==="pending"?<div className='flex w-screen items-center justify-center h-[50vh]'><Loader/></div>:
         <tbody className='w-full'>
-         { coachesData.data?.map((item:any,index:number)=><tr className='border-b border-black h-[100px] '>
-                <th className='text-base font-medium' colSpan={1}>{index+1}</th>
-                <th className='text-base font-medium' colSpan={1}>{item?.name}</th>
-                <th className='text-base font-medium' colSpan={1}>{item?.email}</th>
-                <th className='text-base font-medium' colSpan={1}>{item?.role}</th>
-                <th className='text-base font-medium' colSpan={1}><div className='flex items-center gap-4 justify-center w-full h-full'><Edit/> <Delete/></div></th>
+         { trainerData.data?.map((item:any,index:number)=><tr className='border-b border-black h-[100px] '>
+                <td className='text-base font-medium pl-12'>{index+1}</td>
+                <td className='text-base font-medium pl-12'>{item.name}</td>
+                <td className='text-base font-medium pl-12'>{item.coach.name}</td>
+                <td className='text-base font-medium pl-12'><div className='flex items-center gap-4 w-full h-full'><button><Edit/></button> <button><Delete/></button></div></td>
             </tr>)}
         </tbody>}
     </table>
@@ -86,4 +83,4 @@ const CoachesInfo = () => {
   )
 }
 
-export default CoachesInfo
+export default TraineesInfo

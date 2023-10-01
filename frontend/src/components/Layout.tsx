@@ -35,7 +35,9 @@ const Layout = () => {
           <button className='text-xl font-medium text-secondary-dark' onClick={()=>{cookies.remove("jwt"); setUser(null); navigate("/login")}}>logout</button>
         </div>
       </nav>
+      <div className='flex-1'>
       <Outlet />
+      </div>
     </div>
   )
 }

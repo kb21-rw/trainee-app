@@ -7,10 +7,11 @@ import {
 import Error from "./components/Error";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
-import Login, { action as loginAction } from "./pages/Login";
+import Login, { action as loginAction } from "./pages/User/Login";
 import React, { createContext, useState } from "react";
-import TraineesInfo from "./pages/TraineesInfo";
-import CoachesInfo from "./pages/CoachesInfo";
+import Profile, { action as profileAction } from "./pages/User/Profile";
+import TraineesInfo from "./pages/User/TraineesInfo";
+import CoachesInfo from "./pages/User/CoachesInfo";
 import { Provider } from "react-redux";
 import {store} from "./store";
 import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
@@ -35,7 +36,8 @@ export default function App() {
           />
           <Route
             path="/profile-settings"
-            element={<h1>profile settings page</h1>}
+            element={<Profile />}
+            action={profileAction}
           />
         </Route>
         <Route path="/login" element={<Login />} action={loginAction} />
