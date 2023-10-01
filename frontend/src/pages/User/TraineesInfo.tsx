@@ -61,20 +61,20 @@ const TraineesInfo = () => {
             <table className='w-full my-8'>
         <thead className='bg-[#0077B6] bg-opacity-20 h-20'>
             <tr className=''>
-                <th className='rounded-l-xl ' colSpan={1}>No</th>
-                <th colSpan={1}>Name</th>
-                <th colSpan={1}>Coach</th>
-                <th className="rounded-r-xl" colSpan={1}>Action</th>
+                <td className='rounded-l-xl pl-12 font-semibold'>No</td>
+                <td className='pl-12 font-semibold'>Name</td>
+                <td className='pl-12 font-semibold'>Coach</td>
+                <td className="rounded-r-xl pl-12 font-semibold">Action</td>
                 
             </tr>
         </thead>
           {trainerData.status==="pending"?<div className='flex w-screen items-center justify-center h-[50vh]'><Loader/></div>:
         <tbody className='w-full'>
          { trainerData.data?.map((item:any,index:number)=><tr className='border-b border-black h-[100px] '>
-                <th className='text-base font-medium' colSpan={1}>{index+1}</th>
-                <th className='text-base font-medium' colSpan={1}>{item.name}</th>
-                <th className='text-base font-medium' colSpan={1}>{item.coach.name}</th>
-                <th className='text-base font-medium' colSpan={1}><div className='flex items-center gap-4 justify-center w-full h-full'><Edit/> <Delete/></div></th>
+                <td className='text-base font-medium pl-12'>{index+1}</td>
+                <td className='text-base font-medium pl-12'>{item.name}</td>
+                <td className='text-base font-medium pl-12'>{item.coach.name}</td>
+                <td className='text-base font-medium pl-12'><div className='flex items-center gap-4 w-full h-full'><button><Edit/></button> <button><Delete/></button></div></td>
             </tr>)}
         </tbody>}
     </table>

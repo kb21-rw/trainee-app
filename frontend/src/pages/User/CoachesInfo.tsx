@@ -20,7 +20,7 @@ const CoachesInfo = () => {
         
         <Button variant='small'>
             <Plus/>
-            <span>Add coache</span>
+            <span>Add coach</span>
             </Button>
         </div><div className="flex items-center justify-between">
       <div className="flex w-full  items-center max-w-xl px-1 py-1 h-[58px] border border-[#DBD5E0] rounded-xl">
@@ -59,25 +59,25 @@ const CoachesInfo = () => {
       </label> 
       </div>
     </div>
-            <table className='w-full my-8'>
+            <table className='w-full my-8 table-auto'>
         <thead className='bg-[#0077B6] bg-opacity-20 h-20'>
-            <tr className=''>
-                <th className='rounded-l-xl ' colSpan={1}>No</th>
-                <th colSpan={1}>Name</th>
-                <th colSpan={1}>Email</th>
-                <th colSpan={1}>Coach</th>
-                <th className="rounded-r-xl" colSpan={1}>Action</th>
+            <tr className='w-full'>
+                <td className='rounded-l-xl pl-12 font-semibold' >No</td>
+                <td className='pl-12 font-semibold' >Name</td>
+                <td className='pl-12 font-semibold'>Email</td>
+                <td className='pl-12 font-semibold' >Role</td>
+                <td className="rounded-r-xl pl-12 font-semibold" >Action</td>
                 
             </tr>
         </thead>
           {coachesData.status==="pending"?<div className='flex w-screen items-center justify-center h-[50vh]'><Loader/></div>:
         <tbody className='w-full'>
-         { coachesData.data?.map((item:any,index:number)=><tr className='border-b border-black h-[100px] '>
-                <th className='text-base font-medium' colSpan={1}>{index+1}</th>
-                <th className='text-base font-medium' colSpan={1}>{item?.name}</th>
-                <th className='text-base font-medium' colSpan={1}>{item?.email}</th>
-                <th className='text-base font-medium' colSpan={1}>{item?.role}</th>
-                <th className='text-base font-medium' colSpan={1}><div className='flex items-center gap-4 justify-center w-full h-full'><Edit/> <Delete/></div></th>
+         { coachesData.data?.map((item:any,index:number)=><tr className='border-b border-black h-[100px] w-full'>
+                <td className='text-base font-medium pl-12' >{index+1}</td>
+                <td className='text-base font-medium pl-12' >{item?.name}</td>
+                <td className='text-base font-medium pl-12' >{item?.email}</td>
+                <td className='text-base font-medium pl-12' >{item?.role}</td>
+                <td className='text-base font-medium pl-12' ><div className='flex items-center gap-4 w-full h-full'><button><Edit/></button> <button><Delete/></button></div></td>
             </tr>)}
         </tbody>}
     </table>
