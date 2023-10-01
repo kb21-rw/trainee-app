@@ -2,7 +2,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  RouterProvider
+  RouterProvider,
 } from "react-router-dom";
 import Error from "./components/Error";
 import Layout from "./components/Layout";
@@ -10,6 +10,12 @@ import NotFound from "./pages/NotFound";
 import Login, { action as loginAction } from "./pages/Login";
 import React, { createContext, useState } from "react";
 import Profile, { action as profileAction } from "./pages/User/Profile";
+import TraineesInfo from "./pages/TraineesInfo";
+import CoachesInfo from "./pages/CoachesInfo";
+import { Provider } from "react-redux";
+import {store} from "./store";
+import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
+import { usersApi } from "./features/user/apiSlice";
 
 export const authContext = createContext<any>(null);
 
@@ -20,10 +26,13 @@ export default function App() {
         <Route path="/" element={<Layout />} errorElement={<Error />}>
           <Route index element={<h1>Overview page</h1>} />
           <Route path="/forms" element={<h1>Forms page</h1>} />
-          <Route path="/trainees" element={<h1>Trainees page</h1>} />
+          <Route
+            path="/trainees"
+            element={<TraineesInfo />}
+          />
           <Route
             path="/administer-coach"
-            element={<h1>Administer coach page</h1>}
+            element={<CoachesInfo/>}
           />
           <Route
             path="/profile-settings"
@@ -38,8 +47,12 @@ export default function App() {
   );
   const [user, setUser] = useState(null);
   return (
-    <authContext.Provider value={{ user, setUser }}>
-      <RouterProvider router={router} />
-    </authContext.Provider>
+    // <Provider store={store}>
+      <ApiProvider api={usersApi}>
+      <authContext.Provider value={{ user, setUser }}>
+        <RouterProvider router={router} />
+      </authContext.Provider>
+      </ApiProvider>
+    // </Provider>
   );
 }
