@@ -7,12 +7,12 @@ import {
   ActionFunction,
   useActionData
 } from "react-router-dom";
-import { login } from "../services/api";
+import { login } from "../../services/api";
 import Cookies from "universal-cookie";
-import { H1 } from "../components/ui/Typography";
-import Button from "../components/ui/Button";
-import InputField from "../components/ui/InputField";
-import Loader from "../components/ui/Loader";
+import { H1 } from "../../components/ui/Typography";
+import Button from "../../components/ui/Button";
+import InputField from "../../components/ui/InputField";
+import Loader from "../../components/ui/Loader";
 
 export const action: ActionFunction = async ({ request }) => {
   const cookies = new Cookies();

@@ -7,11 +7,11 @@ import {
 import Error from "./components/Error";
 import Layout from "./components/Layout";
 import NotFound from "./pages/NotFound";
-import Login, { action as loginAction } from "./pages/Login";
+import Login, { action as loginAction } from "./pages/User/Login";
 import React, { createContext, useState } from "react";
 import Profile, { action as profileAction } from "./pages/User/Profile";
-import TraineesInfo from "./pages/TraineesInfo";
-import CoachesInfo from "./pages/CoachesInfo";
+import TraineesInfo from "./pages/User/TraineesInfo";
+import CoachesInfo from "./pages/User/CoachesInfo";
 import { Provider } from "react-redux";
 import {store} from "./store";
 import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
