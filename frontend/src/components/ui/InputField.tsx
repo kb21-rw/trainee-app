@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import OpenEye from "../../../public/OpenEye";
-import ClosedEye from "../../../public/ClosedEye";
+import OpenEye from "../../assets/OpenEye";
+import ClosedEye from "../../assets/ClosedEye";
 
 const InputField = ({
   label,
@@ -28,7 +28,7 @@ const InputField = ({
       </label>
       <div
         className={`${styles &&
-          "!w-2/3"} w-full h-full border border-gray-200 flex justify-between rounded-xl p-3`}
+          "!w-2/3"} w-full border border-gray-200 flex justify-between rounded-xl px-3 h-[58px]`}
       >
         <input
           type={show ? "text" : type}

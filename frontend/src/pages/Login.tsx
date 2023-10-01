@@ -23,7 +23,7 @@ export const action: ActionFunction = async ({ request }) => {
   const pathName = new URL(request.url).searchParams.get("redirectTo") || "/";
   if (response.status === 200) {
     const accessToken = response.accessToken;
-    cookies.set("jwt", accessToken);
+    cookies.set("jwt", accessToken, {maxAge:300});
     return redirect(pathName);
   }
   return response;
