@@ -59,14 +59,14 @@ export const login = async (req: Request, res: Response) => {
     const result = await loginSchema.validateAsync(req.body);
     const user: any = await User.findOne({ email: result.email });
     if (!user) {
-      return res.status(403).send("User not found");
+      return res.status(403).json({message:"User not found"});
     }
     if (user.role === "TRAINEE") {
-      return res.status(403).send("Trainees are not allowed to login");
+      return res.status(403).json({message: "Trainees are not allowed to login"});
     }
     const match = await compare(result.password, user.password);
     if (!match) {
-      return res.status(403).send("Invalid credential");
+      return res.status(403).json({message: "Invalid credential"});
     }
     const accessToken = jwt.sign(
       { id: user._id, name: user.name, email: user.email, role: user.role },
@@ -75,9 +75,9 @@ export const login = async (req: Request, res: Response) => {
         expiresIn: ACCESS_TOKEN_EXPIRATION,
       }
     );
-    return res.status(200).send({ accessToken });
+    return res.status(200).cookie("access_token", accessToken, {httpOnly:true, secure:process.env.NODE_ENV==="production"}).json({ accessToken });
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(400).json({error});
   }
 };
 
@@ -154,7 +154,6 @@ export const get_coaches = async (req: any, res: Response) => {
   try {
     const { role } = req.user;
     if (role !== "ADMIN") {
-      console.log(role);
       return res.status(403).send("Not allowed to view coaches");
     }
     const coaches = await User.aggregate([
@@ -236,7 +235,6 @@ export const assignCoach = async (req: any, res: Response) => {
       return res.status(403).send("coach is assigned only to trainee");
     }
     const coach: any = await User.findById(result.coachId);
-    console.log({ coach });
     if (coach.role !== "COACH") {
       return res
         .status(403)
