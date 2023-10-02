@@ -135,7 +135,10 @@ export const get_coaches = async (req: any, res: Response) => {
     }
     const coaches = await User.aggregate([
       {
-        $match: { role: "COACH" }, // Filter coach users
+        $match: { $or: [
+          { role: "ADMIN" },
+          { role: "COACH" }
+        ] }, 
       },
       {
         $lookup: {
@@ -211,7 +214,7 @@ export const assignCoach = async (req: any, res: Response) => {
     if (user.role !== "TRAINEE") {
       return res.status(403).send("coach is assigned only to trainee");
     }
-    const coach: any = await User.findById(result.coachId);
+    const coach: any = await User.findById(result.coach);
     if (coach.role !== "COACH") {
       return res
         .status(403)

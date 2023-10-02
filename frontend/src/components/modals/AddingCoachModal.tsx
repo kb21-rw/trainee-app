@@ -7,7 +7,7 @@ import { useCreateCoachMutation } from '../../features/user/apiSlice';
 import Loader from '../ui/Loader';
 import Alert from '../ui/Alert';
 
-const CoachPopup = ({closePopup, jwt}:{closePopup:()=>void, jwt:string}) => {
+const AddingCoachModal = ({closePopup, jwt}:{closePopup:()=>void, jwt:string}) => {
   const [createCoach, {isError, isLoading, error}] = useCreateCoachMutation()
   const {
     register,
@@ -37,4 +37,4 @@ const CoachPopup = ({closePopup, jwt}:{closePopup:()=>void, jwt:string}) => {
   )
 }
 
-export default CoachPopup
+export default AddingCoachModal

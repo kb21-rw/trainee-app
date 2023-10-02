@@ -7,7 +7,7 @@ import Delete from '../../assets/Delete'
 import Cookies from "universal-cookie"
 import Loader from '../../components/ui/Loader'
 import { useGetAllCoachesQuery } from '../../features/user/apiSlice';
-import CoachPopup from '../../components/modals/CoachModal';
+import AddingCoachModal from '../../components/modals/AddingCoachModal';
 
 
 const CoachesInfo = () => {
@@ -74,18 +74,18 @@ const CoachesInfo = () => {
         </thead>
           {coachesData.status==="pending"?<div className='flex w-screen items-center justify-center h-[50vh]'><Loader/></div>:
         <tbody className='w-full'>
-         { coachesData.data?.map((item:any,index:number)=><tr className='border-b border-black h-[100px] w-full'>
+         { coachesData.data?.map((coach:any,index:number)=><tr className='border-b border-black h-[100px] w-full'>
                 <td className='text-base font-medium pl-12' >{index+1}</td>
-                <td className='text-base font-medium pl-12' >{item?.name}</td>
-                <td className='text-base font-medium pl-12' >{item?.email}</td>
-                <td className='text-base font-medium pl-12' >{item?.role}</td>
+                <td className='text-base font-medium pl-12' >{coach?.name}</td>
+                <td className='text-base font-medium pl-12' >{coach?.email}</td>
+                <td className='text-base font-medium pl-12' >{coach?.role}</td>
                 <td className='text-base font-medium pl-12' ><div className='flex items-center gap-4 w-full h-full'><button><Edit/></button> <button><Delete/></button></div></td>
             </tr>)}
         </tbody>}
     </table>
             
     </div>
-    {openPopup && <CoachPopup jwt={jwt} closePopup={()=>setOpenPopup(false)}/>}
+    {openPopup && <AddingCoachModal jwt={jwt} closePopup={()=>setOpenPopup(false)}/>}
     </div>
   )
 }

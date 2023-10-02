@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '../../components/ui/Button'
 import Plus from "../../assets/Plus"
 import Sort from "../../assets/Sort";
@@ -7,17 +7,19 @@ import Delete from '../../assets/Delete'
 import Cookies from "universal-cookie"
 import Loader from '../../components/ui/Loader'
 import { useGetAllTraineesQuery } from '../../features/user/apiSlice';
+import AddingTraineeModal from '../../components/modals/AddingTraineeModal';
 
 
 const TraineesInfo = () => {
   const cookies = new Cookies()
   const jwt = cookies.get("jwt")
   const trainerData = useGetAllTraineesQuery(jwt)
+  const [openPopup, setOpenPopup] = useState(false)
   return (
     <div className='py-8'>
         <div className='flex justify-end items-center my-6'>
         
-        <Button variant='small'>
+        <Button clickHandler={()=>setOpenPopup(!openPopup)} variant='small'>
             <Plus/>
             <span>Add trainee</span>
             </Button>
@@ -78,7 +80,7 @@ const TraineesInfo = () => {
             </tr>)}
         </tbody>}
     </table>
-            
+    {openPopup && <AddingTraineeModal jwt={jwt} closePopup={()=>setOpenPopup(false)}/>}  
     </div>
   )
 }

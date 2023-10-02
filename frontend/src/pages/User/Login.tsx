@@ -31,7 +31,6 @@ export const action: ActionFunction = async ({ request }) => {
 
 const Login = () => {
   const error: any = useActionData();
-  console.log({ error });
   const navigation = useNavigation();
   return (
     <Form
