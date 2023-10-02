@@ -181,21 +181,35 @@ export const get_trainees = async (req: any, res: Response) => {
         },
       },
       {
+        $addFields: {
+          coach: {
+            $cond: {
+              if: { $eq: [{ $size: "$coach" }, 0] },
+              then: [{}],
+              else: "$coach",
+            },
+          },
+        },
+      },
+      {
         $project: {
           _id: 1,
           name: 1,
           email: 1,
           role: 1,
           coach: {
-            _id: 1,
-            name: 1,
-            email: 1,
-            role: 1,
+            $cond: {
+              if: { $eq: [{ $size: "$coach" }, 0] },
+              then: {},
+              else: {
+                $arrayElemAt: ["$coach", 0],
+              },
+            },
           },
         },
       },
-      { $unwind: "$coach" },
     ]);
+    
     return res.status(200).json(trainees);
   } catch (error) {
     res.status(400).send("failed to get trainees ");

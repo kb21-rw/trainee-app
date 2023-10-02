@@ -25,6 +25,9 @@ const AddingTraineeModal = ({
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
+    if(!data?.coach){
+        delete data.coach
+    }
     const result =  createTrainee({jwt, body:{...data, role:"TRAINEE"}})
   };
   let errorMessage: any = errors.name?.message;
@@ -54,8 +57,9 @@ const AddingTraineeModal = ({
           className="form-select rounded-xl h-[58px] border-gray-200"
           {...register("coach")}
         >
+            <option key={1} value="">Select a Coach</option>
           {coachesData.data?.map((coach: any, index: number) => (
-            <option key={index} value={coach?._id}>
+            <option key={coach?._id} value={coach?._id}>
               {coach?.name}
             </option>
           ))}
