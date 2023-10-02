@@ -35,3 +35,20 @@ export const updateUserProfile = async (accessToken:any, credentials:any) => {
     throw error;
   }
 };
+
+export const resetPassword = async (email:FormDataEntryValue | null) => {
+  try {
+    const response = await fetch(`${api_url}/auth/reset-password`, {
+      method: "post",
+      headers: {
+        Accept: "application/json, text/plain, */*",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({email: email}),
+    });
+    const result = await response.json();
+    return { ...result, ok: response.ok, status: response.status };
+  } catch (error) {
+    throw error;
+  }
+};

@@ -11,6 +11,7 @@ import {
   generateRandomPassword,
   sendEmail,
   generateMessage,
+  generateResetPasswordMessage,
 } from "../utils/helpers";
 import { hash, compare } from "bcryptjs";
 import dotenv from "dotenv";
@@ -142,7 +143,7 @@ export const reset_password = async (req: Request, res: Response) => {
       user.name,
       user.email,
       "Hello " + user.name,
-      generateMessage(user.name, user.email, user.role, password)
+      generateResetPasswordMessage(user.name, password)
     );
     return res.status(200).json({password})
   } catch (error:any) {
