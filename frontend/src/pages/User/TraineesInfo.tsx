@@ -15,6 +15,7 @@ const TraineesInfo = () => {
   const jwt = cookies.get("jwt")
   const trainerData = useGetAllTraineesQuery(jwt)
   const [openPopup, setOpenPopup] = useState(false)
+  console.log({trainerData})
   return (
     <div className='py-8'>
         <div className='flex justify-end items-center my-6'>
@@ -75,7 +76,7 @@ const TraineesInfo = () => {
          { trainerData.data?.map((item:any,index:number)=><tr className='border-b border-black h-[100px] '>
                 <td className='text-base font-medium pl-12'>{index+1}</td>
                 <td className='text-base font-medium pl-12'>{item.name}</td>
-                <td className='text-base font-medium pl-12'>{item.coach.name}</td>
+                <td className='text-base font-medium pl-12'>{item.coach?.name ||"No coach assigned"}</td>
                 <td className='text-base font-medium pl-12'><div className='flex items-center gap-4 w-full h-full'><button><Edit/></button> <button><Delete/></button></div></td>
             </tr>)}
         </tbody>}
