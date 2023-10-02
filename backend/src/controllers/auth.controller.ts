@@ -3,13 +3,15 @@ import {
   registerSchema,
   loginSchema,
   ProfileSchema,
-  coachAssignSchema
+  coachAssignSchema,
+  resetPasswordSchema,
 } from "../validations/authValidation";
 import User from "../models/User";
 import {
   generateRandomPassword,
   sendEmail,
   generateMessage,
+  generateResetPasswordMessage,
 } from "../utils/helpers";
 import { hash, compare } from "bcryptjs";
 import dotenv from "dotenv";
@@ -18,7 +20,7 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 
 const secret = process.env.ACCESS_TOKEN_KEY || "";
-const ACCESS_TOKEN_EXPIRATION ="5m"; // 5 minutes
+const ACCESS_TOKEN_EXPIRATION = "5m"; // 5 minutes
 
 export const register = async (req: any, res: Response) => {
   let newUser;
@@ -80,7 +82,6 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-
 export const getUserProfile = async (req: any, res: Response) => {
   try {
     const userId = req.user.id;
@@ -104,7 +105,6 @@ export const updateUserProfile = async (req: any, res: Response) => {
       return res.status(400).send(validationResult.error.details[0].message);
     }
 
-
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).send("User not found");
@@ -127,9 +127,33 @@ export const updateUserProfile = async (req: any, res: Response) => {
     return res.status(500).send("Internal Server Error");
   }
 };
+
+export const reset_password = async (req: Request, res: Response) => {
+  try {
+    const result:any = await resetPasswordSchema.validateAsync(req.body);
+    const user: any = await User.findOne({ email: result.email });
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const password = generateRandomPassword(10);
+    const hashedPassword = await hash(password, 10);
+    user.password = hashedPassword;
+    await user.save()
+    sendEmail(
+      user.name,
+      user.email,
+      "Hello " + user.name,
+      generateResetPasswordMessage(user.name, password)
+    );
+    return res.status(200).json({password})
+  } catch (error:any) {
+    return res.status(400).send(error);
+  }
+};
+
 export const get_coaches = async (req: any, res: Response) => {
   try {
-    const {role} = req.user;
+    const { role } = req.user;
     if (role !== "ADMIN") {
       return res.status(403).send("Not allowed to view coaches");
     }
@@ -219,9 +243,9 @@ export const get_trainees = async (req: any, res: Response) => {
 export const assignCoach = async (req: any, res: Response) => {
   const { id } = req.params;
   try {
-    const {role} = req.user
-    if(role !== "ADMIN"){
-      return res.status(400).send("Only admins can assign coach to trainees")
+    const { role } = req.user;
+    if (role !== "ADMIN") {
+      return res.status(400).send("Only admins can assign coach to trainees");
     }
     const result = await coachAssignSchema.validateAsync(req.body);
     const user: any = await User.findById(id);
@@ -241,7 +265,6 @@ export const assignCoach = async (req: any, res: Response) => {
     res.status(400).send(error);
   }
 };
-
 
 export const deleteUser = async (req: any, res: Response) => {
   try {

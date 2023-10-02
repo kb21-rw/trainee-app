@@ -2,7 +2,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  RouterProvider,
+  RouterProvider
 } from "react-router-dom";
 import Error from "./components/Error";
 import Layout from "./components/layouts/Layout";
@@ -12,10 +12,11 @@ import React, { createContext, useState } from "react";
 import Profile, { action as profileAction } from "./pages/User/Profile";
 import TraineesInfo from "./pages/User/TraineesInfo";
 import CoachesInfo from "./pages/User/CoachesInfo";
-import { Provider } from "react-redux";
-import {store} from "./store";
 import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
 import { usersApi } from "./features/user/apiSlice";
+import ResetPassword, {
+  action as resetPasswordAction
+} from "./pages/User/ResetPassword";
 
 export const authContext = createContext<any>(null);
 
@@ -26,14 +27,8 @@ export default function App() {
         <Route path="/" element={<Layout />} errorElement={<Error />}>
           <Route index element={<h1>Overview page</h1>} />
           <Route path="/forms" element={<h1>Forms page</h1>} />
-          <Route
-            path="/trainees"
-            element={<TraineesInfo />}
-          />
-          <Route
-            path="/administer-coach"
-            element={<CoachesInfo/>}
-          />
+          <Route path="/trainees" element={<TraineesInfo />} />
+          <Route path="/administer-coach" element={<CoachesInfo />} />
           <Route
             path="/profile-settings"
             element={<Profile />}
@@ -41,6 +36,11 @@ export default function App() {
           />
         </Route>
         <Route path="/login" element={<Login />} action={loginAction} />
+        <Route
+          path="/reset-password"
+          element={<ResetPassword />}
+          action={resetPasswordAction}
+        />
         <Route path="*" element={<NotFound />} />
       </Route>
     )
@@ -48,11 +48,11 @@ export default function App() {
   const [user, setUser] = useState(null);
   return (
     // <Provider store={store}>
-      <ApiProvider api={usersApi}>
+    <ApiProvider api={usersApi}>
       <authContext.Provider value={{ user, setUser }}>
         <RouterProvider router={router} />
       </authContext.Provider>
-      </ApiProvider>
+    </ApiProvider>
     // </Provider>
   );
 }
