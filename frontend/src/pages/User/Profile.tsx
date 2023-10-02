@@ -32,8 +32,8 @@ export const action = async ({ request }: any) => {
 
 const Profile = () => {
   const { user } = useContext(authContext);
-  const navigation = useNavigation()
-  const response: any = useActionData()
+  const navigation = useNavigation();
+  const response: any = useActionData();
 
   return (
     <Form
@@ -45,12 +45,16 @@ const Profile = () => {
         response.ok ? (
           <Alert type="success">Profile update successfully</Alert>
         ) : (
-          <Alert type="error">{response.message || "Failed to update the profile"}</Alert>
+          <Alert type="error">
+            {response.message || "Failed to update the profile"}
+          </Alert>
         )
       ) : (
-        "")}
-
-      <H1>Profile settings</H1>
+        ""
+      )}
+      <div className="w-2/3 ml-auto">
+        <H1>Profile settings</H1>
+      </div>
       <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
         <InputField
           styles="!flex justify-between"
@@ -77,7 +81,7 @@ const Profile = () => {
         />
       </div>
       <div className="w-2/3 ml-auto">
-      <Button>Save</Button>
+        <Button>Save</Button>
       </div>
     </Form>
   );

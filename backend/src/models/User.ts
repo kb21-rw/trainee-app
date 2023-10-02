@@ -4,7 +4,8 @@ const UserSchema = new Schema({
     name: String,
     email: {
         type: String,
-        unique:true
+        unique:true,
+        sparse: true,
     },
     password: {
         type:String,

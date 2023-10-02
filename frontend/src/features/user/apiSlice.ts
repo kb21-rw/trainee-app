@@ -5,11 +5,11 @@ const api_url = import.meta.env.VITE_API_URL;
 
 const cookies = new Cookies()
 const jwt = cookies.get("jwt")
-console.log({jwt})
 
 export  const usersApi:any = createApi({
     reducerPath: "usersApi",
     baseQuery: fetchBaseQuery({baseUrl: api_url}),
+    tagTypes: ["coaches", "trainees"],
     endpoints: (builder)=>({
         getAllTrainees: builder.query({
             query: (jwt) => ({
@@ -19,6 +19,7 @@ export  const usersApi:any = createApi({
                     Authorization: `Bearer ${jwt}`,
                 },
             }),
+            providesTags: ["trainees"]
         }),
         getAllCoaches: builder.query({
             query: (jwt) => ({
@@ -28,8 +29,35 @@ export  const usersApi:any = createApi({
                     Authorization: `Bearer ${jwt}`,
                 },
             }),
+            providesTags: ["coaches"]
+        }),
+        createCoach: builder.mutation({
+            query: (args) => {
+                const {jwt, body} = args
+                return ({
+                url: '/auth/register',
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+                body: {...body}
+            })}, 
+            invalidatesTags: ["coaches"]
+        }),
+        createTrainee: builder.mutation({
+            query: (args) => {
+                const {jwt, body} = args
+                return ({
+                url: '/auth/register',
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+                body: {...body}
+            })}, 
+            invalidatesTags: ["trainees"]
         })
     })
 })
 
-export const { useGetAllTraineesQuery, useGetAllCoachesQuery } = usersApi
+export const { useGetAllTraineesQuery, useGetAllCoachesQuery, useCreateCoachMutation, useCreateTraineeMutation } = usersApi

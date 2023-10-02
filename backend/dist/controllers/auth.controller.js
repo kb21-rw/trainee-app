@@ -124,7 +124,10 @@ const get_coaches = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         }
         const coaches = yield User_1.default.aggregate([
             {
-                $match: { role: "COACH" }, // Filter coach users
+                $match: { $or: [
+                        { role: "ADMIN" },
+                        { role: "COACH" }
+                    ] },
             },
             {
                 $lookup: {
@@ -203,7 +206,7 @@ const assignCoach = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         if (user.role !== "TRAINEE") {
             return res.status(403).send("coach is assigned only to trainee");
         }
-        const coach = yield User_1.default.findById(result.coachId);
+        const coach = yield User_1.default.findById(result.coach);
         if (coach.role !== "COACH") {
             return res
                 .status(403)
