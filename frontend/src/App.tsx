@@ -17,6 +17,7 @@ import { usersApi } from "./features/user/apiSlice";
 import ResetPassword, {
   action as resetPasswordAction
 } from "./pages/User/ResetPassword";
+import EditMyTrainees from "./pages/User/EditMyTrainees";
 
 export const authContext = createContext<any>(null);
 
@@ -29,6 +30,7 @@ export default function App() {
           <Route path="/forms" element={<h1>Forms page</h1>} />
           <Route path="/trainees" element={<TraineesInfo />} />
           <Route path="/administer-coach" element={<CoachesInfo />} />
+          <Route path="/edit-my-trainees" element={<EditMyTrainees />} />
           <Route
             path="/profile-settings"
             element={<Profile />}
