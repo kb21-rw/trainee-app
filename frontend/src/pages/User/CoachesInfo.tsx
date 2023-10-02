@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '../../components/ui/Button'
 import Plus from "../../assets/Plus"
 import Sort from "../../assets/Sort";
@@ -7,22 +7,24 @@ import Delete from '../../assets/Delete'
 import Cookies from "universal-cookie"
 import Loader from '../../components/ui/Loader'
 import { useGetAllCoachesQuery } from '../../features/user/apiSlice';
+import CoachPopup from '../../components/modals/CoachModal';
 
 
 const CoachesInfo = () => {
   const cookies = new Cookies()
   const jwt = cookies.get("jwt")
   const coachesData = useGetAllCoachesQuery(jwt)
-  console.log({coachesData})
+  const [openPopup, setOpenPopup] = useState(false)
   return (
+    <div>
     <div className='py-8'>
         <div className='flex justify-end items-center my-6'>
         
-        <Button variant='small'>
+        <Button clickHandler={()=>setOpenPopup(!openPopup)} variant='small'>
             <Plus/>
             <span>Add coach</span>
             </Button>
-        </div><div className="flex items-center justify-between">
+        </div><div className="flex items-center justify-between gap-16">
       <div className="flex w-full  items-center max-w-xl px-1 py-1 h-[58px] border border-[#DBD5E0] rounded-xl">
         <input
           className="px-2 flex-1 outline-none border-none h-full"
@@ -31,15 +33,15 @@ const CoachesInfo = () => {
         />
         <Button variant="small">Search</Button>
       </div>
-      <div className="flex gap-6 items-center">
+      <div className="flex gap-4 items-center">
       <label className="flex gap-6 items-center">
       <div className="flex gap-2 items-center">
           <Sort />
-          <span className="text-base font-normal text-[#5B576A]">
+          <span className="text-base font-normal text-[#5B576A] whitespace-nowrap">
             Sort coaches by:
           </span>
         </div>
-        <select name="sort" className="forms-select outline-none bg-white gap-32 w-20 block py-2 ">
+        <select name="sort" className="forms-select outline-none bg-white gap-32 w-[72px] block py-2 ">
           <option selected>Name</option>
           <option>Coach</option>
         </select>
@@ -47,7 +49,7 @@ const CoachesInfo = () => {
       </label>
         
       <label className="flex gap-6 items-center">
-          <span className="text-base font-normal text-[#5B576A]">
+          <span className="text-base font-normal text-[#5B576A] whitespace-nowrap">
             Coaches per page:
           </span>
         <select name="coachePerPage" className="forms-select outline-none bg-white gap-32 w-12 block py-2 ">
@@ -82,6 +84,8 @@ const CoachesInfo = () => {
         </tbody>}
     </table>
             
+    </div>
+    {openPopup && <CoachPopup jwt={jwt} closePopup={()=>setOpenPopup(false)}/>}
     </div>
   )
 }

@@ -5,7 +5,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import Error from "./components/Error";
-import Layout from "./components/Layout";
+import Layout from "./components/layouts/Layout";
 import NotFound from "./pages/NotFound";
 import Login, { action as loginAction } from "./pages/User/Login";
 import React, { createContext, useState } from "react";

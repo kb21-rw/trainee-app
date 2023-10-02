@@ -10,6 +10,7 @@ console.log({jwt})
 export  const usersApi:any = createApi({
     reducerPath: "usersApi",
     baseQuery: fetchBaseQuery({baseUrl: api_url}),
+    tagTypes: ["coaches"],
     endpoints: (builder)=>({
         getAllTrainees: builder.query({
             query: (jwt) => ({
@@ -28,8 +29,20 @@ export  const usersApi:any = createApi({
                     Authorization: `Bearer ${jwt}`,
                 },
             }),
+            providesTags: ["coaches"]
+        }),
+        createCoach: builder.mutation({
+            query: (jwt, ...body) => ({
+                url: '/auth/coach',
+                method: 'POST',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+                body: {...body}
+            }), 
+            invalidatesTags: ["coaches"]
         })
     })
 })
 
-export const { useGetAllTraineesQuery, useGetAllCoachesQuery } = usersApi
+export const { useGetAllTraineesQuery, useGetAllCoachesQuery, useCreateCoachMutation } = usersApi
