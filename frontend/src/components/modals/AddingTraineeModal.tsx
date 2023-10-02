@@ -31,14 +31,14 @@ const AddingTraineeModal = ({
   return (
     <ModalLayout closePopup={closePopup} title="Add trainee">
       {isLoading && (
-        <div className="flex items-center justify-center mt-4">
+        <div className="flex items-center justify-center">
           <Loader />
         </div>
       )}
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-12 w-full mt-20"
+        className="flex flex-col gap-12 w-full"
       >
         <InputField
           type="text"

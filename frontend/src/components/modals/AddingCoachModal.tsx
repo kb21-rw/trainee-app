@@ -23,9 +23,9 @@ const AddingCoachModal = ({closePopup, jwt}:{closePopup:()=>void, jwt:string}) =
   }
   return (
     <ModalLayout closePopup={closePopup} title="Add coach">
-      {isLoading&&<div className='flex items-center justify-center mt-4'><Loader/></div>}
+      {isLoading && <div className='flex items-center justify-center'><Loader/></div>}
       { errorMessage&&<Alert type='error'>{errorMessage}</Alert>}
-        <form onSubmit={handleSubmit((onSubmit))} className='flex flex-col gap-12 w-full mt-20'>
+        <form onSubmit={handleSubmit((onSubmit))} className='flex flex-col gap-12 w-full'>
         <InputField type='text' label='Name' placeholder='Coach name' name='name' register={register} options={{required:{value:true, message:"name is required field"}}}/>
         <InputField type='email' label='Email address' placeholder='example@mail.com' name='email' register={register} options={{required:{value:true, message:"email is required field"}}}/>
         <div className='flex gap-2'>
