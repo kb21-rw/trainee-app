@@ -12,6 +12,7 @@ import Loader from "../../components/ui/Loader";
 import InputField from "../../components/ui/InputField";
 import Button from "../../components/ui/Button";
 import { resetPassword } from "../../services/api";
+import Alert from "../../components/ui/Alert";
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
@@ -22,8 +23,9 @@ export const action: ActionFunction = async ({ request }) => {
 
 const ResetPassword = () => {
   const error: any = useActionData();
-  console.log({ error });
   const navigation = useNavigation();
+  const response: any = useActionData();
+
   return (
     <Form
       method="post"
@@ -33,10 +35,13 @@ const ResetPassword = () => {
       <H1>Reset password</H1>
       {navigation.state === "submitting" && <Loader />}
       <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
-        {error &&
-          <div className="py-2 bg-error-light text-error-dark flex justify-center items-center rounded-lg">
-            {error.message}
-          </div>}
+        {response
+          ? response.ok
+            ? <Alert type="success">Password reset successful</Alert>
+            : <Alert type="error">
+                {response.message || "Failed to reset password"}
+              </Alert>
+          : ""}
         <InputField
           name="email"
           type="email"
