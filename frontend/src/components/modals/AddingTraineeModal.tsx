@@ -53,6 +53,11 @@ const AddingTraineeModal = ({
             required: { value: true, message: "name is required field" },
           }}
         />
+        <div className="flex flex-col gap-5">
+           <label htmlFor="coach" className="text-lg font-medium">
+    Select coach:
+      </label>
+
         <select
           className="form-select rounded-xl h-[58px] border-gray-200"
           {...register("coach")}
@@ -64,6 +69,7 @@ const AddingTraineeModal = ({
             </option>
           ))}
         </select>
+        </div>
         <div className="flex gap-2">
           <Button outlined clickHandler={closePopup}>
             Cancel
