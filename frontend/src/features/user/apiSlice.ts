@@ -32,14 +32,17 @@ export  const usersApi:any = createApi({
             providesTags: ["coaches"]
         }),
         createCoach: builder.mutation({
-            query: (jwt, ...body) => ({
-                url: '/auth/coach',
+            query: (args) => {
+                const {jwt, body} = args
+               console.log({jwt, body})
+                return ({
+                url: '/auth/register',
                 method: 'POST',
                 headers: {
                     Authorization: `Bearer ${jwt}`,
                 },
                 body: {...body}
-            }), 
+            })}, 
             invalidatesTags: ["coaches"]
         })
     })
