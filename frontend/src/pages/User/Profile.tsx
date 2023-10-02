@@ -38,7 +38,7 @@ const Profile = () => {
   return (
     <Form
       method="post"
-      className="h-screen flex flex-col justify-center gap-5 md:gap-16 items-center px-5 sm:px-10 md:p-0 md:w-2/3 lg:w-2/5 mx-auto"
+      className="h-full flex flex-col justify-center gap-5 md:gap-16 items-center px-5 sm:px-10 md:p-0 md:w-2/3 lg:w-2/5 mx-auto"
     >
       {navigation.state === "submitting" && <Loader />}
       {response ? (
