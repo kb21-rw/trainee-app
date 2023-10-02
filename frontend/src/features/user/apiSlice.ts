@@ -56,8 +56,32 @@ export  const usersApi:any = createApi({
                 body: {...body}
             })}, 
             invalidatesTags: ["trainees"]
+        }),
+        deleteCoach: builder.mutation({
+            query: (args) => {
+                const {jwt, id} = args
+                return ({
+                url: `/auth/users/${id}`,
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            })}, 
+            invalidatesTags: ["coaches",]
+        }),
+        deleteTrainee: builder.mutation({
+            query: (args) => {
+                const {jwt, id} = args
+                return ({
+                url: `/auth/users/${id}`,
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            })}, 
+            invalidatesTags: ["trainees",]
         })
     })
 })
 
-export const { useGetAllTraineesQuery, useGetAllCoachesQuery, useCreateCoachMutation, useCreateTraineeMutation } = usersApi
+export const { useGetAllTraineesQuery, useGetAllCoachesQuery, useCreateCoachMutation, useCreateTraineeMutation, useDeleteCoachMutation, useDeleteTraineeMutation } = usersApi
