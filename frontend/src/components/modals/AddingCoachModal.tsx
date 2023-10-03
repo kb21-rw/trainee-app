@@ -8,14 +8,14 @@ import Loader from '../ui/Loader';
 import Alert from '../ui/Alert';
 
 const AddingCoachModal = ({closePopup, jwt}:{closePopup:()=>void, jwt:string}) => {
-  const [createCoach, {isError, isLoading, error}] = useCreateCoachMutation()
+  const [createCoach, {isError, isLoading, error, isSuccess}] = useCreateCoachMutation()
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm(); 
   const onSubmit = async (data:any)=>{
-    const result =  createCoach({jwt, body:{...data, role:"COACH"}})
+    const result =  await createCoach({jwt, body:{...data, role:"COACH"}})
   }
   let errorMessage:any = errors.name?.message || errors.email?.message 
   if(error?.data?.code&&error?.data?.code==11000){
@@ -25,6 +25,7 @@ const AddingCoachModal = ({closePopup, jwt}:{closePopup:()=>void, jwt:string}) =
     <ModalLayout closePopup={closePopup} title="Add coach">
       {isLoading && <div className='flex items-center justify-center'><Loader/></div>}
       { errorMessage&&<Alert type='error'>{errorMessage}</Alert>}
+      { isSuccess&&<Alert type='success'>Coach was added succesfully</Alert>}
         <form onSubmit={handleSubmit((onSubmit))} className='flex flex-col gap-12 w-full'>
         <InputField type='text' label='Name' placeholder='Coach name' name='name' register={register} options={{required:{value:true, message:"name is required field"}}}/>
         <InputField type='email' label='Email address' placeholder='example@mail.com' name='email' register={register} options={{required:{value:true, message:"email is required field"}}}/>
