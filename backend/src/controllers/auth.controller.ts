@@ -154,6 +154,9 @@ export const reset_password = async (req: Request, res: Response) => {
 export const get_coaches = async (req: any, res: Response) => {
   try {
     const { role } = req.user;
+    const search = req.query.search;
+    const sort = req.query.sort;
+    console.log({search})
     if (role !== "ADMIN") {
       return res.status(403).send("Not allowed to view coaches");
     }
@@ -162,7 +165,7 @@ export const get_coaches = async (req: any, res: Response) => {
         $match: { $or: [
           { role: "ADMIN" },
           { role: "COACH" }
-        ] }, 
+        ], $text: {$search:search}}
       },
       {
         $lookup: {
@@ -189,7 +192,7 @@ export const get_coaches = async (req: any, res: Response) => {
     ]);
     return res.status(200).json(coaches);
   } catch (error) {
-    res.status(400).send(400);
+    res.status(400).send(error);
   }
 };
 export const get_trainees = async (req: any, res: Response) => {

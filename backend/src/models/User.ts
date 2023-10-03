@@ -21,5 +21,6 @@ const UserSchema = new Schema({
         ref: 'User'
     }
 }, {timestamps:{}})
+UserSchema.index({ name: 'text' })
 
 export default model("User", UserSchema)
