@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.generateMessage = exports.sendEmail = exports.generateRandomPassword = void 0;
+exports.generateResetPasswordMessage = exports.generateMessage = exports.sendEmail = exports.generateRandomPassword = void 0;
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -55,7 +55,8 @@ const generateMessage = (name, email, role, password) => {
         <div style="font-family: Arial, sans-serif; margin: 20px;">
             <h1>Hello ${name},</h1>
             <p>You are registered as ${role.toLowerCase()}</p>
-            ${password ? `<h3>Your credentials</h3>
+            ${password
+        ? `<h3>Your credentials</h3>
             <div>
             <span>Your email: </span>
             <span>${email}</span>
@@ -63,7 +64,8 @@ const generateMessage = (name, email, role, password) => {
             <div>
             <span>Your password:   </span>
             <span>${password}</span>
-            </div>` : ""}
+            </div>`
+        : ""}
             <p>Sincerely,<br> The gym</p>
         </div>
     </body>
@@ -72,3 +74,21 @@ const generateMessage = (name, email, role, password) => {
     return html;
 };
 exports.generateMessage = generateMessage;
+const generateResetPasswordMessage = (name, password) => {
+    const html = `<html>
+    <head>
+        <meta charset="UTF-8">
+    </head>
+    <body>
+        <div style="font-family: Arial, sans-serif; margin: 20px;">
+            <h1>Hello ${name},</h1>
+            <h3>Your new password is: <span>${password}</span>
+            </h3>
+            <p>Sincerely,<br> The gym</p>
+        </div>
+    </body>
+    </html>
+    `;
+    return html;
+};
+exports.generateResetPasswordMessage = generateResetPasswordMessage;

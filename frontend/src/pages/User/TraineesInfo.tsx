@@ -77,7 +77,7 @@ const TraineesInfo = () => {
                 <td className='text-base font-medium pl-12'>{index+1}</td>
                 <td className='text-base font-medium pl-12'>{item.name}</td>
                 <td className='text-base font-medium pl-12'>{item.coach?.name ||"No coach assigned"}</td>
-                <td className='text-base font-medium pl-12'><div className='flex items-center gap-4 w-full h-full'><button><Edit/></button> <button><Delete/></button></div></td>
+                <td className='text-base font-medium pl-12'><div className='flex items-center gap-4 w-full h-full'><button onClick={()=> {}}><Edit/></button> <button><Delete/></button></div></td>
             </tr>)}
         </tbody>}
     </table>

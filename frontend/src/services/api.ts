@@ -45,7 +45,7 @@ export const resetPassword = async (email:FormDataEntryValue | null) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({email: email}),
-    });
+    });    
     const result = await response.json();
     return { ...result, ok: response.ok, status: response.status };
   } catch (error) {

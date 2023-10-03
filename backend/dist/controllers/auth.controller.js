@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.assignCoach = exports.get_trainees = exports.get_coaches = exports.updateUserProfile = exports.getUserProfile = exports.login = exports.register = void 0;
+exports.editUser = exports.deleteUser = exports.assignCoach = exports.get_trainees = exports.get_coaches = exports.reset_password = exports.updateUserProfile = exports.getUserProfile = exports.login = exports.register = void 0;
 const authValidation_1 = require("../validations/authValidation");
 const User_1 = __importDefault(require("../models/User"));
 const helpers_1 = require("../utils/helpers");
@@ -116,6 +116,25 @@ const updateUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.updateUserProfile = updateUserProfile;
+const reset_password = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const result = yield authValidation_1.resetPasswordSchema.validateAsync(req.body);
+        const user = yield User_1.default.findOne({ email: result.email });
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+        const password = (0, helpers_1.generateRandomPassword)(10);
+        const hashedPassword = yield (0, bcryptjs_1.hash)(password, 10);
+        user.password = hashedPassword;
+        yield user.save();
+        (0, helpers_1.sendEmail)(user.name, user.email, "Hello " + user.name, (0, helpers_1.generateResetPasswordMessage)(user.name, password));
+        return res.status(200).json({ password });
+    }
+    catch (error) {
+        return res.status(400).send(error);
+    }
+});
+exports.reset_password = reset_password;
 const get_coaches = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { role } = req.user;
@@ -172,20 +191,33 @@ const get_trainees = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 },
             },
             {
+                $addFields: {
+                    coach: {
+                        $cond: {
+                            if: { $eq: [{ $size: "$coach" }, 0] },
+                            then: [{}],
+                            else: "$coach",
+                        },
+                    },
+                },
+            },
+            {
                 $project: {
                     _id: 1,
                     name: 1,
                     email: 1,
                     role: 1,
                     coach: {
-                        _id: 1,
-                        name: 1,
-                        email: 1,
-                        role: 1,
+                        $cond: {
+                            if: { $eq: [{ $size: "$coach" }, 0] },
+                            then: {},
+                            else: {
+                                $arrayElemAt: ["$coach", 0],
+                            },
+                        },
                     },
                 },
             },
-            { $unwind: "$coach" },
         ]);
         return res.status(200).json(trainees);
     }
@@ -235,3 +267,34 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.deleteUser = deleteUser;
+const editUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = req.params.id;
+        console.log(req, "request");
+        const { name, email, role } = req.body;
+        const validationResult = authValidation_1.editUserSchema.validate({ name, email, role });
+        if (validationResult.error) {
+            console.log("not validated");
+        }
+        const user = yield User_1.default.findById(userId);
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+        if (name) {
+            user.name = name;
+        }
+        if (email) {
+            user.email = email;
+        }
+        if (role) {
+            user.role = role;
+        }
+        yield user.save();
+        console.log(user);
+        return res.status(200).send(user);
+    }
+    catch (error) {
+        return res.status(500).send("Internal Server Error");
+    }
+});
+exports.editUser = editUser;
