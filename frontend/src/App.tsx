@@ -7,19 +7,16 @@ import {
 import Error from "./components/Error";
 import Layout from "./components/layouts/Layout";
 import NotFound from "./pages/NotFound";
-import Login, { action as loginAction } from "./pages/User/Login";
-import React, { createContext, useState } from "react";
-import Profile, { action as profileAction } from "./pages/User/Profile";
+import Login from "./pages/User/Login";
+import React from "react";
+import Profile from "./pages/User/Profile";
 import TraineesInfo from "./pages/User/TraineesInfo";
 import CoachesInfo from "./pages/User/CoachesInfo";
 import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
 import { usersApi } from "./features/user/apiSlice";
-import ResetPassword, {
-  action as resetPasswordAction
-} from "./pages/User/ResetPassword";
+import ResetPassword from "./pages/User/ResetPassword";
 import EditMyTrainees from "./pages/User/EditMyTrainees";
 
-export const authContext = createContext<any>(null);
 
 export default function App() {
   const router = createBrowserRouter(
@@ -34,27 +31,20 @@ export default function App() {
           <Route
             path="/profile-settings"
             element={<Profile />}
-            action={profileAction}
           />
         </Route>
-        <Route path="/login" element={<Login />} action={loginAction} />
+        <Route path="/login" element={<Login />}  />
         <Route
           path="/reset-password"
           element={<ResetPassword />}
-          action={resetPasswordAction}
         />
         <Route path="*" element={<NotFound />} />
       </Route>
     )
   );
-  const [user, setUser] = useState(null);
   return (
-    // <Provider store={store}>
     <ApiProvider api={usersApi}>
-      <authContext.Provider value={{ user, setUser }}>
         <RouterProvider router={router} />
-      </authContext.Provider>
     </ApiProvider>
-    // </Provider>
   );
 }
