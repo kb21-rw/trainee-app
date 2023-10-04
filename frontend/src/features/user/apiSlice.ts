@@ -9,7 +9,7 @@ const jwt = cookies.get("jwt")
 export  const usersApi:any = createApi({
     reducerPath: "usersApi",
     baseQuery: fetchBaseQuery({baseUrl: api_url}),
-    tagTypes: ["coaches", "trainees", "profile"],
+    tagTypes: ["coaches", "trainees", "myTrainees", "profile"],
     endpoints: (builder)=>({
         getAllTrainees: builder.query({
             query: (jwt) => ({
@@ -20,6 +20,16 @@ export  const usersApi:any = createApi({
                 },
             }),
             providesTags: ["trainees"]
+        }),
+        getMyTrainees: builder.query({
+            query: (jwt) => ({
+                url: '/auth/my-trainees',
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            }),
+            providesTags: ["myTrainees"]
         }),
         getAllCoaches: builder.query({
             query: (jwt) => ({
@@ -126,4 +136,4 @@ export  const usersApi:any = createApi({
     })
 })
 
-export const { useGetAllTraineesQuery, useGetAllCoachesQuery, useCreateCoachMutation, useCreateTraineeMutation, useLoginMutation, useGetProfileQuery, useUpdateProfileMutation, useResetPasswordMutation, useDeleteCoachMutation, useDeleteTraineeMutation } = usersApi
+export const { useGetAllTraineesQuery, useGetAllCoachesQuery, useCreateCoachMutation, useCreateTraineeMutation, useLoginMutation, useGetProfileQuery, useUpdateProfileMutation, useResetPasswordMutation, useDeleteCoachMutation, useDeleteTraineeMutation, useGetMyTraineesQuery } = usersApi

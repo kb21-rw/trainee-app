@@ -15,6 +15,7 @@ import CoachesInfo from "./pages/User/CoachesInfo";
 import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
 import { usersApi } from "./features/user/apiSlice";
 import ResetPassword from "./pages/User/ResetPassword";
+import EditMyTrainees from "./pages/User/EditMyTrainees";
 
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/forms" element={<h1>Forms page</h1>} />
           <Route path="/trainees" element={<TraineesInfo />} />
           <Route path="/administer-coach" element={<CoachesInfo />} />
+          <Route path="/edit-my-trainees" element={<EditMyTrainees />} />
           <Route
             path="/profile-settings"
             element={<Profile />}
