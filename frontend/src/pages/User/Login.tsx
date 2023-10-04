@@ -1,61 +1,64 @@
 import React from "react";
 import {
-  Form,
   Link,
-  redirect,
-  useNavigation,
-  ActionFunction,
-  useActionData
+  useSearchParams,
+  useNavigate
 } from "react-router-dom";
-import { login } from "../../services/api";
+import { useLoginMutation } from "../../features/user/apiSlice";
+import { useForm } from 'react-hook-form';
 import Cookies from "universal-cookie";
 import { H1 } from "../../components/ui/Typography";
 import Button from "../../components/ui/Button";
 import InputField from "../../components/ui/InputField";
 import Loader from "../../components/ui/Loader";
 
-export const action: ActionFunction = async ({ request }) => {
-  const cookies = new Cookies();
-  const formData = await request.formData();
-  const email = formData.get("email");
-  const password = formData.get("password");
-  const response = await login({ email, password });
-  const pathName = new URL(request.url).searchParams.get("redirectTo") || "/";
-  if (response.status === 200) {
-    const accessToken = response.accessToken;
-    cookies.set("jwt", accessToken, {maxAge:300});
-    return redirect(pathName);
-  }
-  return response;
-};
+
 
 const Login = () => {
-  const error: any = useActionData();
-  const navigation = useNavigation();
+  const [login, {isError, isLoading, error}] = useLoginMutation()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm(); 
+  const cookies = new Cookies();
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const redirectUrl =searchParams.get("redirectTo") || "/"
+    const onSubmit = async (data:any)=>{
+        const result =  await login({email:data.email, password:data.password})
+        if(result?.data?.accessToken){
+          cookies.set("jwt", result.data.accessToken, {maxAge:300});
+          return navigate(redirectUrl);
+        }    
+    }
   return (
-    <Form
-      method="post"
-      replace
+    <form
+      onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col h-screen justify-center gap-5 md:gap-16 items-center px-5 sm:px-10 md:p-0 max-w-xl mx-auto"
     >
       <H1>Member login</H1>
-      {navigation.state === "submitting" && <Loader />}
+      {isLoading && <Loader />}
       <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
-        {error &&
+        {isError &&
           <div className="py-2 bg-error-light text-error-dark flex justify-center items-center rounded-lg">
-            {error.message}
+            {error.data.message}
           </div>}
         <InputField
           name="email"
           type="email"
           label="Email address"
           placeholder="example@gmail.com"
+          register={register}
+           options={{required:{value:true, message:"Email is required field"}}}
         />
         <InputField
           name="password"
           type="password"
           label="Password"
           placeholder="password"
+          register={register} 
+          options={{required:{value:true, message:"Password is required field"}}}
         />
       </div>
 
@@ -66,7 +69,7 @@ const Login = () => {
           Reset
         </Link>
       </div>
-    </Form>
+    </form>
   );
 };
 
