@@ -20,7 +20,7 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 
 const secret = process.env.ACCESS_TOKEN_KEY || "";
-const ACCESS_TOKEN_EXPIRATION = "5m"; // 5 minutes
+const ACCESS_TOKEN_EXPIRATION = "500m"; // 5 minutes
 
 export const register = async (req: any, res: Response) => {
   let newUser;
@@ -60,14 +60,16 @@ export const login = async (req: Request, res: Response) => {
     const result = await loginSchema.validateAsync(req.body);
     const user: any = await User.findOne({ email: result.email });
     if (!user) {
-      return res.status(403).json({message:"User not found"});
+      return res.status(403).json({ message: "User not found" });
     }
     if (user.role === "TRAINEE") {
-      return res.status(403).json({message: "Trainees are not allowed to login"});
+      return res
+        .status(403)
+        .json({ message: "Trainees are not allowed to login" });
     }
     const match = await compare(result.password, user.password);
     if (!match) {
-      return res.status(403).json({message: "Invalid credential"});
+      return res.status(403).json({ message: "Invalid credential" });
     }
     const accessToken = jwt.sign(
       { id: user._id, name: user.name, email: user.email, role: user.role },
@@ -76,9 +78,15 @@ export const login = async (req: Request, res: Response) => {
         expiresIn: ACCESS_TOKEN_EXPIRATION,
       }
     );
-    return res.status(200).cookie("access_token", accessToken, {httpOnly:true, secure:process.env.NODE_ENV==="production"}).json({ accessToken });
+    return res
+      .status(200)
+      .cookie("access_token", accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+      })
+      .json({ accessToken });
   } catch (error) {
-    return res.status(400).json({error});
+    return res.status(400).json({ error });
   }
 };
 
@@ -130,7 +138,7 @@ export const updateUserProfile = async (req: any, res: Response) => {
 
 export const reset_password = async (req: Request, res: Response) => {
   try {
-    const result:any = await resetPasswordSchema.validateAsync(req.body);
+    const result: any = await resetPasswordSchema.validateAsync(req.body);
     const user: any = await User.findOne({ email: result.email });
     if (!user) {
       return res.status(404).send("User not found");
@@ -138,15 +146,15 @@ export const reset_password = async (req: Request, res: Response) => {
     const password = generateRandomPassword(10);
     const hashedPassword = await hash(password, 10);
     user.password = hashedPassword;
-    await user.save()
+    await user.save();
     sendEmail(
       user.name,
       user.email,
       "Hello " + user.name,
       generateResetPasswordMessage(user.name, password)
     );
-    return res.status(200).json({password})
-  } catch (error:any) {
+    return res.status(200).json({ password });
+  } catch (error: any) {
     return res.status(400).send(error);
   }
 };
@@ -154,18 +162,25 @@ export const reset_password = async (req: Request, res: Response) => {
 export const get_coaches = async (req: any, res: Response) => {
   try {
     const { role } = req.user;
-    const search = req.query.search;
-    const sort = req.query.sort;
-    console.log({search})
+    const searchString = req.query.searchString || "";
+    const coachesPerPage = Number(req.query.coachesPerPage) || 20
+    const sortBy = req.query.sortBy || "all";
     if (role !== "ADMIN") {
       return res.status(403).send("Not allowed to view coaches");
     }
     const coaches = await User.aggregate([
       {
-        $match: { $or: [
-          { role: "ADMIN" },
-          { role: "COACH" }
-        ], $text: {$search:search}}
+        $match: {
+          $and: [
+            {
+              $or: [
+                { name: { $regex: searchString } },
+                { email: { $regex: searchString } }
+              ]
+            },
+            { role: { $in: ["ADMIN", "COACH"] } }
+          ]
+        },
       },
       {
         $lookup: {
@@ -189,6 +204,12 @@ export const get_coaches = async (req: any, res: Response) => {
           },
         },
       },
+      {
+        $sort: { [sortBy]: 1 }
+      },
+      {
+        $limit: coachesPerPage
+      }
     ]);
     return res.status(200).json(coaches);
   } catch (error) {
@@ -235,8 +256,10 @@ export const get_trainees = async (req: any, res: Response) => {
           },
         },
       },
-    ]);
+      
     
+    ]);
+
     return res.status(200).json(trainees);
   } catch (error) {
     res.status(400).send("failed to get trainees ");
