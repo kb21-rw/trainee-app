@@ -163,23 +163,22 @@ export const get_coaches = async (req: any, res: Response) => {
   try {
     const { role } = req.user;
     const searchString = req.query.searchString || "";
-    const coachesPerPage = Number(req.query.coachesPerPage) || 20
-    const sortBy = req.query.sortBy || "all";
+    const coachesPerPage = Number(req.query.coachesPerPage) || 10
+    const sortBy = req.query.sortBy || "entry";
     if (role !== "ADMIN") {
       return res.status(403).send("Not allowed to view coaches");
     }
     const coaches = await User.aggregate([
       {
         $match: {
-          $and: [
-            {
+          
+            
               $or: [
-                { name: { $regex: searchString } },
-                { email: { $regex: searchString } }
-              ]
-            },
-            { role: { $in: ["ADMIN", "COACH"] } }
-          ]
+                { name: { $regex:  new RegExp(searchString, 'i')} },
+                { email: { $regex: new RegExp(searchString, 'i') } }
+              ],
+            role: { $in: ["ADMIN", "COACH"] } 
+          
         },
       },
       {
@@ -217,9 +216,23 @@ export const get_coaches = async (req: any, res: Response) => {
   }
 };
 export const get_trainees = async (req: any, res: Response) => {
+  const searchString = req.query.searchString || "";
+    const coachesPerPage = Number(req.query.coachesPerPage) || 10
+    const sortBy = req.query.sortBy || "entry";
   try {
     const trainees = await User.aggregate([
-      { $match: { role: "TRAINEE" } },
+      {
+        $match: { 
+            
+              $or: [
+                { name: { $regex:  new RegExp(searchString, 'i')} },
+                { "coach.name": { $regex: new RegExp(searchString, 'i') } }
+              ],
+            
+            role: "TRAINEE" 
+          
+        },
+      },
       {
         $lookup: {
           from: "users",
@@ -255,10 +268,15 @@ export const get_trainees = async (req: any, res: Response) => {
             },
           },
         },
+      },    
+      {
+        $sort: { [sortBy]: 1 }
       },
-      
-    
+      {
+        $limit: coachesPerPage
+      }
     ]);
+    console.log({trainees})
 
     return res.status(200).json(trainees);
   } catch (error) {
