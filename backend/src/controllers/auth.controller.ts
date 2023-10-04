@@ -93,7 +93,7 @@ export const login = async (req: Request, res: Response) => {
 export const getUserProfile = async (req: any, res: Response) => {
   try {
     const userId = req.user.id;
-    const user = await User.findById(userId);
+    const user = await User.findById(userId,{password:0});
     if (!user) {
       return res.status(404).send("User not found");
     }
@@ -204,7 +204,7 @@ export const get_coaches = async (req: any, res: Response) => {
         },
       },
       {
-        $sort: { [sortBy]: 1 }
+        $sort: { [sortBy]: 1  }
       },
       {
         $limit: coachesPerPage
@@ -217,7 +217,7 @@ export const get_coaches = async (req: any, res: Response) => {
 };
 export const get_trainees = async (req: any, res: Response) => {
   const searchString = req.query.searchString || "";
-    const coachesPerPage = Number(req.query.coachesPerPage) || 10
+    const traineesPerPage = Number(req.query.coachesPerPage) || 10
     const sortBy = req.query.sortBy || "entry";
   try {
     const trainees = await User.aggregate([
@@ -226,7 +226,6 @@ export const get_trainees = async (req: any, res: Response) => {
             
               $or: [
                 { name: { $regex:  new RegExp(searchString, 'i')} },
-                { "coach.name": { $regex: new RegExp(searchString, 'i') } }
               ],
             
             role: "TRAINEE" 
@@ -273,7 +272,7 @@ export const get_trainees = async (req: any, res: Response) => {
         $sort: { [sortBy]: 1 }
       },
       {
-        $limit: coachesPerPage
+        $limit: traineesPerPage
       }
     ]);
     console.log({trainees})

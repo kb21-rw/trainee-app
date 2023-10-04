@@ -22,9 +22,10 @@ const CoachesInfo = () => {
   const [query, setQuery] = useState("");
   const coachesData = useGetAllCoachesQuery({ jwt, query });
   const [openPopup, setOpenPopup] = useState(false);
-  const [deleteCoach, { isError, isLoading, error }] = useDeleteCoachMutation();
-  const handleDeleteCoach = (id: string) => {
-    const result = deleteCoach({ jwt, id });
+  const [deleteCoach, { isError, isLoading, error, isFetching }] =
+    useDeleteCoachMutation();
+  const handleDeleteCoach = async (id: string) => {
+    await deleteCoach({ jwt, id });
   };
   const [searchString, setSearchString] = useState("");
   const onSubmitSearch = () => {
@@ -83,6 +84,7 @@ const CoachesInfo = () => {
                 </option>
                 <option value="name">Name</option>
                 <option value="email">Email</option>
+                <option value="role">Role</option>
               </select>
             </label>
 
@@ -107,48 +109,56 @@ const CoachesInfo = () => {
             </label>
           </div>
         </div>
-        <table className="w-full my-8 table-auto">
-          <thead className="bg-[#0077B6] bg-opacity-20 h-20">
-            <tr className="w-full">
-              <td className="rounded-l-xl pl-12 font-semibold">No</td>
-              <td className="pl-12 font-semibold">Name</td>
-              <td className="pl-12 font-semibold">Email</td>
-              <td className="pl-12 font-semibold">Role</td>
-              <td className="rounded-r-xl pl-12 font-semibold">Action</td>
-            </tr>
-          </thead>
-          {coachesData.status === "pending" ? (
-            <div className="flex w-screen items-center justify-center h-[50vh]">
-              <Loader />
-            </div>
-          ) : (
-            <tbody className="w-full">
-              {coachesData.data?.map((coach: any, index: number) => (
-                <tr
-                  key={coach._id}
-                  className="border-b border-black h-[100px] w-full"
-                >
-                  <td className="text-base font-medium pl-12">{index + 1}</td>
-                  <td className="text-base font-medium pl-12">{coach?.name}</td>
-                  <td className="text-base font-medium pl-12">
-                    {coach?.email}
-                  </td>
-                  <td className="text-base font-medium pl-12">{coach?.role}</td>
-                  <td className="text-base font-medium pl-12">
-                    <div className="flex items-center gap-4 w-full h-full">
-                      <button>
-                        <Edit />
-                      </button>{" "}
-                      <button onClick={() => handleDeleteCoach(coach._id)}>
-                        <Delete />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          )}
-        </table>
+        {isFetching ? (
+          <Loader />
+        ) : (
+          <table className="w-full my-8 table-auto">
+            <thead className="bg-[#0077B6] bg-opacity-20 h-20">
+              <tr className="w-full">
+                <td className="rounded-l-xl pl-12 font-semibold">No</td>
+                <td className="pl-12 font-semibold">Name</td>
+                <td className="pl-12 font-semibold">Email</td>
+                <td className="pl-12 font-semibold">Role</td>
+                <td className="rounded-r-xl pl-12 font-semibold">Action</td>
+              </tr>
+            </thead>
+            {coachesData.status === "pending" ? (
+              <div className="flex w-screen items-center justify-center h-[50vh]">
+                <Loader />
+              </div>
+            ) : (
+              <tbody className="w-full">
+                {coachesData.data?.map((coach: any, index: number) => (
+                  <tr
+                    key={coach._id}
+                    className="border-b border-black h-[100px] w-full"
+                  >
+                    <td className="text-base font-medium pl-12">{index + 1}</td>
+                    <td className="text-base font-medium pl-12">
+                      {coach?.name}
+                    </td>
+                    <td className="text-base font-medium pl-12">
+                      {coach?.email}
+                    </td>
+                    <td className="text-base font-medium pl-12">
+                      {coach?.role}
+                    </td>
+                    <td className="text-base font-medium pl-12">
+                      <div className="flex items-center gap-4 w-full h-full">
+                        <button>
+                          <Edit />
+                        </button>{" "}
+                        <button onClick={() => handleDeleteCoach(coach._id)}>
+                          <Delete />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            )}
+          </table>
+        )}
       </div>
       {openPopup && (
         <AddingCoachModal jwt={jwt} closePopup={() => setOpenPopup(false)} />
