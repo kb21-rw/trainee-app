@@ -6,7 +6,7 @@ import Edit from '../../assets/Edit'
 import Delete from '../../assets/Delete'
 import Cookies from "universal-cookie"
 import Loader from '../../components/ui/Loader'
-import { useGetAllTraineesQuery } from '../../features/user/apiSlice';
+import { useDeleteTraineeMutation, useGetAllTraineesQuery } from '../../features/user/apiSlice';
 import AddingTraineeModal from '../../components/modals/AddingTraineeModal';
 import EditTrainee from '../../components/modals/EditTrainee';
 
@@ -18,6 +18,10 @@ const TraineesInfo = () => {
   const [openPopup, setOpenPopup] = useState<boolean>(false)
   const [selectedItem, setSelectecItem] = useState<number>()
   const [openEditPopup, setOpenEditPopup] = useState<boolean>(false)
+  const [deleteTrainee, {isError, isLoading, error}] = useDeleteTraineeMutation()
+  const handleDeleteTrainee = (id:string) =>{
+    const result = deleteTrainee({jwt, id})
+   }
   return (
     <div className='py-8'>
         <div className='flex justify-end items-center my-6'>
@@ -82,7 +86,7 @@ const TraineesInfo = () => {
                 <td className='text-base font-medium pl-12'><div className='flex items-center gap-4 w-full h-full'>
                 <button onClick={() => {setSelectecItem(index), setOpenEditPopup(true)} }>
                     <Edit/></button> 
-                  <button onClick={() => console.log(trainee) } ><Delete/></button></div></td>
+                    <button  onClick={()=>handleDeleteTrainee(trainee._id)}><Delete/></button></div></td>
                   { selectedItem === index && openEditPopup && (
                 <EditTrainee jwt={ jwt} closePopup={()=> setOpenEditPopup(false)} trainee={trainee} id={trainee?._id} />
               )}

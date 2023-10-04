@@ -9,7 +9,7 @@ const jwt = cookies.get("jwt")
 export  const usersApi:any = createApi({
     reducerPath: "usersApi",
     baseQuery: fetchBaseQuery({baseUrl: api_url}),
-    tagTypes: ["coaches", "trainees", "users"],
+    tagTypes: ["coaches", "trainees", "myTrainees", "profile", "users"],
     endpoints: (builder)=>({
         getAllTrainees: builder.query({
             query: (jwt) => ({
@@ -20,6 +20,16 @@ export  const usersApi:any = createApi({
                 },
             }),
             providesTags: ["trainees"]
+        }),
+        getMyTrainees: builder.query({
+            query: (jwt) => ({
+                url: '/auth/my-trainees',
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            }),
+            providesTags: ["myTrainees"]
         }),
         getAllUsers: builder.query({
             query: (jwt) => ({
@@ -92,9 +102,75 @@ export  const usersApi:any = createApi({
                 body: {...body}
             })}, 
             invalidatesTags: ["trainees"]
-        })
+        }),
 
+        deleteCoach: builder.mutation({
+            query: (args) => {
+                const {jwt, id} = args
+                return ({
+                url: `/auth/users/${id}`,
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            })}, 
+            invalidatesTags: ["users",]
+        }),
+        deleteTrainee: builder.mutation({
+            query: (args) => {
+                const {jwt, id} = args
+                return ({
+                url: `/auth/users/${id}`,
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            })}, 
+            invalidatesTags: ["trainees",]
+        }),
+
+        login: builder.mutation({
+            query: (body) => {
+                return ({
+                url: '/auth/login',
+                method: 'POST',
+                body: {...body}
+            })}, 
+            invalidatesTags: ["profile"]
+        }),
+        resetPassword: builder.mutation({
+            query: (body) => {
+                return ({
+                url: '/auth/reset-password',
+                method: 'POST',
+                body
+            })}, 
+        }),
+        getProfile: builder.query({
+            query: (jwt) => ({
+                url: '/auth/profile',
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+            }),
+            providesTags: ["profile"]
+        }),
+        updateProfile: builder.mutation({
+            query: (args) => {
+                const {jwt, profileData} = args
+                console.log({args})
+                return ({
+                url: '/auth/profile',
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+                body: {...profileData}
+            })}, 
+            invalidatesTags: ["profile"]
+        }),
     })
 })
 
-export const { useGetAllTraineesQuery, useGetAllCoachesQuery, useCreateCoachMutation, useCreateTraineeMutation, useEditUserMutation, useGetAllUsersQuery, useEditTraineeMutation } = usersApi
+export const { useGetAllTraineesQuery, useGetAllCoachesQuery, useCreateCoachMutation, useCreateTraineeMutation, useLoginMutation, useGetProfileQuery, useUpdateProfileMutation, useResetPasswordMutation, useDeleteCoachMutation, useDeleteTraineeMutation, useGetMyTraineesQuery, useEditUserMutation, useGetAllUsersQuery, useEditTraineeMutation  } = usersApi

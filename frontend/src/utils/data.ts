@@ -6,6 +6,6 @@ export const adminMenu = [
   ]
 export const coachMenu = [
     { link: "/", title: "Overview" },
-    { link: "/edit-trainees", title: "edit my trainees" },
+    { link: "/edit-my-trainees", title: "edit my trainees" },
    
   ]

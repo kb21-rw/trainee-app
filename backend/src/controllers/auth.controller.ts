@@ -283,6 +283,54 @@ export const get_trainees = async (req: any, res: Response) => {
     res.status(400).send("failed to get trainees ");
   }
 };
+export const get_my_trainees = async (req: any, res: Response) => {
+  try {
+    const {id} = req.user;
+    const coach = await User.findById(id)
+    const trainees = await User.aggregate([
+      { $match: { role: "TRAINEE", coach: coach?._id } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "coach",
+          foreignField: "_id",
+          as: "coach",
+        },
+      },
+      {
+        $addFields: {
+          coach: {
+            $cond: {
+              if: { $eq: [{ $size: "$coach" }, 0] },
+              then: [{}],
+              else: "$coach",
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 1,
+          name: 1,
+          email: 1,
+          role: 1,
+          coach: {
+            $cond: {
+              if: { $eq: [{ $size: "$coach" }, 0] },
+              then: {},
+              else: {
+                $arrayElemAt: ["$coach", 0],
+              },
+            },
+          },
+        },
+      },
+    ]);
+    return res.status(200).json(trainees);
+  } catch (error) {
+    res.status(400).send("failed to get trainees ");
+  }
+};
 
 export const assignCoach = async (req: any, res: Response) => {
   const { id } = req.params;

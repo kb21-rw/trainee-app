@@ -1,63 +1,56 @@
 import React from "react";
-import {
-  ActionFunction,
-  Form,
-  Link,
-  redirect,
-  useActionData,
-  useNavigation
-} from "react-router-dom";
+import { Link} from "react-router-dom";
 import { H1 } from "../../components/ui/Typography";
 import Loader from "../../components/ui/Loader";
 import InputField from "../../components/ui/InputField";
 import Button from "../../components/ui/Button";
-import { resetPassword } from "../../services/api";
 import Alert from "../../components/ui/Alert";
-
-export const action: ActionFunction = async ({ request }) => {
-  const formData = await request.formData();
-  const email = formData.get("email");
-  const response = await resetPassword(email);
-  return response;
-};
+import { useForm } from "react-hook-form";
+import { useResetPasswordMutation } from "../../features/user/apiSlice";
 
 const ResetPassword = () => {
-  const error: any = useActionData();
-  const navigation = useNavigation();
-  const response: any = useActionData();
-
+  const [resetPassword, { isError, isLoading, error, isSuccess }] =
+    useResetPasswordMutation();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const onSubmit = async (data: any) => {
+    const result = await resetPassword({ email: data.email });
+  };
+  let errorMessage: any = errors.email?.message;
+  console.log({errors})
   return (
-    <Form
-      method="post"
-      replace
+    <form
+      onSubmit={handleSubmit(onSubmit)}
       className="flex flex-col h-screen justify-center gap-5 md:gap-16 items-center px-5 sm:px-10 md:p-0 max-w-xl mx-auto"
     >
       <H1>Reset password</H1>
-      {navigation.state === "submitting" && <Loader />}
+      {isLoading && <Loader />}
       <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
-        {response
-          ? response.ok
-            ? <Alert type="success">Password reset successful</Alert>
-            : <Alert type="error">
-                {response.message || "Failed to reset password"}
-              </Alert>
-          : ""}
+        {isSuccess && <Alert type="success">Password reset successful</Alert>}
+        {isError?<Alert type="error">{error}</Alert>:errorMessage&&<Alert type="error">{errorMessage}</Alert>}
         <InputField
           name="email"
           type="email"
           label="Email address"
           placeholder="example@gmail.com"
+          register={register}
+          options={{
+            required: { value: true, message: "Email is required field" },
+          }}
         />
       </div>
 
       <Button>Reset</Button>
       <div className="">
-        Back to {" "}
+        Back to{" "}
         <Link to="/login" className="text-primary-dark">
           login ?
         </Link>
       </div>
-    </Form>
+    </form>
   );
 };
 
