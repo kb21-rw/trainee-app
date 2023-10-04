@@ -15,7 +15,6 @@ const TraineesInfo = () => {
   const jwt = cookies.get("jwt")
   const trainerData = useGetAllTraineesQuery(jwt)
   const [openPopup, setOpenPopup] = useState(false)
-  console.log({trainerData})
   return (
     <div className='py-8'>
         <div className='flex justify-end items-center my-6'>

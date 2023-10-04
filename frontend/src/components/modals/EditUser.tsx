@@ -28,7 +28,6 @@ const EditUser = ({
     const result = editUser({ jwt, id: id, body: { ...data } })
   };
   let errorMessage: any = errors.name?.message;
-  console.log({id})
   return (
     <ModalLayout closePopup={closePopup} title="Add trainee">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}

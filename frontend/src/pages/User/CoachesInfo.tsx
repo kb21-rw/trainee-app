@@ -15,8 +15,9 @@ const CoachesInfo = () => {
   const cookies = new Cookies()
   const jwt = cookies.get("jwt")
   const usersData = useGetAllUsersQuery(jwt)
-  const [openPopup, setOpenPopup] = useState<any>()
-  const [openEditPopup, setOpenEditPopup] = useState(false)
+  const [openPopup, setOpenPopup] = useState<boolean>(false)
+  const [selectedItem, setSelectecItem] = useState<number>()
+  const [openEditPopup, setOpenEditPopup] = useState<boolean>(false)
   const handleOpenPopup = (coachId:any) => {
     setOpenEditPopup(coachId);
   };
@@ -88,12 +89,12 @@ const CoachesInfo = () => {
                   <td className='text-base font-medium pl-12' >{coach?.email}</td>
                   <td className='text-base font-medium pl-12' >{coach?.role}</td>
                   <td className='text-base font-medium pl-12' ><div className='flex items-center gap-4 w-full h-full'>
-                  <button onClick={() => handleOpenPopup(true)}>
+                  <button onClick={() => {setSelectecItem(index), setOpenEditPopup(true)} }>
                     <Edit />
                   </button>
                     <button><Delete /></button></div></td>
-                  { openEditPopup && (
-                <EditUser jwt={ jwt} closePopup={()=>setOpenEditPopup(false)} user={coach} id={coach?._id} />
+                  { selectedItem === index && openEditPopup && (
+                <EditUser jwt={ jwt} closePopup={()=> setOpenEditPopup(false)} user={coach} id={coach?._id} />
               )}
                 </tr>
                   </>
