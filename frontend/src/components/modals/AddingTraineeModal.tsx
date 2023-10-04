@@ -17,7 +17,7 @@ const AddingTraineeModal = ({
   closePopup: () => void;
   jwt: string;
 }) => {
-  const [createTrainee, { isError, isLoading, error }] = useCreateTraineeMutation();
+  const [createTrainee, { isError, isLoading, error, isSuccess }] = useCreateTraineeMutation();
   const coachesData = useGetAllCoachesQuery(jwt);
   const {
     register,
@@ -28,7 +28,7 @@ const AddingTraineeModal = ({
     if(!data?.coach){
         delete data.coach
     }
-    const result =  createTrainee({jwt, body:{...data, role:"TRAINEE"}})
+    const result =  await createTrainee({jwt, body:{...data, role:"TRAINEE"}})
   };
   let errorMessage: any = errors.name?.message;
   return (
@@ -38,7 +38,8 @@ const AddingTraineeModal = ({
           <Loader />
         </div>
       )}
-      {errorMessage && <Alert type="error">{errorMessage}</Alert>}
+      {isError?<Alert type="error">{error}</Alert>:errorMessage&&<Alert type="error">{errorMessage}</Alert>}
+      { isSuccess&&<Alert type='success'>Trainee was added succesfully</Alert>}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-12 w-full"
