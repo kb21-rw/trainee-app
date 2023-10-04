@@ -18,9 +18,6 @@ const CoachesInfo = () => {
   const [openPopup, setOpenPopup] = useState<boolean>(false)
   const [selectedItem, setSelectecItem] = useState<number>()
   const [openEditPopup, setOpenEditPopup] = useState<boolean>(false)
-  const handleOpenPopup = (coachId:any) => {
-    setOpenEditPopup(coachId);
-  };
 
   return (
     <div>

@@ -8,13 +8,16 @@ import Cookies from "universal-cookie"
 import Loader from '../../components/ui/Loader'
 import { useGetAllTraineesQuery } from '../../features/user/apiSlice';
 import AddingTraineeModal from '../../components/modals/AddingTraineeModal';
+import EditTrainee from '../../components/modals/EditTrainee';
 
 
 const TraineesInfo = () => {
   const cookies = new Cookies()
   const jwt = cookies.get("jwt")
   const trainerData = useGetAllTraineesQuery(jwt)
-  const [openPopup, setOpenPopup] = useState(false)
+  const [openPopup, setOpenPopup] = useState<boolean>(false)
+  const [selectedItem, setSelectecItem] = useState<number>()
+  const [openEditPopup, setOpenEditPopup] = useState<boolean>(false)
   return (
     <div className='py-8'>
         <div className='flex justify-end items-center my-6'>
@@ -72,11 +75,17 @@ const TraineesInfo = () => {
         </thead>
           {trainerData.status==="pending"?<div className='flex w-screen items-center justify-center h-[50vh]'><Loader/></div>:
         <tbody className='w-full'>
-         { trainerData.data?.map((item:any,index:number)=><tr className='border-b border-black h-[100px] '>
+         { trainerData.data?.map((trainee:any,index:number)=><tr className='border-b border-black h-[100px] '>
                 <td className='text-base font-medium pl-12'>{index+1}</td>
-                <td className='text-base font-medium pl-12'>{item.name}</td>
-                <td className='text-base font-medium pl-12'>{item.coach?.name ||"No coach assigned"}</td>
-                <td className='text-base font-medium pl-12'><div className='flex items-center gap-4 w-full h-full'><button onClick={()=> {}}><Edit/></button> <button><Delete/></button></div></td>
+                <td className='text-base font-medium pl-12'>{trainee.name}</td>
+                <td className='text-base font-medium pl-12'>{trainee.coach?.name ||"No coach assigned"}</td>
+                <td className='text-base font-medium pl-12'><div className='flex items-center gap-4 w-full h-full'>
+                <button onClick={() => {setSelectecItem(index), setOpenEditPopup(true)} }>
+                    <Edit/></button> 
+                  <button onClick={() => console.log(trainee) } ><Delete/></button></div></td>
+                  { selectedItem === index && openEditPopup && (
+                <EditTrainee jwt={ jwt} closePopup={()=> setOpenEditPopup(false)} trainee={trainee} id={trainee?._id} />
+              )}
             </tr>)}
         </tbody>}
     </table>

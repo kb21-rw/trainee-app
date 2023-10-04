@@ -79,9 +79,22 @@ export  const usersApi:any = createApi({
                 body: {...body}
             })}, 
             invalidatesTags: ["users"]
+        }),
+        editTrainee: builder.mutation({
+            query: (args) => {
+                const {jwt, body, id} = args
+                return ({
+                url: `/auth/edit-trainee/${id}`,
+                method: 'PUT',
+                headers: {
+                    Authorization: `Bearer ${jwt}`,
+                },
+                body: {...body}
+            })}, 
+            invalidatesTags: ["trainees"]
         })
 
     })
 })
 
-export const { useGetAllTraineesQuery, useGetAllCoachesQuery, useCreateCoachMutation, useCreateTraineeMutation, useEditUserMutation, useGetAllUsersQuery } = usersApi
+export const { useGetAllTraineesQuery, useGetAllCoachesQuery, useCreateCoachMutation, useCreateTraineeMutation, useEditUserMutation, useGetAllUsersQuery, useEditTraineeMutation } = usersApi

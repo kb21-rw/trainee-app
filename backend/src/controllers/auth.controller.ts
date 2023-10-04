@@ -355,3 +355,32 @@ export const editUser = async (req: any, res: Response) => {
     return res.status(500).send("Internal Server Error");
   }
 };
+
+export const editTrainee = async (req: any, res: Response) => {
+  try {
+    const userId = req.params.id;
+    
+    const { name, coach } = req.body;
+
+    const validationResult = editUserSchema.validate({ name, coach });
+    if (validationResult.error) {
+      console.log(validationResult)
+    }
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    if (name) {
+      user.name = name;
+    }
+    if (coach) {
+      user.coach = coach;
+    }
+    
+    await user.save();    
+
+    return res.status(200).send(user);
+  } catch (error) {
+    return res.status(500).send("Internal Server Error");
+  }
+};
