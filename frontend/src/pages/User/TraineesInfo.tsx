@@ -6,7 +6,7 @@ import Edit from '../../assets/Edit'
 import Delete from '../../assets/Delete'
 import Cookies from "universal-cookie"
 import Loader from '../../components/ui/Loader'
-import { useGetAllTraineesQuery } from '../../features/user/apiSlice';
+import { useDeleteTraineeMutation, useGetAllTraineesQuery } from '../../features/user/apiSlice';
 import AddingTraineeModal from '../../components/modals/AddingTraineeModal';
 
 
@@ -15,7 +15,11 @@ const TraineesInfo = () => {
   const jwt = cookies.get("jwt")
   const trainerData = useGetAllTraineesQuery(jwt)
   const [openPopup, setOpenPopup] = useState(false)
-  console.log({trainerData})
+  const [deleteTrainee, {isError, isLoading, error}] = useDeleteTraineeMutation()
+  const handleDeleteTrainee = (id:string) =>{
+    const result = deleteTrainee({jwt, id})
+    console.log({result})
+   }
   return (
     <div className='py-8'>
         <div className='flex justify-end items-center my-6'>
@@ -73,11 +77,11 @@ const TraineesInfo = () => {
         </thead>
           {trainerData.status==="pending"?<div className='flex w-screen items-center justify-center h-[50vh]'><Loader/></div>:
         <tbody className='w-full'>
-         { trainerData.data?.map((item:any,index:number)=><tr className='border-b border-black h-[100px] '>
+         { trainerData.data?.map((trainee:any,index:number)=><tr className='border-b border-black h-[100px] '>
                 <td className='text-base font-medium pl-12'>{index+1}</td>
-                <td className='text-base font-medium pl-12'>{item.name}</td>
-                <td className='text-base font-medium pl-12'>{item.coach?.name ||"No coach assigned"}</td>
-                <td className='text-base font-medium pl-12'><div className='flex items-center gap-4 w-full h-full'><button><Edit/></button> <button><Delete/></button></div></td>
+                <td className='text-base font-medium pl-12'>{trainee.name}</td>
+                <td className='text-base font-medium pl-12'>{trainee.coach?.name ||"No coach assigned"}</td>
+                <td className='text-base font-medium pl-12'><div className='flex items-center gap-4 w-full h-full'><button><Edit/></button> <button  onClick={()=>handleDeleteTrainee(trainee._id)}><Delete/></button></div></td>
             </tr>)}
         </tbody>}
     </table>

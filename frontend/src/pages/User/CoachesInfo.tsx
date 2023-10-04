@@ -6,7 +6,7 @@ import Edit from '../../assets/Edit'
 import Delete from '../../assets/Delete'
 import Cookies from "universal-cookie"
 import Loader from '../../components/ui/Loader'
-import { useGetAllCoachesQuery } from '../../features/user/apiSlice';
+import { useDeleteCoachMutation, useGetAllCoachesQuery } from '../../features/user/apiSlice';
 import AddingCoachModal from '../../components/modals/AddingCoachModal';
 
 
@@ -15,6 +15,11 @@ const CoachesInfo = () => {
   const jwt = cookies.get("jwt")
   const coachesData = useGetAllCoachesQuery(jwt)
   const [openPopup, setOpenPopup] = useState(false)
+  const [deleteCoach, {isError, isLoading, error}] = useDeleteCoachMutation()
+  const handleDeleteCoach = (id:string) =>{
+   const result = deleteCoach({jwt, id})
+   console.log({result})
+  }
   return (
     <div>
     <div className='py-8'>
@@ -74,12 +79,12 @@ const CoachesInfo = () => {
         </thead>
           {coachesData.status==="pending"?<div className='flex w-screen items-center justify-center h-[50vh]'><Loader/></div>:
         <tbody className='w-full'>
-         { coachesData.data?.map((coach:any,index:number)=><tr className='border-b border-black h-[100px] w-full'>
+         { coachesData.data?.map((coach:any,index:number)=><tr key={coach._id} className='border-b border-black h-[100px] w-full'>
                 <td className='text-base font-medium pl-12' >{index+1}</td>
                 <td className='text-base font-medium pl-12' >{coach?.name}</td>
                 <td className='text-base font-medium pl-12' >{coach?.email}</td>
                 <td className='text-base font-medium pl-12' >{coach?.role}</td>
-                <td className='text-base font-medium pl-12' ><div className='flex items-center gap-4 w-full h-full'><button><Edit/></button> <button><Delete/></button></div></td>
+                <td className='text-base font-medium pl-12' ><div className='flex items-center gap-4 w-full h-full'><button><Edit/></button> <button onClick={()=>handleDeleteCoach(coach._id)}><Delete/></button></div></td>
             </tr>)}
         </tbody>}
     </table>
