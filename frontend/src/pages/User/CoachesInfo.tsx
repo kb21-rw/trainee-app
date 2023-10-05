@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, InputHTMLAttributes } from "react";
+import React, { useEffect, useState, useRef} from "react";
 import Button from "../../components/ui/Button";
 import Plus from "../../assets/Plus";
 import Sort from "../../assets/Sort";
@@ -16,7 +16,7 @@ const DEFAULTCOACHESPERPAGE="10"
 const CoachesInfo = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
-  const searchRef = useRef<any>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("entry");
   const [usersPerPage, setUsersPerPage] = useState(DEFAULTCOACHESPERPAGE);
