@@ -18,7 +18,7 @@ const AddingTraineeModal = ({
   jwt: string;
 }) => {
   const [createTrainee, { isError, isLoading, error, isSuccess }] = useCreateTraineeMutation();
-  const coachesData = useGetAllCoachesQuery(jwt);
+  const coachesData = useGetAllCoachesQuery({jwt, query:""});
   const {
     register,
     handleSubmit,
