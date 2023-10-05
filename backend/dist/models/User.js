@@ -21,4 +21,5 @@ const UserSchema = new mongoose_1.Schema({
         ref: 'User'
     }
 }, { timestamps: {} });
+UserSchema.index({ name: 'text' });
 exports.default = (0, mongoose_1.model)("User", UserSchema);

@@ -56,7 +56,9 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             return res.status(403).json({ message: "User not found" });
         }
         if (user.role === "TRAINEE") {
-            return res.status(403).json({ message: "Trainees are not allowed to login" });
+            return res
+                .status(403)
+                .json({ message: "Trainees are not allowed to login" });
         }
         const match = yield (0, bcryptjs_1.compare)(result.password, user.password);
         if (!match) {
@@ -65,7 +67,13 @@ const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const accessToken = jsonwebtoken_1.default.sign({ id: user._id, name: user.name, email: user.email, role: user.role }, secret, {
             expiresIn: ACCESS_TOKEN_EXPIRATION,
         });
-        return res.status(200).cookie("access_token", accessToken, { httpOnly: true, secure: process.env.NODE_ENV === "production" }).json({ accessToken });
+        return res
+            .status(200)
+            .cookie("access_token", accessToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production",
+        })
+            .json({ accessToken });
     }
     catch (error) {
         return res.status(400).json({ error });
@@ -75,7 +83,7 @@ exports.login = login;
 const getUserProfile = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const userId = req.user.id;
-        const user = yield User_1.default.findById(userId);
+        const user = yield User_1.default.findById(userId, { password: 0 });
         if (!user) {
             return res.status(404).send("User not found");
         }
@@ -138,15 +146,21 @@ exports.reset_password = reset_password;
 const get_coaches = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { role } = req.user;
+        const searchString = req.query.searchString || "";
+        const coachesPerPage = Number(req.query.coachesPerPage) || 10;
+        const sortBy = req.query.sortBy || "entry";
         if (role !== "ADMIN") {
             return res.status(403).send("Not allowed to view coaches");
         }
         const coaches = yield User_1.default.aggregate([
             {
-                $match: { $or: [
-                        { role: "ADMIN" },
-                        { role: "COACH" }
-                    ] },
+                $match: {
+                    $or: [
+                        { name: { $regex: new RegExp(searchString, "i") } },
+                        { email: { $regex: new RegExp(searchString, "i") } },
+                    ],
+                    role: { $in: ["ADMIN", "COACH"] },
+                },
             },
             {
                 $lookup: {
@@ -170,18 +184,32 @@ const get_coaches = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
                     },
                 },
             },
+            {
+                $sort: { [sortBy]: 1 },
+            },
+            {
+                $limit: coachesPerPage,
+            },
         ]);
         return res.status(200).json(coaches);
     }
     catch (error) {
-        res.status(400).send(400);
+        res.status(400).send(error);
     }
 });
 exports.get_coaches = get_coaches;
 const get_trainees = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const searchString = req.query.searchString || "";
+    const traineesPerPage = Number(req.query.coachesPerPage) || 10;
+    const sortBy = req.query.sortBy || "entry";
     try {
         const trainees = yield User_1.default.aggregate([
-            { $match: { role: "TRAINEE" } },
+            {
+                $match: {
+                    $or: [{ name: { $regex: new RegExp(searchString, "i") } }],
+                    role: "TRAINEE",
+                },
+            },
             {
                 $lookup: {
                     from: "users",
@@ -217,6 +245,12 @@ const get_trainees = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                         },
                     },
                 },
+            },
+            {
+                $sort: { [sortBy]: 1 },
+            },
+            {
+                $limit: traineesPerPage,
             },
         ]);
         return res.status(200).json(trainees);
@@ -227,11 +261,20 @@ const get_trainees = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.get_trainees = get_trainees;
 const get_my_trainees = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const searchString = req.query.searchString || "";
+    const traineesPerPage = Number(req.query.coachesPerPage) || 10;
+    const sortBy = req.query.sortBy || "entry";
     try {
         const { id } = req.user;
         const coach = yield User_1.default.findById(id);
         const trainees = yield User_1.default.aggregate([
-            { $match: { role: "TRAINEE", coach: coach === null || coach === void 0 ? void 0 : coach._id } },
+            {
+                $match: {
+                    coach: coach === null || coach === void 0 ? void 0 : coach._id,
+                    role: "TRAINEE",
+                    $or: [{ name: { $regex: new RegExp(searchString, "i") } }],
+                },
+            },
             {
                 $lookup: {
                     from: "users",
@@ -267,6 +310,12 @@ const get_my_trainees = (req, res) => __awaiter(void 0, void 0, void 0, function
                         },
                     },
                 },
+            },
+            {
+                $sort: { [sortBy]: 1 },
+            },
+            {
+                $limit: traineesPerPage,
             },
         ]);
         return res.status(200).json(trainees);
