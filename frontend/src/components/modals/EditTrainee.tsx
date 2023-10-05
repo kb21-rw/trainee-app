@@ -5,6 +5,7 @@ import ModalLayout from './ModalLayout';
 import Alert from '../ui/Alert';
 import InputField from '../ui/InputField';
 import Button from '../ui/Button';
+import Loader from '../ui/Loader';
 
 const EditTrainee = ({
   closePopup,
@@ -17,7 +18,7 @@ const EditTrainee = ({
   id: any;
   trainee: any
 }) => {
-  const [editTrainee, { isError, isLoading, error }] = useEditTraineeMutation();
+  const [editTrainee, { isError, isLoading, error, isSuccess : isEditTraineeSuccess }] = useEditTraineeMutation();
   const coacheesData = useGetAllUsersQuery(jwt) 
   const {
     register,
@@ -28,10 +29,12 @@ const EditTrainee = ({
     const result = editTrainee({ jwt, id: id, body: { ...data } })
   };
   let errorMessage: any = errors.name?.message;
+
   
   return (
     <ModalLayout closePopup={closePopup} title="Add trainee">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
+      {isLoading && <div className='w-full flex justify-center items-center'><Loader/></div> }
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-12 w-full"

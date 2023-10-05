@@ -101,7 +101,7 @@ export  const usersApi:any = createApi({
                 },
                 body: {...body}
             })}, 
-            invalidatesTags: ["trainees"]
+            invalidatesTags: ["trainees", "myTrainees"]
         }),
 
         deleteCoach: builder.mutation({
