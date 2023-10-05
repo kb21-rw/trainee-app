@@ -28,7 +28,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, query } = args;
         return {
-          url: "/auth/my-trainees",
+          url: `/auth/my-trainees${query}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,

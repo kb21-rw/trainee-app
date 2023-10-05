@@ -12,15 +12,18 @@ import {
 } from "../../features/user/apiSlice";
 import AddingTraineeModal from "../../components/modals/AddingTraineeModal";
 
+
+const DEFAULTTRAINEESPERPAGE="10"
 const TraineesInfo = () => {
   const cookies = new Cookies();
   const jwt: string = cookies.get("jwt");
   const searchRef = useRef<HTMLInputElement>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("entry");
-  const [usersPerPage, setUsersPerPage] = useState("10");
+  const [usersPerPage, setUsersPerPage] = useState(DEFAULTTRAINEESPERPAGE);
+  const [searchString, setSearchString] = useState("");
   const [query, setQuery] = useState("");
-  const trainerData = useGetAllTraineesQuery({ jwt, query });
+  const {data, isLoading:isTrainerLoading, isFetching: isTrainerFetching} = useGetAllTraineesQuery({ jwt, query });
   const [openPopup, setOpenPopup] = useState(false);
   const [deleteTrainee, { isError, isLoading, error, isFetching }] =
     useDeleteTraineeMutation();
@@ -28,7 +31,6 @@ const TraineesInfo = () => {
     await deleteTrainee({ jwt, id });
   };
 
-  const [searchString, setSearchString] = useState("");
   const onSubmitSearch = () => {
     setSearchQuery(searchString);
   };
@@ -96,8 +98,8 @@ const TraineesInfo = () => {
               name="traineePerPage"
               className="forms-select outline-none bg-white gap-32 w-12 block py-2 "
             >
-              <option value="10" selected>
-                10
+              <option value={DEFAULTTRAINEESPERPAGE} selected>
+             {DEFAULTTRAINEESPERPAGE}
               </option>
               <option value="20">20</option>
               <option value="30">30</option>
@@ -107,9 +109,7 @@ const TraineesInfo = () => {
           </label>
         </div>
       </div>
-      {isFetching ? (
-        <Loader />
-      ) : (
+     
         <table className="w-full my-8">
           <thead className="bg-[#0077B6] bg-opacity-20 h-20">
             <tr className="">
@@ -119,13 +119,13 @@ const TraineesInfo = () => {
               <td className="rounded-r-xl pl-12 font-semibold">Action</td>
             </tr>
           </thead>
-          {trainerData.status === "pending" ? (
+          {isTrainerFetching ? (
             <div className="flex w-screen items-center justify-center h-[50vh]">
               <Loader />
             </div>
           ) : (
             <tbody className="w-full">
-              {trainerData.data?.map((trainee: any, index: number) => (
+              {data?.map((trainee: any, index: number) => (
                 <tr className="border-b border-black h-[100px] ">
                   <td className="text-base font-medium pl-12">{index + 1}</td>
                   <td className="text-base font-medium pl-12">
@@ -149,7 +149,6 @@ const TraineesInfo = () => {
             </tbody>
           )}
         </table>
-      )}
       {openPopup && (
         <AddingTraineeModal jwt={jwt} closePopup={() => setOpenPopup(false)} />
       )}

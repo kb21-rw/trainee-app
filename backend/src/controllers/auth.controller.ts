@@ -93,7 +93,7 @@ export const login = async (req: Request, res: Response) => {
 export const getUserProfile = async (req: any, res: Response) => {
   try {
     const userId = req.user.id;
-    const user = await User.findById(userId,{password:0});
+    const user = await User.findById(userId, { password: 0 });
     if (!user) {
       return res.status(404).send("User not found");
     }
@@ -163,7 +163,7 @@ export const get_coaches = async (req: any, res: Response) => {
   try {
     const { role } = req.user;
     const searchString = req.query.searchString || "";
-    const coachesPerPage = Number(req.query.coachesPerPage) || 10
+    const coachesPerPage = Number(req.query.coachesPerPage) || 10;
     const sortBy = req.query.sortBy || "entry";
     if (role !== "ADMIN") {
       return res.status(403).send("Not allowed to view coaches");
@@ -171,14 +171,11 @@ export const get_coaches = async (req: any, res: Response) => {
     const coaches = await User.aggregate([
       {
         $match: {
-          
-            
-              $or: [
-                { name: { $regex:  new RegExp(searchString, 'i')} },
-                { email: { $regex: new RegExp(searchString, 'i') } }
-              ],
-            role: { $in: ["ADMIN", "COACH"] } 
-          
+          $or: [
+            { name: { $regex: new RegExp(searchString, "i") } },
+            { email: { $regex: new RegExp(searchString, "i") } },
+          ],
+          role: { $in: ["ADMIN", "COACH"] },
         },
       },
       {
@@ -204,11 +201,11 @@ export const get_coaches = async (req: any, res: Response) => {
         },
       },
       {
-        $sort: { [sortBy]: 1  }
+        $sort: { [sortBy]: 1 },
       },
       {
-        $limit: coachesPerPage
-      }
+        $limit: coachesPerPage,
+      },
     ]);
     return res.status(200).json(coaches);
   } catch (error) {
@@ -217,19 +214,14 @@ export const get_coaches = async (req: any, res: Response) => {
 };
 export const get_trainees = async (req: any, res: Response) => {
   const searchString = req.query.searchString || "";
-    const traineesPerPage = Number(req.query.coachesPerPage) || 10
-    const sortBy = req.query.sortBy || "entry";
+  const traineesPerPage = Number(req.query.coachesPerPage) || 10;
+  const sortBy = req.query.sortBy || "entry";
   try {
     const trainees = await User.aggregate([
       {
-        $match: { 
-            
-              $or: [
-                { name: { $regex:  new RegExp(searchString, 'i')} },
-              ],
-            
-            role: "TRAINEE" 
-          
+        $match: {
+          $or: [{ name: { $regex: new RegExp(searchString, "i") } }],
+          role: "TRAINEE",
         },
       },
       {
@@ -267,15 +259,15 @@ export const get_trainees = async (req: any, res: Response) => {
             },
           },
         },
-      },    
-      {
-        $sort: { [sortBy]: 1 }
       },
       {
-        $limit: traineesPerPage
-      }
+        $sort: { [sortBy]: 1 },
+      },
+      {
+        $limit: traineesPerPage,
+      },
     ]);
-    console.log({trainees})
+    
 
     return res.status(200).json(trainees);
   } catch (error) {
@@ -283,11 +275,20 @@ export const get_trainees = async (req: any, res: Response) => {
   }
 };
 export const get_my_trainees = async (req: any, res: Response) => {
+  const searchString = req.query.searchString || "";
+  const traineesPerPage = Number(req.query.coachesPerPage) || 10;
+  const sortBy = req.query.sortBy || "entry";
   try {
     const {id} = req.user;
     const coach = await User.findById(id)
     const trainees = await User.aggregate([
-      { $match: { role: "TRAINEE", coach: coach?._id } },
+      {
+        $match: {
+          coach: coach?._id,
+          role: "TRAINEE",
+          $or: [{ name: { $regex: new RegExp(searchString, "i") } }],
+        },
+      },
       {
         $lookup: {
           from: "users",
@@ -323,6 +324,12 @@ export const get_my_trainees = async (req: any, res: Response) => {
             },
           },
         },
+      },
+      {
+        $sort: { [sortBy]: 1 },
+      },
+      {
+        $limit: traineesPerPage,
       },
     ]);
     return res.status(200).json(trainees);

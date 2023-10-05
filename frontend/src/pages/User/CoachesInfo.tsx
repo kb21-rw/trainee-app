@@ -12,13 +12,14 @@ import {
 } from "../../features/user/apiSlice";
 import AddingCoachModal from "../../components/modals/AddingCoachModal";
 
+const DEFAULTCOACHESPERPAGE="10"
 const CoachesInfo = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
   const searchRef = useRef<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("entry");
-  const [usersPerPage, setUsersPerPage] = useState("10");
+  const [usersPerPage, setUsersPerPage] = useState(DEFAULTCOACHESPERPAGE);
   const [query, setQuery] = useState("");
   const coachesData = useGetAllCoachesQuery({ jwt, query });
   const [openPopup, setOpenPopup] = useState(false);
@@ -83,7 +84,6 @@ const CoachesInfo = () => {
                   Entry
                 </option>
                 <option value="name">Name</option>
-                <option value="email">Email</option>
                 <option value="role">Role</option>
               </select>
             </label>
@@ -98,8 +98,8 @@ const CoachesInfo = () => {
                 name="coachePerPage"
                 className="forms-select outline-none bg-white gap-32 w-12 block py-2 "
               >
-                <option value="10" selected>
-                  10
+                <option value={DEFAULTCOACHESPERPAGE} selected>
+                  {DEFAULTCOACHESPERPAGE}
                 </option>
                 <option value="20">20</option>
                 <option value="30">30</option>
