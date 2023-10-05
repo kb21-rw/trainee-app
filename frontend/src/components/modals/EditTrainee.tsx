@@ -18,7 +18,7 @@ const EditTrainee = ({
   trainee: any
 }) => {
   const [editTrainee, { isError, isLoading, error }] = useEditTraineeMutation();
-  const coacheesData = useGetAllUsersQuery(jwt)
+  const coacheesData = useGetAllUsersQuery(jwt) 
   const {
     register,
     handleSubmit,

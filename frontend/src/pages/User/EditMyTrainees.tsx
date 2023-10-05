@@ -8,12 +8,16 @@ import Cookies from "universal-cookie";
 import Loader from "../../components/ui/Loader";
 import { useGetMyTraineesQuery } from "../../features/user/apiSlice";
 import AddingTraineeModal from "../../components/modals/AddingTraineeModal";
+import EditUser from "../../components/modals/EditUser";
+import EditTrainee from "../../components/modals/EditTrainee";
 
 const EditMyTrainees = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
   const trainerData = useGetMyTraineesQuery(jwt);
   const [openPopup, setOpenPopup] = useState(false);
+  const [selectedItem, setSelectecItem] = useState<number>()
+  const [openEditPopup, setOpenEditPopup] = useState<boolean>(false)
   console.log({ trainerData });
   return (
     <div className="py-8">
@@ -84,9 +88,12 @@ const EditMyTrainees = () => {
                 </td>
                 <td className="text-base font-medium pl-12">
                   <div className="flex items-center gap-4 w-full h-full">
-                    <button>
-                      <Edit />
-                    </button>{" "}
+                  <button onClick={() => {setSelectecItem(index), setOpenEditPopup(true)} }>
+                    <Edit />
+                  </button>
+                  { selectedItem === index && openEditPopup && (
+                <EditTrainee jwt={ jwt} closePopup={()=> setOpenEditPopup(false)} trainee={item} id={item?._id} />
+              )}
                   </div>
                 </td>
               </tr>
