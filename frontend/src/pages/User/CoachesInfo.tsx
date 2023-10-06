@@ -1,17 +1,18 @@
-import React, { useState } from 'react'
-import Button from '../../components/ui/Button'
-import Plus from "../../assets/Plus"
+import React, { useState } from "react";
+import Button from "../../components/ui/Button";
+import Plus from "../../assets/Plus";
 import Sort from "../../assets/Sort";
 import Edit from '../../assets/Edit'
 import Delete from '../../assets/Delete'
 import Cookies from "universal-cookie"
 import Loader from '../../components/ui/Loader'
 import { useGetAllUsersQuery } from '../../features/user/apiSlice';
-import { useDeleteCoachMutation, useGetAllCoachesQuery } from '../../features/user/apiSlice';
+import { useDeleteCoachMutation } from '../../features/user/apiSlice';
 import AddingCoachModal from '../../components/modals/AddingCoachModal';
 import EditUser from '../../components/modals/EditUser';
 
 
+const DEFAULTCOACHESPERPAGE="10"
 const CoachesInfo = () => {
   const cookies = new Cookies()
   const jwt = cookies.get("jwt")
@@ -110,4 +111,4 @@ const CoachesInfo = () => {
   )
 }
 
-export default CoachesInfo
+export default CoachesInfo;

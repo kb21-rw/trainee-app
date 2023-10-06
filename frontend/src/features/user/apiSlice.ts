@@ -1,10 +1,10 @@
-import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import Cookies from "universal-cookie";
 
 const api_url = import.meta.env.VITE_API_URL;
 
-const cookies = new Cookies()
-const jwt = cookies.get("jwt")
+const cookies = new Cookies();
+const jwt = cookies.get("jwt");
 
 export  const usersApi:any = createApi({
     reducerPath: "usersApi",
@@ -129,48 +129,66 @@ export  const usersApi:any = createApi({
             invalidatesTags: ["trainees",]
         }),
 
-        login: builder.mutation({
-            query: (body) => {
-                return ({
-                url: '/auth/login',
-                method: 'POST',
-                body: {...body}
-            })}, 
-            invalidatesTags: ["profile"]
-        }),
-        resetPassword: builder.mutation({
-            query: (body) => {
-                return ({
-                url: '/auth/reset-password',
-                method: 'POST',
-                body
-            })}, 
-        }),
-        getProfile: builder.query({
-            query: (jwt) => ({
-                url: '/auth/profile',
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                },
-            }),
-            providesTags: ["profile"]
-        }),
-        updateProfile: builder.mutation({
-            query: (args) => {
-                const {jwt, profileData} = args
-                console.log({args})
-                return ({
-                url: '/auth/profile',
-                method: 'PUT',
-                headers: {
-                    Authorization: `Bearer ${jwt}`,
-                },
-                body: {...profileData}
-            })}, 
-            invalidatesTags: ["profile"]
-        }),
-    })
-})
+    login: builder.mutation({
+      query: (body) => {
+        return {
+          url: "/auth/login",
+          method: "POST",
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["profile"],
+    }),
+    resetPassword: builder.mutation({
+      query: (body) => {
+        return {
+          url: "/auth/reset-password",
+          method: "POST",
+          body,
+        };
+      },
+    }),
+    getProfile: builder.query({
+      query: (jwt) => ({
+        url: "/auth/profile",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      }),
+      providesTags: ["profile"],
+    }),
+    updateProfile: builder.mutation({
+      query: (args) => {
+        const { jwt, profileData } = args;
+        console.log({ args });
+        return {
+          url: "/auth/profile",
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...profileData },
+        };
+      },
+      invalidatesTags: ["profile"],
+    }),
+  }),
+});
 
-export const { useGetAllTraineesQuery, useGetAllCoachesQuery, useCreateCoachMutation, useCreateTraineeMutation, useLoginMutation, useGetProfileQuery, useUpdateProfileMutation, useResetPasswordMutation, useDeleteCoachMutation, useDeleteTraineeMutation, useGetMyTraineesQuery, useEditUserMutation, useGetAllUsersQuery, useEditTraineeMutation  } = usersApi
+export const {
+  useGetAllTraineesQuery,
+  useGetAllCoachesQuery,
+  useCreateCoachMutation,
+  useCreateTraineeMutation,
+  useLoginMutation,
+  useGetProfileQuery,
+  useUpdateProfileMutation,
+  useResetPasswordMutation,
+  useDeleteCoachMutation,
+  useDeleteTraineeMutation,
+  useGetMyTraineesQuery,
+  useEditUserMutation, 
+  useGetAllUsersQuery, 
+  useEditTraineeMutation  
+} = usersApi;

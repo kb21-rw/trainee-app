@@ -21,13 +21,13 @@ const Layout = () => {
   const menu = data?.role==="ADMIN"&&adminMenu || data?.role ==="COACH" &&coachMenu ||[]
   return (
     <div className='h-screen flex flex-col px-16 py-4 max-w-[1920px] mx-auto'>
-      <nav className='flex items-center justify-between'>
-        <div className='flex items-center gap-20'>
-          {menu.map((element, index) => <NavLink key={index} to={element.link} className={({ isActive }) => `whitespace-nowrap text-xl font-medium ${isActive ? "text-primary-dark" : "text-secondary-dark"}`} end>{element.title}</NavLink>)
+      <nav className='flex items-center justify-between gap-20'>
+        <div className='flex items-center gap-10'>
+          {menu.map((element, index) => <NavLink key={index} to={element.link} className={({ isActive }) => `whitespace-nowrap placeholder:text-red-500 text-xl font-medium ${isActive ? "text-primary-dark" : "text-secondary-dark"}`} end>{element.title}</NavLink>)
           }
 
         </div>
-        <div className='flex items-center gap-20'>
+        <div className='flex items-center gap-10'>
           {<NavLink to="/profile-settings" className={({ isActive }) => `whitespace-nowrap text-xl font-medium ${isActive ? "text-primary-dark" : "text-secondary-dark"}`}>{data?.name}</NavLink>}
           <button className='text-xl font-medium text-secondary-dark' onClick={()=>{cookies.remove("jwt"); navigate("/login")}}>logout</button>
         </div>

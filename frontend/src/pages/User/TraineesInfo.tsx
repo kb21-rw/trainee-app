@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
-import Button from '../../components/ui/Button'
-import Plus from "../../assets/Plus"
+import React, { useState } from "react";
+import Button from "../../components/ui/Button";
+import Plus from "../../assets/Plus";
 import Sort from "../../assets/Sort";
 import Edit from '../../assets/Edit'
 import Delete from '../../assets/Delete'
@@ -98,4 +98,5 @@ const TraineesInfo = () => {
   )
 }
 
-export default TraineesInfo
+
+export default TraineesInfo;
