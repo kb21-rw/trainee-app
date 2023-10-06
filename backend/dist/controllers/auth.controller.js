@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.assignCoach = exports.get_my_trainees = exports.get_trainees = exports.get_coaches = exports.reset_password = exports.updateUserProfile = exports.getUserProfile = exports.login = exports.register = void 0;
+exports.editTrainee = exports.editUser = exports.deleteUser = exports.assignCoach = exports.get_my_trainees = exports.get_trainees = exports.get_users = exports.get_coaches = exports.reset_password = exports.updateUserProfile = exports.getUserProfile = exports.login = exports.register = void 0;
 const authValidation_1 = require("../validations/authValidation");
 const User_1 = __importDefault(require("../models/User"));
 const helpers_1 = require("../utils/helpers");
@@ -198,6 +198,49 @@ const get_coaches = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.get_coaches = get_coaches;
+const get_users = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { role } = req.user;
+        if (role !== "ADMIN") {
+            return res.status(403).send("Not allowed to view coaches");
+        }
+        const coaches = yield User_1.default.aggregate([
+            {
+                $match: { $or: [
+                        { role: "ADMIN" },
+                        { role: "COACH" }
+                    ] },
+            },
+            {
+                $lookup: {
+                    from: "users",
+                    localField: "_id",
+                    foreignField: "coach",
+                    as: "trainees",
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    name: 1,
+                    email: 1,
+                    role: 1,
+                    trainees: {
+                        _id: 1,
+                        name: 1,
+                        email: 1,
+                        role: 1,
+                    },
+                },
+            },
+        ]);
+        return res.status(200).json(coaches);
+    }
+    catch (error) {
+        res.status(400).send(400);
+    }
+});
+exports.get_users = get_users;
 const get_trainees = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const searchString = req.query.searchString || "";
     const traineesPerPage = Number(req.query.coachesPerPage) || 10;
@@ -366,3 +409,58 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 });
 exports.deleteUser = deleteUser;
+const editUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = req.params.id;
+        const { name, email, role } = req.body;
+        const validationResult = authValidation_1.editUserSchema.validate({ name, email, role });
+        if (validationResult.error) {
+            console.log(validationResult);
+        }
+        const user = yield User_1.default.findById(userId);
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+        if (name) {
+            user.name = name;
+        }
+        if (email) {
+            user.email = email;
+        }
+        if (role) {
+            user.role = role;
+        }
+        yield user.save();
+        return res.status(200).send(user);
+    }
+    catch (error) {
+        return res.status(500).send("Internal Server Error");
+    }
+});
+exports.editUser = editUser;
+const editTrainee = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const userId = req.params.id;
+        const { name, coach } = req.body;
+        const validationResult = authValidation_1.editUserSchema.validate({ name, coach });
+        if (validationResult.error) {
+            console.log(validationResult);
+        }
+        const user = yield User_1.default.findById(userId);
+        if (!user) {
+            return res.status(404).send("User not found");
+        }
+        if (name) {
+            user.name = name;
+        }
+        if (coach) {
+            user.coach = coach;
+        }
+        yield user.save();
+        return res.status(200).send(user);
+    }
+    catch (error) {
+        return res.status(500).send("Internal Server Error");
+    }
+});
+exports.editTrainee = editTrainee;

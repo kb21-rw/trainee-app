@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef} from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Button from "../../components/ui/Button";
 import Plus from "../../assets/Plus";
 import Sort from "../../assets/Sort";
@@ -7,12 +7,14 @@ import Delete from "../../assets/Delete";
 import Cookies from "universal-cookie";
 import Loader from "../../components/ui/Loader";
 import {
-  useDeleteCoachMutation,
   useGetAllCoachesQuery,
+  useGetAllUsersQuery,
 } from "../../features/user/apiSlice";
+import { useDeleteCoachMutation } from "../../features/user/apiSlice";
 import AddingCoachModal from "../../components/modals/AddingCoachModal";
+import EditUser from "../../components/modals/EditUser";
 
-const DEFAULTCOACHESPERPAGE="10"
+const DEFAULTCOACHESPERPAGE = "10";
 const CoachesInfo = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
@@ -22,11 +24,14 @@ const CoachesInfo = () => {
   const [usersPerPage, setUsersPerPage] = useState(DEFAULTCOACHESPERPAGE);
   const [query, setQuery] = useState("");
   const coachesData = useGetAllCoachesQuery({ jwt, query });
-  const [openPopup, setOpenPopup] = useState(false);
+  const usersData = useGetAllUsersQuery(jwt);
+  const [openPopup, setOpenPopup] = useState<boolean>(false);
+  const [selectedItem, setSelectecItem] = useState<number>();
+  const [openEditPopup, setOpenEditPopup] = useState<boolean>(false);
   const [deleteCoach, { isError, isLoading, error, isFetching }] =
     useDeleteCoachMutation();
-  const handleDeleteCoach = async (id: string) => {
-    await deleteCoach({ jwt, id });
+  const handleDeleteCoach = (id: string) => {
+    const result = deleteCoach({ jwt, id });
   };
   const [searchString, setSearchString] = useState("");
   const onSubmitSearch = () => {
@@ -42,6 +47,7 @@ const CoachesInfo = () => {
       `?searchString=${searchQuery}&sortBy=${sortBy}&coachesPerPage=${usersPerPage}`
     );
   }, [searchQuery, sortBy, usersPerPage]);
+
   return (
     <div>
       <div className="py-8">
@@ -109,56 +115,57 @@ const CoachesInfo = () => {
             </label>
           </div>
         </div>
-        {isFetching ? (
-          <Loader />
-        ) : (
-          <table className="w-full my-8 table-auto">
-            <thead className="bg-[#0077B6] bg-opacity-20 h-20">
-              <tr className="w-full">
-                <td className="rounded-l-xl pl-12 font-semibold">No</td>
-                <td className="pl-12 font-semibold">Name</td>
-                <td className="pl-12 font-semibold">Email</td>
-                <td className="pl-12 font-semibold">Role</td>
-                <td className="rounded-r-xl pl-12 font-semibold">Action</td>
-              </tr>
-            </thead>
-            {coachesData.status === "pending" ? (
-              <div className="flex w-screen items-center justify-center h-[50vh]">
-                <Loader />
-              </div>
-            ) : (
-              <tbody className="w-full">
-                {coachesData.data?.map((coach: any, index: number) => (
-                  <tr
-                    key={coach._id}
-                    className="border-b border-black h-[100px] w-full"
-                  >
-                    <td className="text-base font-medium pl-12">{index + 1}</td>
-                    <td className="text-base font-medium pl-12">
-                      {coach?.name}
-                    </td>
-                    <td className="text-base font-medium pl-12">
-                      {coach?.email}
-                    </td>
-                    <td className="text-base font-medium pl-12">
-                      {coach?.role}
-                    </td>
-                    <td className="text-base font-medium pl-12">
-                      <div className="flex items-center gap-4 w-full h-full">
-                        <button>
-                          <Edit />
-                        </button>{" "}
-                        <button onClick={() => handleDeleteCoach(coach._id)}>
-                          <Delete />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            )}
-          </table>
-        )}
+
+        <table className="w-full my-8 table-auto">
+          <thead className="bg-[#0077B6] bg-opacity-20 h-20">
+            <tr className="w-full">
+              <td className="rounded-l-xl pl-12 font-semibold">No</td>
+              <td className="pl-12 font-semibold">Name</td>
+              <td className="pl-12 font-semibold">Email</td>
+              <td className="pl-12 font-semibold">Role</td>
+              <td className="rounded-r-xl pl-12 font-semibold">Action</td>
+            </tr>
+          </thead>
+          {isFetching ? (
+            <div className="flex w-screen items-center justify-center h-[50vh]">
+              <Loader />
+            </div>
+          ) : (
+            <tbody className="w-full">
+              {usersData.data?.map((coach: any, index: number) => (
+                <tr
+                  key={coach._id}
+                  className="border-b border-black h-[100px] w-full"
+                >
+                  <td className="text-base font-medium pl-12">{index + 1}</td>
+                  <td className="text-base font-medium pl-12">{coach?.name}</td>
+                  <td className="text-base font-medium pl-12">
+                    {coach?.email}
+                  </td>
+                  <td className="text-base font-medium pl-12">{coach?.role}</td>
+                  <td className="text-base font-medium pl-12">
+                    <div className="flex items-center gap-4 w-full h-full">
+                    <button onClick={() => {setSelectecItem(index), setOpenEditPopup(true)} }>
+                    <Edit />
+                  </button>
+                      <button onClick={() => handleDeleteCoach(coach._id)}>
+                        <Delete />
+                      </button>
+                    </div>
+                  </td>
+                  {selectedItem === index && openEditPopup && (
+                    <EditUser
+                      jwt={jwt}
+                      closePopup={() => setOpenEditPopup(false)}
+                      user={coach}
+                      id={coach?._id}
+                    />
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          )}
+        </table>
       </div>
       {openPopup && (
         <AddingCoachModal jwt={jwt} closePopup={() => setOpenPopup(false)} />

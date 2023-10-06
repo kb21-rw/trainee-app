@@ -9,7 +9,7 @@ const jwt = cookies.get("jwt");
 export const usersApi: any = createApi({
   reducerPath: "usersApi",
   baseQuery: fetchBaseQuery({ baseUrl: api_url }),
-  tagTypes: ["coaches", "trainees", "myTrainees", "profile"],
+  tagTypes: ["coaches", "trainees", "myTrainees", "profile", "users"],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
       query: (args) => {
@@ -35,8 +35,17 @@ export const usersApi: any = createApi({
           },
         };
       },
-
       providesTags: ["myTrainees"],
+    }),
+    getAllUsers: builder.query({
+      query: (jwt) => ({
+        url: "/auth/users",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      }),
+      providesTags: ["users"],
     }),
     getAllCoaches: builder.query({
       query: (args) => {
@@ -63,7 +72,7 @@ export const usersApi: any = createApi({
           body: { ...body },
         };
       },
-      invalidatesTags: ["coaches"],
+      invalidatesTags: ["coaches", "users"],
     }),
     createTrainee: builder.mutation({
       query: (args) => {
@@ -79,6 +88,35 @@ export const usersApi: any = createApi({
       },
       invalidatesTags: ["trainees"],
     }),
+    editUser: builder.mutation({
+      query: (args) => {
+        const { jwt, body, id } = args;
+        return {
+          url: `/auth/edit-user/${id}`,
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["users"],
+    }),
+    editTrainee: builder.mutation({
+      query: (args) => {
+        const { jwt, body, id } = args;
+        return {
+          url: `/auth/edit-trainee/${id}`,
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["trainees", "myTrainees"],
+    }),
+
     deleteCoach: builder.mutation({
       query: (args) => {
         const { jwt, id } = args;
@@ -90,7 +128,7 @@ export const usersApi: any = createApi({
           },
         };
       },
-      invalidatesTags: ["coaches"],
+      invalidatesTags: ["users"],
     }),
     deleteTrainee: builder.mutation({
       query: (args) => {
@@ -165,4 +203,7 @@ export const {
   useDeleteCoachMutation,
   useDeleteTraineeMutation,
   useGetMyTraineesQuery,
+  useEditUserMutation,
+  useGetAllUsersQuery,
+  useEditTraineeMutation,
 } = usersApi;

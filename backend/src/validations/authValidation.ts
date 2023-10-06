@@ -5,7 +5,13 @@ export const registerSchema = Joi.object({
   email: Joi.string().email(),
   role: Joi.string().valid("ADMIN", "COACH", "TRAINEE").required(),
   coach: Joi.string(),
+});
 
+export const editUserSchema = Joi.object({
+  name: Joi.string().min(3).max(30).optional(),
+  email: Joi.string().email().optional(),
+  role: Joi.string().valid("ADMIN", "COACH").optional(),
+  coach: Joi.string().optional(),
 });
 
 export const loginSchema = Joi.object({
