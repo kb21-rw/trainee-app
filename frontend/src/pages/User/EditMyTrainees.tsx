@@ -9,7 +9,7 @@ import AddingTraineeModal from "../../components/modals/AddingTraineeModal";
 import EditUser from "../../components/modals/EditUser";
 import EditTrainee from "../../components/modals/EditTrainee";
 
-const DEFAULTTRAINEESPERPAGE="10"
+const DEFAULTTRAINEESPERPAGE = "10";
 const EditMyTrainees = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
@@ -19,10 +19,14 @@ const EditMyTrainees = () => {
   const [usersPerPage, setUsersPerPage] = useState(DEFAULTTRAINEESPERPAGE);
   const [searchString, setSearchString] = useState("");
   const [query, setQuery] = useState("");
-  const { data, isLoading:isTrainerLoading, isFetching: isTrainerFetching} = useGetMyTraineesQuery({ jwt, query });
+  const {
+    data,
+    isLoading: isTrainerLoading,
+    isFetching: isTrainerFetching,
+  } = useGetMyTraineesQuery({ jwt, query });
   const [openPopup, setOpenPopup] = useState(false);
-  const [selectedItem, setSelectecItem] = useState<number>()
-  const [openEditPopup, setOpenEditPopup] = useState<boolean>(false)
+  const [selectedItem, setSelectecItem] = useState<number>();
+  const [openEditPopup, setOpenEditPopup] = useState<boolean>(false);
   const onSubmitSearch = () => {
     setSearchQuery(searchString);
   };
@@ -36,7 +40,7 @@ const EditMyTrainees = () => {
       `?searchString=${searchQuery}&sortBy=${sortBy}&coachesPerPage=${usersPerPage}`
     );
   }, [searchQuery, sortBy, usersPerPage]);
- 
+
   return (
     <div className="py-8">
       <div className="flex items-center justify-between mt-24">
@@ -86,7 +90,7 @@ const EditMyTrainees = () => {
               className="forms-select outline-none bg-white gap-32 w-12 block py-2 "
             >
               <option value={DEFAULTTRAINEESPERPAGE} selected>
-             {DEFAULTTRAINEESPERPAGE}
+                {DEFAULTTRAINEESPERPAGE}
               </option>
               <option value="20">20</option>
               <option value="30">30</option>
@@ -105,27 +109,36 @@ const EditMyTrainees = () => {
             <td className="rounded-r-xl pl-12 font-semibold">Edit</td>
           </tr>
         </thead>
-        {data.status === "pending" ? (
+        {isTrainerFetching ? (
           <div className="flex w-screen items-center justify-center h-[50vh]">
             <Loader />
           </div>
         ) : (
           <tbody className="w-full">
-            {data.data?.map((item: any, index: number) => (
-              <tr className="border-b border-black h-[100px] ">
+            {data.map((trainee: any, index: number) => (
+              <tr key={trainee._id} className="border-b border-black h-[100px] ">
                 <td className="text-base font-medium pl-12">{index + 1}</td>
-                <td className="text-base font-medium pl-12">{item.name}</td>
+                <td className="text-base font-medium pl-12">{trainee.name}</td>
                 <td className="text-base font-medium pl-12">
-                  {item.coach?.name || "No coach assigned"}
+                  {trainee.coach?.name || "No coach assigned"}
                 </td>
                 <td className="text-base font-medium pl-12">
                   <div className="flex items-center gap-4 w-full h-full">
-                  <button onClick={() => {setSelectecItem(index), setOpenEditPopup(true)} }>
-                    <Edit />
-                  </button>
-                  { selectedItem === index && openEditPopup && (
-                <EditTrainee jwt={ jwt} closePopup={()=> setOpenEditPopup(false)} trainee={item} id={item?._id} />
-              )}
+                    <button
+                      onClick={() => {
+                        setSelectecItem(index), setOpenEditPopup(true);
+                      }}
+                    >
+                      <Edit />
+                    </button>
+                    {selectedItem === index && openEditPopup && (
+                      <EditTrainee
+                        jwt={jwt}
+                        closePopup={() => setOpenEditPopup(false)}
+                        trainee={trainee}
+                        id={trainee?._id}
+                      />
+                    )}
                   </div>
                 </td>
               </tr>
@@ -133,9 +146,6 @@ const EditMyTrainees = () => {
           </tbody>
         )}
       </table>
-      {openPopup && (
-        <AddingTraineeModal jwt={jwt} closePopup={() => setOpenPopup(false)} />
-      )}
     </div>
   );
 };
