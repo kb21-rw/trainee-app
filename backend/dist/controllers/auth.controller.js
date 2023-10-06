@@ -21,7 +21,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 dotenv_1.default.config();
 const secret = process.env.ACCESS_TOKEN_KEY || "";
-const ACCESS_TOKEN_EXPIRATION = "500m"; // 5 minutes
+const ACCESS_TOKEN_EXPIRATION = "5m"; // 5 minutes
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let newUser;
     try {
