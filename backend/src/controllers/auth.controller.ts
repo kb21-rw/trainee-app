@@ -48,8 +48,8 @@ export const register = async (req: any, res: Response) => {
         createdUser.name,
         createdUser.email,
         createdUser.role,
-        password
-      )
+        password,
+      ),
     ).catch((error) => console.error(error));
     return res.status(201).send({ ...result, password });
   } catch (error) {
@@ -77,7 +77,7 @@ export const login = async (req: Request, res: Response) => {
       secret,
       {
         expiresIn: ACCESS_TOKEN_EXPIRATION,
-      }
+      },
     );
     return res
       .status(200)
@@ -152,7 +152,7 @@ export const reset_password = async (req: Request, res: Response) => {
       user.name,
       user.email,
       "Hello " + user.name,
-      generateResetPasswordMessage(user.name, password)
+      generateResetPasswordMessage(user.name, password),
     );
     return res.status(200).json({ password });
   } catch (error: any) {
@@ -222,10 +222,7 @@ export const get_users = async (req: any, res: Response) => {
     }
     const coaches = await User.aggregate([
       {
-        $match: { $or: [
-          { role: "ADMIN" },
-          { role: "COACH" }
-        ] }, 
+        $match: { $or: [{ role: "ADMIN" }, { role: "COACH" }] },
       },
       {
         $lookup: {
@@ -311,7 +308,6 @@ export const get_trainees = async (req: any, res: Response) => {
         $limit: traineesPerPage,
       },
     ]);
-    
 
     return res.status(200).json(trainees);
   } catch (error) {
@@ -323,8 +319,8 @@ export const get_my_trainees = async (req: any, res: Response) => {
   const traineesPerPage = Number(req.query.coachesPerPage) || 10;
   const sortBy = req.query.sortBy || "entry";
   try {
-    const {id} = req.user;
-    const coach = await User.findById(id)
+    const { id } = req.user;
+    const coach = await User.findById(id);
     const trainees = await User.aggregate([
       {
         $match: {
@@ -421,16 +417,15 @@ export const deleteUser = async (req: any, res: Response) => {
   }
 };
 
-
 export const editUser = async (req: any, res: Response) => {
   try {
     const userId = req.params.id;
-    
+
     const { name, email, role } = req.body;
 
     const validationResult = editUserSchema.validate({ name, email, role });
     if (validationResult.error) {
-      console.log(validationResult)
+      console.log(validationResult);
     }
     const user = await User.findById(userId);
     if (!user) {
@@ -446,7 +441,7 @@ export const editUser = async (req: any, res: Response) => {
       user.role = role;
     }
 
-    await user.save();    
+    await user.save();
 
     return res.status(200).send(user);
   } catch (error) {
@@ -457,12 +452,12 @@ export const editUser = async (req: any, res: Response) => {
 export const editTrainee = async (req: any, res: Response) => {
   try {
     const userId = req.params.id;
-    
+
     const { name, coach } = req.body;
 
     const validationResult = editUserSchema.validate({ name, coach });
     if (validationResult.error) {
-      console.log(validationResult)
+      console.log(validationResult);
     }
     const user = await User.findById(userId);
     if (!user) {
@@ -474,8 +469,8 @@ export const editTrainee = async (req: any, res: Response) => {
     if (coach) {
       user.coach = coach;
     }
-    
-    await user.save();    
+
+    await user.save();
 
     return res.status(200).send(user);
   } catch (error) {

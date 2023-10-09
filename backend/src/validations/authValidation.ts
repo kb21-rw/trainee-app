@@ -16,18 +16,18 @@ export const editUserSchema = Joi.object({
 
 export const loginSchema = Joi.object({
   email: Joi.string().email().required(),
-  password: Joi.string().required()
+  password: Joi.string().required(),
 });
 
 export const ProfileSchema = Joi.object({
   name: Joi.string().optional(),
   email: Joi.string().email().optional(),
-  password: Joi.string().min(6).optional()
+  password: Joi.string().min(6).optional(),
 });
 
 export const coachAssignSchema = Joi.object({
-  coachId: Joi.string().required()
+  coachId: Joi.string().required(),
 });
 export const resetPasswordSchema = Joi.object({
-  email: Joi.string().email().required()
-})
+  email: Joi.string().email().required(),
+});
