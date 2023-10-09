@@ -17,18 +17,22 @@ const AddingTraineeModal = ({
   closePopup: () => void;
   jwt: string;
 }) => {
-  const [createTrainee, { isError, isLoading, error, isSuccess }] = useCreateTraineeMutation();
-  const coachesData = useGetAllCoachesQuery({jwt, query:""});
+  const [createTrainee, { isError, isLoading, error, isSuccess }] =
+    useCreateTraineeMutation();
+  const coachesData = useGetAllCoachesQuery({ jwt, query: "" });
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
-    if(!data?.coach){
-        delete data.coach
+    if (!data?.coach) {
+      delete data.coach;
     }
-    const result =  await createTrainee({jwt, body:{...data, role:"TRAINEE"}})
+    const result = await createTrainee({
+      jwt,
+      body: { ...data, role: "TRAINEE" },
+    });
   };
   let errorMessage: any = errors.name?.message;
   return (
@@ -38,8 +42,12 @@ const AddingTraineeModal = ({
           <Loader />
         </div>
       )}
-      {isError?<Alert type="error">{error}</Alert>:errorMessage&&<Alert type="error">{errorMessage}</Alert>}
-      { isSuccess&&<Alert type='success'>Trainee was added succesfully</Alert>}
+      {isError ? (
+        <Alert type="error">{error}</Alert>
+      ) : (
+        errorMessage && <Alert type="error">{errorMessage}</Alert>
+      )}
+      {isSuccess && <Alert type="success">Trainee was added succesfully</Alert>}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-12 w-full"
@@ -55,21 +63,23 @@ const AddingTraineeModal = ({
           }}
         />
         <div className="flex flex-col gap-5">
-           <label htmlFor="coach" className="text-lg font-medium">
-    Select coach:
-      </label>
+          <label htmlFor="coach" className="text-lg font-medium">
+            Select coach:
+          </label>
 
-        <select
-          className="form-select rounded-xl h-[58px] border-gray-200"
-          {...register("coach")}
-        >
-            <option key={1} value="">Select a Coach</option>
-          {coachesData.data?.map((coach: any, index: number) => (
-            <option key={coach?._id} value={coach?._id}>
-              {coach?.name}
+          <select
+            className="form-select rounded-xl h-[58px] border-gray-200"
+            {...register("coach")}
+          >
+            <option key={1} value="">
+              Select a Coach
             </option>
-          ))}
-        </select>
+            {coachesData.data?.map((coach: any, index: number) => (
+              <option key={coach?._id} value={coach?._id}>
+                {coach?.name}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="flex gap-2">
           <Button outlined clickHandler={closePopup}>

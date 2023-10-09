@@ -4,23 +4,20 @@ import Close from "../../assets/Close";
 const ModalLayout = ({
   children,
   title,
-  closePopup
+  closePopup,
 }: {
   children: ReactNode;
   title: string;
   closePopup: () => void;
 }) => {
-  useEffect(
-    () => {
-      !closePopup
-        ? (document.body.style.overflow = "unset")
-        : (document.body.style.overflow = "hidden");
-      return () => {
-        document.body.style.overflow = "unset";
-      };
-    },
-    [closePopup]
-  );
+  useEffect(() => {
+    !closePopup
+      ? (document.body.style.overflow = "unset")
+      : (document.body.style.overflow = "hidden");
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [closePopup]);
   return (
     <div className="fixed inset-0 h-screen w-full flex items-center justify-center z-50 bg-secondary-dark bg-opacity-40">
       <div className="bg-white rounded-3xl flex flex-col overflow-y-auto w-[660px] max-h-[70vh] px-8 pt-9 gap-16 pb-8">

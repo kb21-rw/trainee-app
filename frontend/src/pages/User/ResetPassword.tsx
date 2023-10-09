@@ -1,5 +1,5 @@
 import React from "react";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { H1 } from "../../components/ui/Typography";
 import Loader from "../../components/ui/Loader";
 import InputField from "../../components/ui/InputField";
@@ -20,7 +20,7 @@ const ResetPassword = () => {
     const result = await resetPassword({ email: data.email });
   };
   let errorMessage: any = errors.email?.message;
-  console.log({errors})
+  console.log({ errors });
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -30,7 +30,11 @@ const ResetPassword = () => {
       {isLoading && <Loader />}
       <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
         {isSuccess && <Alert type="success">Password reset successful</Alert>}
-        {isError?<Alert type="error">{error}</Alert>:errorMessage&&<Alert type="error">{errorMessage}</Alert>}
+        {isError ? (
+          <Alert type="error">{error}</Alert>
+        ) : (
+          errorMessage && <Alert type="error">{errorMessage}</Alert>
+        )}
         <InputField
           name="email"
           type="email"

@@ -2,7 +2,7 @@ import React, { ReactNode, useState } from "react";
 
 const Alert = ({
   children,
-  type
+  type,
 }: {
   children: ReactNode;
   type: "error" | "success";
@@ -13,9 +13,9 @@ const Alert = ({
   }, 3000);
   return (
     <div
-      className={`w-full py-2 flex justify-center items-center rounded-lg ${type ===
-        "error" && "bg-error-light text-error-dark"} ${type === "success" &&
-        "bg-green-300 text-white"}`}
+      className={`w-full py-2 flex justify-center items-center rounded-lg ${
+        type === "error" && "bg-error-light text-error-dark"
+      } ${type === "success" && "bg-green-300 text-white"}`}
     >
       {children}
     </div>

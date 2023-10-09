@@ -47,7 +47,7 @@ const TraineesInfo = () => {
   };
   useEffect(() => {
     setQuery(
-      `?searchString=${searchQuery}&sortBy=${sortBy}&coachesPerPage=${usersPerPage}`
+      `?searchString=${searchQuery}&sortBy=${sortBy}&coachesPerPage=${usersPerPage}`,
     );
   }, [searchQuery, sortBy, usersPerPage]);
   return (
@@ -59,61 +59,60 @@ const TraineesInfo = () => {
         </Button>
       </div>
       <div className="flex items-center justify-between">
-       
-          <div className="flex w-full  items-center max-w-xl px-1 py-1 h-[58px] border border-[#DBD5E0] rounded-xl">
-            <input
-              className="px-2 flex-1 outline-none border-none h-full"
-              placeholder="Enter name"
-              name="search"
-              value={searchString}
-              onChange={(event) => setSearchString(event.target.value)}
-              ref={searchRef}
-              onKeyDown={handleKeyPress}
-            />
-            <Button clickHandler={onSubmitSearch} variant="small">
-              Search
-            </Button>
-          </div>
-          <div className="flex gap-6 items-center">
-            <label className="flex gap-6 items-center">
-              <div className="flex gap-2 items-center">
-                <Sort />
-                <span className="text-base font-normal text-[#5B576A]">
-                  Sort trainees by:
-                </span>
-              </div>
-              <select
-                value={sortBy}
-                onChange={(event) => setSortBy(event.target.value)}
-                name="sort"
-                className="forms-select outline-none bg-white gap-32 w-[72px] block py-2 "
-              >
-                <option value="all" selected>
-                  Entry
-                </option>
-                <option value="name">Name</option>
-              </select>
-            </label>
-
-            <label className="flex gap-6 items-center">
+        <div className="flex w-full  items-center max-w-xl px-1 py-1 h-[58px] border border-[#DBD5E0] rounded-xl">
+          <input
+            className="px-2 flex-1 outline-none border-none h-full"
+            placeholder="Enter name"
+            name="search"
+            value={searchString}
+            onChange={(event) => setSearchString(event.target.value)}
+            ref={searchRef}
+            onKeyDown={handleKeyPress}
+          />
+          <Button clickHandler={onSubmitSearch} variant="small">
+            Search
+          </Button>
+        </div>
+        <div className="flex gap-6 items-center">
+          <label className="flex gap-6 items-center">
+            <div className="flex gap-2 items-center">
+              <Sort />
               <span className="text-base font-normal text-[#5B576A]">
-                Trainees per page:
+                Sort trainees by:
               </span>
-              <select
-                value={usersPerPage}
-                onChange={(event) => setUsersPerPage(event.target.value)}
-                name="traineePerPage"
-                className="forms-select outline-none bg-white gap-32 w-12 block py-2 "
-              >
-                <option value={DEFAULTTRAINEESPERPAGE} selected>
-                  {DEFAULTTRAINEESPERPAGE}
-                </option>
-                <option value="20">20</option>
-                <option value="30">30</option>
-                <option value="40">40</option>
-                <option value="50">50</option>
-              </select>
-            </label>
+            </div>
+            <select
+              value={sortBy}
+              onChange={(event) => setSortBy(event.target.value)}
+              name="sort"
+              className="forms-select outline-none bg-white gap-32 w-[72px] block py-2 "
+            >
+              <option value="all" selected>
+                Entry
+              </option>
+              <option value="name">Name</option>
+            </select>
+          </label>
+
+          <label className="flex gap-6 items-center">
+            <span className="text-base font-normal text-[#5B576A]">
+              Trainees per page:
+            </span>
+            <select
+              value={usersPerPage}
+              onChange={(event) => setUsersPerPage(event.target.value)}
+              name="traineePerPage"
+              className="forms-select outline-none bg-white gap-32 w-12 block py-2 "
+            >
+              <option value={DEFAULTTRAINEESPERPAGE} selected>
+                {DEFAULTTRAINEESPERPAGE}
+              </option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+            </select>
+          </label>
         </div>
       </div>
       <table className="w-full my-8">
