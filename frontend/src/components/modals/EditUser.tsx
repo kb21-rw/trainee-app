@@ -1,10 +1,10 @@
-import React from 'react'
-import { useEditUserMutation } from '../../features/user/apiSlice';
-import { useForm } from 'react-hook-form';
-import ModalLayout from './ModalLayout';
-import Alert from '../ui/Alert';
-import InputField from '../ui/InputField';
-import Button from '../ui/Button';
+import React from "react";
+import { useEditUserMutation } from "../../features/user/apiSlice";
+import { useForm } from "react-hook-form";
+import ModalLayout from "./ModalLayout";
+import Alert from "../ui/Alert";
+import InputField from "../ui/InputField";
+import Button from "../ui/Button";
 
 const EditUser = ({
   closePopup,
@@ -15,9 +15,9 @@ const EditUser = ({
   closePopup: () => void;
   jwt: string;
   id: any;
-  user: any
+  user: any;
 }) => {
-  const roles = ['ADMIN', 'COACH']
+  const roles = ["ADMIN", "COACH"];
   const [editUser, { isError, isLoading, error }] = useEditUserMutation();
   const {
     register,
@@ -25,7 +25,7 @@ const EditUser = ({
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
-    const result = editUser({ jwt, id: id, body: { ...data } })
+    const result = editUser({ jwt, id: id, body: { ...data } });
   };
   let errorMessage: any = errors.name?.message;
   return (
@@ -66,12 +66,17 @@ const EditUser = ({
             className="form-select rounded-xl h-[58px] border-gray-200"
             {...register("role")}
           >
-            <option key={1} value="">{user.role}</option>
-            {roles.map((role: any, index: number) => role !== user.role && (
-              <option key={index} value={role}>
-                {role}
-              </option>
-            ))}
+            <option key={1} value="">
+              {user.role}
+            </option>
+            {roles.map(
+              (role: any, index: number) =>
+                role !== user.role && (
+                  <option key={index} value={role}>
+                    {role}
+                  </option>
+                ),
+            )}
           </select>
         </div>
         <div className="flex gap-2">
@@ -83,6 +88,6 @@ const EditUser = ({
       </form>
     </ModalLayout>
   );
-}
+};
 
-export default EditUser
+export default EditUser;

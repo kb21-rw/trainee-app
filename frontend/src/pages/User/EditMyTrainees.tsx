@@ -37,7 +37,7 @@ const EditMyTrainees = () => {
   };
   useEffect(() => {
     setQuery(
-      `?searchString=${searchQuery}&sortBy=${sortBy}&coachesPerPage=${usersPerPage}`
+      `?searchString=${searchQuery}&sortBy=${sortBy}&coachesPerPage=${usersPerPage}`,
     );
   }, [searchQuery, sortBy, usersPerPage]);
 
@@ -116,7 +116,10 @@ const EditMyTrainees = () => {
         ) : (
           <tbody className="w-full">
             {data.map((trainee: any, index: number) => (
-              <tr key={trainee._id} className="border-b border-black h-[100px] ">
+              <tr
+                key={trainee._id}
+                className="border-b border-black h-[100px] "
+              >
                 <td className="text-base font-medium pl-12">{index + 1}</td>
                 <td className="text-base font-medium pl-12">{trainee.name}</td>
                 <td className="text-base font-medium pl-12">

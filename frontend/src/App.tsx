@@ -2,7 +2,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  RouterProvider
+  RouterProvider,
 } from "react-router-dom";
 import Error from "./components/Error";
 import Layout from "./components/layouts/Layout";
@@ -17,7 +17,6 @@ import { usersApi } from "./features/user/apiSlice";
 import ResetPassword from "./pages/User/ResetPassword";
 import EditMyTrainees from "./pages/User/EditMyTrainees";
 
-
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -28,23 +27,17 @@ export default function App() {
           <Route path="/trainees" element={<TraineesInfo />} />
           <Route path="/administer-coach" element={<CoachesInfo />} />
           <Route path="/edit-my-trainees" element={<EditMyTrainees />} />
-          <Route
-            path="/profile-settings"
-            element={<Profile />}
-          />
+          <Route path="/profile-settings" element={<Profile />} />
         </Route>
-        <Route path="/login" element={<Login />}  />
-        <Route
-          path="/reset-password"
-          element={<ResetPassword />}
-        />
+        <Route path="/login" element={<Login />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
-      </Route>
-    )
+      </Route>,
+    ),
   );
   return (
     <ApiProvider api={usersApi}>
-        <RouterProvider router={router} />
+      <RouterProvider router={router} />
     </ApiProvider>
   );
 }

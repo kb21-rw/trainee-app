@@ -10,7 +10,7 @@ const InputField = ({
   styles,
   defaultValue,
   register,
-  options
+  options,
 }: {
   label: string;
   type: string;
@@ -19,8 +19,7 @@ const InputField = ({
   styles?: string;
   defaultValue?: string;
   register?: any;
-  options?:any;
-
+  options?: any;
 }) => {
   const [show, setShow] = useState<boolean>(false);
   const passwordIcon = () => {
@@ -32,8 +31,9 @@ const InputField = ({
         {label} {!styles && ":"}
       </label>
       <div
-        className={`${styles &&
-          "!w-2/3"} w-full border border-gray-200 flex justify-between rounded-xl px-3 h-[58px]`}
+        className={`${
+          styles && "!w-2/3"
+        } w-full border border-gray-200 flex justify-between rounded-xl px-3 h-[58px]`}
       >
         <input
           type={show ? "text" : type}
@@ -41,13 +41,14 @@ const InputField = ({
           className="placeholder:text-lg outline-none border-none h-full flex-1"
           placeholder={placeholder}
           defaultValue={defaultValue}
-          {...register && {...register(name, options)}}
+          {...(register && { ...register(name, options) })}
         />
 
-        {type === "password" &&
+        {type === "password" && (
           <button type="button" onClick={() => setShow(!show)}>
             {passwordIcon()}
-          </button>}
+          </button>
+        )}
       </div>
     </div>
   );
