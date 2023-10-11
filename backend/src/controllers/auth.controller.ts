@@ -35,9 +35,13 @@ export const register = async (req: any, res: Response) => {
     if (result.role === "COACH" || result.role === "ADMIN") {
       password = generateRandomPassword(10);
       const hashedPassword = await hash(password, 10);
-      newUser = { ...result, password: hashedPassword };
+      newUser = {
+        ...result,
+        name: result.name.trim(),
+        password: hashedPassword,
+      };
     } else {
-      newUser = { ...result };
+      newUser = { ...result, name: result.name.trim() };
     }
     const createdUser: any = await User.create(newUser);
     sendEmail(
