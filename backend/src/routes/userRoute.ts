@@ -15,7 +15,7 @@ import { verifyJWT } from "../middlewares/authenticate";
 const router = Router();
 
 router.get("/trainees", verifyJWT, get_trainees);
-router.get("/my-trainees", verifyJWT, get_my_trainees);
+router.get("/trainees/my-trainees", verifyJWT, get_my_trainees);
 router.get("/coaches", verifyJWT, get_coaches);
 router.get("/all", verifyJWT, get_users);
 router.patch("/edit-coach-or-admin/:id", verifyJWT, editUser);
