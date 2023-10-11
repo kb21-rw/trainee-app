@@ -15,7 +15,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, query } = args;
         return {
-          url: `/auth/trainees${query}`,
+          url: `/users/trainees${query}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -28,7 +28,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, query } = args;
         return {
-          url: `/auth/my-trainees${query}`,
+          url: `/users/trainees/my-trainees${query}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -39,7 +39,7 @@ export const usersApi: any = createApi({
     }),
     getAllUsers: builder.query({
       query: (jwt) => ({
-        url: "/auth/users",
+        url: "/users/all",
         method: "GET",
         headers: {
           Authorization: `Bearer ${jwt}`,
@@ -51,7 +51,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, query } = args;
         return {
-          url: `/auth/coaches${query}`,
+          url: `/users/coaches${query}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -72,7 +72,7 @@ export const usersApi: any = createApi({
           body: { ...body },
         };
       },
-      invalidatesTags: ["coaches", "users"],
+      invalidatesTags: ["users"],
     }),
     createTrainee: builder.mutation({
       query: (args) => {
@@ -92,8 +92,8 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, body, id } = args;
         return {
-          url: `/auth/edit-user/${id}`,
-          method: "PUT",
+          url: `/users/edit-coach-or-admin//${id}`,
+          method: "PATCH",
           headers: {
             Authorization: `Bearer ${jwt}`,
           },
@@ -106,8 +106,8 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, body, id } = args;
         return {
-          url: `/auth/edit-trainee/${id}`,
-          method: "PUT",
+          url: `/users/edit-trainee/${id}`,
+          method: "PATCH",
           headers: {
             Authorization: `Bearer ${jwt}`,
           },
@@ -121,7 +121,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, id } = args;
         return {
-          url: `/auth/users/${id}`,
+          url: `/users/${id}`,
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -134,7 +134,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, id } = args;
         return {
-          url: `/auth/users/${id}`,
+          url: `/users/${id}`,
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -165,7 +165,7 @@ export const usersApi: any = createApi({
     }),
     getProfile: builder.query({
       query: (jwt) => ({
-        url: "/auth/profile",
+        url: "/users/my-profile",
         method: "GET",
         headers: {
           Authorization: `Bearer ${jwt}`,
@@ -176,10 +176,9 @@ export const usersApi: any = createApi({
     updateProfile: builder.mutation({
       query: (args) => {
         const { jwt, profileData } = args;
-        console.log({ args });
         return {
-          url: "/auth/profile",
-          method: "PUT",
+          url: "/users/my-profile",
+          method: "PATCH",
           headers: {
             Authorization: `Bearer ${jwt}`,
           },
