@@ -25,9 +25,14 @@ const AddingCoachModal = ({
     const result = await createCoach({ jwt, body: { ...data, role: "COACH" } });
   };
   let errorMessage: any = errors.name?.message || errors.email?.message;
-  if (error?.data?.code && error?.data?.code == 11000) {
-    errorMessage = "The email is alredy registered";
+  if (error?.data?.code === 11000) {
+    errorMessage = error?.data?.keyValue?.email
+      ? "The email is already registered"
+      : "" || error?.data?.keyValue?.name
+      ? "That name is already taken"
+      : "";
   }
+
   return (
     <ModalLayout closePopup={closePopup} title="Add coach">
       {isLoading && (

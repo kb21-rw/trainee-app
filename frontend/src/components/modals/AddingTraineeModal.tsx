@@ -34,7 +34,13 @@ const AddingTraineeModal = ({
       body: { ...data, role: "TRAINEE" },
     });
   };
-  let errorMessage: any = errors.name?.message;
+  let errorMessage: any = errors?.name?.message || errors?.email?.message;
+  if (error?.data?.code === 11000) {
+    errorMessage =
+      (error?.data?.keyValue?.email && "The email is already registered") ||
+      (error?.data?.keyValue?.name && "That name is already taken");
+  }
+
   return (
     <ModalLayout closePopup={closePopup} title="Add trainee">
       {isLoading && (
@@ -42,11 +48,7 @@ const AddingTraineeModal = ({
           <Loader />
         </div>
       )}
-      {isError ? (
-        <Alert type="error">{error}</Alert>
-      ) : (
-        errorMessage && <Alert type="error">{errorMessage}</Alert>
-      )}
+      {errorMessage && <Alert type="error">{errorMessage}</Alert>}
       {isSuccess && <Alert type="success">Trainee was added succesfully</Alert>}
       <form
         onSubmit={handleSubmit(onSubmit)}
