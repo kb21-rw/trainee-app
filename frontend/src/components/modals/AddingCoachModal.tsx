@@ -26,11 +26,9 @@ const AddingCoachModal = ({
   };
   let errorMessage: any = errors.name?.message || errors.email?.message;
   if (error?.data?.code === 11000) {
-    errorMessage = error?.data?.keyValue?.email
-      ? "The email is already registered"
-      : "" || error?.data?.keyValue?.name
-      ? "That name is already taken"
-      : "";
+    errorMessage =
+      (error?.data?.keyValue?.email && "The email is already registered") ||
+      (error?.data?.keyValue?.name && "That name is already taken");
   }
 
   return (
