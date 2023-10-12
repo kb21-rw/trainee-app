@@ -1,7 +1,5 @@
 import { Response } from "express";
-import {
-  editUserSchema,
-} from "../validations/userValidation";
+import { editUserSchema } from "../validations/userValidation";
 import User from "../models/User";
 import dotenv from "dotenv";
 

@@ -1,9 +1,9 @@
 import { Router } from "express";
 import {
-    get_trainees,
-    update_trainee,
-    get_my_trainees,
-  } from "../controllers/trainee.controller";
+  get_trainees,
+  update_trainee,
+  get_my_trainees,
+} from "../controllers/trainee.controller";
 import { verifyJWT } from "../middlewares/authenticate";
 
 const router = Router();

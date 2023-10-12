@@ -92,7 +92,6 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-
 export const reset_password = async (req: Request, res: Response) => {
   try {
     const result: any = await resetPasswordSchema.validateAsync(req.body);

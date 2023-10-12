@@ -5,8 +5,8 @@ import authRoute from "./routes/authRoute";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoute from "./routes/userRoute";
-import traineeRoute from "./routes/traineeRoute"
-import coachRoute from "./routes/coachRoute"
+import traineeRoute from "./routes/traineeRoute";
+import coachRoute from "./routes/coachRoute";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -24,5 +24,4 @@ app.use(express.json());
 app.use("/auth", authRoute);
 app.use("/users", userRoute);
 app.use("/trainees", traineeRoute);
-app.use("/coaches", coachRoute)
-
+app.use("/coaches", coachRoute);
