@@ -9,7 +9,7 @@ import {
   get_users,
   editTrainee,
   get_my_trainees,
-} from "../controllers/auth.controller";
+} from "../controllers/user.controller";
 import { verifyJWT } from "../middlewares/authenticate";
 
 const router = Router();
