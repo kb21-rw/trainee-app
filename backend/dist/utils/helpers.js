@@ -33,14 +33,14 @@ const sendEmail = (name, email, subject, message) => __awaiter(void 0, void 0, v
         service: "gmail",
         auth: {
             user,
-            pass
-        }
+            pass,
+        },
     });
     const info = yield transporter.sendMail({
         from: `${name} <${email}>`,
         to: email,
         subject,
-        html: message
+        html: message,
     });
     console.log("Message sent: " + info.messageId);
 });

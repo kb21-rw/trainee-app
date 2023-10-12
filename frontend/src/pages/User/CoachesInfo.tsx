@@ -6,9 +6,7 @@ import Edit from "../../assets/Edit";
 import Delete from "../../assets/Delete";
 import Cookies from "universal-cookie";
 import Loader from "../../components/ui/Loader";
-import {
-  useGetAllCoachesQuery
-} from "../../features/user/apiSlice";
+import { useGetAllCoachesQuery } from "../../features/user/apiSlice";
 import { useDeleteCoachMutation } from "../../features/user/apiSlice";
 import AddingCoachModal from "../../components/modals/AddingCoachModal";
 import EditUser from "../../components/modals/EditUser";
@@ -22,12 +20,14 @@ const CoachesInfo = () => {
   const [sortBy, setSortBy] = useState("entry");
   const [usersPerPage, setUsersPerPage] = useState(DEFAULTCOACHESPERPAGE);
   const [query, setQuery] = useState("");
-  const {data,  isFetching} = useGetAllCoachesQuery({ jwt, query });
+  const { data, isFetching } = useGetAllCoachesQuery({ jwt, query });
   const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [selectedItem, setSelectecItem] = useState<number>();
   const [openEditPopup, setOpenEditPopup] = useState<boolean>(false);
-  const [deleteCoach, { isError, isLoading, error, isFetching:deleteIsFetching }] =
-    useDeleteCoachMutation();
+  const [
+    deleteCoach,
+    { isError, isLoading, error, isFetching: deleteIsFetching },
+  ] = useDeleteCoachMutation();
   const handleDeleteCoach = (id: string) => {
     const result = deleteCoach({ jwt, id });
   };

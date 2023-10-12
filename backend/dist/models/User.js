@@ -2,7 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const UserSchema = new mongoose_1.Schema({
-    name: String,
+    name: {
+        type: String,
+        unique: true,
+        required: true,
+    },
     email: {
         type: String,
         unique: true,
@@ -14,12 +18,12 @@ const UserSchema = new mongoose_1.Schema({
     role: {
         type: String,
         required: true,
-        enum: ["ADMIN", "COACH", "TRAINEE"]
+        enum: ["ADMIN", "COACH", "TRAINEE"],
     },
     coach: {
         type: mongoose_1.Schema.Types.ObjectId,
-        ref: 'User'
-    }
+        ref: "User",
+    },
 }, { timestamps: {} });
-UserSchema.index({ name: 'text' });
+UserSchema.index({ name: "text" });
 exports.default = (0, mongoose_1.model)("User", UserSchema);
