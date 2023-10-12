@@ -145,7 +145,7 @@ export const update_trainee = async (req: any, res: Response) => {
       return res.status(404).send("User not found");
     }
     if (name) {
-      user.name = name;
+      user.name = name.trim().replace(/\s+/g, " ");
     }
     if (coach) {
       user.coach = coach;

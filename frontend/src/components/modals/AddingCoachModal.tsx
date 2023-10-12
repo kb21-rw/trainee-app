@@ -52,6 +52,7 @@ const AddingCoachModal = ({
           register={register}
           options={{
             required: { value: true, message: "name is required field" },
+            maxLength:{value:30, message: "Name must not exceed 30 characters"}
           }}
         />
         <InputField
