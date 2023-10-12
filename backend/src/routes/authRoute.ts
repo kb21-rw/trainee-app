@@ -3,7 +3,7 @@ import {
   login,
   register,
   reset_password,
-} from "../controllers/auth.controller";
+} from "../controllers/authController";
 import { verifyJWT } from "../middlewares/authenticate";
 
 const router = Router();

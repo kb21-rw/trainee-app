@@ -3,7 +3,7 @@ import {
   get_trainees,
   update_trainee,
   get_my_trainees,
-} from "../controllers/trainee.controller";
+} from "../controllers/traineeController";
 import { verifyJWT } from "../middlewares/authenticate";
 
 const router = Router();

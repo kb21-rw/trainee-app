@@ -5,7 +5,7 @@ import {
   delete_user,
   update_user,
   get_users,
-} from "../controllers/user.controller";
+} from "../controllers/userController";
 import { verifyJWT } from "../middlewares/authenticate";
 
 const router = Router();
