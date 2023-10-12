@@ -120,6 +120,7 @@ const TraineesInfo = () => {
           <tr className="">
             <td className="rounded-l-xl pl-12 font-semibold">No</td>
             <td className="pl-12 font-semibold">Name</td>
+            <td className="pl-12 font-semibold">Email</td>
             <td className="pl-12 font-semibold">Coach</td>
             <td className="rounded-r-xl pl-12 font-semibold">Action</td>
           </tr>
@@ -134,6 +135,9 @@ const TraineesInfo = () => {
               <tr className="border-b border-black h-[100px] ">
                 <td className="text-base font-medium pl-12">{index + 1}</td>
                 <td className="text-base font-medium pl-12">{trainee.name}</td>
+                <td className="text-base font-medium pl-12">
+                  {trainee.email || "No email yet"}
+                </td>
                 <td className="text-base font-medium pl-12">
                   {trainee.coach?.name || "No coach assigned"}
                 </td>

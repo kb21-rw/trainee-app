@@ -59,6 +59,17 @@ const EditTrainee = ({
             required: { value: true, message: "name is required field" },
           }}
         />
+        <InputField
+          type="email"
+          label="Email adress"
+          placeholder=""
+          name="email"
+          defaultValue={trainee?.email || "No email yet"}
+          register={register}
+          options={{
+            required: { value: true, message: "Email is required field" },
+          }}
+        />
         <div className="flex flex-col gap-5">
           <label htmlFor="role" className="text-lg font-medium">
             Assign coach
