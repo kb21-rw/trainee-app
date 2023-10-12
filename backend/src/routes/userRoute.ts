@@ -1,15 +1,20 @@
 import { Router } from "express";
 import {
   getUserProfile,
-  get_coaches,
-  get_trainees,
   updateUserProfile,
   deleteUser,
   editUser,
   get_users,
+} from "../controllers/user.controller";
+import {
+  get_coaches,
+} from "../controllers/coach.controller";
+
+import {
+  get_trainees,
   editTrainee,
   get_my_trainees,
-} from "../controllers/user.controller";
+} from "../controllers/trainee.controller";
 import { verifyJWT } from "../middlewares/authenticate";
 
 const router = Router();
