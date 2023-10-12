@@ -1,7 +1,7 @@
 import { Response } from "express";
 import {
   editUserSchema,
-} from "../validations/authValidation";
+} from "../validations/userValidation";
 import User from "../models/User";
 import dotenv from "dotenv";
 
@@ -132,7 +132,7 @@ export const get_my_trainees = async (req: any, res: Response) => {
   }
 };
 
-export const editTrainee = async (req: any, res: Response) => {
+export const update_trainee = async (req: any, res: Response) => {
   try {
     const userId = req.params.id;
 
