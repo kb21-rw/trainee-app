@@ -2,7 +2,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  RouterProvider,
+  RouterProvider
 } from "react-router-dom";
 import Error from "./components/Error";
 import Layout from "./components/layouts/Layout";
@@ -16,6 +16,7 @@ import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
 import { usersApi } from "./features/user/apiSlice";
 import ResetPassword from "./pages/User/ResetPassword";
 import EditMyTrainees from "./pages/User/EditMyTrainees";
+import ProtectedRoute from "./ProtectedRoutes";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -23,17 +24,19 @@ export default function App() {
       <Route>
         <Route path="/" element={<Layout />} errorElement={<Error />}>
           <Route index element={<h1>Overview page</h1>} />
-          <Route path="/forms" element={<h1>Forms page</h1>} />
-          <Route path="/trainees" element={<TraineesInfo />} />
-          <Route path="/administer-coach" element={<CoachesInfo />} />
-          <Route path="/edit-my-trainees" element={<EditMyTrainees />} />
-          <Route path="/profile-settings" element={<Profile />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/forms" element={<h1>Forms page</h1>} />
+            <Route path="/trainees" element={<TraineesInfo />} />
+            <Route path="/administer-coach" element={<CoachesInfo />} />
+            <Route path="/edit-my-trainees" element={<EditMyTrainees />} />
+            <Route path="/profile-settings" element={<Profile />} />
+          </Route>
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
-      </Route>,
-    ),
+      </Route>
+    )
   );
   return (
     <ApiProvider api={usersApi}>
