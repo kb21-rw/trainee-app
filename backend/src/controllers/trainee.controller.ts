@@ -136,9 +136,9 @@ export const editTrainee = async (req: any, res: Response) => {
   try {
     const userId = req.params.id;
 
-    const { name, coach } = req.body;
+    const { name, coach, email } = req.body;
 
-    const validationResult = editUserSchema.validate({ name, coach });
+    const validationResult = editUserSchema.validate({ name, coach, email });
     if (validationResult.error) {
       console.log(validationResult);
     }
@@ -152,7 +152,9 @@ export const editTrainee = async (req: any, res: Response) => {
     if (coach) {
       user.coach = coach;
     }
-
+    if (email) {
+      user.email = email;
+    }
     await user.save();
 
     return res.status(200).send(user);
