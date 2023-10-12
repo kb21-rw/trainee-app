@@ -1,8 +1,5 @@
 import { Response } from "express";
-import {
-  ProfileSchema,
-  editUserSchema,
-} from "../validations/authValidation";
+import { ProfileSchema, editUserSchema } from "../validations/userValidation";
 import User from "../models/User";
 
 import { hash } from "bcryptjs";
@@ -10,7 +7,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const getUserProfile = async (req: any, res: Response) => {
+export const get_profile = async (req: any, res: Response) => {
   try {
     const userId = req.user.id;
     const user = await User.findById(userId, { password: 0 });
@@ -23,7 +20,7 @@ export const getUserProfile = async (req: any, res: Response) => {
   }
 };
 
-export const updateUserProfile = async (req: any, res: Response) => {
+export const update_profile = async (req: any, res: Response) => {
   try {
     const userId = req.user.id;
     const { name, email, password } = req.body;
@@ -95,7 +92,7 @@ export const get_users = async (req: any, res: Response) => {
   }
 };
 
-export const deleteUser = async (req: any, res: Response) => {
+export const delete_user = async (req: any, res: Response) => {
   try {
     const userId = req.params.userId;
     const user = await User.findByIdAndDelete(userId);
@@ -108,7 +105,7 @@ export const deleteUser = async (req: any, res: Response) => {
   }
 };
 
-export const editUser = async (req: any, res: Response) => {
+export const update_user = async (req: any, res: Response) => {
   try {
     const userId = req.params.id;
 

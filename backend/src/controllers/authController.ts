@@ -34,11 +34,11 @@ export const register = async (req: any, res: Response) => {
       const hashedPassword = await hash(password, 10);
       newUser = {
         ...result,
-        name: result.name.trim(),
+        name: result.name.trim().replace(/\s+/g, " "),
         password: hashedPassword,
       };
     } else {
-      newUser = { ...result, name: result.name.trim() };
+      newUser = { ...result, name: result.name.trim().replace(/\s+/g, " ") };
     }
     const createdUser: any = await User.create(newUser);
     sendEmail(
@@ -91,7 +91,6 @@ export const login = async (req: Request, res: Response) => {
     return res.status(400).json({ error });
   }
 };
-
 
 export const reset_password = async (req: Request, res: Response) => {
   try {

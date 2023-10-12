@@ -7,8 +7,7 @@ import Delete from "../../assets/Delete";
 import Cookies from "universal-cookie";
 import Loader from "../../components/ui/Loader";
 import {
-  useGetAllCoachesQuery,
-  useGetAllUsersQuery,
+  useGetAllCoachesQuery
 } from "../../features/user/apiSlice";
 import { useDeleteCoachMutation } from "../../features/user/apiSlice";
 import AddingCoachModal from "../../components/modals/AddingCoachModal";
@@ -23,12 +22,11 @@ const CoachesInfo = () => {
   const [sortBy, setSortBy] = useState("entry");
   const [usersPerPage, setUsersPerPage] = useState(DEFAULTCOACHESPERPAGE);
   const [query, setQuery] = useState("");
-  const coachesData = useGetAllCoachesQuery({ jwt, query });
-  const usersData = useGetAllUsersQuery(jwt);
+  const {data,  isFetching} = useGetAllCoachesQuery({ jwt, query });
   const [openPopup, setOpenPopup] = useState<boolean>(false);
   const [selectedItem, setSelectecItem] = useState<number>();
   const [openEditPopup, setOpenEditPopup] = useState<boolean>(false);
-  const [deleteCoach, { isError, isLoading, error, isFetching }] =
+  const [deleteCoach, { isError, isLoading, error, isFetching:deleteIsFetching }] =
     useDeleteCoachMutation();
   const handleDeleteCoach = (id: string) => {
     const result = deleteCoach({ jwt, id });
@@ -132,7 +130,7 @@ const CoachesInfo = () => {
             </div>
           ) : (
             <tbody className="w-full">
-              {usersData.data?.map((coach: any, index: number) => (
+              {data?.map((coach: any, index: number) => (
                 <tr
                   key={coach._id}
                   className="border-b border-black h-[100px] w-full"

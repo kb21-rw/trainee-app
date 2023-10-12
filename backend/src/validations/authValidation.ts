@@ -7,27 +7,11 @@ export const registerSchema = Joi.object({
   coach: Joi.string(),
 });
 
-export const editUserSchema = Joi.object({
-  name: Joi.string().min(3).max(30).optional(),
-  email: Joi.string().email().optional(),
-  role: Joi.string().valid("ADMIN", "COACH").optional(),
-  coach: Joi.string().optional(),
-});
-
 export const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
 });
 
-export const ProfileSchema = Joi.object({
-  name: Joi.string().optional(),
-  email: Joi.string().email().optional(),
-  password: Joi.string().min(6).optional(),
-});
-
-export const coachAssignSchema = Joi.object({
-  coachId: Joi.string().required(),
-});
 export const resetPasswordSchema = Joi.object({
   email: Joi.string().email().required(),
 });

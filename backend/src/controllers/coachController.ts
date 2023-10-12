@@ -1,7 +1,4 @@
 import { Response } from "express";
-import {
-  coachAssignSchema,
-} from "../validations/authValidation";
 import User from "../models/User";
 import dotenv from "dotenv";
 
@@ -56,32 +53,6 @@ export const get_coaches = async (req: any, res: Response) => {
       },
     ]);
     return res.status(200).json(coaches);
-  } catch (error) {
-    res.status(400).send(error);
-  }
-};
-
-export const assignCoach = async (req: any, res: Response) => {
-  const { id } = req.params;
-  try {
-    const { role } = req.user;
-    if (role !== "ADMIN") {
-      return res.status(400).send("Only admins can assign coach to trainees");
-    }
-    const result = await coachAssignSchema.validateAsync(req.body);
-    const user: any = await User.findById(id);
-    if (user.role !== "TRAINEE") {
-      return res.status(403).send("coach is assigned only to trainee");
-    }
-    const coach: any = await User.findById(result.coach);
-    if (coach.role !== "COACH") {
-      return res
-        .status(403)
-        .send("only user with coach role can be assigned to be a coach");
-    }
-    user.coach = coach._id;
-    await user.save();
-    return res.status(200).send("coach was assigned succesfully");
   } catch (error) {
     res.status(400).send(error);
   }

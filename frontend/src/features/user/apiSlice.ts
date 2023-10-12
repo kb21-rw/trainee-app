@@ -15,7 +15,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, query } = args;
         return {
-          url: `/users/trainees${query}`,
+          url: `/trainees/all${query}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -28,7 +28,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, query } = args;
         return {
-          url: `/users/trainees/my-trainees${query}`,
+          url: `/trainees/my-trainees${query}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -51,7 +51,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, query } = args;
         return {
-          url: `/users/coaches${query}`,
+          url: `/coaches/all${query}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -92,7 +92,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, body, id } = args;
         return {
-          url: `/users/edit-coach-or-admin//${id}`,
+          url: `/users/edit-coach-or-admin/${id}`,
           method: "PATCH",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -106,7 +106,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, body, id } = args;
         return {
-          url: `/users/edit-trainee/${id}`,
+          url: `/trainees/${id}`,
           method: "PATCH",
           headers: {
             Authorization: `Bearer ${jwt}`,

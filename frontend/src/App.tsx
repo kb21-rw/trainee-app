@@ -2,7 +2,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  RouterProvider
+  RouterProvider,
 } from "react-router-dom";
 import Error from "./components/Error";
 import Layout from "./components/layouts/Layout";
@@ -35,8 +35,8 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
-      </Route>
-    )
+      </Route>,
+    ),
   );
   return (
     <ApiProvider api={usersApi}>
