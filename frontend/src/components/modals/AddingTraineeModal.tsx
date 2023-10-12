@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import ModalLayout from "./ModalLayout";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
@@ -62,6 +62,16 @@ const AddingTraineeModal = ({
           register={register}
           options={{
             required: { value: true, message: "name is required field" },
+          }}
+        />
+        <InputField
+          type="email"
+          label="Email adress"
+          placeholder="Trainee's email"
+          name="email"
+          register={register}
+          options={{
+            required: { value: true, message: "Email is required field" },
           }}
         />
         <div className="flex flex-col gap-5">
