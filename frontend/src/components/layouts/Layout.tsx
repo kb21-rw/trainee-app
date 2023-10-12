@@ -9,14 +9,7 @@ const Layout = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
   const navigate = useNavigate();
-  const location = useLocation();
-  const pathname = location.pathname;
 
-  useEffect(() => {
-    if (!jwt) {
-      return navigate(`/login?redirectTo=${pathname}`);
-    }
-  }, [jwt]);
   const { data } = useGetProfileQuery(jwt);
   const menu =
     (data?.role === "ADMIN" && adminMenu) ||
