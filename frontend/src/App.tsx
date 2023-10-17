@@ -23,8 +23,8 @@ export default function App() {
     createRoutesFromElements(
       <Route>
         <Route path="/" element={<Layout />} errorElement={<Error />}>
-          <Route index element={<h1>Overview page</h1>} />
           <Route element={<ProtectedRoute />}>
+            <Route index element={<h1>Overview page</h1>} />
             <Route path="/forms" element={<h1>Forms page</h1>} />
             <Route path="/trainees" element={<TraineesInfo />} />
             <Route path="/administer-coach" element={<CoachesInfo />} />
