@@ -1,7 +1,7 @@
 import React from "react";
 import {
   useEditTraineeMutation,
-  useGetAllUsersQuery,
+  useGetAllCoachesQuery,
 } from "../../features/user/apiSlice";
 import { useForm } from "react-hook-form";
 import ModalLayout from "./ModalLayout";
@@ -14,31 +14,33 @@ const EditTrainee = ({
   closePopup,
   jwt,
   trainee,
-  id,
 }: {
   closePopup: () => void;
   jwt: string;
-  id: any;
   trainee: any;
 }) => {
   const [
     editTrainee,
     { isError, isLoading, error, isSuccess: isEditTraineeSuccess },
   ] = useEditTraineeMutation();
-  const coacheesData = useGetAllUsersQuery(jwt);
+  const query = "?coachesPerPage=100";
+  const coacheesData = useGetAllCoachesQuery({ jwt, query });
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
-    const result = editTrainee({ jwt, id: id, body: { ...data } });
+    const result = editTrainee({ jwt, id: trainee[0], body: { ...data } });
   };
   let errorMessage: any = errors.name?.message;
 
   return (
     <ModalLayout closePopup={closePopup} title="Add trainee">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
+      {isEditTraineeSuccess && (
+        <Alert type="success">Coach was added succesfully</Alert>
+      )}
       {isLoading && (
         <div className="w-full flex justify-center items-center">
           <Loader />
@@ -53,7 +55,7 @@ const EditTrainee = ({
           label="Name"
           placeholder=""
           name="name"
-          defaultValue={trainee?.name}
+          defaultValue={trainee[1]}
           register={register}
           options={{
             required: { value: true, message: "name is required field" },
@@ -68,7 +70,7 @@ const EditTrainee = ({
           label="Email adress"
           placeholder=""
           name="email"
-          defaultValue={trainee?.email || "No email yet"}
+          defaultValue={trainee[2]}
           register={register}
           options={{
             required: { value: true, message: "Email is required field" },
@@ -84,8 +86,7 @@ const EditTrainee = ({
             {...register("coach")}
           >
             <option key={1} value="">
-              {" "}
-              {trainee.coach?.name || "No assigned coach"}{" "}
+              {trainee[3]}
             </option>
             {coacheesData.data?.map(
               (coach: any, index: number) =>

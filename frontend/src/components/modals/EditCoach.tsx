@@ -1,36 +1,42 @@
 import React from "react";
-import { useEditUserMutation } from "../../features/user/apiSlice";
+import { useEditCoachMutation } from "../../features/user/apiSlice";
 import { useForm } from "react-hook-form";
 import ModalLayout from "./ModalLayout";
 import Alert from "../ui/Alert";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
+import Loader from "../ui/Loader";
 
-const EditUser = ({
+const EditCoach = ({
   closePopup,
   jwt,
-  user,
-  id,
+  coach,
 }: {
   closePopup: () => void;
   jwt: string;
-  id: any;
-  user: any;
+  coach: any;
 }) => {
   const roles = ["ADMIN", "COACH"];
-  const [editUser, { isError, isLoading, error }] = useEditUserMutation();
+  const [edit, { isError, isLoading, error, isSuccess }] =
+    useEditCoachMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
-    const result = editUser({ jwt, id: id, body: { ...data } });
+    await edit({ jwt, id: coach[0], body: { ...data } });
   };
   let errorMessage: any = errors.name?.message;
   return (
     <ModalLayout closePopup={closePopup} title="Add trainee">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
+      {isSuccess && <Alert type="success">Coach was added succesfully</Alert>}
+      {isLoading && (
+        <div className="flex items-center justify-center">
+          <Loader />
+        </div>
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-12 w-full"
@@ -40,7 +46,7 @@ const EditUser = ({
           label="Name"
           placeholder=""
           name="name"
-          defaultValue={user?.name}
+          defaultValue={coach[1]}
           register={register}
           options={{
             required: { value: true, message: "name is required field" },
@@ -51,7 +57,7 @@ const EditUser = ({
           label="Email adress"
           placeholder=""
           name="email"
-          defaultValue={user?.email}
+          defaultValue={coach[2]}
           register={register}
           options={{
             required: { value: true, message: "email is required field" },
@@ -71,11 +77,11 @@ const EditUser = ({
             {...register("role")}
           >
             <option key={1} value="">
-              {user.role}
+              {coach[3]}
             </option>
             {roles.map(
               (role: any, index: number) =>
-                role !== user.role && (
+                role !== coach[3] && (
                   <option key={index} value={role}>
                     {role}
                   </option>
@@ -94,4 +100,4 @@ const EditUser = ({
   );
 };
 
-export default EditUser;
+export default EditCoach;
