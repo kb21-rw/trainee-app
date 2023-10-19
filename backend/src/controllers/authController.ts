@@ -11,14 +11,12 @@ import {
   generateMessage,
   generateResetPasswordMessage,
 } from "../utils/helpers";
+import { secret, ACCESS_TOKEN_EXPIRATION } from "../constants";
 import { hash, compare } from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
 dotenv.config();
-
-const secret = process.env.ACCESS_TOKEN_KEY || "";
-const ACCESS_TOKEN_EXPIRATION = "30m"; // 30 minutes
 
 export const register = async (req: any, res: Response) => {
   let newUser;
