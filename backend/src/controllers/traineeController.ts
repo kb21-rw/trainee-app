@@ -5,9 +5,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const get_trainees = async (req: any, res: Response) => {
+export const getTrainees = async (req: any, res: Response) => {
   const searchString = req.query.searchString || "";
-  const traineesPerPage = Number(req.query.coachesPerPage) || 10;
+  const traineesPerPage = Number(req.query.coachesPerPage) || 100;
   const sortBy = req.query.sortBy || "entry";
   try {
     const trainees = await User.aggregate([
@@ -63,12 +63,13 @@ export const get_trainees = async (req: any, res: Response) => {
 
     return res.status(200).json(trainees);
   } catch (error) {
-    res.status(400).send("failed to get trainees ");
+    return res.status(400).json({ message: "failed to get trainees " });
   }
 };
-export const get_my_trainees = async (req: any, res: Response) => {
+
+export const getTraineesForCoach = async (req: any, res: Response) => {
   const searchString = req.query.searchString || "";
-  const traineesPerPage = Number(req.query.coachesPerPage) || 10;
+  const traineesPerPage = Number(req.query.coachesPerPage) || 100;
   const sortBy = req.query.sortBy || "entry";
   try {
     const { id } = req.user;
@@ -124,13 +125,14 @@ export const get_my_trainees = async (req: any, res: Response) => {
         $limit: traineesPerPage,
       },
     ]);
+
     return res.status(200).json(trainees);
   } catch (error) {
-    res.status(400).send("failed to get trainees ");
+    return res.status(400).json({ message: "failed to get trainees " });
   }
 };
 
-export const update_trainee = async (req: any, res: Response) => {
+export const updateTrainee = async (req: any, res: Response) => {
   try {
     const userId = req.params.id;
 
@@ -138,11 +140,11 @@ export const update_trainee = async (req: any, res: Response) => {
 
     const validationResult = editUserSchema.validate({ name, coach, email });
     if (validationResult.error) {
-      console.log(validationResult);
+      return res.status(400).json(validationResult);
     }
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).send("User not found");
+      return res.status(404).json({ message: "User not found" });
     }
     if (name) {
       user.name = name.trim().replace(/\s+/g, " ");
@@ -155,8 +157,8 @@ export const update_trainee = async (req: any, res: Response) => {
     }
     await user.save();
 
-    return res.status(200).send(user);
+    return res.status(200).json(user);
   } catch (error) {
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };

@@ -35,7 +35,6 @@ const EditTrainee = ({
     const result = editTrainee({ jwt, id: id, body: { ...data } });
   };
   let errorMessage: any = errors.name?.message;
-
   return (
     <ModalLayout closePopup={closePopup} title="Add trainee">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
@@ -83,7 +82,7 @@ const EditTrainee = ({
             className="form-select rounded-xl h-[58px] border-gray-200"
             {...register("coach")}
           >
-            <option key={1} value="">
+            <option key={1} value={trainee.coach?._id}>
               {" "}
               {trainee.coach?.name || "No assigned coach"}{" "}
             </option>
