@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { get_coaches } from "../controllers/coachController";
+import { getCoaches } from "../controllers/coachController";
 import { verifyJWT } from "../middlewares/authenticate";
 
 const router = Router();
 
-router.get("/all", verifyJWT, get_coaches);
+router.get("/all", verifyJWT, getCoaches);
 export default router;
