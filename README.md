@@ -39,36 +39,16 @@ These instructions will help you get a copy of the project up and running on you
 
    ```bash
    git clone https://github.com/yourusername/trainee-app.git
-Navigate to the project directory:
-
-bash
-Copy code
+### Navigate to the project directory:
 cd trainee-app
-Install dependencies:
+### Install dependencies:
 
-bash
-Copy code
-npm install
-Usage
-Start the server:
+    npm install
+### Usage
+    Start the backend:
 
-bash
-Copy code
-npm run server
-Start the frontend:
+      npm run dev
+     Start the frontend:
 
-bash
-Copy code
-npm run dev
-Open your web browser and access the app at http://localhost:3000.
-
-Contributing
-If you'd like to contribute to the project, please follow these guidelines:
-
-Fork the repository on GitHub.
-Create a new branch with a descriptive name.
-Make your changes and commit them.
-Push your changes to your fork on GitHub.
-Create a pull request to the main repository.
-License
-This project is licensed under the MIT License.
+     npm run dev
+Open your web browser and access the app at http://localhost:5170.
