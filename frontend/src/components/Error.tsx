@@ -9,10 +9,10 @@ type ErrorType = {
 const Error = () => {
   const error = useRouteError() as ErrorType
   return (
-    <div>
-      <h1>Error</h1>
-      <p>{error?.message}</p>
-      <Link to="/">Back to home page</Link>
+    <div className="flex flex-col items-center justify-center h-screen">
+      <h1>Error 🫤</h1>
+      <p className="m-3">{error?.message}</p>
+      <Link to="/" className="m-3">Back to home page</Link>
     </div>
   )
   
