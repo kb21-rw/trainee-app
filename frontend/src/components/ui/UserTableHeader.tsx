@@ -1,8 +1,18 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  Dispatch,
+  SetStateAction,
+} from "react";
 import Sort from "../../assets/Sort";
 import Button from "./Button";
 
-const UserTableHeader = ({ setQuery }: any) => {
+const UserTableHeader = ({
+  setQuery,
+}: {
+  setQuery: Dispatch<SetStateAction<string>>;
+}) => {
   const DEFAULTCOACHESPERPAGE = "10";
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState("entry");
@@ -18,7 +28,7 @@ const UserTableHeader = ({ setQuery }: any) => {
     }
   };
   useEffect(() => {
-    setQuery(
+    return setQuery(
       `?searchString=${searchQuery}&sortBy=${sortBy}&coachesPerPage=${usersPerPage}`,
     );
   }, [searchQuery, sortBy, usersPerPage]);

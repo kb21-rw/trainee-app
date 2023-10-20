@@ -4,8 +4,9 @@ import { useGetMyTraineesQuery } from "../../features/user/apiSlice";
 import EditTrainee from "../../components/modals/EditTrainee";
 import UserTable from "../../components/ui/UserTable";
 import UserTableHeader from "../../components/ui/UserTableHeader";
+import { getTraineesForCoach } from "../../utils/helper";
 
-const EditMyTrainees = () => {
+const EditTraineesForCoaches = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
   const [query, setQuery] = useState("");
@@ -13,39 +14,30 @@ const EditMyTrainees = () => {
     jwt,
     query,
   });
-  const [editTrainee, setEditTrainee] = useState<any>(null);
-  const getMyTrainees = () => {
-    const dataItems = ["_id", "name", "email", "coach"];
-    const traineesData = data?.map(
-      (traineeData: any) =>
-        dataItems?.map((dataItem: string) =>
-          dataItem === "coach"
-            ? traineeData?.coach?.name || "No coach assigned"
-            : traineeData[dataItem],
-        ),
-    );
-    return traineesData;
-  };
+  const [editTraineeData, setEditTraineeData] = useState<string[] | null>(null);
+  const headers = ["No", "Name", "Email", "Coach", "Action"];
+  const dataItems = ["_id", "name", "email", "coach"];
+  const myTraineesList = getTraineesForCoach(data, dataItems);
 
   return (
     <div className="py-8">
       <UserTableHeader setQuery={setQuery} />
       <UserTable
-        headers={["No", "Name", "Email", "Coach", "Action"]}
-        data={getMyTrainees()}
-        actions={[{ type: "edit", actionCaller: setEditTrainee }]}
+        headers={headers}
+        data={myTraineesList}
+        actions={[{ type: "edit", actionCaller: setEditTraineeData }]}
         isLoading={isGetMyTraineesLoading}
       />
 
-      {editTrainee && (
+      {editTraineeData && (
         <EditTrainee
           jwt={jwt}
-          closePopup={() => setEditTrainee(null)}
-          trainee={editTrainee}
+          closePopup={() => setEditTraineeData(null)}
+          traineeData={editTraineeData}
         />
       )}
     </div>
   );
 };
 
-export default EditMyTrainees;
+export default EditTraineesForCoaches;

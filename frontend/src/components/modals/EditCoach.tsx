@@ -7,29 +7,33 @@ import InputField from "../ui/InputField";
 import Button from "../ui/Button";
 import Loader from "../ui/Loader";
 
-const EditCoach = ({
+const EditCoachModal = ({
   closePopup,
   jwt,
-  coach,
+  coachData,
 }: {
   closePopup: () => void;
   jwt: string;
-  coach: any;
+  coachData: string[];
 }) => {
   const roles = ["ADMIN", "COACH"];
-  const [edit, { isError, isLoading, error, isSuccess }] =
-    useEditCoachMutation();
+  const [editCoach, { isLoading, isSuccess, error }] = useEditCoachMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
-    await edit({ jwt, id: coach[0], body: { ...data } });
+    await editCoach({ jwt, id: coachData[0], body: { ...data } });
   };
-  let errorMessage: any = errors.name?.message;
+  let errorMessage: any = errors.name?.message || errors.email?.message;
+  if (error?.data?.code === 11000) {
+    errorMessage =
+      (error?.data?.keyValue?.email && "The email is already registered") ||
+      (error?.data?.keyValue?.name && "That name is already taken");
+  }
   return (
-    <ModalLayout closePopup={closePopup} title="Add trainee">
+    <ModalLayout closePopup={closePopup} title="Edit trainee">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
       {isSuccess && <Alert type="success">Coach was added succesfully</Alert>}
       {isLoading && (
@@ -46,7 +50,7 @@ const EditCoach = ({
           label="Name"
           placeholder=""
           name="name"
-          defaultValue={coach[1]}
+          defaultValue={coachData[1]}
           register={register}
           options={{
             required: { value: true, message: "name is required field" },
@@ -57,7 +61,7 @@ const EditCoach = ({
           label="Email adress"
           placeholder=""
           name="email"
-          defaultValue={coach[2]}
+          defaultValue={coachData[2]}
           register={register}
           options={{
             required: { value: true, message: "email is required field" },
@@ -76,17 +80,11 @@ const EditCoach = ({
             className="form-select rounded-xl h-[58px] border-gray-200"
             {...register("role")}
           >
-            <option key={1} value="">
-              {coach[3]}
-            </option>
-            {roles.map(
-              (role: any, index: number) =>
-                role !== coach[3] && (
-                  <option key={index} value={role}>
-                    {role}
-                  </option>
-                ),
-            )}
+            {roles.map((role: any, index: number) => (
+              <option key={index} value={role} selected={role === coachData[3]}>
+                {role}
+              </option>
+            ))}
           </select>
         </div>
         <div className="flex gap-2">
@@ -100,4 +98,4 @@ const EditCoach = ({
   );
 };
 
-export default EditCoach;
+export default EditCoachModal;

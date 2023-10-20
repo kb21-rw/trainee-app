@@ -1,9 +1,20 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import Edit from "../../assets/Edit";
 import Delete from "../../assets/Delete";
 import Loader from "../../components/ui/Loader";
+interface PropTypes {
+  headers: string[];
+  isLoading: boolean;
+  data: string[][];
+  actions: {
+    type: string;
+    actionCaller:
+      | Dispatch<SetStateAction<string[] | null>>
+      | ((id: string) => Promise<void>);
+  }[];
+}
 
-const UserTable = ({ headers, isLoading, data, actions }: any) => {
+const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
   return (
     <table className="w-full my-8 table-auto">
       <thead className="bg-[#0077B6] bg-opacity-20 h-20">
@@ -24,14 +35,14 @@ const UserTable = ({ headers, isLoading, data, actions }: any) => {
         </div>
       ) : (
         <tbody className="w-full">
-          {data?.map((user: any, index: number) => {
+          {data?.map((userData: string[], index: number) => {
             return (
               <tr
-                key={user[0]}
+                key={userData[0]}
                 className="border-b border-black h-[100px] w-full"
               >
                 <td className="text-base font-medium pl-12">{index + 1}</td>
-                {user.slice(1).map((item: string) => (
+                {userData.slice(1).map((item: string) => (
                   <td className="text-base font-medium pl-12">{item}</td>
                 ))}
                 <td className="text-base font-medium pl-12">
@@ -40,7 +51,7 @@ const UserTable = ({ headers, isLoading, data, actions }: any) => {
                       <button
                         onClick={() =>
                           action.actionCaller(
-                            action.type == "delete" ? user[0] : user,
+                            action.type == "delete" ? userData[0] : userData,
                           )
                         }
                       >

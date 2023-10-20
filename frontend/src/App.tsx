@@ -15,7 +15,7 @@ import CoachesInfo from "./pages/User/CoachesInfo";
 import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
 import { usersApi } from "./features/user/apiSlice";
 import ResetPassword from "./pages/User/ResetPassword";
-import EditMyTrainees from "./pages/User/EditMyTrainees";
+import EditMyTrainees from "./pages/User/EditTraineesForCoach";
 import ProtectedRoute from "./components/ProtectedRoutes";
 
 export default function App() {
