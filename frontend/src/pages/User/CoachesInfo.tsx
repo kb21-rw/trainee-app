@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import Button from "../../components/ui/Button";
 import Plus from "../../assets/Plus";
 import Cookies from "universal-cookie";
 import { useGetAllCoachesQuery } from "../../features/user/apiSlice";
 import { useDeleteCoachMutation } from "../../features/user/apiSlice";
-import AddingCoachModal from "../../components/modals/AddingCoachModal";
+import AddingCoachModal from "../../components/modals/AddingCoach";
 import UserTable from "../../components/ui/UserTable";
 import EditCoach from "../../components/modals/EditCoach";
 import UserTableHeader from "../../components/ui/UserTableHeader";
+import { getCoaches } from "../../utils/helper";
 
 const CoachesInfo = () => {
   const cookies = new Cookies();
@@ -17,51 +18,48 @@ const CoachesInfo = () => {
     jwt,
     query,
   });
-  const [openPopup, setOpenPopup] = useState(false);
-  const [editCoach, setEditCoach] = useState<any>(null);
+  const [isAddingCoach, setIsAddingCoach] = useState(false);
+  const [editCoachData, setEditCoachData] = useState<string[] | null>(null);
   const [deleteCoach, { isFetching: isDeleteCoachLoading }] =
     useDeleteCoachMutation();
-  const handleDeleteCoach = (id: string) => {
-    const result = deleteCoach({ jwt, id });
+  const handleDeleteCoach = async (id: string) => {
+    await deleteCoach({ jwt, id });
   };
-
-  const getCoaches = () => {
-    const dataItems = ["_id", "name", "email", "role"];
-    const coachesData = data?.map(
-      (coachData: any) =>
-        dataItems?.map((dataItem: string) => coachData[dataItem]),
-    );
-    return coachesData;
-  };
+  const headers = ["No", "Name", "Email", "Role", "Action"];
+  const dataItems = ["_id", "name", "email", "role"];
+  const coachesList = getCoaches(data, dataItems);
 
   return (
     <div>
       <div className="py-8">
         <div className="flex justify-end items-center my-6">
-          <Button clickHandler={() => setOpenPopup(!openPopup)} variant="small">
+          <Button clickHandler={() => setIsAddingCoach(true)} variant="small">
             <Plus />
             <span>Add coach</span>
           </Button>
         </div>
         <UserTableHeader setQuery={setQuery} />
         <UserTable
-          headers={["No", "Name", "Email", "Role", "Action"]}
-          data={getCoaches()}
+          headers={headers}
+          data={coachesList}
           actions={[
-            { type: "edit", actionCaller: setEditCoach },
+            { type: "edit", actionCaller: setEditCoachData },
             { type: "delete", actionCaller: handleDeleteCoach },
           ]}
           isLoading={isDeleteCoachLoading || isGetAllCoachesLoading}
         />
       </div>
-      {openPopup && (
-        <AddingCoachModal jwt={jwt} closePopup={() => setOpenPopup(false)} />
+      {isAddingCoach && (
+        <AddingCoachModal
+          jwt={jwt}
+          closePopup={() => setIsAddingCoach(false)}
+        />
       )}
-      {editCoach && (
+      {editCoachData && (
         <EditCoach
           jwt={jwt}
-          closePopup={() => setEditCoach(null)}
-          coach={editCoach}
+          closePopup={() => setEditCoachData(null)}
+          coachData={editCoachData}
         />
       )}
     </div>
