@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const get_trainees = async (req: any, res: Response) => {
+export const getTrainees = async (req: any, res: Response) => {
   const searchString = req.query.searchString || "";
   const traineesPerPage = Number(req.query.coachesPerPage) || 10;
   const sortBy = req.query.sortBy || "entry";
@@ -66,7 +66,7 @@ export const get_trainees = async (req: any, res: Response) => {
     res.status(400).send("failed to get trainees ");
   }
 };
-export const get_my_trainees = async (req: any, res: Response) => {
+export const getMyTrainees = async (req: any, res: Response) => {
   const searchString = req.query.searchString || "";
   const traineesPerPage = Number(req.query.coachesPerPage) || 10;
   const sortBy = req.query.sortBy || "entry";
@@ -130,7 +130,7 @@ export const get_my_trainees = async (req: any, res: Response) => {
   }
 };
 
-export const update_trainee = async (req: any, res: Response) => {
+export const updateTrainee = async (req: any, res: Response) => {
   try {
     const userId = req.params.id;
 

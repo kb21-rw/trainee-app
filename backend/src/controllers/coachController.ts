@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const get_coaches = async (req: any, res: Response) => {
+export const getCoaches = async (req: any, res: Response) => {
   try {
     const { role } = req.user;
     const searchString = req.query.searchString || "";
