@@ -1,7 +1,7 @@
 import React from "react";
 import {
   useEditTraineeMutation,
-  useGetAllUsersQuery,
+  useGetAllCoachesQuery,
 } from "../../features/user/apiSlice";
 import { useForm } from "react-hook-form";
 import ModalLayout from "./ModalLayout";
@@ -10,35 +10,42 @@ import InputField from "../ui/InputField";
 import Button from "../ui/Button";
 import Loader from "../ui/Loader";
 
-const EditTrainee = ({
+const EditTraineeModal = ({
   closePopup,
   jwt,
-  trainee,
-  id,
+  traineeData,
+  role,
 }: {
   closePopup: () => void;
   jwt: string;
-  id: any;
-  trainee: any;
+  traineeData: string[];
+  role: "ADMIN" | "COACH";
 }) => {
-  const [
-    editTrainee,
-    { isError, isLoading, error, isSuccess: isEditTraineeSuccess },
-  ] = useEditTraineeMutation();
-  const coacheesData = useGetAllUsersQuery(jwt);
+  const [editTrainee, { isLoading, error, isSuccess: isEditTraineeSuccess }] =
+    useEditTraineeMutation();
+  const query = "?coachesPerPage=100";
+  const allCoaches = useGetAllCoachesQuery({ jwt, query });
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
-    const result = editTrainee({ jwt, id: id, body: { ...data } });
+    console.log({ data });
+    await editTrainee({ jwt, id: traineeData[0], body: { ...data } });
   };
-  let errorMessage: any = errors.name?.message;
-
+  let errorMessage: any = errors.name?.message || errors.email?.message;
+  if (error?.data?.code === 11000) {
+    errorMessage =
+      (error?.data?.keyValue?.email && "The email is already registered") ||
+      (error?.data?.keyValue?.name && "That name is already taken");
+  }
   return (
-    <ModalLayout closePopup={closePopup} title="Add trainee">
+    <ModalLayout closePopup={closePopup} title="Edit trainee">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
+      {isEditTraineeSuccess && (
+        <Alert type="success">Trainee was updated succesfully</Alert>
+      )}
       {isLoading && (
         <div className="w-full flex justify-center items-center">
           <Loader />
@@ -53,7 +60,7 @@ const EditTrainee = ({
           label="Name"
           placeholder=""
           name="name"
-          defaultValue={trainee?.name}
+          defaultValue={traineeData[1]}
           register={register}
           options={{
             required: { value: true, message: "name is required field" },
@@ -68,35 +75,34 @@ const EditTrainee = ({
           label="Email adress"
           placeholder=""
           name="email"
-          defaultValue={trainee?.email || "No email yet"}
+          defaultValue={traineeData[2]}
           register={register}
           options={{
             required: { value: true, message: "Email is required field" },
           }}
         />
-        <div className="flex flex-col gap-5">
-          <label htmlFor="role" className="text-lg font-medium">
-            Assign coach
-          </label>
+        {role === "ADMIN" && (
+          <div className="flex flex-col gap-5">
+            <label htmlFor="role" className="text-lg font-medium">
+              Assign coach
+            </label>
 
-          <select
-            className="form-select rounded-xl h-[58px] border-gray-200"
-            {...register("coach")}
-          >
-            <option key={1} value="">
-              {" "}
-              {trainee.coach?.name || "No assigned coach"}{" "}
-            </option>
-            {coacheesData.data?.map(
-              (coach: any, index: number) =>
-                coach.name !== trainee.coach?.name && (
-                  <option key={index} value={coach._id}>
-                    {coach.name}
-                  </option>
-                ),
-            )}
-          </select>
-        </div>
+            <select
+              className="form-select rounded-xl h-[58px] border-gray-200"
+              {...register("coach")}
+            >
+              {allCoaches.data?.map((coach: any, index: number) => (
+                <option
+                  key={index}
+                  value={coach._id}
+                  selected={coach.name === traineeData[3]}
+                >
+                  {coach.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
         <div className="flex gap-2">
           <Button outlined clickHandler={closePopup}>
             Cancel
@@ -108,4 +114,4 @@ const EditTrainee = ({
   );
 };
 
-export default EditTrainee;
+export default EditTraineeModal;

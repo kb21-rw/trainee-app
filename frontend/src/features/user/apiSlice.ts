@@ -5,7 +5,7 @@ const api_url = import.meta.env.VITE_API_URL;
 export const usersApi: any = createApi({
   reducerPath: "usersApi",
   baseQuery: fetchBaseQuery({ baseUrl: api_url }),
-  tagTypes: ["coaches", "trainees", "myTrainees", "profile", "users"],
+  tagTypes: ["coaches", "trainees", "myTrainees", "profile"],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
       query: (args) => {
@@ -34,18 +34,6 @@ export const usersApi: any = createApi({
       },
       providesTags: ["myTrainees"],
     }),
-
-    getAllUsers: builder.query({
-      query: (jwt) => ({
-        url: "/users/all",
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      }),
-      providesTags: ["users"],
-    }),
-
     getAllCoaches: builder.query({
       query: (args) => {
         const { jwt, query } = args;
@@ -72,7 +60,7 @@ export const usersApi: any = createApi({
           body: { ...body },
         };
       },
-      invalidatesTags: ["users"],
+      invalidatesTags: ["coaches"],
     }),
 
     createTrainee: builder.mutation({
@@ -89,8 +77,7 @@ export const usersApi: any = createApi({
       },
       invalidatesTags: ["trainees"],
     }),
-
-    editUser: builder.mutation({
+    editCoach: builder.mutation({
       query: (args) => {
         const { jwt, body, id } = args;
         return {
@@ -102,7 +89,7 @@ export const usersApi: any = createApi({
           body: { ...body },
         };
       },
-      invalidatesTags: ["users"],
+      invalidatesTags: ["coaches"],
     }),
 
     editTrainee: builder.mutation({
@@ -131,7 +118,7 @@ export const usersApi: any = createApi({
           },
         };
       },
-      invalidatesTags: ["users"],
+      invalidatesTags: ["coaches"],
     }),
 
     deleteTrainee: builder.mutation({
@@ -209,7 +196,6 @@ export const {
   useDeleteCoachMutation,
   useDeleteTraineeMutation,
   useGetMyTraineesQuery,
-  useEditUserMutation,
-  useGetAllUsersQuery,
+  useEditCoachMutation,
   useEditTraineeMutation,
 } = usersApi;

@@ -157,6 +157,6 @@ export const updateTrainee = async (req: any, res: Response) => {
 
     return res.status(200).send(user);
   } catch (error) {
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).send(error);
   }
 };
