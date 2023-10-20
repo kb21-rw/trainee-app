@@ -82,7 +82,7 @@ const EditTrainee = ({
             className="form-select rounded-xl h-[58px] border-gray-200"
             {...register("coach")}
           >
-            <option key={1} value={trainee.coach?._id}>
+            <option key={1} value="">
               {" "}
               {trainee.coach?.name || "No assigned coach"}{" "}
             </option>
