@@ -27,6 +27,11 @@ const TraineesInfo = () => {
   const handleDeleteTrainee = async (id: string) => {
     await deleteTrainee({ jwt, id });
   };
+  const sortingValues = [
+    { title: "Entry", value: "entry" },
+    { title: "Name", value: "name" },
+  ];
+  const usersPerPageValues = [10, 20, 30, 40, 50, 100];
   const headers = ["No", "Name", "Email", "Coach", "Action"];
   const dataItems = ["_id", "name", "email", "coach"];
   const traineesList: string[][] = getTrainees(data, dataItems);
@@ -39,7 +44,11 @@ const TraineesInfo = () => {
           <span>Add trainee</span>
         </Button>
       </div>
-      <UserTableHeader setQuery={setQuery} />
+      <UserTableHeader
+        setQuery={setQuery}
+        sortingValues={sortingValues}
+        usersPerPageValues={usersPerPageValues}
+      />
       <UserTable
         headers={headers}
         data={traineesList}
@@ -60,6 +69,7 @@ const TraineesInfo = () => {
           jwt={jwt}
           closePopup={() => setEditTrainee(null)}
           traineeData={editTrainee}
+          role="ADMIN"
         />
       )}
     </div>

@@ -25,6 +25,12 @@ const CoachesInfo = () => {
   const handleDeleteCoach = async (id: string) => {
     await deleteCoach({ jwt, id });
   };
+  const sortingValues = [
+    { title: "Entry", value: "entry" },
+    { title: "Name", value: "name" },
+    { title: "Role", value: "role" },
+  ];
+  const usersPerPageValues = [10, 20, 30, 40, 50, 100];
   const headers = ["No", "Name", "Email", "Role", "Action"];
   const dataItems = ["_id", "name", "email", "role"];
   const coachesList = getCoaches(data, dataItems);
@@ -38,7 +44,11 @@ const CoachesInfo = () => {
             <span>Add coach</span>
           </Button>
         </div>
-        <UserTableHeader setQuery={setQuery} />
+        <UserTableHeader
+          setQuery={setQuery}
+          sortingValues={sortingValues}
+          usersPerPageValues={usersPerPageValues}
+        />
         <UserTable
           headers={headers}
           data={coachesList}

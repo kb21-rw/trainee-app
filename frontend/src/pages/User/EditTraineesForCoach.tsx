@@ -15,13 +15,22 @@ const EditTraineesForCoaches = () => {
     query,
   });
   const [editTraineeData, setEditTraineeData] = useState<string[] | null>(null);
+  const sortingValues = [
+    { title: "Entry", value: "entry" },
+    { title: "Name", value: "name" },
+  ];
+  const usersPerPageValues = [10, 20, 30, 40, 50, 100];
   const headers = ["No", "Name", "Email", "Coach", "Action"];
   const dataItems = ["_id", "name", "email", "coach"];
   const myTraineesList = getTraineesForCoach(data, dataItems);
 
   return (
     <div className="py-8">
-      <UserTableHeader setQuery={setQuery} />
+      <UserTableHeader
+        setQuery={setQuery}
+        sortingValues={sortingValues}
+        usersPerPageValues={usersPerPageValues}
+      />
       <UserTable
         headers={headers}
         data={myTraineesList}
@@ -34,6 +43,7 @@ const EditTraineesForCoaches = () => {
           jwt={jwt}
           closePopup={() => setEditTraineeData(null)}
           traineeData={editTraineeData}
+          role="COACH"
         />
       )}
     </div>

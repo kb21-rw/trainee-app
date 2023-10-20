@@ -78,7 +78,7 @@ export const usersApi: any = createApi({
       invalidatesTags: ["trainees"],
     }),
 
-    editUser: builder.mutation({
+    editCoach: builder.mutation({
       query: (args) => {
         const { jwt, body, id } = args;
         return {

@@ -4,14 +4,19 @@ import React, {
   useEffect,
   Dispatch,
   SetStateAction,
+  KeyboardEventHandler,
 } from "react";
 import Sort from "../../assets/Sort";
 import Button from "./Button";
 
 const UserTableHeader = ({
   setQuery,
+  sortingValues,
+  usersPerPageValues,
 }: {
   setQuery: Dispatch<SetStateAction<string>>;
+  sortingValues: { title: string; value: string }[];
+  usersPerPageValues: number[];
 }) => {
   const DEFAULTCOACHESPERPAGE = "10";
   const [searchQuery, setSearchQuery] = useState("");
@@ -22,7 +27,7 @@ const UserTableHeader = ({
   const onSubmitSearch = () => {
     setSearchQuery(searchString);
   };
-  const handleKeyPress = (event: any) => {
+  const handleKeyPress: KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === "Enter") {
       setSearchQuery(searchString);
     }
@@ -62,11 +67,11 @@ const UserTableHeader = ({
             name="sort"
             className="forms-select outline-none bg-white gap-32 w-[72px] block py-2 "
           >
-            <option value="all" selected>
-              Entry
-            </option>
-            <option value="name">Name</option>
-            <option value="role">Role</option>
+            {sortingValues.map((sortingValue, index: number) => (
+              <option key={index} value={sortingValue.value}>
+                {sortingValue.title}
+              </option>
+            ))}
           </select>
         </label>
 
@@ -80,13 +85,11 @@ const UserTableHeader = ({
             name="coachePerPage"
             className="forms-select outline-none bg-white gap-32 w-12 block py-2 "
           >
-            <option value={DEFAULTCOACHESPERPAGE} selected>
-              {DEFAULTCOACHESPERPAGE}
-            </option>
-            <option value="20">20</option>
-            <option value="30">30</option>
-            <option value="40">40</option>
-            <option value="50">50</option>
+            {usersPerPageValues.map((usersPerPage: number, index: number) => (
+              <option key={index} value={usersPerPage}>
+                {usersPerPage}
+              </option>
+            ))}
           </select>
         </label>
       </div>

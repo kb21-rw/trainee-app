@@ -17,7 +17,8 @@ const EditCoachModal = ({
   coachData: string[];
 }) => {
   const roles = ["ADMIN", "COACH"];
-  const [editCoach, { isLoading, isSuccess, error }] = useEditCoachMutation();
+  const res = useEditCoachMutation();
+  const [editCoach, { isLoading, isSuccess, error }] = res;
   const {
     register,
     handleSubmit,
@@ -33,9 +34,9 @@ const EditCoachModal = ({
       (error?.data?.keyValue?.name && "That name is already taken");
   }
   return (
-    <ModalLayout closePopup={closePopup} title="Edit trainee">
+    <ModalLayout closePopup={closePopup} title="Edit user">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
-      {isSuccess && <Alert type="success">Coach was added succesfully</Alert>}
+      {isSuccess && <Alert type="success">Coach was updated succesfully</Alert>}
       {isLoading && (
         <div className="flex items-center justify-center">
           <Loader />
