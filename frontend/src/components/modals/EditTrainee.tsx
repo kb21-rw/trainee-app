@@ -21,7 +21,6 @@ const EditTraineeModal = ({
   traineeData: string[];
   role: "ADMIN" | "COACH";
 }) => {
-  console.log({});
   const [editTrainee, { isLoading, error, isSuccess: isEditTraineeSuccess }] =
     useEditTraineeMutation();
   const query = "?coachesPerPage=100";

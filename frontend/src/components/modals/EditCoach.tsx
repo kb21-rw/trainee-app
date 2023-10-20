@@ -17,8 +17,7 @@ const EditCoachModal = ({
   coachData: string[];
 }) => {
   const roles = ["ADMIN", "COACH"];
-  const res = useEditCoachMutation();
-  const [editCoach, { isLoading, isSuccess, error }] = res;
+  const [editCoach, { isLoading, isSuccess, error }] = useEditCoachMutation();
   const {
     register,
     handleSubmit,
