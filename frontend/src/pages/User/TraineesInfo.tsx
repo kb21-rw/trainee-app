@@ -11,6 +11,12 @@ import EditTrainee from "../../components/modals/EditTrainee";
 import UserTable from "../../components/ui/UserTable";
 import UserTableHeader from "../../components/ui/UserTableHeader";
 import { getTrainees } from "../../utils/helper";
+import {
+  usersPerPageValues,
+  traineeTableDataItems,
+  traineeTableHeaders,
+  traineeTableSortingValues,
+} from "../../utils/data";
 
 const TraineesInfo = () => {
   const cookies = new Cookies();
@@ -27,14 +33,7 @@ const TraineesInfo = () => {
   const handleDeleteTrainee = async (id: string) => {
     await deleteTrainee({ jwt, id });
   };
-  const sortingValues = [
-    { title: "Entry", value: "entry" },
-    { title: "Name", value: "name" },
-  ];
-  const usersPerPageValues = [10, 20, 30, 40, 50, 100];
-  const headers = ["No", "Name", "Email", "Coach", "Action"];
-  const dataItems = ["_id", "name", "email", "coach"];
-  const traineesList: string[][] = getTrainees(data, dataItems);
+  const traineesList: string[][] = getTrainees(data, traineeTableDataItems);
 
   return (
     <div className="py-8">
@@ -46,11 +45,11 @@ const TraineesInfo = () => {
       </div>
       <UserTableHeader
         setQuery={setQuery}
-        sortingValues={sortingValues}
+        sortingValues={traineeTableSortingValues}
         usersPerPageValues={usersPerPageValues}
       />
       <UserTable
-        headers={headers}
+        headers={traineeTableHeaders}
         data={traineesList}
         actions={[
           { type: "edit", actionCaller: setEditTrainee },

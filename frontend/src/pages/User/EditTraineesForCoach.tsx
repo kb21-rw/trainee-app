@@ -5,6 +5,12 @@ import EditTrainee from "../../components/modals/EditTrainee";
 import UserTable from "../../components/ui/UserTable";
 import UserTableHeader from "../../components/ui/UserTableHeader";
 import { getTraineesForCoach } from "../../utils/helper";
+import {
+  usersPerPageValues,
+  traineeTableDataItems,
+  traineeTableHeaders,
+  traineeTableSortingValues,
+} from "../../utils/data";
 
 const EditTraineesForCoaches = () => {
   const cookies = new Cookies();
@@ -15,24 +21,17 @@ const EditTraineesForCoaches = () => {
     query,
   });
   const [editTraineeData, setEditTraineeData] = useState<string[] | null>(null);
-  const sortingValues = [
-    { title: "Entry", value: "entry" },
-    { title: "Name", value: "name" },
-  ];
-  const usersPerPageValues = [10, 20, 30, 40, 50, 100];
-  const headers = ["No", "Name", "Email", "Coach", "Action"];
-  const dataItems = ["_id", "name", "email", "coach"];
-  const myTraineesList = getTraineesForCoach(data, dataItems);
+  const myTraineesList = getTraineesForCoach(data, traineeTableDataItems);
 
   return (
     <div className="py-8">
       <UserTableHeader
         setQuery={setQuery}
-        sortingValues={sortingValues}
+        sortingValues={traineeTableSortingValues}
         usersPerPageValues={usersPerPageValues}
       />
       <UserTable
-        headers={headers}
+        headers={traineeTableHeaders}
         data={myTraineesList}
         actions={[{ type: "edit", actionCaller: setEditTraineeData }]}
         isLoading={isGetMyTraineesLoading}
