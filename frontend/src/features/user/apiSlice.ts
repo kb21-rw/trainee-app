@@ -21,7 +21,7 @@ export const usersApi: any = createApi({
       providesTags: ["trainees"],
     }),
 
-    getMyTrainees: builder.query({
+    getTraineesForCoach: builder.query({
       query: (args) => {
         const { jwt, query } = args;
         return {
@@ -195,7 +195,7 @@ export const {
   useResetPasswordMutation,
   useDeleteCoachMutation,
   useDeleteTraineeMutation,
-  useGetMyTraineesQuery,
+  useGetTraineeForCoachQuery,
   useEditCoachMutation,
   useEditTraineeMutation,
 } = usersApi;
