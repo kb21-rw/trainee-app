@@ -28,7 +28,7 @@ const EditCoachModal = ({
     await editCoach({ jwt, id: coachData[0], body: { ...data } });
   };
 
-  let errorMessage: any = errors.name?.message || errors.email?.message || error.data?.message;
+  let errorMessage: any = errors.name?.message || errors.email?.message || error?.data?.message;
   if (error?.data?.code === 11000) {
     errorMessage =
       (error?.data?.keyValue?.email && "The email is already registered") ||
