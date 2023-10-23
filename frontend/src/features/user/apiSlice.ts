@@ -81,7 +81,7 @@ export const usersApi: any = createApi({
       query: (args) => {
         const { jwt, body, id } = args;
         return {
-          url: `/users/edit-coach-or-admin/${id}`,
+          url: `/coaches/edit-coach-or-admin/${id}`,
           method: "PATCH",
           headers: {
             Authorization: `Bearer ${jwt}`,

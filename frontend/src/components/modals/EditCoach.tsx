@@ -18,6 +18,7 @@ const EditCoachModal = ({
 }) => {
   const roles = ["ADMIN", "COACH"];
   const [editCoach, { isLoading, isSuccess, error }] = useEditCoachMutation();
+
   const {
     register,
     handleSubmit,
@@ -26,12 +27,18 @@ const EditCoachModal = ({
   const onSubmit = async (data: any) => {
     await editCoach({ jwt, id: coachData[0], body: { ...data } });
   };
-  let errorMessage: any = errors.name?.message || errors.email?.message;
+
+  let errorMessage: any = errors.name?.message || errors.email?.message || error?.data?.message;
   if (error?.data?.code === 11000) {
     errorMessage =
       (error?.data?.keyValue?.email && "The email is already registered") ||
       (error?.data?.keyValue?.name && "That name is already taken");
   }
+
+  if(error?.data?.message) {
+    errorMessage = error?.data?.message
+  }
+
   return (
     <ModalLayout closePopup={closePopup} title="Edit user">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
