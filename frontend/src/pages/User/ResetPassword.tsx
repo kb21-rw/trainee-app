@@ -20,7 +20,6 @@ const ResetPassword = () => {
     const result = await resetPassword({ email: data.email });
   };
   let errorMessage: any = errors.email?.message;
-  console.log({ errors });
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
