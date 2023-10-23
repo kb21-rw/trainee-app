@@ -66,7 +66,7 @@ export const updateCoachOrAdmin = async (req: any, res: Response) => {
 
     const validationResult = editUserSchema.validate({ name, email, role });
     if (validationResult.error) {
-      console.error(validationResult);
+      return res.status(400).json({ message: validationResult.error.message });
     }
     const user = await User.findById(userId);
     if (!user) {

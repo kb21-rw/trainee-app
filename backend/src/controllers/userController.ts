@@ -1,5 +1,5 @@
 import { Response } from "express";
-import { ProfileSchema, editUserSchema } from "../validations/userValidation";
+import { ProfileSchema } from "../validations/userValidation";
 import User from "../models/User";
 
 import { hash } from "bcryptjs";
