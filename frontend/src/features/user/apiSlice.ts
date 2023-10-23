@@ -34,6 +34,7 @@ export const usersApi: any = createApi({
       },
       providesTags: ["myTrainees"],
     }),
+
     getAllCoaches: builder.query({
       query: (args) => {
         const { jwt, query } = args;
@@ -77,6 +78,7 @@ export const usersApi: any = createApi({
       },
       invalidatesTags: ["trainees"],
     }),
+
     editCoach: builder.mutation({
       query: (args) => {
         const { jwt, body, id } = args;
