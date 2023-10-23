@@ -53,12 +53,13 @@ These instructions will help you get a copy of the project up and running on you
 
 1. Clone the repository:
 
-   ```bash
-   git clone https://github.com/yourusername/trainee-app.git
-    ```
+```bash
+git clone https://github.com/yourusername/trainee-app.git
+```
 2. Navigate to the repository
 ```bash 
 cd trainee-app
+```
 ### Navigate to the project directory to the backend:
 ```shell
 cd backend
