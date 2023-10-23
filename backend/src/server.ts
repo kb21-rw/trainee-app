@@ -19,9 +19,9 @@ mongoose.connection.once("open", () => {
   });
 });
 app.use(cors({ origin: "*", credentials: true }));
-
 app.use(cookieParser());
 app.use(express.json());
+
 app.use("/auth", authRoute);
 app.use("/users", userRoute);
 app.use("/trainees", traineeRoute);
