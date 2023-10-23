@@ -1,7 +1,6 @@
 import { Response } from "express";
 import { ProfileSchema } from "../validations/userValidation";
 import User from "../models/User";
-
 import { hash } from "bcryptjs";
 import dotenv from "dotenv";
 
@@ -104,4 +103,3 @@ export const deleteUser = async (req: any, res: Response) => {
     return res.status(500).send("Internal Server Error");
   }
 };
-
