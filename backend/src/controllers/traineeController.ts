@@ -66,6 +66,7 @@ export const getTrainees = async (req: any, res: Response) => {
     res.status(400).send("failed to get trainees ");
   }
 };
+
 export const getTraineesForCoach = async (req: any, res: Response) => {
   const searchString = req.query.searchString || "";
   const traineesPerPage = Number(req.query.coachesPerPage) || 10;
@@ -138,7 +139,7 @@ export const updateTrainee = async (req: any, res: Response) => {
 
     const validationResult = editUserSchema.validate({ name, coach, email });
     if (validationResult.error) {
-      return res.status(400).send(validationResult);
+      return res.status(400).json({ message: validationResult.error.message });
     }
     const user = await User.findById(userId);
     if (!user) {

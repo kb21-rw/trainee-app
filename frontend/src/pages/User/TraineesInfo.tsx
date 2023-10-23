@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Button from "../../components/ui/Button";
-import Plus from "../../assets/Plus";
 import Cookies from "universal-cookie";
 import {
   useDeleteTraineeMutation,
@@ -17,6 +15,7 @@ import {
   traineeTableHeaders,
   traineeTableSortingValues,
 } from "../../utils/data";
+import AddUserButton from "../../components/ui/AddUserButton";
 
 const TraineesInfo = () => {
   const cookies = new Cookies();

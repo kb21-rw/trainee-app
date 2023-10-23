@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Cookies from "universal-cookie";
-import { useGetTraineeForCoachQuery } from "../../features/user/apiSlice";
+import { useGetTraineesForCoachQuery } from "../../features/user/apiSlice";
 import EditTrainee from "../../components/modals/EditTrainee";
 import UserTable from "../../components/ui/UserTable";
 import UserTableHeader from "../../components/ui/UserTableHeader";
@@ -17,7 +17,7 @@ const EditTraineesForCoaches = () => {
   const jwt = cookies.get("jwt");
   const [query, setQuery] = useState("");
   const { data, isFetching: isGetMyTraineesLoading } =
-    useGetTraineeForCoachQuery({
+    useGetTraineesForCoachQuery({
       jwt,
       query,
     });
