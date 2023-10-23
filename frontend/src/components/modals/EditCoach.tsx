@@ -35,8 +35,8 @@ const EditCoachModal = ({
       (error?.data?.keyValue?.name && "That name is already taken");
   }
 
-  if(error?.data?.message === "\"email\" must be a valid email") {
-    errorMessage = "The email must be valid."
+  if(error?.data?.message) {
+    errorMessage = error?.data?.message
   }
 
   return (
