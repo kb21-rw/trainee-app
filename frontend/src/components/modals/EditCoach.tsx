@@ -18,6 +18,8 @@ const EditCoachModal = ({
 }) => {
   const roles = ["ADMIN", "COACH"];
   const [editCoach, { isLoading, isSuccess, error }] = useEditCoachMutation();
+  console.log("XXXX", error);
+
   const {
     register,
     handleSubmit,
@@ -26,12 +28,19 @@ const EditCoachModal = ({
   const onSubmit = async (data: any) => {
     await editCoach({ jwt, id: coachData[0], body: { ...data } });
   };
+
+  console.log("ERRRR", errors)
   let errorMessage: any = errors.name?.message || errors.email?.message || errors.data?.message;
   if (error?.data?.code === 11000) {
     errorMessage =
       (error?.data?.keyValue?.email && "The email is already registered") ||
       (error?.data?.keyValue?.name && "That name is already taken");
   }
+
+  if(error?.data?.message === "\"email\" must be a valid email") {
+    errorMessage = "The email must be valid."
+  }
+
   return (
     <ModalLayout closePopup={closePopup} title="Edit user">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
