@@ -31,7 +31,6 @@ const EditTraineeModal = ({
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
-    console.log({ data });
     await editTrainee({ jwt, id: traineeData[0], body: { ...data } });
   };
   let errorMessage: any = errors.name?.message || errors.email?.message;

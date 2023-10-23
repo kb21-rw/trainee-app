@@ -1,7 +1,7 @@
 {
-  "name": "backend",
+  "name": "trainee-app-backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "The backend of a Trainee App is the core engine that manages data, user authentication, assessments, and security",
   "main": "src/server.ts",
   "scripts": {
     "build": "tsc",

@@ -41,7 +41,7 @@ export const register = async (req: any, res: Response) => {
     }
 
     const createdUser: any = await User.create(newUser);
-    if(createdUser) {
+    if (createdUser) {
       await sendEmail(
         createdUser.name,
         createdUser.email,
@@ -52,9 +52,9 @@ export const register = async (req: any, res: Response) => {
           createdUser.role,
           password,
         ),
-      ).catch((error) => console.error(error));
+      );
     }
-  
+
     return res.status(201).send({ ...result, password });
   } catch (error) {
     return res.status(400).send(error);

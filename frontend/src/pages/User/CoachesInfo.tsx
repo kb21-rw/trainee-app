@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import Button from "../../components/ui/Button";
-import Plus from "../../assets/Plus";
+import AddUserButton from "../../components/ui/AddUserButton";
 import Cookies from "universal-cookie";
 import { useGetAllCoachesQuery } from "../../features/user/apiSlice";
 import { useDeleteCoachMutation } from "../../features/user/apiSlice";
@@ -36,12 +35,9 @@ const CoachesInfo = () => {
   return (
     <div>
       <div className="py-8">
-        <div className="flex justify-end items-center my-6">
-          <Button clickHandler={() => setIsAddingCoach(true)} variant="small">
-            <Plus />
-            <span>Add coach</span>
-          </Button>
-        </div>
+        <AddUserButton addUserHandler={() => setIsAddingCoach(true)}>
+          Add coach
+        </AddUserButton>
         <UserTableHeader
           setQuery={setQuery}
           sortingValues={coachTableSortingValues}

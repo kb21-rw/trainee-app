@@ -37,12 +37,9 @@ const TraineesInfo = () => {
 
   return (
     <div className="py-8">
-      <div className="flex justify-end items-center my-6">
-        <Button clickHandler={() => setIsAddingTrainee(true)} variant="small">
-          <Plus />
-          <span>Add trainee</span>
-        </Button>
-      </div>
+      <AddUserButton addUserHandler={() => setIsAddingTrainee(true)}>
+        Add trainee
+      </AddUserButton>
       <UserTableHeader
         setQuery={setQuery}
         sortingValues={traineeTableSortingValues}

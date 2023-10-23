@@ -2,8 +2,10 @@ import nodeMailer from "nodemailer";
 import dotenv from "dotenv";
 
 dotenv.config();
+
 const user = process.env.NODEMAIL_EMAIL;
 const pass = process.env.NODEMAIL_PASSWORD;
+
 export const generateRandomPassword = (length: number) => {
   const charset =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&";
@@ -16,6 +18,7 @@ export const generateRandomPassword = (length: number) => {
 
   return randomString;
 };
+
 export const sendEmail = async (
   name: string,
   email: string,
@@ -35,7 +38,6 @@ export const sendEmail = async (
     subject,
     html: message,
   });
-  console.log("Message sent: " + info.messageId);
 };
 
 export const generateMessage = (

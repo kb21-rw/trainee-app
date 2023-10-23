@@ -1,7 +1,8 @@
 {
-  "name": "frontend",
+  "name": "trainee-app-frontend",
   "private": true,
   "version": "0.0.0",
+  "description":"The front-end of the Trainee App offers a user-friendly interface for coaches and trainees to assess, track progress, and communicate effectively",
   "type": "module",
   "scripts": {
     "dev": "vite",
