@@ -18,7 +18,6 @@ const EditCoachModal = ({
 }) => {
   const roles = ["ADMIN", "COACH"];
   const [editCoach, { isLoading, isSuccess, error }] = useEditCoachMutation();
-  console.log("XXXX", error);
 
   const {
     register,
@@ -29,7 +28,6 @@ const EditCoachModal = ({
     await editCoach({ jwt, id: coachData[0], body: { ...data } });
   };
 
-  console.log("ERRRR", errors)
   let errorMessage: any = errors.name?.message || errors.email?.message || errors.data?.message;
   if (error?.data?.code === 11000) {
     errorMessage =
