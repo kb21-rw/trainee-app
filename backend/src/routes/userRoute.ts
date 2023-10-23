@@ -1,19 +1,17 @@
 import { Router } from "express";
 import {
-  get_profile,
-  update_profile,
-  delete_user,
-  update_user,
-  get_users,
+  getProfile,
+  updateProfile,
+  deleteUser,
+  getUsers,
 } from "../controllers/userController";
 import { verifyJWT } from "../middlewares/authenticate";
 
 const router = Router();
 
-router.get("/all", verifyJWT, get_users);
-router.patch("/edit-coach-or-admin/:id", verifyJWT, update_user);
-router.get("/my-profile", verifyJWT, get_profile);
-router.patch("/my-profile", verifyJWT, update_profile);
-router.delete("/:userId", delete_user);
+router.get("/all", verifyJWT, getUsers);
+router.get("/my-profile", verifyJWT, getProfile);
+router.patch("/my-profile", verifyJWT, updateProfile);
+router.delete("/:userId", deleteUser);
 
 export default router;
