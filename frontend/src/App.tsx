@@ -15,7 +15,7 @@ import CoachesInfo from "./pages/User/CoachesInfo";
 import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
 import { usersApi } from "./features/user/apiSlice";
 import ResetPassword from "./pages/User/ResetPassword";
-import EditMyTrainees from "./pages/User/EditMyTrainees";
+import EditMyTrainees from "./pages/User/EditTraineesForCoach";
 import ProtectedRoute from "./components/ProtectedRoutes";
 
 export default function App() {
@@ -23,8 +23,8 @@ export default function App() {
     createRoutesFromElements(
       <Route>
         <Route path="/" element={<Layout />} errorElement={<Error />}>
-          <Route index element={<h1>Overview page</h1>} />
           <Route element={<ProtectedRoute />}>
+            <Route index element={<h1>Overview page</h1>} />
             <Route path="/forms" element={<h1>Forms page</h1>} />
             <Route path="/trainees" element={<TraineesInfo />} />
             <Route path="/administer-coach" element={<CoachesInfo />} />

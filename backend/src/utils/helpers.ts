@@ -35,7 +35,6 @@ export const sendEmail = async (
     subject,
     html: message,
   });
-  console.log("Message sent: " + info.messageId);
 };
 
 export const generateMessage = (

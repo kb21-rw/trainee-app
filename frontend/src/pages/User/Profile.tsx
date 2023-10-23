@@ -39,7 +39,6 @@ const Profile = () => {
       profileData.password = data.password;
     }
     const result = await updateProfile({ jwt, profileData });
-    console.log({ jwt, profileData });
   };
   return (
     <form

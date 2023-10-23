@@ -11,14 +11,12 @@ import {
   generateMessage,
   generateResetPasswordMessage,
 } from "../utils/helpers";
+import { secret, ACCESS_TOKEN_EXPIRATION } from "../constants";
 import { hash, compare } from "bcryptjs";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
 dotenv.config();
-
-const secret = process.env.ACCESS_TOKEN_KEY || "";
-const ACCESS_TOKEN_EXPIRATION = "30m"; // 30 minutes
 
 export const register = async (req: any, res: Response) => {
   let newUser;
@@ -27,6 +25,7 @@ export const register = async (req: any, res: Response) => {
     if (role !== "ADMIN") {
       return res.status(400).send("Only admins can register users");
     }
+
     const result = await registerSchema.validateAsync(req.body);
     let password: string = "";
     if (result.role === "COACH" || result.role === "ADMIN") {
@@ -40,35 +39,41 @@ export const register = async (req: any, res: Response) => {
     } else {
       newUser = { ...result, name: result.name.trim().replace(/\s+/g, " ") };
     }
+
     const createdUser: any = await User.create(newUser);
-    sendEmail(
-      createdUser.name,
-      createdUser.email,
-      "Welcome " + createdUser.name,
-      generateMessage(
+    if (createdUser) {
+      await sendEmail(
         createdUser.name,
         createdUser.email,
-        createdUser.role,
-        password,
-      ),
-    ).catch((error) => console.error(error));
+        "Welcome " + createdUser.name,
+        generateMessage(
+          createdUser.name,
+          createdUser.email,
+          createdUser.role,
+          password,
+        ),
+      );
+    }
+
     return res.status(201).send({ ...result, password });
   } catch (error) {
     return res.status(400).send(error);
   }
 };
+
 export const login = async (req: Request, res: Response) => {
   try {
     const result = await loginSchema.validateAsync(req.body);
     const user: any = await User.findOne({ email: result.email });
     if (!user) {
-      return res.status(403).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
     if (user.role === "TRAINEE") {
       return res
         .status(403)
-        .json({ message: "Trainees are not allowed to login" });
+        .json({ message: "Trainees are not allowed to login yet" });
     }
+
     const match = await compare(result.password, user.password);
     if (!match) {
       return res.status(403).json({ message: "Invalid credential" });
@@ -92,18 +97,19 @@ export const login = async (req: Request, res: Response) => {
   }
 };
 
-export const reset_password = async (req: Request, res: Response) => {
+export const resetPassword = async (req: Request, res: Response) => {
   try {
     const result: any = await resetPasswordSchema.validateAsync(req.body);
     const user: any = await User.findOne({ email: result.email });
     if (!user) {
       return res.status(404).send("User not found");
     }
+
     const password = generateRandomPassword(10);
     const hashedPassword = await hash(password, 10);
     user.password = hashedPassword;
     await user.save();
-    sendEmail(
+    await sendEmail(
       user.name,
       user.email,
       "Hello " + user.name,
