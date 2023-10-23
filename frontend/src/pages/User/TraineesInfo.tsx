@@ -11,6 +11,7 @@ import EditTrainee from "../../components/modals/EditTrainee";
 import UserTable from "../../components/ui/UserTable";
 import UserTableHeader from "../../components/ui/UserTableHeader";
 import { getTrainees } from "../../utils/helper";
+import AddUserButton from "../../components/ui/AddUserButton";
 
 const TraineesInfo = () => {
   const cookies = new Cookies();
@@ -38,12 +39,9 @@ const TraineesInfo = () => {
 
   return (
     <div className="py-8">
-      <div className="flex justify-end items-center my-6">
-        <Button clickHandler={() => setIsAddingTrainee(true)} variant="small">
-          <Plus />
-          <span>Add trainee</span>
-        </Button>
-      </div>
+      <AddUserButton addUserHandler={() => setIsAddingTrainee(true)}>
+        Add trainee
+      </AddUserButton>
       <UserTableHeader
         setQuery={setQuery}
         sortingValues={sortingValues}
