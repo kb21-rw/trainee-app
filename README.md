@@ -43,8 +43,7 @@ This project is a monorepo project that contains two parts backend and frontend.
 ### Data Visualization
 - **Table View**: Display trainee data in a table format for easy access for all trainees
 - **Filling Forms**:  Coach can fill in the information only for their  trainees.
-  
-### ! Admins can do everything a coach can do like coaching trainees but with other additional features
+
 
 ## Getting Started
 
@@ -84,4 +83,4 @@ npm install
 ```shell
 npm run dev
  ``` 
-Open your web browser and access the app at http://localhost:5170.
+Open your web browser and access the app at http://localhost:5173.
