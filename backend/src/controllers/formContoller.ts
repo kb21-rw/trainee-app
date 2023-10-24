@@ -38,6 +38,6 @@ export const getForms = async (req: any, res: Response) => {
     ]);
     return res.status(200).json(forms);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(400).json({ error });
   }
 };
