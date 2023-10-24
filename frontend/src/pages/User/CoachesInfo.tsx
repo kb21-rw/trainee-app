@@ -8,6 +8,12 @@ import UserTable from "../../components/ui/UserTable";
 import EditCoach from "../../components/modals/EditCoach";
 import UserTableHeader from "../../components/ui/UserTableHeader";
 import { getCoaches } from "../../utils/helper";
+import {
+  usersPerPageValues,
+  coachTableSortingValues,
+  coachTableDataItems,
+  coachTableHeaders,
+} from "../../utils/data";
 
 const CoachesInfo = () => {
   const cookies = new Cookies();
@@ -24,15 +30,7 @@ const CoachesInfo = () => {
   const handleDeleteCoach = async (id: string) => {
     await deleteCoach({ jwt, id });
   };
-  const sortingValues = [
-    { title: "Entry", value: "entry" },
-    { title: "Name", value: "name" },
-    { title: "Role", value: "role" },
-  ];
-  const usersPerPageValues = [10, 20, 30, 40, 50, 100];
-  const headers = ["No", "Name", "Email", "Role", "Action"];
-  const dataItems = ["_id", "name", "email", "role"];
-  const coachesList = getCoaches(data, dataItems);
+  const coachesList = getCoaches(data, coachTableDataItems);
 
   return (
     <div>
@@ -42,11 +40,11 @@ const CoachesInfo = () => {
         </AddUserButton>
         <UserTableHeader
           setQuery={setQuery}
-          sortingValues={sortingValues}
+          sortingValues={coachTableSortingValues}
           usersPerPageValues={usersPerPageValues}
         />
         <UserTable
-          headers={headers}
+          headers={coachTableHeaders}
           data={coachesList}
           actions={[
             { type: "edit", actionCaller: setEditCoachData },

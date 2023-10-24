@@ -8,3 +8,18 @@ export const coachMenu = [
   { link: "/", title: "Overview" },
   { link: "/edit-my-trainees", title: "Edit my trainees" },
 ];
+
+export const usersPerPageValues = [10, 20, 30, 40, 50, 100];
+export const coachTableSortingValues = [
+  { title: "Entry", value: "entry" },
+  { title: "Name", value: "name" },
+  { title: "Role", value: "role" },
+];
+export const coachTableHeaders = ["No", "Name", "Email", "Role", "Action"];
+export const coachTableDataItems = ["_id", "name", "email", "role"];
+export const traineeTableSortingValues = [
+  { title: "Entry", value: "entry" },
+  { title: "Name", value: "name" },
+];
+export const traineeTableHeaders = ["No", "Name", "Email", "Coach", "Action"];
+export const traineeTableDataItems = ["_id", "name", "email", "coach"];

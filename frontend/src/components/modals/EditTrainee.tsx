@@ -24,7 +24,7 @@ const EditTraineeModal = ({
   const [editTrainee, { isLoading, error, isSuccess: isEditTraineeSuccess }] =
     useEditTraineeMutation();
   const query = "?coachesPerPage=100";
-  const allCoaches = useGetAllCoachesQuery({ jwt, query });
+  const allCoaches = role === "ADMIN" && useGetAllCoachesQuery({ jwt, query });
   const {
     register,
     handleSubmit,
@@ -33,7 +33,8 @@ const EditTraineeModal = ({
   const onSubmit = async (data: any) => {
     await editTrainee({ jwt, id: traineeData[0], body: { ...data } });
   };
-  let errorMessage: any = errors.name?.message || errors.email?.message;
+  let errorMessage: any =
+    errors.name?.message || errors.email?.message || error?.data?.message;
   if (error?.data?.code === 11000) {
     errorMessage =
       (error?.data?.keyValue?.email && "The email is already registered") ||
