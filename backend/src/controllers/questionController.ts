@@ -22,4 +22,3 @@ export const createQuestion = async (req:any, res: Response) => {
     return res.status(400).json({ error });
   }
 };
-
