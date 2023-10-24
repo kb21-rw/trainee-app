@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { get_coaches } from "../controllers/coachController";
+import { getCoaches, updateCoachOrAdmin} from "../controllers/coachController";
 import { verifyJWT } from "../middlewares/authenticate";
 
 const router = Router();
 
-router.get("/all", verifyJWT, get_coaches);
+router.get("/all", verifyJWT, getCoaches);
+router.patch("/edit-coach-or-admin/:id", verifyJWT, updateCoachOrAdmin);
 export default router;

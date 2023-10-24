@@ -1,15 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import Cookies from "universal-cookie";
 
 const api_url = import.meta.env.VITE_API_URL;
-
-const cookies = new Cookies();
-const jwt = cookies.get("jwt");
 
 export const usersApi: any = createApi({
   reducerPath: "usersApi",
   baseQuery: fetchBaseQuery({ baseUrl: api_url }),
-  tagTypes: ["coaches", "trainees", "myTrainees", "profile", "users"],
+  tagTypes: ["coaches", "trainees", "myTrainees", "profile"],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
       query: (args) => {
@@ -24,7 +20,8 @@ export const usersApi: any = createApi({
       },
       providesTags: ["trainees"],
     }),
-    getMyTrainees: builder.query({
+
+    getTraineesForCoach: builder.query({
       query: (args) => {
         const { jwt, query } = args;
         return {
@@ -37,16 +34,7 @@ export const usersApi: any = createApi({
       },
       providesTags: ["myTrainees"],
     }),
-    getAllUsers: builder.query({
-      query: (jwt) => ({
-        url: "/users/all",
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-      }),
-      providesTags: ["users"],
-    }),
+
     getAllCoaches: builder.query({
       query: (args) => {
         const { jwt, query } = args;
@@ -60,6 +48,7 @@ export const usersApi: any = createApi({
       },
       providesTags: ["coaches"],
     }),
+
     createCoach: builder.mutation({
       query: (args) => {
         const { jwt, body } = args;
@@ -72,8 +61,9 @@ export const usersApi: any = createApi({
           body: { ...body },
         };
       },
-      invalidatesTags: ["users"],
+      invalidatesTags: ["coaches"],
     }),
+
     createTrainee: builder.mutation({
       query: (args) => {
         const { jwt, body } = args;
@@ -88,11 +78,12 @@ export const usersApi: any = createApi({
       },
       invalidatesTags: ["trainees"],
     }),
-    editUser: builder.mutation({
+
+    editCoach: builder.mutation({
       query: (args) => {
         const { jwt, body, id } = args;
         return {
-          url: `/users/edit-coach-or-admin/${id}`,
+          url: `/coaches/edit-coach-or-admin/${id}`,
           method: "PATCH",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -100,8 +91,9 @@ export const usersApi: any = createApi({
           body: { ...body },
         };
       },
-      invalidatesTags: ["users"],
+      invalidatesTags: ["coaches"],
     }),
+
     editTrainee: builder.mutation({
       query: (args) => {
         const { jwt, body, id } = args;
@@ -128,8 +120,9 @@ export const usersApi: any = createApi({
           },
         };
       },
-      invalidatesTags: ["users"],
+      invalidatesTags: ["coaches"],
     }),
+
     deleteTrainee: builder.mutation({
       query: (args) => {
         const { jwt, id } = args;
@@ -154,6 +147,7 @@ export const usersApi: any = createApi({
       },
       invalidatesTags: ["profile"],
     }),
+
     resetPassword: builder.mutation({
       query: (body) => {
         return {
@@ -163,6 +157,7 @@ export const usersApi: any = createApi({
         };
       },
     }),
+
     getProfile: builder.query({
       query: (jwt) => ({
         url: "/users/my-profile",
@@ -173,6 +168,7 @@ export const usersApi: any = createApi({
       }),
       providesTags: ["profile"],
     }),
+
     updateProfile: builder.mutation({
       query: (args) => {
         const { jwt, profileData } = args;
@@ -201,8 +197,7 @@ export const {
   useResetPasswordMutation,
   useDeleteCoachMutation,
   useDeleteTraineeMutation,
-  useGetMyTraineesQuery,
-  useEditUserMutation,
-  useGetAllUsersQuery,
+  useGetTraineeForCoachQuery,
+  useEditCoachMutation,
   useEditTraineeMutation,
 } = usersApi;
