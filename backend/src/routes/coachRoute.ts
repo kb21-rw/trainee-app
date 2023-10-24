@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getCoaches, updateCoachOrAdmin} from "../controllers/coachController";
+import { getCoaches, updateCoachOrAdmin } from "../controllers/coachController";
 import { verifyJWT } from "../middlewares/authenticate";
 
 const router = Router();

@@ -197,7 +197,7 @@ export const {
   useResetPasswordMutation,
   useDeleteCoachMutation,
   useDeleteTraineeMutation,
-  useGetTraineeForCoachQuery,
+  useGetTraineesForCoachQuery,
   useEditCoachMutation,
   useEditTraineeMutation,
 } = usersApi;

@@ -139,7 +139,7 @@ export const updateTrainee = async (req: any, res: Response) => {
 
     const validationResult = editUserSchema.validate({ name, coach, email });
     if (validationResult.error) {
-      return res.status(400).send(validationResult);
+      return res.status(400).json({ message: validationResult.error.message });
     }
 
     const user = await User.findById(userId);
