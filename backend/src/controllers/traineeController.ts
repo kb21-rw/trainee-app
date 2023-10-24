@@ -66,6 +66,7 @@ export const getTrainees = async (req: any, res: Response) => {
     res.status(400).send("failed to get trainees ");
   }
 };
+
 export const getTraineesForCoach = async (req: any, res: Response) => {
   const searchString = req.query.searchString || "";
   const traineesPerPage = Number(req.query.coachesPerPage) || 10;
@@ -140,19 +141,24 @@ export const updateTrainee = async (req: any, res: Response) => {
     if (validationResult.error) {
       return res.status(400).send(validationResult);
     }
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).send("User not found");
     }
+
     if (name) {
       user.name = name.trim().replace(/\s+/g, " ");
     }
+
     if (coach) {
       user.coach = coach;
     }
+
     if (email) {
       user.email = email;
     }
+
     await user.save();
 
     return res.status(200).send(user);

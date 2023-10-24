@@ -13,6 +13,7 @@ export const getProfile = async (req: any, res: Response) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
+
     return res.status(200).send(user);
   } catch (error) {
     return res.status(500).send("Internal Server Error");
@@ -33,12 +34,15 @@ export const updateProfile = async (req: any, res: Response) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
+
     if (name) {
       user.name = name;
     }
+
     if (email) {
       user.email = email;
     }
+
     if (password) {
       const hashedPassword = await hash(password, 10);
       user.password = hashedPassword;
@@ -58,6 +62,7 @@ export const getUsers = async (req: any, res: Response) => {
     if (role !== "ADMIN") {
       return res.status(403).send("Not allowed to view coaches");
     }
+
     const coaches = await User.aggregate([
       {
         $match: { $or: [{ role: "ADMIN" }, { role: "COACH" }] },
@@ -98,6 +103,7 @@ export const deleteUser = async (req: any, res: Response) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
+
     return res.status(200).send("User deleted successfully");
   } catch (error) {
     return res.status(500).send("Internal Server Error");

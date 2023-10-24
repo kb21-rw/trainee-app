@@ -32,7 +32,7 @@ export const sendEmail = async (
       pass,
     },
   });
-  const info: any = await transporter.sendMail({
+  await transporter.sendMail({
     from: `${name} <${email}>`,
     to: email,
     subject,
