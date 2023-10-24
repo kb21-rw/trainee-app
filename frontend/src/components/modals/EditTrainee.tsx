@@ -24,7 +24,10 @@ const EditTraineeModal = ({
   const [editTrainee, { isLoading, error, isSuccess: isEditTraineeSuccess }] =
     useEditTraineeMutation();
   const query = "?coachesPerPage=100";
-  const allCoaches = useGetAllCoachesQuery({ jwt, query });
+  const allCoaches = useGetAllCoachesQuery(
+    { jwt, query },
+    { skip: role !== "ADMIN" },
+  );
   const {
     register,
     handleSubmit,
