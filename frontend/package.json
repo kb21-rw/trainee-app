@@ -2,7 +2,7 @@
   "name": "trainee-app-frontend",
   "private": true,
   "version": "0.0.0",
-  "description":"The front-end of the Trainee App offers a user-friendly interface for coaches and trainees to assess, track progress, and communicate effectively",
+  "description": "The front-end of the Trainee App offers a user-friendly interface for coaches and trainees to assess, track progress, and communicate effectively",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -10,7 +10,8 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "format": "prettier --write .",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "lint-fix": "npx eslint --fix"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.6",
@@ -26,6 +27,8 @@
     "@tailwindcss/forms": "^0.5.6",
     "@types/react": "^18.2.23",
     "@types/react-dom": "^18.2.8",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
     "@vitejs/plugin-react": "^4.0.3",
     "autoprefixer": "^10.4.16",
     "eslint": "^8.45.0",
@@ -38,10 +41,12 @@
     "prettier": "^3.0.3",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.2.2",
-    "vite": "^4.4.5"
+    "vite": "^4.4.5",
+    "vite-plugin-eslint": "^1.8.1"
   },
   "lint-staged": {
     "*.{ts,tsx,js,jsx}": [
+      "npm run lint-fix",
       "prettier --write"
     ]
   }
