@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 import userRoute from "./routes/userRoute";
 import traineeRoute from "./routes/traineeRoute";
 import coachRoute from "./routes/coachRoute";
+import formRoute from "./routes/formRoute";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -28,3 +29,4 @@ app.use("/auth", authRoute);
 app.use("/users", userRoute);
 app.use("/trainees", traineeRoute);
 app.use("/coaches", coachRoute);
+app.use("/forms", formRoute);
