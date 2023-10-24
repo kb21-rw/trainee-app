@@ -12,9 +12,9 @@ const Arrow = () => {
       <path
         d="M8 10L12 14L16 10"
         stroke="#070412"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

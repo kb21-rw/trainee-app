@@ -10,14 +10,10 @@ import Loader from "../../components/ui/Loader";
 
 const Login = () => {
   const [login, { isError, isLoading, error }] = useLoginMutation();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
   const cookies = new Cookies();
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const redirectUrl = searchParams.get("redirectTo") || "/";
   const onSubmit = async (data: any) => {
     const result = await login({ email: data.email, password: data.password });
@@ -26,6 +22,7 @@ const Login = () => {
       return navigate(redirectUrl);
     }
   };
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

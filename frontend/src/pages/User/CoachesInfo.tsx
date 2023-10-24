@@ -24,6 +24,7 @@ const CoachesInfo = () => {
   const handleDeleteCoach = async (id: string) => {
     await deleteCoach({ jwt, id });
   };
+
   const sortingValues = [
     { title: "Entry", value: "entry" },
     { title: "Name", value: "name" },

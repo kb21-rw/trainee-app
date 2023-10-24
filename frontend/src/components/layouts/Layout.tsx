@@ -1,6 +1,5 @@
 import React from "react";
-import { useEffect } from "react";
-import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import Cookies from "universal-cookie";
 import { adminMenu, coachMenu } from "../../utils/data";
 import { useGetProfileQuery } from "../../features/user/apiSlice";

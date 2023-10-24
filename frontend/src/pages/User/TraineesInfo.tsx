@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import Button from "../../components/ui/Button";
-import Plus from "../../assets/Plus";
 import Cookies from "universal-cookie";
 import {
   useDeleteTraineeMutation,
@@ -28,6 +26,7 @@ const TraineesInfo = () => {
   const handleDeleteTrainee = async (id: string) => {
     await deleteTrainee({ jwt, id });
   };
+
   const sortingValues = [
     { title: "Entry", value: "entry" },
     { title: "Name", value: "name" },

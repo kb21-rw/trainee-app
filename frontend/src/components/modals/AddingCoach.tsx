@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import ModalLayout from "./ModalLayout";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
@@ -14,7 +14,7 @@ const AddingCoachModal = ({
   closePopup: () => void;
   jwt: string;
 }) => {
-  const [createCoach, { isError, isLoading, error, isSuccess }] =
+  const [createCoach, { isLoading, error, isSuccess }] =
     useCreateCoachMutation();
   const {
     register,
@@ -22,8 +22,9 @@ const AddingCoachModal = ({
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
-    const result = await createCoach({ jwt, body: { ...data, role: "COACH" } });
+    await createCoach({ jwt, body: { ...data, role: "COACH" } });
   };
+
   let errorMessage: any = errors.name?.message || errors.email?.message;
   if (error?.data?.code === 11000) {
     errorMessage =

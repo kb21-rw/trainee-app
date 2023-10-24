@@ -33,12 +33,14 @@ const EditTraineeModal = ({
   const onSubmit = async (data: any) => {
     await editTrainee({ jwt, id: traineeData[0], body: { ...data } });
   };
+
   let errorMessage: any = errors.name?.message || errors.email?.message;
   if (error?.data?.code === 11000) {
     errorMessage =
       (error?.data?.keyValue?.email && "The email is already registered") ||
       (error?.data?.keyValue?.name && "That name is already taken");
   }
+
   return (
     <ModalLayout closePopup={closePopup} title="Edit trainee">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
