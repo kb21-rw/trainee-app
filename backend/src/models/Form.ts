@@ -5,9 +5,10 @@ const FormSchema = new Schema(
     title: {
       type: String,
       required: true,
+      unique: true,
     },
     description: String,
-    questions: [
+    questionsId: [
       {
         type: Schema.Types.ObjectId,
         ref: "Question",
