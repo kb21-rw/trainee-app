@@ -7,8 +7,12 @@ import Form from "../models/Form";
 
 export const createForm = async (req: any, res: Response) => {
   try {
-    const validationResult = await createFormValidation.validateAsync(req.body);
-    const { title, description } = validationResult;
+    const validationResult = createFormValidation.validate(req.body);
+    if (validationResult.error) {
+      return res.status(400).json({ message: validationResult.error.message });
+    }
+
+    const { title, description } = req.body;
     const createdForm = await Form.create({ title, description });
     return res.status(201).json(createdForm);
   } catch (error: any) {
@@ -48,15 +52,15 @@ export const getForms = async (req: any, res: Response) => {
 export const updateForm = async (req: any, res: Response) => {
   try {
     const { formId } = req.params;
-    const validationResult = await editFormValidation.validateAsync(req.body);
+    const validationResult = editFormValidation.validate(req.body);
     if (validationResult.error) {
       return res.status(400).json({ message: validationResult.error.message });
     }
 
-    const { title, description } = validationResult;
+    const { title, description } = req.body;
     const form = await Form.findById(formId);
     if (!form) {
-      return res.status(404).send("User not found");
+      return res.status(404).send("form not found");
     }
 
     if (title) {
