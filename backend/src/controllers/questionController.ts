@@ -12,8 +12,9 @@ export const createQuestion = async (req: any, res: Response) => {
     const { title, type, options } = validationResult;
 
     const relatedForm = await Form.findById(formId);
-    if (!relatedForm)
+    if (!relatedForm) {
       return res.status(404).json({ error: "That form is not found" });
+    }
 
     const createQuestion = await Question.create({ title, type, options });
     if (createQuestion) {
