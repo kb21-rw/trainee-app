@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { Dispatch, SetStateAction } from "react";
 import Edit from "../../assets/Edit";
 import Delete from "../../assets/Delete";
@@ -10,7 +11,7 @@ interface PropTypes {
     type: string;
     actionCaller:
       | Dispatch<SetStateAction<string[] | null>>
-      | ((id: string) => Promise<void>);
+      | ((_id: string) => Promise<void>);
   }[];
 }
 
@@ -42,13 +43,16 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
                 className="border-b border-black h-[100px] w-full"
               >
                 <td className="text-base font-medium pl-12">{index + 1}</td>
-                {userData.slice(1).map((item: string) => (
-                  <td className="text-base font-medium pl-12">{item}</td>
+                {userData.slice(1).map((item: string, index: number) => (
+                  <td key={index} className="text-base font-medium pl-12">
+                    {item}
+                  </td>
                 ))}
                 <td className="text-base font-medium pl-12">
                   <div className="flex items-center gap-4 w-full h-full">
-                    {actions.map((action: any) => (
+                    {actions.map((action: any, index: number) => (
                       <button
+                        key={index}
                         onClick={() =>
                           action.actionCaller(
                             action.type == "delete" ? userData[0] : userData,

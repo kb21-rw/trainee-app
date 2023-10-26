@@ -17,7 +17,7 @@ const AddingTraineeModal = ({
   closePopup: () => void;
   jwt: string;
 }) => {
-  const [createTrainee, { isError, isLoading, error, isSuccess }] =
+  const [createTrainee, { isLoading, error, isSuccess }] =
     useCreateTraineeMutation();
   const coachesData = useGetAllCoachesQuery({ jwt, query: "" });
   const {
@@ -29,11 +29,13 @@ const AddingTraineeModal = ({
     if (!data?.coach) {
       delete data.coach;
     }
-    const result = await createTrainee({
+
+    await createTrainee({
       jwt,
       body: { ...data, role: "TRAINEE" },
     });
   };
+
   let errorMessage: any = errors?.name?.message || errors?.email?.message;
   if (error?.data?.code === 11000) {
     errorMessage =
@@ -90,7 +92,7 @@ const AddingTraineeModal = ({
             <option key={1} value="">
               Select a Coach
             </option>
-            {coachesData.data?.map((coach: any, index: number) => (
+            {coachesData.data?.map((coach: any) => (
               <option key={coach?._id} value={coach?._id}>
                 {coach?.name}
               </option>

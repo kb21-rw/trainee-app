@@ -141,19 +141,24 @@ export const updateTrainee = async (req: any, res: Response) => {
     if (validationResult.error) {
       return res.status(400).json({ message: validationResult.error.message });
     }
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).send("User not found");
     }
+
     if (name) {
       user.name = name.trim().replace(/\s+/g, " ");
     }
+
     if (coach) {
       user.coach = coach;
     }
+
     if (email) {
       user.email = email;
     }
+
     await user.save();
 
     return res.status(200).send(user);

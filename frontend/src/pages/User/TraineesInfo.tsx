@@ -32,6 +32,7 @@ const TraineesInfo = () => {
   const handleDeleteTrainee = async (id: string) => {
     await deleteTrainee({ jwt, id });
   };
+
   const traineesList: string[][] = getTrainees(data, traineeTableDataItems);
 
   return (

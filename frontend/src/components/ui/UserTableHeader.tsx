@@ -27,16 +27,18 @@ const UserTableHeader = ({
   const onSubmitSearch = () => {
     setSearchQuery(searchString);
   };
+
   const handleKeyPress: KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === "Enter") {
       setSearchQuery(searchString);
     }
   };
+
   useEffect(() => {
     return setQuery(
       `?searchString=${searchQuery}&sortBy=${sortBy}&coachesPerPage=${usersPerPage}`,
     );
-  }, [searchQuery, sortBy, usersPerPage]);
+  }, [searchQuery, sortBy, usersPerPage, setQuery]);
   return (
     <div className="flex items-center justify-between gap-16">
       <div className="flex w-full  items-center max-w-xl px-1 py-1 h-[58px] border border-[#DBD5E0] rounded-xl">

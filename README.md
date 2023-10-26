@@ -107,3 +107,11 @@ npm run dev
 ```
 
 Open your web browser and access the app at http://localhost:5173.
+
+## To contribute
+
+### Install husky to apply eslinting and prettier before committing
+ ```bash
+npx husky install
+```
+  

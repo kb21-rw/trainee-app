@@ -24,7 +24,10 @@ const EditTraineeModal = ({
   const [editTrainee, { isLoading, error, isSuccess: isEditTraineeSuccess }] =
     useEditTraineeMutation();
   const query = "?coachesPerPage=100";
-  const allCoaches = role === "ADMIN" && useGetAllCoachesQuery({ jwt, query });
+  const allCoaches = useGetAllCoachesQuery(
+    { jwt, query },
+    { skip: role !== "ADMIN" },
+  );
   const {
     register,
     handleSubmit,
@@ -33,6 +36,7 @@ const EditTraineeModal = ({
   const onSubmit = async (data: any) => {
     await editTrainee({ jwt, id: traineeData[0], body: { ...data } });
   };
+
   let errorMessage: any =
     errors.name?.message || errors.email?.message || error?.data?.message;
   if (error?.data?.code === 11000) {
@@ -40,6 +44,7 @@ const EditTraineeModal = ({
       (error?.data?.keyValue?.email && "The email is already registered") ||
       (error?.data?.keyValue?.name && "That name is already taken");
   }
+
   return (
     <ModalLayout closePopup={closePopup} title="Edit trainee">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}

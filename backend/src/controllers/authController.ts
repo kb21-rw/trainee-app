@@ -68,6 +68,7 @@ export const login = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+
     if (user.role === "TRAINEE") {
       return res
         .status(403)
@@ -78,6 +79,7 @@ export const login = async (req: Request, res: Response) => {
     if (!match) {
       return res.status(403).json({ message: "Invalid credential" });
     }
+
     const accessToken = jwt.sign(
       { id: user._id, name: user.name, email: user.email, role: user.role },
       secret,

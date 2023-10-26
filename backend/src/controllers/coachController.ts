@@ -13,6 +13,7 @@ export const getCoaches = async (req: any, res: Response) => {
     if (role !== "ADMIN") {
       return res.status(403).send("Not allowed to view coaches");
     }
+
     const coaches = await User.aggregate([
       {
         $match: {
@@ -68,16 +69,20 @@ export const updateCoachOrAdmin = async (req: any, res: Response) => {
     if (validationResult.error) {
       return res.status(400).json({ message: validationResult.error.message });
     }
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).send("User not found");
     }
+
     if (name) {
       user.name = name;
     }
+
     if (email) {
       user.email = email;
     }
+
     if (role) {
       user.role = role;
     }

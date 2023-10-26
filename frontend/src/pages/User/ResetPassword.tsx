@@ -17,8 +17,9 @@ const ResetPassword = () => {
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
-    const result = await resetPassword({ email: data.email });
+    await resetPassword({ email: data.email });
   };
+
   let errorMessage: any = errors.email?.message;
   return (
     <form

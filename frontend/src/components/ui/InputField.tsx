@@ -25,6 +25,7 @@ const InputField = ({
   const passwordIcon = () => {
     return show ? <OpenEye /> : <ClosedEye />;
   };
+
   return (
     <div className={`${styles ? styles : "flex flex-col gap-5"} w-full`}>
       <label htmlFor={label} className="text-lg font-medium">

@@ -17,11 +17,7 @@ const Profile = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
   const { data } = useGetProfileQuery(jwt);
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const { register, handleSubmit } = useForm();
   const onSubmit = async (data: {
     email?: string;
     name?: string;
@@ -32,14 +28,18 @@ const Profile = () => {
     if (data.email) {
       profileData.email = data.email;
     }
+
     if (data.name) {
       profileData.name = data.name;
     }
+
     if (data.password) {
       profileData.password = data.password;
     }
-    const result = await updateProfile({ jwt, profileData });
+
+    await updateProfile({ jwt, profileData });
   };
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

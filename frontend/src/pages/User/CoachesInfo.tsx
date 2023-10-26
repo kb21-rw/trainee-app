@@ -30,6 +30,7 @@ const CoachesInfo = () => {
   const handleDeleteCoach = async (id: string) => {
     await deleteCoach({ jwt, id });
   };
+
   const coachesList = getCoaches(data, coachTableDataItems);
 
   return (
