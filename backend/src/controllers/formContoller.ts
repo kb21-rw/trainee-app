@@ -1,5 +1,8 @@
 import { Response } from "express";
-import { createFormValidation } from "../validations/formValidation";
+import {
+  createFormValidation,
+  editFormValidation,
+} from "../validations/formValidation";
 import Form from "../models/Form";
 
 export const createForm = async (req: any, res: Response) => {
@@ -39,5 +42,35 @@ export const getForms = async (req: any, res: Response) => {
     return res.status(200).json(forms);
   } catch (error) {
     res.status(400).json({ error });
+  }
+};
+
+export const updateForm = async (req: any, res: Response) => {
+  try {
+    const { formId } = req.params;
+    const validationResult = await editFormValidation.validateAsync(req.body);
+    if (validationResult.error) {
+      return res.status(400).json({ message: validationResult.error.message });
+    }
+
+    const { title, description } = validationResult;
+    const form = await Form.findById(formId);
+    if (!form) {
+      return res.status(404).send("User not found");
+    }
+
+    if (title) {
+      form.title = title;
+    }
+
+    if (description) {
+      form.description = description;
+    }
+
+    await form.save();
+
+    return res.status(200).json(form);
+  } catch (error) {
+    return res.status(500).json({ error });
   }
 };
