@@ -85,3 +85,17 @@ export const updateForm = async (req: Request, res: Response) => {
     return res.status(500).json({ error });
   }
 };
+
+export const deleteForm = async (req: Request, res: Response) => {
+  try {
+    const formId = req.params.formId;
+    const user = await Form.deleteOne({ _id: formId });
+    if (!user) {
+      return res.status(404).json({ message: "Form not found" });
+    }
+
+    return res.status(204).send({ message: "Form deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};
