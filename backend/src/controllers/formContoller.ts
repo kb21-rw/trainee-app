@@ -6,6 +6,7 @@ import {
 import Form from "../models/Form";
 import Joi from "joi";
 import { CreateFormType, Search, FormType } from "../utils/types";
+import Question from "../models/Question";
 
 export const createForm = async (req: Request, res: Response) => {
   try {
@@ -89,10 +90,12 @@ export const updateForm = async (req: Request, res: Response) => {
 export const deleteForm = async (req: Request, res: Response) => {
   try {
     const formId = req.params.formId;
-    const user = await Form.deleteOne({ _id: formId });
-    if (!user) {
+    const form = await Form.findByIdAndDelete(formId);
+    if (!form) {
       return res.status(404).json({ message: "Form not found" });
     }
+
+    await Question.deleteMany({ _id: { $in: form.questionsId } });
 
     return res.status(204).send({ message: "Form deleted successfully" });
   } catch (error) {
