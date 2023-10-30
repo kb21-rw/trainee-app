@@ -74,11 +74,11 @@ export const deleteQuestion = async (req: Request, res: Response) => {
     const { questionId } = req.params;
     const question = await Question.findByIdAndDelete(questionId);
     if (!question) {
-      return res.status(404).send("Question is not found");
+      return res.status(404).json({ error: "Question is not found" });
     }
 
-    return res.status(200).send("Question deleted successfully");
+    return res.status(204).json({ message: "Question deleted successfully" });
   } catch (error) {
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).json({ message: "Internal Server Error" });
   }
 };
