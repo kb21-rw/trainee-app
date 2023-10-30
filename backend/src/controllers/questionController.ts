@@ -41,12 +41,12 @@ export const getAllQuestions = async (
   try {
     const searchString = req.query.searchString || "";
     const typeQuery = req.query.typeQuery || "";
-    const forms: QuestionType[] = await Question.find({
+    const questions: QuestionType[] = await Question.find({
       title: { $regex: searchString, $options: "i" },
       type: { $regex: typeQuery, $options: "i" },
     });
 
-    return res.status(200).json(forms);
+    return res.status(200).json(questions);
   } catch (error) {
     res.status(400).json({ error });
   }
