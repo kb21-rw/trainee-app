@@ -79,6 +79,6 @@ export const deleteQuestion = async (req: Request, res: Response) => {
 
     return res.status(204).json({ message: "Question deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ message: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
