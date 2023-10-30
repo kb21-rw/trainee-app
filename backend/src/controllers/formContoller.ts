@@ -85,3 +85,17 @@ export const updateForm = async (req: Request, res: Response) => {
     return res.status(500).json({ error });
   }
 };
+
+export const getSingleForm = async (req: Request, res: Response) => {
+  try {
+    const { formId } = req.params;
+    const form = await Form.findById(formId);
+    if (!form) {
+      return res.status(404).json({ message: "Form not found" });
+    }
+
+    return res.status(200).json(form);
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};
