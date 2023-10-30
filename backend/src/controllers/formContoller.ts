@@ -97,7 +97,7 @@ export const deleteForm = async (req: Request, res: Response) => {
 
     await Question.deleteMany({ _id: { $in: form.questionsId } });
 
-    return res.status(204).send({ message: "Form deleted successfully" });
+    return res.status(204).json({ message: "Form deleted successfully" });
   } catch (error) {
     return res.status(500).json({ error });
   }
