@@ -23,4 +23,5 @@ export type QuestionType = CreateQuestionType & MetaType;
 
 export interface Search {
   searchString?: string;
+  typeQuery?: string;
 }
