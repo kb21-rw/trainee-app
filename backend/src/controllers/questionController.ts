@@ -1,5 +1,8 @@
 import { Response, Request } from "express";
-import { createQuestionValidation } from "../validations/questionValidation";
+import {
+  createQuestionValidation,
+  updateQuestionValidation,
+} from "../validations/questionValidation";
 import Form from "../models/Form";
 import Question from "../models/Question";
 import { CreateQuestionType } from "../utils/types";
@@ -38,7 +41,7 @@ export const updateQuestion = async (req: Request, res: Response) => {
   try {
     const { questionId } = req.params;
     const validationResult: ValidationResult<CreateQuestionType> =
-      createQuestionValidation.validate(req.body);
+      updateQuestionValidation.validate(req.body);
     if (validationResult.error) {
       return res.status(400).json({ message: validationResult.error.message });
     }
