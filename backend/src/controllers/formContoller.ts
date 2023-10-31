@@ -96,8 +96,21 @@ export const deleteForm = async (req: Request, res: Response) => {
     }
 
     await Question.deleteMany({ _id: { $in: form.questionsId } });
-
     return res.status(204).json({ message: "Form deleted successfully" });
+  } catch (error) {
+    return res.status(500).json({ error });
+  }
+};
+
+export const getSingleForm = async (req: Request, res: Response) => {
+  try {
+    const { formId } = req.params;
+    const form = await Form.findById(formId);
+    if (!form) {
+      return res.status(404).json({ message: "Form not found" });
+    }
+
+    return res.status(200).json(form);
   } catch (error) {
     return res.status(500).json({ error });
   }
