@@ -5,7 +5,7 @@ import {
 } from "../validations/questionValidation";
 import Form from "../models/Form";
 import Question from "../models/Question";
-import { CreateQuestionType } from "../utils/types";
+import { CreateQuestionType, QuestionType, Search } from "../utils/types";
 import { ValidationResult } from "joi";
 
 export const createQuestion = async (req: Request, res: Response) => {
@@ -34,6 +34,24 @@ export const createQuestion = async (req: Request, res: Response) => {
     return res.status(201).json(createQuestion);
   } catch (error) {
     return res.status(400).json({ error });
+  }
+};
+
+export const getAllQuestions = async (
+  req: Request<object, object, object, Search>,
+  res: Response,
+) => {
+  try {
+    const searchString = req.query.searchString || "";
+    const typeQuery = req.query.typeQuery || "";
+    const questions: QuestionType[] = await Question.find({
+      title: { $regex: searchString, $options: "i" },
+      type: { $regex: typeQuery, $options: "i" },
+    });
+
+    return res.status(200).json(questions);
+  } catch (error) {
+    res.status(400).json({ error });
   }
 };
 
