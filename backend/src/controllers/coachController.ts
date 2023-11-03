@@ -55,7 +55,7 @@ export const getCoaches = async (req: any, res: Response) => {
     ]);
     return res.status(200).json(coaches);
   } catch (error) {
-    res.status(400).send(error);
+    res.status(500).send(error);
   }
 };
 

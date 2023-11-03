@@ -57,7 +57,7 @@ export const register = async (req: any, res: Response) => {
 
     return res.status(201).send({ ...result, password });
   } catch (error) {
-    return res.status(400).send(error);
+    return res.status(500).send(error);
   }
 };
 
@@ -95,7 +95,7 @@ export const login = async (req: Request, res: Response) => {
       })
       .json({ accessToken });
   } catch (error) {
-    return res.status(400).json({ error });
+    return res.status(500).json({ error });
   }
 };
 
@@ -119,6 +119,6 @@ export const resetPassword = async (req: Request, res: Response) => {
     );
     return res.status(200).json({ password });
   } catch (error: any) {
-    return res.status(400).send(error);
+    return res.status(500).send(error);
   }
 };
