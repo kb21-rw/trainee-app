@@ -63,7 +63,7 @@ export const getTrainees = async (req: any, res: Response) => {
 
     return res.status(200).json(trainees);
   } catch (error) {
-    res.status(400).send("failed to get trainees ");
+    res.status(500).send("failed to get trainees ");
   }
 };
 
@@ -127,7 +127,7 @@ export const getTraineesForCoach = async (req: any, res: Response) => {
     ]);
     return res.status(200).json(trainees);
   } catch (error) {
-    res.status(400).send("failed to get trainees ");
+    res.status(500).send("failed to get trainees ");
   }
 };
 

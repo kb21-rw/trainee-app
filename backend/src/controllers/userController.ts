@@ -92,7 +92,7 @@ export const getUsers = async (req: any, res: Response) => {
     ]);
     return res.status(200).json(coaches);
   } catch (error) {
-    res.status(400).send(400);
+    res.status(500).send(error);
   }
 };
 
