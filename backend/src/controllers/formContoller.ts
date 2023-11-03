@@ -30,6 +30,9 @@ export const getForms = async (
 ) => {
   try {
     const searchString = req.query.searchString || "";
+
+    // from this will be moved to services
+
     const forms: FormType[] = await Form.aggregate([
       {
         $match: { title: { $regex: new RegExp(searchString, "i") } },
