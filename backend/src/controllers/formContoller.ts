@@ -5,8 +5,9 @@ import {
 } from "../validations/formValidation";
 import Form from "../models/Form";
 import Joi from "joi";
-import { CreateFormType, Search, FormType } from "../utils/types";
+import { CreateFormType, Search } from "../utils/types";
 import Question from "../models/Question";
+import { getForms, updateForm } from "../services/formService";
 
 export const createForm = async (req: Request, res: Response) => {
   try {
@@ -24,42 +25,20 @@ export const createForm = async (req: Request, res: Response) => {
   }
 };
 
-export const getForms = async (
+export const getFormsController = async (
   req: Request<object, object, object, Search>,
   res: Response,
 ) => {
   try {
     const searchString = req.query.searchString || "";
-
-    // from this will be moved to services
-
-    const forms: FormType[] = await Form.aggregate([
-      {
-        $match: { title: { $regex: new RegExp(searchString, "i") } },
-      },
-      {
-        $lookup: {
-          from: "questions",
-          localField: "questionsId",
-          foreignField: "_id",
-          as: "questions",
-        },
-      },
-      {
-        $project: {
-          title: 1,
-          description: 1,
-          questions: 1,
-        },
-      },
-    ]);
+    const forms = await getForms(searchString);
     return res.status(200).json(forms);
   } catch (error) {
     res.status(500).json({ error });
   }
 };
 
-export const updateForm = async (req: Request, res: Response) => {
+export const updateFormController = async (req: Request, res: Response) => {
   try {
     const { formId } = req.params;
     const validationResult: Joi.ValidationResult<CreateFormType> =
@@ -68,23 +47,13 @@ export const updateForm = async (req: Request, res: Response) => {
       return res.status(400).json({ message: validationResult.error.message });
     }
 
-    const { title, description }: CreateFormType = req.body;
-    const form = await Form.findById(formId);
-    if (!form) {
-      return res.status(404).json({ message: "form not found" });
+    const updatedForm = await updateForm(formId, req.body);
+
+    if (updatedForm === null) {
+      return res.status(404).json({ message: "Form not found" });
     }
 
-    if (title) {
-      form.title = title;
-    }
-
-    if (description) {
-      form.description = description;
-    }
-
-    await form.save();
-
-    return res.status(200).json(form);
+    return res.status(200).json(updatedForm);
   } catch (error) {
     return res.status(500).json({ error });
   }
