@@ -3,13 +3,17 @@ import {
   createFormValidation,
   editFormValidation,
 } from "../validations/formValidation";
-import Form from "../models/Form";
 import Joi from "joi";
 import { CreateFormType, Search } from "../utils/types";
-import Question from "../models/Question";
-import { getForms, updateForm } from "../services/formService";
+import {
+  getForms,
+  createForm,
+  updateForm,
+  getSingleForm,
+  deleteForm,
+} from "../services/formService";
 
-export const createForm = async (req: Request, res: Response) => {
+export const createFormController = async (req: Request, res: Response) => {
   try {
     const validationResult: Joi.ValidationResult<CreateFormType> =
       createFormValidation.validate(req.body);
@@ -17,8 +21,7 @@ export const createForm = async (req: Request, res: Response) => {
       return res.status(400).json({ message: validationResult.error.message });
     }
 
-    const { title, description }: CreateFormType = req.body;
-    const createdForm = await Form.create({ title, description });
+    const createdForm = await createForm(req.body);
     return res.status(201).json(createdForm);
   } catch (error) {
     return res.status(500).json({ error });
@@ -59,26 +62,27 @@ export const updateFormController = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteForm = async (req: Request, res: Response) => {
+export const deleteFormController = async (req: Request, res: Response) => {
   try {
     const formId = req.params.formId;
-    const form = await Form.findByIdAndDelete(formId);
-    if (!form) {
+    const isDeleted = await deleteForm(formId);
+
+    if (!isDeleted) {
       return res.status(404).json({ message: "Form not found" });
     }
 
-    await Question.deleteMany({ _id: { $in: form.questionsId } });
     return res.status(204).json({ message: "Form deleted successfully" });
   } catch (error) {
     return res.status(500).json({ error });
   }
 };
 
-export const getSingleForm = async (req: Request, res: Response) => {
+export const getSingleFormController = async (req: Request, res: Response) => {
   try {
     const { formId } = req.params;
-    const form = await Form.findById(formId);
-    if (!form) {
+    const form = await getSingleForm(formId);
+
+    if (form === null) {
       return res.status(404).json({ message: "Form not found" });
     }
 
