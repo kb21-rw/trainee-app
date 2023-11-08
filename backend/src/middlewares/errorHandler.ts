@@ -1,11 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { Request, Response, NextFunction } from "express";
+
 import CustomError from "./customError";
+interface ErrorObject {
+  name: string;
+  details?: any;
+  statusCode: number;
+  errorCode: any;
+}
 
 export const errorHandler = (
-  error: { name: string; details: any; statusCode: number; errorCode: any },
-  req: any,
-  res: any,
-  next: any,
+  error: ErrorObject,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
   if (error.name === "ValidationError") {
     return res.status(400).send({
