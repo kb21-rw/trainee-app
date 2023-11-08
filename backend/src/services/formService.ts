@@ -50,6 +50,7 @@ export const updateForm = async (formId: string, formData: CreateFormType) => {
     }
 
     await form.save();
+    return form;
   } catch (error) {
     throw error;
   }
