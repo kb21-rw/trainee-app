@@ -12,82 +12,113 @@ import {
   getSingleForm,
   deleteForm,
 } from "../services/formService";
+import CustomError from "../middlewares/customError";
 
-export const createFormController = async (req: Request, res: Response) => {
+import { DUPLICATE_DOCUMENT, FORM_NOT_FOUND } from "../utils/errorCodes";
+
+export const createFormController = async (
+  req: Request,
+  res: Response,
+  next: any,
+) => {
   try {
     const validationResult: Joi.ValidationResult<CreateFormType> =
       createFormValidation.validate(req.body);
     if (validationResult.error) {
-      return res.status(400).json({ message: validationResult.error.message });
+      throw validationResult.error;
     }
 
     const createdForm = await createForm(req.body);
     return res.status(201).json(createdForm);
   } catch (error) {
-    return res.status(500).json({ error });
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    if (error.code === 11000) {
+      const err = new CustomError(
+        DUPLICATE_DOCUMENT,
+        "Please that form already exist",
+        400,
+      );
+      next(err);
+    }
+
+    next(error);
   }
 };
 
 export const getFormsController = async (
   req: Request<object, object, object, Search>,
   res: Response,
+  next: any,
 ) => {
   try {
     const searchString = req.query.searchString || "";
     const forms = await getForms(searchString);
     return res.status(200).json(forms);
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-export const updateFormController = async (req: Request, res: Response) => {
+export const updateFormController = async (
+  req: Request,
+  res: Response,
+  next: any,
+) => {
   try {
     const { formId } = req.params;
     const validationResult: Joi.ValidationResult<CreateFormType> =
       editFormValidation.validate(req.body);
     if (validationResult.error) {
-      return res.status(400).json({ message: validationResult.error.message });
+      throw validationResult.error;
     }
 
     const updatedForm = await updateForm(formId, req.body);
 
     if (updatedForm === null) {
-      return res.status(404).json({ message: "Form not found" });
+      throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
     }
 
     return res.status(200).json(updatedForm);
   } catch (error) {
-    return res.status(500).json({ error });
+    return next(error);
   }
 };
 
-export const deleteFormController = async (req: Request, res: Response) => {
+export const deleteFormController = async (
+  req: Request,
+  res: Response,
+  next: any,
+) => {
   try {
     const formId = req.params.formId;
     const isDeleted = await deleteForm(formId);
 
     if (!isDeleted) {
-      return res.status(404).json({ message: "Form not found" });
+      throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
     }
 
     return res.status(204).json({ message: "Form deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ error });
+    return next(error);
   }
 };
 
-export const getSingleFormController = async (req: Request, res: Response) => {
+export const getSingleFormController = async (
+  req: Request,
+  res: Response,
+  next: any,
+) => {
   try {
     const { formId } = req.params;
     const form = await getSingleForm(formId);
 
     if (form === null) {
-      return res.status(404).json({ message: "Form not found" });
+      throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
     }
 
     return res.status(200).json(form);
   } catch (error) {
-    return res.status(500).json({ error });
+    return next(error);
   }
 };

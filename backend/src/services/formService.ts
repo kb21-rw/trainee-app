@@ -1,8 +1,12 @@
 /* eslint-disable no-useless-catch */
+import CustomError from "../middlewares/customError";
 import Form from "../models/Form";
 import Question from "../models/Question";
-
+import { INVALID_MONGODB_ID } from "../utils/errorCodes";
 import { CreateFormType, FormType } from "../utils/types";
+import mongoose from "mongoose";
+const { Types } = mongoose;
+const { ObjectId } = Types;
 
 export const getForms = async (searchString: string) => {
   try {
@@ -35,6 +39,10 @@ export const getForms = async (searchString: string) => {
 export const updateForm = async (formId: string, formData: CreateFormType) => {
   try {
     const { title, description } = formData;
+    if (!ObjectId.isValid(formId)) {
+      throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
+    }
+
     const form = await Form.findById(formId);
 
     if (!form) {
@@ -68,6 +76,10 @@ export const createForm = async (formData: CreateFormType) => {
 
 export const getSingleForm = async (formId: string) => {
   try {
+    if (!ObjectId.isValid(formId)) {
+      throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
+    }
+
     const form = await Form.findById(formId);
 
     if (!form) {
@@ -82,6 +94,10 @@ export const getSingleForm = async (formId: string) => {
 
 export const deleteForm = async (formId: string) => {
   try {
+    if (!ObjectId.isValid(formId)) {
+      throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
+    }
+
     const form = await Form.findByIdAndDelete(formId);
 
     if (!form) {
