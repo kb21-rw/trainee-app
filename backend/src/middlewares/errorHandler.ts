@@ -6,7 +6,7 @@ interface ErrorObject {
   name: string;
   details?: any;
   statusCode: number;
-  errorCode: any;
+  errorCode: number | string;
 }
 
 export const errorHandler = (
