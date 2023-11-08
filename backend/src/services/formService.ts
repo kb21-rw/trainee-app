@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 const { Types } = mongoose;
 const { ObjectId } = Types;
 
-export const getForms = async (searchString: string) => {
+export const getFormsService = async (searchString: string) => {
   try {
     const forms: FormType[] = await Form.aggregate([
       {
@@ -36,7 +36,10 @@ export const getForms = async (searchString: string) => {
   }
 };
 
-export const updateForm = async (formId: string, formData: CreateFormType) => {
+export const updateFormService = async (
+  formId: string,
+  formData: CreateFormType,
+) => {
   try {
     const { title, description } = formData;
     if (!ObjectId.isValid(formId)) {
@@ -64,7 +67,7 @@ export const updateForm = async (formId: string, formData: CreateFormType) => {
   }
 };
 
-export const createForm = async (formData: CreateFormType) => {
+export const createFormService = async (formData: CreateFormType) => {
   try {
     const { title, description } = formData;
     const createdForm = await Form.create({ title, description });
@@ -74,7 +77,7 @@ export const createForm = async (formData: CreateFormType) => {
   }
 };
 
-export const getSingleForm = async (formId: string) => {
+export const getSingleFormService = async (formId: string) => {
   try {
     if (!ObjectId.isValid(formId)) {
       throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
@@ -92,7 +95,7 @@ export const getSingleForm = async (formId: string) => {
   }
 };
 
-export const deleteForm = async (formId: string) => {
+export const deleteFormService = async (formId: string) => {
   try {
     if (!ObjectId.isValid(formId)) {
       throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);

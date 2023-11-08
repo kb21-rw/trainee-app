@@ -6,11 +6,11 @@ import {
 import Joi from "joi";
 import { CreateFormType, Search } from "../utils/types";
 import {
-  getForms,
-  createForm,
-  updateForm,
-  getSingleForm,
-  deleteForm,
+  getFormsService,
+  createFormService,
+  updateFormService,
+  getSingleFormService,
+  deleteFormService,
 } from "../services/formService";
 import CustomError from "../middlewares/customError";
 import { DUPLICATE_DOCUMENT, FORM_NOT_FOUND } from "../utils/errorCodes";
@@ -27,7 +27,7 @@ export const createFormController = async (
       throw validationResult.error;
     }
 
-    const createdForm = await createForm(req.body);
+    const createdForm = await createFormService(req.body);
     return res.status(201).json(createdForm);
   } catch (error) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -52,7 +52,7 @@ export const getFormsController = async (
 ) => {
   try {
     const searchString = req.query.searchString || "";
-    const forms = await getForms(searchString);
+    const forms = await getFormsService(searchString);
     return res.status(200).json(forms);
   } catch (error) {
     next(error);
@@ -72,7 +72,7 @@ export const updateFormController = async (
       throw validationResult.error;
     }
 
-    const updatedForm = await updateForm(formId, req.body);
+    const updatedForm = await updateFormService(formId, req.body);
 
     if (updatedForm === null) {
       throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
@@ -91,7 +91,7 @@ export const deleteFormController = async (
 ) => {
   try {
     const formId = req.params.formId;
-    const isDeleted = await deleteForm(formId);
+    const isDeleted = await deleteFormService(formId);
 
     if (!isDeleted) {
       throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
@@ -110,7 +110,7 @@ export const getSingleFormController = async (
 ) => {
   try {
     const { formId } = req.params;
-    const form = await getSingleForm(formId);
+    const form = await getSingleFormService(formId);
 
     if (form === null) {
       throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
