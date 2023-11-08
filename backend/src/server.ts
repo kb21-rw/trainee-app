@@ -31,4 +31,4 @@ app.use("/users", userRoute);
 app.use("/trainees", traineeRoute);
 app.use("/coaches", coachRoute);
 app.use("/forms", formRoute);
-app.use("/questions", questionRoute)
+app.use("/questions", questionRoute);

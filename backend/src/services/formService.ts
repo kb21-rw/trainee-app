@@ -1,9 +1,10 @@
+/* eslint-disable no-useless-catch */
 import Form from "../models/Form";
 import Question from "../models/Question";
 
 import { CreateFormType, FormType } from "../utils/types";
 
-export const getForms = async (searchString: string): Promise<FormType[]> => {
+export const getForms = async (searchString: string) => {
   try {
     const forms: FormType[] = await Form.aggregate([
       {
@@ -27,7 +28,7 @@ export const getForms = async (searchString: string): Promise<FormType[]> => {
     ]);
     return forms;
   } catch (error) {
-    throw console.error(error);
+    throw error;
   }
 };
 
@@ -37,7 +38,7 @@ export const updateForm = async (formId: string, formData: CreateFormType) => {
     const form = await Form.findById(formId);
 
     if (!form) {
-      return null; // Handle the case when the form is not found
+      return null;
     }
 
     if (title) {
@@ -50,7 +51,7 @@ export const updateForm = async (formId: string, formData: CreateFormType) => {
 
     await form.save();
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 };
 
@@ -60,7 +61,7 @@ export const createForm = async (formData: CreateFormType) => {
     const createdForm = await Form.create({ title, description });
     return createdForm;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 };
 
@@ -69,12 +70,12 @@ export const getSingleForm = async (formId: string) => {
     const form = await Form.findById(formId);
 
     if (!form) {
-      return null; // Handle the case when the form is not found
+      return null;
     }
 
     return form;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 };
 
@@ -83,12 +84,12 @@ export const deleteForm = async (formId: string) => {
     const form = await Form.findByIdAndDelete(formId);
 
     if (!form) {
-      return false; // Handle the case when the form is not found
+      return false;
     }
 
     await Question.deleteMany({ _id: { $in: form.questionsId } });
     return true;
   } catch (error) {
-    console.error(error);
+    throw error;
   }
 };
