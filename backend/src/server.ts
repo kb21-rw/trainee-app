@@ -8,6 +8,10 @@ import userRoute from "./routes/userRoute";
 import traineeRoute from "./routes/traineeRoute";
 import coachRoute from "./routes/coachRoute";
 import formRoute from "./routes/formRoute";
+import questionRoute from "./routes/questionRoute";
+import { errorHandler } from "./middlewares/errorHandler";
+import CustomError from "./middlewares/customError";
+import { URL_NOT_FOUND } from "./utils/errorCodes";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -30,3 +34,15 @@ app.use("/users", userRoute);
 app.use("/trainees", traineeRoute);
 app.use("/coaches", coachRoute);
 app.use("/forms", formRoute);
+app.use("/questions", questionRoute);
+
+app.all("*", (req, res, next) => {
+  const err = new CustomError(
+    URL_NOT_FOUND,
+    `Can't find ${req.originalUrl} on the server`,
+    404,
+  );
+  next(err);
+});
+
+app.use(errorHandler);

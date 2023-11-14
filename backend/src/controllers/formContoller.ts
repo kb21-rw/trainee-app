@@ -1,43 +1,123 @@
-import { Response } from "express";
-import { createFormValidation } from "../validations/formValidation";
-import Form from "../models/Form";
+import { Request, Response } from "express";
+import {
+  createFormValidation,
+  editFormValidation,
+} from "../validations/formValidation";
+import Joi from "joi";
+import { CreateFormType, Search } from "../utils/types";
+import {
+  getFormsService,
+  createFormService,
+  updateFormService,
+  getSingleFormService,
+  deleteFormService,
+} from "../services/formService";
+import CustomError from "../middlewares/customError";
+import { DUPLICATE_DOCUMENT, FORM_NOT_FOUND } from "../utils/errorCodes";
 
-export const createForm = async (req: any, res: Response) => {
+export const createFormController = async (
+  req: Request,
+  res: Response,
+  next: any,
+) => {
   try {
-    const validationResult = await createFormValidation.validateAsync(req.body);
-    const { title, description } = validationResult;
-    const createdForm = await Form.create({ title, description });
+    const validationResult: Joi.ValidationResult<CreateFormType> =
+      createFormValidation.validate(req.body);
+    if (validationResult.error) {
+      throw validationResult.error;
+    }
+
+    const createdForm = await createFormService(req.body);
     return res.status(201).json(createdForm);
-  } catch (error: any) {
-    return res.status(400).json({ error });
+  } catch (error) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    if (error.code === 11000) {
+      const err = new CustomError(
+        DUPLICATE_DOCUMENT,
+        "Please that form already exist",
+        400,
+      );
+      next(err);
+    }
+
+    next(error);
   }
 };
 
-export const getForms = async (req: any, res: Response) => {
+export const getFormsController = async (
+  req: Request<object, object, object, Search>,
+  res: Response,
+  next: any,
+) => {
   try {
     const searchString = req.query.searchString || "";
-    const forms = await Form.aggregate([
-      {
-        $match: { title: { $regex: new RegExp(searchString, "i") } },
-      },
-      {
-        $lookup: {
-          from: "questions",
-          localField: "questionsId",
-          foreignField: "_id",
-          as: "questions",
-        },
-      },
-      {
-        $project: {
-          title: 1,
-          description: 1,
-          questions: 1,
-        },
-      },
-    ]);
+    const forms = await getFormsService(searchString);
     return res.status(200).json(forms);
   } catch (error) {
-    res.status(400).json({ error });
+    next(error);
+  }
+};
+
+export const updateFormController = async (
+  req: Request,
+  res: Response,
+  next: any,
+) => {
+  try {
+    const { formId } = req.params;
+    const validationResult: Joi.ValidationResult<CreateFormType> =
+      editFormValidation.validate(req.body);
+    if (validationResult.error) {
+      throw validationResult.error;
+    }
+
+    const updatedForm = await updateFormService(formId, req.body);
+
+    if (updatedForm === null) {
+      throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
+    }
+
+    return res.status(200).json(updatedForm);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const deleteFormController = async (
+  req: Request,
+  res: Response,
+  next: any,
+) => {
+  try {
+    const formId = req.params.formId;
+    const isDeleted = await deleteFormService(formId);
+
+    if (!isDeleted) {
+      throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
+    }
+
+    return res.status(204).json({ message: "Form deleted successfully" });
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getSingleFormController = async (
+  req: Request,
+  res: Response,
+  next: any,
+) => {
+  try {
+    const { formId } = req.params;
+    const form = await getSingleFormService(formId);
+
+    if (form === null) {
+      throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
+    }
+
+    return res.status(200).json(form);
+  } catch (error) {
+    return next(error);
   }
 };
