@@ -1,65 +1,41 @@
-import { Response } from "express";
-import User from "../models/User";
+import { NextFunction, Response } from "express";
 import dotenv from "dotenv";
 import { editUserSchema } from "../validations/userValidation";
+import {
+  getCoachesService,
+  updateCoachOrAdminService,
+} from "../services/coachService";
+import { DUPLICATE_DOCUMENT } from "../utils/errorCodes";
+import CustomError from "../middlewares/customError";
 dotenv.config();
 
-export const getCoaches = async (req: any, res: Response) => {
+export const getCoaches = async (
+  req: any,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { role } = req.user;
     const searchString = req.query.searchString || "";
     const coachesPerPage = Number(req.query.coachesPerPage) || 10;
     const sortBy = req.query.sortBy || "entry";
-    if (role !== "ADMIN") {
-      return res.status(403).send("Not allowed to view coaches");
-    }
-
-    const coaches = await User.aggregate([
-      {
-        $match: {
-          $or: [
-            { name: { $regex: new RegExp(searchString, "i") } },
-            { email: { $regex: new RegExp(searchString, "i") } },
-          ],
-          role: { $in: ["ADMIN", "COACH"] },
-        },
-      },
-      {
-        $lookup: {
-          from: "users",
-          localField: "_id",
-          foreignField: "coach",
-          as: "trainees",
-        },
-      },
-      {
-        $project: {
-          _id: 1,
-          name: 1,
-          email: 1,
-          role: 1,
-          trainees: {
-            _id: 1,
-            name: 1,
-            email: 1,
-            role: 1,
-          },
-        },
-      },
-      {
-        $sort: { [sortBy]: 1 },
-      },
-      {
-        $limit: coachesPerPage,
-      },
-    ]);
+    const coaches = await getCoachesService(role, {
+      searchString,
+      coachesPerPage,
+      sortBy,
+    });
+    console.log({ coaches });
     return res.status(200).json(coaches);
   } catch (error) {
-    res.status(500).send(error);
+    next(error);
   }
 };
 
-export const updateCoachOrAdmin = async (req: any, res: Response) => {
+export const updateCoachOrAdmin = async (
+  req: any,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const userId = req.params.id;
 
@@ -70,27 +46,14 @@ export const updateCoachOrAdmin = async (req: any, res: Response) => {
       return res.status(400).json({ message: validationResult.error.message });
     }
 
-    const user = await User.findById(userId);
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-
-    if (name) {
-      user.name = name;
-    }
-
-    if (email) {
-      user.email = email;
-    }
-
-    if (role) {
-      user.role = role;
-    }
-
-    await user.save();
-
+    const user = await updateCoachOrAdminService(userId, { name, email, role });
     return res.status(200).send(user);
-  } catch (error) {
-    return res.status(500).send(error);
+  } catch (error: any) {
+    if (error.code === 11000) {
+      const err = new CustomError(DUPLICATE_DOCUMENT, "Duplicate user", 400);
+      next(err);
+    }
+
+    next(error);
   }
 };

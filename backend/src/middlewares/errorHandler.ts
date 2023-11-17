@@ -20,6 +20,13 @@ export const errorHandler = (
       type: "ValidationError",
       details: error.details,
     });
+  } else if (error.name === "NotFoundError") {
+    return res.status(404).send({
+      type: "NotFoundError",
+      details: error.details,
+    });
+  } else if (error.errorCode === 11000) {
+    console.log("hjjj", { error });
   }
 
   if (error instanceof CustomError) {

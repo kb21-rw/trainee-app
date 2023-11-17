@@ -1,61 +1,63 @@
-import { Response, Request } from "express";
+import { Response, Request, NextFunction } from "express";
 import {
   createQuestionValidation,
   updateQuestionValidation,
 } from "../validations/questionValidation";
-import Form from "../models/Form";
-import Question from "../models/Question";
-import { CreateQuestionType, QuestionType, Search } from "../utils/types";
+import { CreateQuestionType, Search } from "../utils/types";
 import { ValidationResult } from "joi";
+import {
+  createQuestionService,
+  getAllQuestionsService,
+  updateQuestionService,
+} from "../services/questionService";
+import { deleteFormService } from "../services/formService";
 
-export const createQuestion = async (req: Request, res: Response) => {
+export const createQuestion = async (
+  req: Request,
+  res: Response,
+  next: any,
+) => {
   try {
     const { formId } = req.params;
+    const { title, type, options }: CreateQuestionType = req.body;
     const validationResult: ValidationResult<CreateQuestionType> =
       createQuestionValidation.validate(req.body);
     if (validationResult.error) {
       return res.status(400).json({ message: validationResult.error.message });
     }
 
-    const { title, type, options }: CreateQuestionType = req.body;
+    const createdQuestion = await createQuestionService(formId, {
+      title,
+      type,
+      options,
+    });
 
-    const relatedForm = await Form.findById(formId);
-    if (!relatedForm) {
-      return res.status(404).json({ error: "That form is not found." });
-    }
-
-    const createQuestion = await Question.create({ title, type, options });
-    if (createQuestion) {
-      relatedForm.questionsId.push(createQuestion._id);
-    }
-
-    await relatedForm.save();
-
-    return res.status(201).json(createQuestion);
+    return res.status(201).json(createdQuestion);
   } catch (error) {
-    return res.status(500).json({ error });
+    next(error);
   }
 };
 
 export const getAllQuestions = async (
   req: Request<object, object, object, Search>,
   res: Response,
+  next: NextFunction,
 ) => {
   try {
     const searchString = req.query.searchString || "";
     const typeQuery = req.query.typeQuery || "";
-    const questions: QuestionType[] = await Question.find({
-      title: { $regex: searchString, $options: "i" },
-      type: { $regex: typeQuery, $options: "i" },
-    });
-
+    const questions = await getAllQuestionsService(searchString, typeQuery);
     return res.status(200).json(questions);
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-export const updateQuestion = async (req: Request, res: Response) => {
+export const updateQuestion = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { questionId } = req.params;
     const validationResult: ValidationResult<CreateQuestionType> =
@@ -65,41 +67,27 @@ export const updateQuestion = async (req: Request, res: Response) => {
     }
 
     const { title, type, options }: CreateQuestionType = req.body;
-    const question = await Question.findById(questionId);
-    if (!question) {
-      return res.status(404).json({ message: "Question is not found" });
-    }
-
-    if (title) {
-      question.title = title;
-    }
-
-    if (type) {
-      question.type = type;
-    }
-
-    if (options) {
-      question.options = options;
-    }
-
-    await question.save();
-
-    return res.status(200).json(question);
+    const updatedQuestion = updateQuestionService(questionId, {
+      title,
+      type,
+      options,
+    });
+    return res.status(200).json(updatedQuestion);
   } catch (error) {
-    return res.status(500).json({ error });
+    next(error);
   }
 };
 
-export const deleteQuestion = async (req: Request, res: Response) => {
+export const deleteQuestion = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const { questionId } = req.params;
-    const question = await Question.findByIdAndDelete(questionId);
-    if (!question) {
-      return res.status(404).json({ error: "Question is not found" });
-    }
-
+    await deleteFormService(questionId);
     return res.status(204).json({ message: "Question deleted successfully" });
   } catch (error) {
-    return res.status(500).json({ error: "Internal Server Error" });
+    next(error);
   }
 };
