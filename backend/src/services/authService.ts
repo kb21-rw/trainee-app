@@ -59,7 +59,7 @@ export const registerService = async (user: any, body: any) => {
 
     return createdUser;
   } catch (error) {
-    console.log("first", error);
+    console.log("first", JSON.stringify(error));
     throw error;
   }
 };

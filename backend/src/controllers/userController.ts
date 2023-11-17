@@ -2,7 +2,7 @@ import { NextFunction, Response } from "express";
 import { ProfileSchema } from "../validations/userValidation";
 import dotenv from "dotenv";
 import {
-  deleeteUserService,
+  deleteUserService,
   getProfileService,
   getUsersService,
   updateProfileService,
@@ -38,7 +38,7 @@ export const updateProfile = async (
       return res.status(400).send(validationResult.error.details[0].message);
     }
 
-    const user = updateProfileService(userId, { name, email, password });
+    const user = await updateProfileService(userId, { name, email, password });
     return res.status(200).send(user);
   } catch (error) {
     next(error);
@@ -62,7 +62,7 @@ export const deleteUser = async (
 ) => {
   try {
     const userId = req.params.userId;
-    await deleeteUserService(userId);
+    await deleteUserService(userId);
     return res.status(200).send("User deleted successfully");
   } catch (error) {
     next(error);

@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from "express";
 
 import CustomError from "./customError";
 interface ErrorObject {
+  keyValue: any;
+  code: number;
   name: string;
   details?: any;
   statusCode: number;
@@ -25,10 +27,14 @@ export const errorHandler = (
       type: "NotFoundError",
       details: error.details,
     });
-  } else if (error.errorCode === 11000) {
-    console.log("hjjj", { error });
+  } else if (error.code === 11000) {
+    return res.status(400).send({
+      type: "DuplicateError",
+      details: `duplicate ${Object.keys(error.keyValue)}`,
+    });
   }
 
+  console.log({ error });
   if (error instanceof CustomError) {
     return res.status(error.statusCode).json({
       errorCode: error.errorCode,

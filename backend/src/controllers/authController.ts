@@ -5,8 +5,8 @@ import {
   registerService,
   resetPasswordService,
 } from "../services/authService";
-import { DUPLICATE_USER } from "../utils/errorCodes";
-import CustomError from "../middlewares/customError";
+// import { DUPLICATE_USER } from "../utils/errorCodes";
+// import CustomError from "../middlewares/customError";
 
 dotenv.config();
 
@@ -18,15 +18,6 @@ export const register = async (req: any, res: Response, next: NextFunction) => {
     delete newUser.password;
     return res.status(201).send(newUser);
   } catch (error: any) {
-    if (error.code === 11000) {
-      const err = new CustomError(
-        DUPLICATE_USER,
-        "Please that user already exist",
-        400,
-      );
-      next(err);
-    }
-
     next(error);
   }
 };

@@ -5,8 +5,6 @@ import {
   getCoachesService,
   updateCoachOrAdminService,
 } from "../services/coachService";
-import { DUPLICATE_DOCUMENT } from "../utils/errorCodes";
-import CustomError from "../middlewares/customError";
 dotenv.config();
 
 export const getCoaches = async (
@@ -24,7 +22,6 @@ export const getCoaches = async (
       coachesPerPage,
       sortBy,
     });
-    console.log({ coaches });
     return res.status(200).json(coaches);
   } catch (error) {
     next(error);
@@ -49,11 +46,6 @@ export const updateCoachOrAdmin = async (
     const user = await updateCoachOrAdminService(userId, { name, email, role });
     return res.status(200).send(user);
   } catch (error: any) {
-    if (error.code === 11000) {
-      const err = new CustomError(DUPLICATE_DOCUMENT, "Duplicate user", 400);
-      next(err);
-    }
-
     next(error);
   }
 };

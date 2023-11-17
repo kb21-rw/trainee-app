@@ -94,7 +94,7 @@ export const getUsersService = async (role: "ADMIN" | "COACH" | "TRAINEE") => {
   }
 };
 
-export const deleeteUserService = async (userId: string) => {
+export const deleteUserService = async (userId: string) => {
   try {
     const user = await User.findByIdAndDelete(userId);
     if (!user) {

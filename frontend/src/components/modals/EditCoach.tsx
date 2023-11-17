@@ -28,8 +28,8 @@ const EditCoachModal = ({
     await editCoach({ jwt, id: coachData[0], body: { ...data } });
   };
 
-  let errorMessage: any =
-    errors.name?.message || errors.email?.message || error?.data?.errorMessage;
+  const errorMessage: any =
+    errors?.name?.message || errors?.email?.message || error?.data?.details;
   return (
     <ModalLayout closePopup={closePopup} title="Edit user">
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
