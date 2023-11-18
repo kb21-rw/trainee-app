@@ -1,17 +1,14 @@
 import { NextFunction, Request, Response } from "express";
-import dotenv from "dotenv";
 import {
   loginService,
   registerService,
   resetPasswordService,
 } from "../services/authService";
 import {
-  loginSchema,
   registerSchema,
+  loginSchema,
   resetPasswordSchema,
 } from "../validations/authValidation";
-
-dotenv.config();
 
 export const register = async (req: any, res: Response, next: NextFunction) => {
   try {
