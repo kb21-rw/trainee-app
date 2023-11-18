@@ -37,7 +37,9 @@ const AddingTraineeModal = ({
   };
 
   const errorMessage: any =
-    errors?.name?.message || errors?.email?.message || error?.data?.details;
+    errors?.name?.message ||
+    errors?.email?.message ||
+    error?.data?.errorMessage;
 
   return (
     <ModalLayout closePopup={closePopup} title="Add trainee">

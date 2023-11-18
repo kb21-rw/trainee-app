@@ -1,14 +1,11 @@
 import { NextFunction, Response } from "express";
 import { ProfileSchema } from "../validations/userValidation";
-import dotenv from "dotenv";
 import {
   deleteUserService,
   getProfileService,
   getUsersService,
   updateProfileService,
 } from "../services/userService";
-
-dotenv.config();
 
 export const getProfile = async (
   req: any,
@@ -31,14 +28,9 @@ export const updateProfile = async (
 ) => {
   try {
     const userId = req.user.id;
-    const { name, email, password } = req.body;
+    await ProfileSchema.validateAsync(req.body);
 
-    const validationResult = ProfileSchema.validate({ name, email, password });
-    if (validationResult.error) {
-      return res.status(400).send(validationResult.error.details[0].message);
-    }
-
-    const user = await updateProfileService(userId, { name, email, password });
+    const user = await updateProfileService(userId, req.body);
     return res.status(200).send(user);
   } catch (error) {
     next(error);

@@ -9,38 +9,30 @@ export const createQuestionService = async (
   formId: string,
   questionData: CreateQuestionType,
 ) => {
-  try {
-    const { title, type, options } = questionData;
-    const relatedForm = await Form.findById(formId);
-    if (!relatedForm) {
-      throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
-    }
-
-    const createQuestion = await Question.create({ title, type, options });
-    if (createQuestion) {
-      relatedForm.questionsId.push(createQuestion._id);
-    }
-
-    await relatedForm.save();
-    return relatedForm;
-  } catch (error) {
-    throw error;
+  const { title, type, options } = questionData;
+  const relatedForm = await Form.findById(formId);
+  if (!relatedForm) {
+    throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
   }
+
+  const createQuestion = await Question.create({ title, type, options });
+  if (createQuestion) {
+    relatedForm.questionsId.push(createQuestion._id);
+  }
+
+  await relatedForm.save();
+  return relatedForm;
 };
 
 export const getAllQuestionsService = async (
   searchString: string,
   typeQuery: string,
 ) => {
-  try {
-    const questions: QuestionType[] = await Question.find({
-      title: { $regex: searchString, $options: "i" },
-      type: { $regex: typeQuery, $options: "i" },
-    });
-    return questions;
-  } catch (error) {
-    throw error;
-  }
+  const questions: QuestionType[] = await Question.find({
+    title: { $regex: searchString, $options: "i" },
+    type: { $regex: typeQuery, $options: "i" },
+  });
+  return questions;
 };
 
 export const updateQuestionService = async (
@@ -51,34 +43,26 @@ export const updateQuestionService = async (
     options,
   }: { title: string; type: "text" | "dropdown"; options: string[] },
 ) => {
-  try {
-    const question = await Question.findById(questionId);
-    if (!question) {
-      throw new CustomError(QUESTION_NOT_FOUND, "Question not found", 404);
-    }
-
-    if (title) {
-      question.title = title;
-    }
-
-    if (type) {
-      question.type = type;
-    }
-
-    if (options) {
-      question.options = options;
-    }
-
-    await question.save();
-  } catch (error) {
-    throw error;
+  const question = await Question.findById(questionId);
+  if (!question) {
+    throw new CustomError(QUESTION_NOT_FOUND, "Question not found", 404);
   }
+
+  if (title) {
+    question.title = title;
+  }
+
+  if (type) {
+    question.type = type;
+  }
+
+  if (options) {
+    question.options = options;
+  }
+
+  await question.save();
 };
 
 export const deleteQuestion = async (questionId: string) => {
-  try {
-    await Question.findByIdAndDelete(questionId);
-  } catch (error) {
-    throw error;
-  }
+  await Question.findByIdAndDelete(questionId);
 };

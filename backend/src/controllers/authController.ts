@@ -5,8 +5,11 @@ import {
   registerService,
   resetPasswordService,
 } from "../services/authService";
-// import { DUPLICATE_USER } from "../utils/errorCodes";
-// import CustomError from "../middlewares/customError";
+import {
+  loginSchema,
+  registerSchema,
+  resetPasswordSchema,
+} from "../validations/authValidation";
 
 dotenv.config();
 
@@ -14,6 +17,7 @@ export const register = async (req: any, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
     const body = req.body;
+    await registerSchema.validateAsync(body);
     const newUser = await registerService(user, body);
     delete newUser.password;
     return res.status(201).send(newUser);
@@ -28,6 +32,7 @@ export const login = async (
   next: NextFunction,
 ) => {
   try {
+    await loginSchema.validateAsync(req.body);
     const accessToken = await loginService(req.body);
     return res
       .status(200)
@@ -47,6 +52,8 @@ export const resetPassword = async (
   next: NextFunction,
 ) => {
   try {
+    const body = req.body;
+    await resetPasswordSchema.validateAsync(body);
     const password = resetPasswordService(req.body);
     return res.status(200).json({ password });
   } catch (error: any) {

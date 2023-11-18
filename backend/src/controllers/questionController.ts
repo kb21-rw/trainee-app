@@ -3,8 +3,7 @@ import {
   createQuestionValidation,
   updateQuestionValidation,
 } from "../validations/questionValidation";
-import { CreateQuestionType, Search } from "../utils/types";
-import { ValidationResult } from "joi";
+import { Search } from "../utils/types";
 import {
   createQuestionService,
   getAllQuestionsService,
@@ -15,23 +14,12 @@ import { deleteFormService } from "../services/formService";
 export const createQuestion = async (
   req: Request,
   res: Response,
-  next: any,
+  next: NextFunction,
 ) => {
   try {
     const { formId } = req.params;
-    const { title, type, options }: CreateQuestionType = req.body;
-    const validationResult: ValidationResult<CreateQuestionType> =
-      createQuestionValidation.validate(req.body);
-    if (validationResult.error) {
-      return res.status(400).json({ message: validationResult.error.message });
-    }
-
-    const createdQuestion = await createQuestionService(formId, {
-      title,
-      type,
-      options,
-    });
-
+    await createQuestionValidation.validateAsync(req.body);
+    const createdQuestion = await createQuestionService(formId, req.body);
     return res.status(201).json(createdQuestion);
   } catch (error) {
     next(error);
@@ -60,18 +48,8 @@ export const updateQuestion = async (
 ) => {
   try {
     const { questionId } = req.params;
-    const validationResult: ValidationResult<CreateQuestionType> =
-      updateQuestionValidation.validate(req.body);
-    if (validationResult.error) {
-      return res.status(400).json({ message: validationResult.error.message });
-    }
-
-    const { title, type, options }: CreateQuestionType = req.body;
-    const updatedQuestion = updateQuestionService(questionId, {
-      title,
-      type,
-      options,
-    });
+    await updateQuestionValidation.validateAsync(req.body);
+    const updatedQuestion = updateQuestionService(questionId, req.body);
     return res.status(200).json(updatedQuestion);
   } catch (error) {
     next(error);

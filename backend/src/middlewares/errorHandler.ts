@@ -18,31 +18,29 @@ export const errorHandler = (
   next: NextFunction,
 ) => {
   if (error.name === "ValidationError") {
-    return res.status(400).send({
+    return res.status(400).json({
       type: "ValidationError",
-      details: error.details,
+      errorMessage: error.details[0].message,
     });
   } else if (error.name === "NotFoundError") {
-    return res.status(404).send({
+    return res.status(404).json({
       type: "NotFoundError",
-      details: error.details,
+      errorMessage: error.details,
     });
   } else if (error.code === 11000) {
-    return res.status(400).send({
+    return res.status(400).json({
       type: "DuplicateError",
-      details: `duplicate ${Object.keys(error.keyValue)}`,
+      errorMessage: `duplicate ${Object.keys(error.keyValue)}`,
     });
-  }
-
-  console.log({ error });
-  if (error instanceof CustomError) {
+  } else if (error instanceof CustomError) {
     return res.status(error.statusCode).json({
-      errorCode: error.errorCode,
+      type: error.errorCode,
       errorMessage: error.message,
     });
   }
 
-  return res
-    .status(500)
-    .json({ error: "Something Went Wrong. Our team is working on it" });
+  return res.status(500).json({
+    type: "ServerError",
+    errorMessage: "Something Went Wrong. Our team is working on it",
+  });
 };
