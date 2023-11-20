@@ -154,4 +154,5 @@ export const updateTraineeService = async (
   }
 
   await user.save();
+  return user;
 };

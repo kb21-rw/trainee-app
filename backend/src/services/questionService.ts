@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-catch */
 import CustomError from "../middlewares/customError";
 import Form from "../models/Form";
 import Question from "../models/Question";
@@ -63,6 +62,6 @@ export const updateQuestionService = async (
   await question.save();
 };
 
-export const deleteQuestion = async (questionId: string) => {
+export const deleteQuestionService = async (questionId: string) => {
   await Question.findByIdAndDelete(questionId);
 };

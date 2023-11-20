@@ -6,10 +6,10 @@ import {
 import { Search } from "../utils/types";
 import {
   createQuestionService,
+  deleteQuestionService,
   getAllQuestionsService,
   updateQuestionService,
 } from "../services/questionService";
-import { deleteFormService } from "../services/formService";
 
 export const createQuestion = async (
   req: Request,
@@ -63,7 +63,7 @@ export const deleteQuestion = async (
 ) => {
   try {
     const { questionId } = req.params;
-    await deleteFormService(questionId);
+    await deleteQuestionService(questionId);
     return res.status(204).json({ message: "Question deleted successfully" });
   } catch (error) {
     next(error);

@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-catch */
 import { compare, hash } from "bcryptjs";
 import CustomError from "../middlewares/customError";
 import {

@@ -3,7 +3,6 @@ import CustomError from "../middlewares/customError";
 import User from "../models/User";
 import { NOT_ALLOWED, USER_NOT_FOUND } from "../utils/errorCodes";
 
-/* eslint-disable no-useless-catch */
 export const getProfileService = async (userId: string) => {
   const user = await User.findById(userId, { password: 0 });
   if (!user) {
@@ -87,4 +86,6 @@ export const deleteUserService = async (userId: string) => {
   if (!user) {
     throw new CustomError(USER_NOT_FOUND, "User not found", 404);
   }
+
+  return user;
 };

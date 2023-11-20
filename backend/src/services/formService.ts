@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-catch */
 import CustomError from "../middlewares/customError";
 import Form from "../models/Form";
 import Question from "../models/Question";

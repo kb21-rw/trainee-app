@@ -1,4 +1,3 @@
-/* eslint-disable no-useless-catch */
 import CustomError from "../middlewares/customError";
 import User from "../models/User";
 import { NOT_ALLOWED, USER_NOT_FOUND } from "../utils/errorCodes";
@@ -83,4 +82,5 @@ export const updateCoachOrAdminService = async (
   }
 
   await user.save();
+  return user;
 };
