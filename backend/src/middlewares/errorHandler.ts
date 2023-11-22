@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from "express";
 
 import CustomError from "./customError";
 interface ErrorObject {
+  message: string;
+  kind: string;
   keyValue: any;
   code: number;
   name: string;
@@ -31,6 +33,11 @@ export const errorHandler = (
     return res.status(400).json({
       type: "DuplicateError",
       errorMessage: `duplicate ${Object.keys(error.keyValue)}`,
+    });
+  } else if (error.kind == "ObjectId") {
+    return res.status(400).json({
+      type: "InvalidDocumentId",
+      errorMessage: error.message,
     });
   } else if (error instanceof CustomError) {
     return res.status(error.statusCode).json({
