@@ -51,7 +51,7 @@ export const resetPassword = async (
   try {
     const body = req.body;
     await resetPasswordSchema.validateAsync(body);
-    const password = resetPasswordService(req.body);
+    const password = await resetPasswordService(req.body);
     return res.status(200).json({ password });
   } catch (error: any) {
     next(error);

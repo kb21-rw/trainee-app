@@ -28,9 +28,9 @@ export const getTraineesForCoachService = async (
     traineesPerPage,
   }: { searchString: string; sortBy: string; traineesPerPage: number },
 ) => {
-  const coach = await User.findById(id);
+  const coach: any = await User.findById(id);
   const trainees = await getTraineesForCoachQuery(
-    coach?.id,
+    coach._id,
     searchString,
     sortBy,
     traineesPerPage,
