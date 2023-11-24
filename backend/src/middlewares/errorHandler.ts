@@ -13,41 +13,71 @@ interface ErrorObject {
   errorCode: number | string;
 }
 
+const handleValidationError = (error: ErrorObject, res: Response) => {
+  return res.status(400).json({
+    type: "ValidationError",
+    errorMessage: error.details[0].message,
+  });
+};
+
+const handleNotFoundError = (error: ErrorObject, res: Response) => {
+  return res.status(404).json({
+    type: "NotFoundError",
+    errorMessage: error.details,
+  });
+};
+
+const handleDuplicateError = (error: ErrorObject, res: Response) => {
+  return res.status(400).json({
+    type: "DuplicateError",
+    errorMessage: `duplicate ${Object.keys(error.keyValue)}`,
+  });
+};
+
+const handleObjectIdError = (error: ErrorObject, res: Response) => {
+  return res.status(400).json({
+    type: "InvalidDocumentId",
+    errorMessage: error.message,
+  });
+};
+
+const handleCustomError = (error: ErrorObject, res: Response) => {
+  return res.status(error.statusCode).json({
+    type: error.errorCode,
+    errorMessage: error.message,
+  });
+};
+
+const handleServerError = (res: Response) => {
+  res.status(500).json({
+    type: "ServerError",
+    errorMessage: "Something Went Wrong. Our team is working on it",
+  });
+};
+
 export const errorHandler = (
   error: ErrorObject,
   req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  if (error.name === "ValidationError") {
-    return res.status(400).json({
-      type: "ValidationError",
-      errorMessage: error.details[0].message,
-    });
-  } else if (error.name === "NotFoundError") {
-    return res.status(404).json({
-      type: "NotFoundError",
-      errorMessage: error.details,
-    });
-  } else if (error.code === 11000) {
-    return res.status(400).json({
-      type: "DuplicateError",
-      errorMessage: `duplicate ${Object.keys(error.keyValue)}`,
-    });
-  } else if (error.kind == "ObjectId") {
-    return res.status(400).json({
-      type: "InvalidDocumentId",
-      errorMessage: error.message,
-    });
-  } else if (error instanceof CustomError) {
-    return res.status(error.statusCode).json({
-      type: error.errorCode,
-      errorMessage: error.message,
-    });
+  switch (true) {
+    case error.name === "ValidationError":
+      handleValidationError(error, res);
+      break;
+    case error.name === "NotFoundError":
+      handleNotFoundError(error, res);
+      break;
+    case error.code === 11000:
+      handleDuplicateError(error, res);
+      break;
+    case error.kind == "ObjectId":
+      handleObjectIdError(error, res);
+      break;
+    case error instanceof CustomError:
+      handleCustomError(error, res);
+      break;
+    default:
+      handleServerError(res);
   }
-
-  return res.status(500).json({
-    type: "ServerError",
-    errorMessage: "Something Went Wrong. Our team is working on it",
-  });
 };
