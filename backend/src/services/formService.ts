@@ -1,33 +1,15 @@
 import CustomError from "../middlewares/customError";
 import Form from "../models/Form";
 import Question from "../models/Question";
+import { getFormsQuery } from "../queries/formQueries";
 import { FORM_NOT_FOUND, INVALID_MONGODB_ID } from "../utils/errorCodes";
-import { CreateFormType, FormType } from "../utils/types";
+import { CreateFormType } from "../utils/types";
 import mongoose from "mongoose";
 const { Types } = mongoose;
 const { ObjectId } = Types;
 
 export const getFormsService = async (searchString: string) => {
-  const forms: FormType[] = await Form.aggregate([
-    {
-      $match: { title: { $regex: new RegExp(searchString, "i") } },
-    },
-    {
-      $lookup: {
-        from: "questions",
-        localField: "questionsId",
-        foreignField: "_id",
-        as: "questions",
-      },
-    },
-    {
-      $project: {
-        title: 1,
-        description: 1,
-        questions: 1,
-      },
-    },
-  ]);
+  const forms = await getFormsQuery(searchString);
   return forms;
 };
 

@@ -1,5 +1,6 @@
 import CustomError from "../middlewares/customError";
 import User from "../models/User";
+import { getCoachesQuery } from "../queries/coachQuery";
 import { NOT_ALLOWED, USER_NOT_FOUND } from "../utils/errorCodes";
 
 export const getCoachesService = async (
@@ -14,45 +15,7 @@ export const getCoachesService = async (
     throw new CustomError(NOT_ALLOWED, "Only admins can view coaches", 403);
   }
 
-  const coaches = await User.aggregate([
-    {
-      $match: {
-        $or: [
-          { name: { $regex: new RegExp(searchString, "i") } },
-          { email: { $regex: new RegExp(searchString, "i") } },
-        ],
-        role: { $in: ["ADMIN", "COACH"] },
-      },
-    },
-    {
-      $lookup: {
-        from: "users",
-        localField: "_id",
-        foreignField: "coach",
-        as: "trainees",
-      },
-    },
-    {
-      $project: {
-        _id: 1,
-        name: 1,
-        email: 1,
-        role: 1,
-        trainees: {
-          _id: 1,
-          name: 1,
-          email: 1,
-          role: 1,
-        },
-      },
-    },
-    {
-      $sort: { [sortBy]: 1 },
-    },
-    {
-      $limit: coachesPerPage,
-    },
-  ]);
+  const coaches = await getCoachesQuery(searchString, sortBy, coachesPerPage);
   return coaches;
 };
 
