@@ -5,7 +5,7 @@ const api_url = import.meta.env.VITE_API_URL;
 export const usersApi: any = createApi({
   reducerPath: "usersApi",
   baseQuery: fetchBaseQuery({ baseUrl: api_url }),
-  tagTypes: ["coaches", "trainees", "myTrainees", "profile"],
+  tagTypes: ["coaches", "trainees", "myTrainees", "profile", "forms"],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
       query: (args) => {
@@ -183,6 +183,48 @@ export const usersApi: any = createApi({
       },
       invalidatesTags: ["profile"],
     }),
+
+    getAllForms: builder.query({
+      query: (args) => {
+        const { jwt, searchString } = args;
+        return {
+          url: `/forms?searchString=${searchString}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      providesTags: ["forms"],
+    }),
+
+    getSingleForm: builder.query({
+      query: (args) => {
+        const { jwt, id } = args;
+        return {
+          url: `/forms/${id}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      providesTags: ["forms"],
+    }),
+
+    deleteForm: builder.mutation({
+      query: (args) => {
+        const { jwt, id } = args;
+        return {
+          url: `/forms/${id}`,
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      invalidatesTags: ["forms"],
+    }),
   }),
 });
 
@@ -200,4 +242,7 @@ export const {
   useGetTraineesForCoachQuery,
   useEditCoachMutation,
   useEditTraineeMutation,
+  useGetAllFormsQuery,
+  useDeleteFormMutation,
+  useGetSingleFormQuery,
 } = usersApi;
