@@ -5,7 +5,14 @@ const api_url = import.meta.env.VITE_API_URL;
 export const usersApi: any = createApi({
   reducerPath: "usersApi",
   baseQuery: fetchBaseQuery({ baseUrl: api_url }),
-  tagTypes: ["coaches", "trainees", "myTrainees", "profile", "forms"],
+  tagTypes: [
+    "coaches",
+    "trainees",
+    "myTrainees",
+    "profile",
+    "forms",
+    "questions",
+  ],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
       query: (args) => {
@@ -198,7 +205,7 @@ export const usersApi: any = createApi({
       providesTags: ["forms"],
     }),
 
-    getSingleForm: builder.query({
+    getForm: builder.query({
       query: (args) => {
         const { jwt, id } = args;
         return {
@@ -210,6 +217,51 @@ export const usersApi: any = createApi({
         };
       },
       providesTags: ["forms"],
+    }),
+
+    createForm: builder.mutation({
+      query: (args) => {
+        const { jwt, body } = args;
+        return {
+          url: "/forms",
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["forms"],
+    }),
+
+    editForm: builder.mutation({
+      query: (args) => {
+        const { jwt, body, id } = args;
+        return {
+          url: `/forms/${id}`,
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["forms"],
+    }),
+
+    editQuestion: builder.mutation({
+      query: (args) => {
+        const { jwt, body, id } = args;
+        return {
+          url: `/questions/${id}`,
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["questions"],
     }),
 
     deleteForm: builder.mutation({
@@ -244,5 +296,8 @@ export const {
   useEditTraineeMutation,
   useGetAllFormsQuery,
   useDeleteFormMutation,
-  useGetSingleFormQuery,
+  useGetFormQuery,
+  useCreateFormMutation,
+  useEditFormMutation,
+  useEditQuestionMutation,
 } = usersApi;
