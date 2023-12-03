@@ -4,6 +4,7 @@ import {
   getAllQuestions,
   deleteQuestion,
   updateQuestion,
+  getAllQuestionsForForm,
 } from "../controllers/questionController";
 import { verifyJWT } from "../middlewares/authenticate";
 import { isAdmin } from "../middlewares/authorization";
@@ -12,6 +13,7 @@ const router = Router();
 
 router.post("/:formId", verifyJWT, isAdmin, createQuestion);
 router.get("/", verifyJWT, isAdmin, getAllQuestions);
+router.get("/:formId", verifyJWT, isAdmin, getAllQuestionsForForm);
 router.patch("/:questionId", verifyJWT, isAdmin, updateQuestion);
 router.delete("/:questionId", verifyJWT, isAdmin, deleteQuestion);
 

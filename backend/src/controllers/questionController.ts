@@ -7,6 +7,7 @@ import { Search } from "../utils/types";
 import {
   createQuestionService,
   deleteQuestionService,
+  getAllQuestionsForFormService,
   getAllQuestionsService,
   updateQuestionService,
 } from "../services/questionService";
@@ -35,6 +36,20 @@ export const getAllQuestions = async (
     const searchString = req.query.searchString || "";
     const typeQuery = req.query.typeQuery || "";
     const questions = await getAllQuestionsService(searchString, typeQuery);
+    return res.status(200).json(questions);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllQuestionsForForm = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { formId } = req.params;
+    const questions = await getAllQuestionsForFormService(formId);
     return res.status(200).json(questions);
   } catch (error) {
     next(error);

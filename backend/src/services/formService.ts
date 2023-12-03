@@ -41,7 +41,7 @@ export const updateFormService = async (
 
 export const createFormService = async (formData: CreateFormType) => {
   const { title, description } = formData;
-  const createdForm = await Form.create({ title, description });
+  const createdForm = await Form.create({ title, description, active: false });
   return createdForm;
 };
 

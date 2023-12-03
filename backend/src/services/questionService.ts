@@ -34,6 +34,11 @@ export const getAllQuestionsService = async (
   return questions;
 };
 
+export const getAllQuestionsForFormService = async (formId: string) => {
+  const questions: QuestionType[] = await Question.find({ formId });
+  return questions;
+};
+
 export const updateQuestionService = async (
   questionId: string,
   {

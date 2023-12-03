@@ -8,6 +8,10 @@ const FormSchema = new Schema(
       unique: true,
     },
     description: String,
+    active: {
+      type: Boolean,
+      required: true,
+    },
     questionsId: [
       {
         type: Schema.Types.ObjectId,
