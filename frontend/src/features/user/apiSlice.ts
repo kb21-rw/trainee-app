@@ -249,6 +249,34 @@ export const usersApi: any = createApi({
       invalidatesTags: ["forms"],
     }),
 
+    deleteForm: builder.mutation({
+      query: (args) => {
+        const { jwt, id } = args;
+        return {
+          url: `/forms/${id}`,
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      invalidatesTags: ["forms"],
+    }),
+
+    getAllQuestionsForForm: builder.query({
+      query: (args) => {
+        const { jwt, formId } = args;
+        return {
+          url: `/questions/${formId}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      providesTags: ["questions"],
+    }),
+
     editQuestion: builder.mutation({
       query: (args) => {
         const { jwt, body, id } = args;
@@ -262,20 +290,6 @@ export const usersApi: any = createApi({
         };
       },
       invalidatesTags: ["questions"],
-    }),
-
-    deleteForm: builder.mutation({
-      query: (args) => {
-        const { jwt, id } = args;
-        return {
-          url: `/forms/${id}`,
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        };
-      },
-      invalidatesTags: ["forms"],
     }),
   }),
 });
@@ -300,4 +314,5 @@ export const {
   useCreateFormMutation,
   useEditFormMutation,
   useEditQuestionMutation,
+  useGetAllQuestionsForFormQuery,
 } = usersApi;
