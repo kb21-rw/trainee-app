@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useGetFormQuery } from "../../features/user/apiSlice";
 import Cookies from "universal-cookie";
 import Loader from "../../components/ui/Loader";
@@ -16,9 +16,11 @@ const SingleForm = () => {
   const title = data?.title;
   const description = data?.description || "";
   const questions = data?.questionsId || [];
+  const [activeQuestion, setActiveQuestion] = useState("");
+
   return (
     <div className="py-12 max-w-5xl mx-auto">
-      <button onClick={() => navigate(-1)}>
+      <button onClick={() => navigate("/forms")}>
         <Back />
       </button>
       {isFetching ? (
@@ -27,10 +29,21 @@ const SingleForm = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          <EditForm title={title} description={description} id={id} />
+          <EditForm
+            title={title}
+            description={description}
+            id={id}
+            activeQuestion={activeQuestion}
+            setActiveQuestion={setActiveQuestion}
+          />
           <div className="flex flex-col gap-4">
-            {questions?.map((question: any, index: number) => (
-              <QuestionCard key={index} question={question} />
+            {questions?.map((question: any) => (
+              <QuestionCard
+                activeQuestion={activeQuestion}
+                setActiveQuestion={setActiveQuestion}
+                key={question._id}
+                question={question}
+              />
             ))}
           </div>
         </div>
