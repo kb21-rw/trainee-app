@@ -1,6 +1,5 @@
 import React from "react";
 import Loader from "./Loader";
-// import DropDown from "./DropDown";
 import Delete from "../../assets/Delete";
 import {
   useDeleteQuestionMutation,
@@ -14,7 +13,6 @@ import Reset from "../../assets/Reset";
 
 const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   const { title, type, options, _id } = question;
-  // const [currentOptions, setCurrentOptions] = useState(options);
   const {
     register,
     handleSubmit,
@@ -43,17 +41,11 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
     console.log({ result });
   };
 
-  // useEffect(() => {
-  //   if (type == "text") {
-  //     setCurrentOptions([]);
-  //   }
-  // }, [type]);
-
   const { type: selectedType } = watch();
   const { options: currentOptions } = watch();
 
   return (
-    <div className="flex gap-2" onFocus={() => setActiveQuestion(_id)}>
+    <div className="flex justify-start gap-2" onFocus={() => setActiveQuestion(_id)}>
       <div
         className={`p-8 custom-shadow ${
           activeQuestion === _id && "border-l-8 border-[#4285F4]"
@@ -76,7 +68,6 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
             <select
               className="p-2"
               {...register("type")}
-              // onChange={(event) => setValue("type", event.target.value)}
             >
               {[
                 { label: "Text", value: "text" },
@@ -99,7 +90,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
           </div>
           {selectedType === "dropdown" && (
             <div>
-              <ol className="mt-4 w-full">
+              <ol className="w-full my-4">
                 {currentOptions.map((option: string, index: number) => (
                   <li key={index} className="flex gap-3 items-center">
                     <span>{index + 1}.</span>
@@ -124,7 +115,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
           )}
         </div>
       </div>
-      <div className="flex flex-col gap-6 p-4 custom-shadow rounded-xl">
+      <div className="max-h-44 flex flex-col justify-center gap-6 p-4 custom-shadow rounded-xl">
         {isDirty ? (
           <div className="flex flex-col gap-6">
             <button type="submit" onClick={handleSubmit(onSubmit)}>

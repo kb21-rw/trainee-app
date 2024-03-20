@@ -82,7 +82,7 @@ const EditForm = ({
           {...register("description")}
         />
       </div>
-      <div className="flex flex-col gap-6 p-4 custom-shadow rounded-xl">
+      <div className="flex flex-col justify-between gap-6 p-4 custom-shadow rounded-xl">
         {isDirty ? (
           <button type="submit" onClick={handleSubmit(onSubmit)}>
             <SuccessCheckMark />
