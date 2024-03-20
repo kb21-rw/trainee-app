@@ -5,6 +5,7 @@ import authRoute from "./routes/authRoute";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import userRoute from "./routes/userRoute";
+import applicantRoute from "./routes/applicantRoutes"
 import traineeRoute from "./routes/traineeRoute";
 import coachRoute from "./routes/coachRoute";
 import formRoute from "./routes/formRoute";
@@ -31,6 +32,7 @@ app.use(express.json());
 
 app.use("/auth", authRoute);
 app.use("/users", userRoute);
+app.use("/applicants", applicantRoute);
 app.use("/trainees", traineeRoute);
 app.use("/coaches", coachRoute);
 app.use("/forms", formRoute);
