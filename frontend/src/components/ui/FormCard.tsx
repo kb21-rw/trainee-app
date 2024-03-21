@@ -28,7 +28,7 @@ const FormCard = ({ form }: { form: IFormType }) => {
         </div>
       )}
       <div
-        className="flex flex-col gap-4 cursor-pointer w-full"
+        className="flex flex-col gap-4 w-full"
       > 
         <div className="flex justify-between">
           {" "}
