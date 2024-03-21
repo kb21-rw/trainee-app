@@ -19,7 +19,7 @@ export const updateFormService = async (
 ) => {
   const { title, description } = formData;
   if (!ObjectId.isValid(formId)) {
-    throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
+    throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
   }
 
   const form = await Form.findById(formId);
@@ -47,7 +47,7 @@ export const createFormService = async (formData: CreateFormType) => {
 
 export const getSingleFormService = async (formId: string) => {
   if (!ObjectId.isValid(formId)) {
-    throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
+    throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
   }
 
   const form = await getFormQuery(formId);
@@ -60,7 +60,7 @@ export const getSingleFormService = async (formId: string) => {
 
 export const deleteFormService = async (formId: string) => {
   if (!ObjectId.isValid(formId)) {
-    throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
+    throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
   }
 
   const form = await Form.findByIdAndDelete(formId);
