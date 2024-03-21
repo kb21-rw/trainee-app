@@ -7,6 +7,7 @@ import Cookies from "universal-cookie";
 import { useDeleteFormMutation } from "../../features/user/apiSlice";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
+import View from "../../assets/View"
 
 const FormCard = ({ form }: { form: IFormType }) => {
   const navigate = useNavigate();
@@ -20,33 +21,43 @@ const FormCard = ({ form }: { form: IFormType }) => {
   };
 
   return (
-    <div className="p-8 custom-shadow flex items-center justify-between rounded-xl">
+    <div className="p-8 relative custom-shadow flex items-center justify-between rounded-xl">
       {isDeleteFormLoading && (
         <div className="absolute inset-0 h-full w-full">
           <Loader />
         </div>
       )}
       <div
-        onClick={() => navigate(`/forms/${form._id}`)}
-        className="flex flex-col gap-4 cursor-pointer"
-      >
-        <H2>{form.title}</H2>
-        <H6>{form.description}</H6>
-        <div className="flex items-center gap-1">
-          <H7>{questions.length}</H7>
-          <H7>{questions.length === 1 ? "Question" : "Questions"}</H7>
+        className="flex flex-col gap-4 cursor-pointer w-full"
+      > 
+        <div className="flex justify-between">
+          {" "}
+          <H2>{form.title}</H2>
+          <div className="flex items-center gap-1 font-bold ">
+            <H7>{questions.length}</H7>
+            <H7>{questions.length === 1 ? "Question" : "Questions"}</H7>
+          </div>
         </div>
-      </div>
-      <div className="flex  gap-6">
-        <button className="flex items-center gap-2">
-          <Edit />
+        <H6>{form.description}</H6>
+        <div className="flex justify-between">
+        <button onClick={() => navigate(`/forms/${form._id}`)}
+         className='flex items-center gap-2'>
+         <View/>
+        <span>View</span>
+        </button>
+        <button onClick={() => navigate(`/forms/${form._id}`)}
+         className="flex items-center gap-2">
+          <Edit /> 
+          <span>Edit</span>
         </button>
         <button
           onClick={() => handleDeleteForm(form._id)}
           className="flex items-center gap-2"
         >
-          <Delete />
+          <Delete /> 
+          <span>Delete</span>
         </button>
+      </div>
       </div>
     </div>
   );
