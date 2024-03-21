@@ -10,6 +10,7 @@ import SuccessCheckMark from "../../assets/SuccessCheckMark";
 import { useForm } from "react-hook-form";
 import AddIcon from "../../assets/AddIcon";
 import Reset from "../../assets/Reset";
+import RemoveIcon from "../../assets/RemoveIcon";
 
 const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   const { title, type, options, _id } = question;
@@ -45,7 +46,10 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   const { options: currentOptions } = watch();
 
   return (
-    <div className="flex justify-start gap-2" onFocus={() => setActiveQuestion(_id)}>
+    <div
+      className="flex justify-start gap-2"
+      onFocus={() => setActiveQuestion(_id)}
+    >
       <div
         className={`p-8 custom-shadow ${
           activeQuestion === _id && "border-l-8 border-[#4285F4]"
@@ -65,17 +69,14 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                 activeQuestion === _id && "bg-white"
               } focus:border-b-2 border-blue-400 outline-none py-1 px-0.5`}
             />
-            <select
-              className="p-2"
-              {...register("type")}
-            >
+            <select className="p-2" {...register("type")}>
               {[
                 { label: "Text", value: "text" },
                 { label: "Dropdown", value: "dropdown" },
               ].map(
                 (
                   currentType: { label: string; value: string },
-                  index: number,
+                  index: number
                 ) => (
                   <option
                     key={index}
@@ -84,7 +85,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                   >
                     {currentType.label}
                   </option>
-                ),
+                )
               )}
             </select>
           </div>
@@ -111,6 +112,16 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
               >
                 <AddIcon />
               </button>
+              {currentOptions.length > 0 && (
+                <button
+                  onClick={() => {
+                    currentOptions.pop();
+                    setValue("options", currentOptions);
+                  }}
+                >
+                  <RemoveIcon />
+                </button>
+              )}
             </div>
           )}
         </div>
