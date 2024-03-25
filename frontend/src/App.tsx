@@ -18,6 +18,8 @@ import ResetPassword from "./pages/User/ResetPassword";
 import EditMyTrainees from "./pages/User/EditTraineesForCoach";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import SignUp from "./pages/Applicant/SignUp";
+import AllForm from "./pages/Form/AllForms";
+import SingleForm from "./pages/Form/SingleForm";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -26,7 +28,8 @@ export default function App() {
         <Route path="/" element={<Layout />} errorElement={<Error />}>
           <Route element={<ProtectedRoute />}>
             <Route index element={<h1>Overview page</h1>} />
-            <Route path="/forms" element={<h1>Forms page</h1>} />
+            <Route path="/forms" element={<AllForm />} />
+            <Route path="/forms/:id" element={<SingleForm />} />
             <Route path="/trainees" element={<TraineesInfo />} />
             <Route path="/administer-coach" element={<CoachesInfo />} />
             <Route path="/edit-my-trainees" element={<EditMyTrainees />} />
