@@ -18,7 +18,7 @@ export default function SignUp() {
                 name="ApplicantEmail"
                 required
                 placeholder="example@gmail.com"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 outline-none focus:border-blue-500 focus:border-2"
+                className="bg-gray-50 border border-gray-300 w-72 text-gray-900 text-sm rounded-lg p-2.5 outline-none focus:border-blue-500 focus:border-2"
               />
             </div>
             <div className="password grid">
@@ -57,9 +57,9 @@ export default function SignUp() {
             </div>
           </form>
           <Google title={"Sign up with Google"} />
-          <h3>
+          <h3 className="mx-auto">
             Already have an account?
-            <span className="text-primary-dark"> Sign in</span>
+            <span className="text-primary-dark mx-auto"> Sign in</span>
           </h3>
         </div>
       </div>
