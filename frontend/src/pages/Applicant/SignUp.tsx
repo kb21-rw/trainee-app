@@ -59,7 +59,7 @@ export default function SignUp() {
           <Google title={"Sign up with Google"} />
           <h3 className="mx-auto">
             Already have an account?
-            <span className="text-primary-dark mx-auto"> Sign in</span>
+            <span className="text-primary-dark"> Sign in</span>
           </h3>
         </div>
       </div>
