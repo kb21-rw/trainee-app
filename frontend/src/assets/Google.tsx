@@ -2,7 +2,7 @@ import React from "react";
 
 export default function Google(prop: any) {
   return (
-    <div className="flex items-center justify-start border-2 border-gray-400 rounded-2xl px-4 py-1 gap-2 hover:cursor-pointer hover:bg-primary-dark hover:text-white">
+    <div className="flex items-center justify-start mx-auto border-2 border-gray-400 rounded-2xl px-4 py-1 gap-2 hover:cursor-pointer hover:bg-primary-dark hover:text-white lg:w-9/12">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         width="1.5em"
