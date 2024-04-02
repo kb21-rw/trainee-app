@@ -1,33 +1,32 @@
-import React, { KeyboardEventHandler, useRef, useState } from "react";
-import Button from "./Button";
+import React, { KeyboardEventHandler, useRef } from "react";
+import SearchIcon from "../../assets/SearchIcon";
 
 const SearchInput = ({ setSearchQuery }: { setSearchQuery: any }) => {
-  const [searchString, setSearchString] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
-  const onSubmitSearch = () => {
-    setSearchQuery(searchString);
-  };
 
   const handleKeyPress: KeyboardEventHandler<HTMLInputElement> = (event) => {
     if (event.key === "Enter") {
-      setSearchQuery(searchString);
+      setSearchQuery(event.currentTarget.value);
     }
   };
 
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value);
+  };
+
   return (
-    <div className="flex w-full  items-center max-w-xl px-1 py-1 h-[58px] border border-[#DBD5E0] rounded-xl">
+    <div className="flex w-full items-center max-w-xl h-[58px] border border-[#DBD5E0] rounded-xl">
+      <div className="bg-primary-dark h-full rounded-tl-xl rounded-bl-xl flex items-center justify-center p-2 text-white space-x-1">
+        <SearchIcon />
+      </div>
       <input
-        className="px-2 flex-1 outline-none border-none h-full"
+        className="px-2 flex-1 outline-none border-none h-full w-5/6  rounded-xl"
         placeholder="Enter name"
         name="search"
-        value={searchString}
-        onChange={(event) => setSearchString(event.target.value)}
+        onChange={handleInputChange}
         ref={searchRef}
         onKeyDown={handleKeyPress}
       />
-      <Button clickHandler={onSubmitSearch} variant="small">
-        Search
-      </Button>
     </div>
   );
 };
