@@ -35,6 +35,7 @@ const SingleForm = () => {
             id={id}
             activeQuestion={activeQuestion}
             setActiveQuestion={setActiveQuestion}
+            
           />
           <div className="flex flex-col gap-4">
             {questions?.map((question: any) => (

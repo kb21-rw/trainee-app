@@ -45,7 +45,7 @@ const FormCard = ({ form }: { form: IFormType }) => {
          <View/>
         <span>View</span>
         </button>
-        <button onClick={() => navigate(`/forms/${form._id}`)}
+        <button onClick={() => navigate(`/forms/${form._id}?edit=true`)}
          className="flex items-center gap-2">
           <Edit /> 
           <span>Edit</span>
