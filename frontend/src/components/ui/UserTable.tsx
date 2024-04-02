@@ -3,6 +3,7 @@ import React, { Dispatch, SetStateAction } from "react";
 import Edit from "../../assets/Edit";
 import Delete from "../../assets/Delete";
 import Loader from "../../components/ui/Loader";
+import NotFound from "./NotFound";
 interface PropTypes {
   headers: string[];
   isLoading: boolean;
@@ -34,40 +35,42 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
         <div className="flex w-screen items-center justify-center h-[50vh]">
           <Loader />
         </div>
+      ) : data.length === 0 ? (
+        <div className="flex w-screen h-[50vh]">
+          <NotFound type="User" />
+        </div>
       ) : (
         <tbody className="w-full">
-          {data?.map((userData: string[], index: number) => {
-            return (
-              <tr
-                key={userData[0]}
-                className="border-b border-black h-[100px] w-full"
-              >
-                <td className="text-base font-medium pl-12">{index + 1}</td>
-                {userData.slice(1).map((item: string, index: number) => (
-                  <td key={index} className="text-base font-medium pl-12">
-                    {item}
-                  </td>
-                ))}
-                <td className="text-base font-medium pl-12">
-                  <div className="flex items-center gap-4 w-full h-full">
-                    {actions.map((action: any, index: number) => (
-                      <button
-                        key={index}
-                        onClick={() =>
-                          action.actionCaller(
-                            action.type == "delete" ? userData[0] : userData,
-                          )
-                        }
-                      >
-                        {action.type == "delete" && <Delete />}
-                        {action.type == "edit" && <Edit />}
-                      </button>
-                    ))}
-                  </div>
+          {data.map((userData: string[], index: number) => (
+            <tr
+              key={userData[0]}
+              className="border-b border-black h-[100px] w-full"
+            >
+              <td className="text-base font-medium pl-12">{index + 1}</td>
+              {userData.slice(1).map((item: string, index: number) => (
+                <td key={index} className="text-base font-medium pl-12">
+                  {item}
                 </td>
-              </tr>
-            );
-          })}
+              ))}
+              <td className="text-base font-medium pl-12">
+                <div className="flex items-center gap-4 w-full h-full">
+                  {actions.map((action: any, index: number) => (
+                    <button
+                      key={index}
+                      onClick={() =>
+                        action.actionCaller(
+                          action.type == "delete" ? userData[0] : userData,
+                        )
+                      }
+                    >
+                      {action.type == "delete" && <Delete />}
+                      {action.type == "edit" && <Edit />}
+                    </button>
+                  ))}
+                </div>
+              </td>
+            </tr>
+          ))}
         </tbody>
       )}
     </table>
