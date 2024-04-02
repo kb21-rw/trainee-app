@@ -1,6 +1,6 @@
 import React from "react";
 
-const Sort = () => {
+const SortIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -76,4 +76,4 @@ const Sort = () => {
   );
 };
 
-export default Sort;
+export default SortIcon;
