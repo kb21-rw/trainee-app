@@ -1,7 +1,9 @@
 import React from "react";
 import Google from "../../assets/Google";
+import { useNavigate } from "react-router-dom";
 
 export default function SignUp() {
+  const navigate = useNavigate();
   return (
     <section className="signup min-h-screen flex items-center justify-center lg:py-10">
       <div className="md:px-36 px-16 flex flex-col items-center gap-10 pt-10 pb-10 shadow-2xl">
@@ -59,7 +61,13 @@ export default function SignUp() {
           <Google title={"Sign up with Google"} />
           <h3 className="mx-auto">
             Already have an account?
-            <span className="text-primary-dark"> Sign in</span>
+            <span
+              className="text-primary-dark cursor-pointer"
+              onClick={() => navigate("/applicant/signin")}
+            >
+              {" "}
+              Sign in
+            </span>
           </h3>
         </div>
       </div>
