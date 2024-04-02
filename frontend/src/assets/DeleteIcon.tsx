@@ -1,6 +1,6 @@
 import React from "react";
 
-const Delete = () => {
+const DeleteIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -48,4 +48,4 @@ const Delete = () => {
   );
 };
 
-export default Delete;
+export default DeleteIcon;

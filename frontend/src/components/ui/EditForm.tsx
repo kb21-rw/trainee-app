@@ -1,5 +1,5 @@
 import React from "react";
-import CheckMark from "../../assets/CheckMark";
+import CheckMark from "../../assets/CheckMarkIcon";
 import AddIcon from "../../assets/AddIcon";
 import { useForm } from "react-hook-form";
 import Cookies from "universal-cookie";
@@ -8,8 +8,8 @@ import {
   useDeleteFormMutation,
   useEditFormMutation,
 } from "../../features/user/apiSlice";
-import SuccessCheckMark from "../../assets/SuccessCheckMark";
-import Delete from "../../assets/Delete";
+import SuccessCheckMark from "../../assets/SuccessCheckMarkIcon";
+import Delete from "../../assets/DeleteIcon";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 

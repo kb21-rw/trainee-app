@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect } from "react";
-import Close from "../../assets/Close";
+import Close from "../../assets/CloseIcon";
 
 const ModalLayout = ({
   children,

@@ -1,16 +1,16 @@
 import React from "react";
 import Loader from "./Loader";
 // import DropDown from "./DropDown";
-import Delete from "../../assets/Delete";
+import Delete from "../../assets/DeleteIcon";
 import {
   useDeleteQuestionMutation,
   useEditQuestionMutation,
 } from "../../features/user/apiSlice";
 import Cookies from "universal-cookie";
-import SuccessCheckMark from "../../assets/SuccessCheckMark";
+import SuccessCheckMark from "../../assets/SuccessCheckMarkIcon";
 import { useForm } from "react-hook-form";
 import AddIcon from "../../assets/AddIcon";
-import Reset from "../../assets/Reset";
+import Reset from "../../assets/ResetIcon";
 
 const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   const { title, type, options, _id } = question;

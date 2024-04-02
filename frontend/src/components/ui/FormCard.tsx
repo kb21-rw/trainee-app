@@ -1,13 +1,13 @@
 import React from "react";
 import { H2, H6, H7 } from "./Typography";
 import { IFormType } from "../../utils/types";
-import Delete from "../../assets/Delete";
-import Edit from "../../assets/Edit";
+import Delete from "../../assets/DeleteIcon";
+import Edit from "../../assets/EditIcon";
 import Cookies from "universal-cookie";
 import { useDeleteFormMutation } from "../../features/user/apiSlice";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
-import View from "../../assets/View"
+import View from "../../assets/ViewIcon"
 
 const FormCard = ({ form }: { form: IFormType }) => {
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const FormCard = ({ form }: { form: IFormType }) => {
   };
 
   return (
-    <div className="p-8 relative custom-shadow flex items-center justify-between rounded-xl">
+    <div className="p-8 custom-shadow flex items-center justify-between rounded-xl">
       {isDeleteFormLoading && (
         <div className="absolute inset-0 h-full w-full">
           <Loader />

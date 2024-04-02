@@ -1,6 +1,6 @@
 import React from "react";
 
-const Reset = () => {
+const ResetIcon = () => {
   return (
     <svg
       width="25"
@@ -17,4 +17,4 @@ const Reset = () => {
   );
 };
 
-export default Reset;
+export default ResetIcon;

@@ -4,7 +4,7 @@ import Cookies from "universal-cookie";
 import Loader from "../../components/ui/Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import EditForm from "../../components/ui/EditForm";
-import Back from "../../assets/Back";
+import Back from "../../assets/BackIcon";
 import QuestionCard from "../../components/ui/QuestionCard";
 
 const SingleForm = () => {
