@@ -14,7 +14,7 @@ export const createResponse = async (
     await createResponseValidation.validateAsync(req.body);
     const createdResponse = await createResponseService(
       loggedInUser.id,
-      userId as string,
+      userId,
       questionId,
       req.body
     );

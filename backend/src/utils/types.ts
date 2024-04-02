@@ -23,6 +23,7 @@ export interface CreateResponseType {
 
 export type FormType = CreateFormType & MetaType;
 export type QuestionType = CreateQuestionType & MetaType;
+export type ResponseType = CreateResponseType & MetaType;
 
 export interface Search {
   searchString?: string;

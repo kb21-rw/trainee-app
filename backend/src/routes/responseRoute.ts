@@ -5,6 +5,6 @@ import { createResponse } from "../controllers/responseController";
 
 const router = Router();
 
-router.post("/:questionId?", verifyJWT, isAdminOrCoach, createResponse);
+router.put("/:questionId?", verifyJWT, isAdminOrCoach, createResponse);
 
 export default router;

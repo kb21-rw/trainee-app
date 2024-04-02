@@ -1,9 +1,16 @@
+import { ObjectId } from "mongoose";
 import CustomError from "../middlewares/customError";
 import Question from "../models/Question";
 import Response from "../models/Response";
 import User from "../models/User";
 import { INVALID_MONGODB_ID, NOT_ALLOWED } from "../utils/errorCodes";
 import { CreateResponseType } from "../utils/types";
+
+interface IResponse {
+  _id: ObjectId;
+  userId: ObjectId;
+  text: string;
+}
 
 export const createResponseService = async (
   loggedInUserId: string,
@@ -12,9 +19,11 @@ export const createResponseService = async (
   responseData: CreateResponseType
 ) => {
   const { text } = responseData;
+
   const trainee = await User.findById(traineeId);
-  const relateQuestion = await Question.findById(questionId);
-  if (!relateQuestion || !trainee) {
+  const relatedQuestion = await Question.findById(questionId);
+
+  if (!relatedQuestion || !trainee) {
     throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
   }
 
@@ -34,13 +43,37 @@ export const createResponseService = async (
     );
   }
 
-//   await Response.find({user})
-
-  const createdResponse = await Response.create({ userId: traineeId, text });
-  if (createdResponse) {
-    relateQuestion.responseIds.push(createdResponse._id);
+  if (
+    relatedQuestion.type === "dropdown" &&
+    !relatedQuestion.options.includes(text)
+  ) {
+    throw new CustomError(
+      NOT_ALLOWED,
+      "You can only choose from the available options",
+      400
+    );
   }
 
-  await relateQuestion.save();
-  return relateQuestion;
+  const relatedQuestionPopulated = await relatedQuestion.populate<{
+    responseIds: IResponse[];
+  }>("responseIds");
+
+  const oldResponse = relatedQuestionPopulated.responseIds.find(
+    (response) => response.userId.toString() === traineeId
+  );
+
+  if (oldResponse) {
+    const response = await Response.findByIdAndUpdate(
+      oldResponse._id,
+      { text },
+      { new: true }
+    );
+    return response;
+  }
+
+  const createdResponse = await Response.create({ userId: traineeId, text });
+  relatedQuestion.responseIds.push(createdResponse.id);
+  await relatedQuestion.save();
+
+  return createdResponse;
 };
