@@ -1,6 +1,6 @@
 import React from "react";
 
-const DropDown = () => {
+const DropDownIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -17,4 +17,4 @@ const DropDown = () => {
   );
 };
 
-export default DropDown;
+export default DropDownIcon;

@@ -1,6 +1,6 @@
 import React from "react";
 
-const ClosedEye = () => {
+const ClosedEyeIcon = () => {
   return (
     <svg
       width="24"
@@ -48,4 +48,4 @@ const ClosedEye = () => {
   );
 };
 
-export default ClosedEye;
+export default ClosedEyeIcon;

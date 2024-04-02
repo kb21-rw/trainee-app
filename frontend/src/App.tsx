@@ -17,8 +17,10 @@ import { usersApi } from "./features/user/apiSlice";
 import ResetPassword from "./pages/User/ResetPassword";
 import EditMyTrainees from "./pages/User/EditTraineesForCoach";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import SignUp from "./pages/Applicant/SignUp";
 import AllForm from "./pages/Form/AllForms";
 import SingleForm from "./pages/Form/SingleForm";
+import SignIn from "./pages/Applicant/SignIn";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -35,6 +37,8 @@ export default function App() {
             <Route path="/profile-settings" element={<Profile />} />
           </Route>
         </Route>
+        <Route path="/applicant/signup" element={<SignUp />} />
+        <Route path="/applicant/signin" element={<SignIn />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />

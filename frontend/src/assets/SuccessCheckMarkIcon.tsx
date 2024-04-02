@@ -1,6 +1,6 @@
 import React from "react";
 
-const SuccessCheckMark = () => {
+const SuccessCheckMarkIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -17,4 +17,4 @@ const SuccessCheckMark = () => {
   );
 };
 
-export default SuccessCheckMark;
+export default SuccessCheckMarkIcon;
