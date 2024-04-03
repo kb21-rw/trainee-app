@@ -1,6 +1,6 @@
 import React from "react";
 
-const OpenEye = () => {
+const OpenEyeIcon = () => {
   return (
     <svg
       width="24"
@@ -31,4 +31,4 @@ const OpenEye = () => {
   );
 };
 
-export default OpenEye;
+export default OpenEyeIcon;

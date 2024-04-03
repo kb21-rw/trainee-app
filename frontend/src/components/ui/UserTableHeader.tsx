@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
-import Sort from "../../assets/Sort";
+import Sort from "../../assets/SortIcon";
 import SearchInput from "./SearchInput";
 
 const UserTableHeader = ({

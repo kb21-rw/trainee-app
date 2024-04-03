@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import OpenEye from "../../assets/OpenEye";
-import ClosedEye from "../../assets/ClosedEye";
+import OpenEye from "../../assets/OpenEyeIcon";
+import ClosedEye from "../../assets/ClosedEyeIcon";
 
 const InputField = ({
   label,

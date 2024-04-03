@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React, { Dispatch, SetStateAction } from "react";
-import Edit from "../../assets/Edit";
-import Delete from "../../assets/Delete";
+import Edit from "../../assets/EditIcon";
+import Delete from "../../assets/DeleteIcon";
 import Loader from "../../components/ui/Loader";
 import NotFound from "./NotFound";
 interface PropTypes {

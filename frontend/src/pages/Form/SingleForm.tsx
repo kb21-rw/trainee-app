@@ -4,7 +4,7 @@ import Cookies from "universal-cookie";
 import Loader from "../../components/ui/Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import EditForm from "../../components/ui/EditForm";
-import Back from "../../assets/Back";
+import Back from "../../assets/BackIcon";
 import QuestionCard from "../../components/ui/QuestionCard";
 
 const SingleForm = () => {
@@ -35,6 +35,7 @@ const SingleForm = () => {
             id={id}
             activeQuestion={activeQuestion}
             setActiveQuestion={setActiveQuestion}
+            
           />
           <div className="flex flex-col gap-4">
             {questions?.map((question: any) => (
