@@ -1,6 +1,7 @@
 import CustomError from "../middlewares/customError";
 import Form from "../models/Form";
 import Question from "../models/Question";
+import Response from "../models/Response";
 import { INVALID_MONGODB_ID, QUESTION_NOT_FOUND } from "../utils/errorCodes";
 import { CreateQuestionType, QuestionType } from "../utils/types";
 
@@ -68,5 +69,11 @@ export const updateQuestionService = async (
 };
 
 export const deleteQuestionService = async (questionId: string) => {
-  await Question.findByIdAndDelete(questionId);
+  const question = await Question.findByIdAndDelete(questionId);
+
+  if (!question) {
+    throw new CustomError(QUESTION_NOT_FOUND, "Question not found!", 400);
+  }
+
+  await Response.deleteMany({ _id: { $in: question.responseIds } });
 };
