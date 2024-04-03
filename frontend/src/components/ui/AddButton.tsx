@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import Button from "./Button";
-import Plus from "../../assets/Plus";
+import Plus from "../../assets/PlusIcon";
 
 interface PropTypes {
   children: ReactNode;
