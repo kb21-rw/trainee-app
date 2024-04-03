@@ -32,13 +32,17 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
         </tr>
       </thead>
       {isLoading ? (
-        <div className="flex w-screen items-center justify-center h-[50vh]">
+       <tbody>
+         <tr className="flex w-screen items-center justify-center h-[50vh]">
           <Loader />
-        </div>
+        </tr>
+     </tbody>
       ) : data.length === 0 ? (
-        <div className="flex w-screen h-[50vh]">
-          <NotFound type="User" />
-        </div>
+        <tbody>
+         <tr className="flex w-screen h-[50vh]">
+            <NotFound type="User" />
+        </tr>
+     </tbody>
       ) : (
         <tbody className="w-full">
           {data.map((userData: string[], index: number) => (
