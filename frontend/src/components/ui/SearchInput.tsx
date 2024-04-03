@@ -1,14 +1,8 @@
-import React, { KeyboardEventHandler, useRef } from "react";
+import React, { useRef } from "react";
 import SearchIcon from "../../assets/SearchIcon";
 
 const SearchInput = ({ setSearchQuery }: { setSearchQuery: any }) => {
   const searchRef = useRef<HTMLInputElement>(null);
-
-  const handleKeyPress: KeyboardEventHandler<HTMLInputElement> = (event) => {
-    if (event.key === "Enter") {
-      setSearchQuery(event.currentTarget.value);
-    }
-  };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
@@ -25,7 +19,6 @@ const SearchInput = ({ setSearchQuery }: { setSearchQuery: any }) => {
         name="search"
         onChange={handleInputChange}
         ref={searchRef}
-        onKeyDown={handleKeyPress}
       />
     </div>
   );
