@@ -9,7 +9,7 @@ const SearchInput = ({ setSearchQuery }: { setSearchQuery: any }) => {
   };
 
   return (
-    <div className="flex w-full items-center max-w-xl h-[58px] border border-[#DBD5E0] rounded-xl">
+    <div className="flex w-full items-center max-w-xl h-14 border border-gray-250 rounded-xl">
       <div className="bg-primary-dark h-full rounded-tl-xl rounded-bl-xl flex items-center justify-center p-2 text-white space-x-1">
         <SearchIcon />
       </div>
