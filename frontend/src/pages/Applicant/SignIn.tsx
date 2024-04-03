@@ -48,7 +48,7 @@ export default function SignIn() {
           <Google title={"Sign in with Google"} />
           <h3 className="mx-auto">
             Forgot password?
-            <span className="text-primary-dark"> Reset</span>
+            <span className="text-primary-dark cursor-pointer" onClick={() => navigate("/applicant/reset-password")}> Reset</span>
           </h3>
           <h3
             className="text-primary-dark mx-auto cursor-pointer"
