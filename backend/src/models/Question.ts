@@ -1,24 +1,30 @@
 import { Schema, model } from "mongoose";
 
 const QuestionSchema = new Schema(
-    {
-        title: {
-            type: String,
-            required: true,
-        },
-
-        type: {
-            type: String,
-            enum: ['text', 'dropdown'],
-            required: true,
-        },
-
-        options: [String],
+  {
+    title: {
+      type: String,
+      required: true,
     },
 
-    {timestamps: {}}
-)
+    type: {
+      type: String,
+      enum: ["text", "dropdown"],
+      required: true,
+    },
 
-QuestionSchema.index({title: "text"});
+    options: [String],
+
+    responseIds: {
+      type: [Schema.Types.ObjectId],
+      ref: "Response",
+      default: [],
+    },
+  },
+
+  { timestamps: {} }
+);
+
+QuestionSchema.index({ title: "text" });
 
 export default model("Question", QuestionSchema);

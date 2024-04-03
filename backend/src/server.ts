@@ -10,6 +10,7 @@ import traineeRoute from "./routes/traineeRoute";
 import coachRoute from "./routes/coachRoute";
 import formRoute from "./routes/formRoute";
 import questionRoute from "./routes/questionRoute";
+import responseRoute from "./routes/responseRoute";
 import { errorHandler } from "./middlewares/errorHandler";
 import CustomError from "./middlewares/customError";
 import { URL_NOT_FOUND } from "./utils/errorCodes";
@@ -37,6 +38,7 @@ app.use("/trainees", traineeRoute);
 app.use("/coaches", coachRoute);
 app.use("/forms", formRoute);
 app.use("/questions", questionRoute);
+app.use("/responses", responseRoute);
 
 app.all("*", (req, res, next) => {
   const err = new CustomError(
