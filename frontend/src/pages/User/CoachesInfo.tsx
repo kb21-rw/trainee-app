@@ -43,6 +43,7 @@ const CoachesInfo = () => {
           setQuery={setQuery}
           sortingValues={coachTableSortingValues}
           usersPerPageValues={usersPerPageValues}
+          userType="Coach"
         />
         <UserTable
           headers={coachTableHeaders}
