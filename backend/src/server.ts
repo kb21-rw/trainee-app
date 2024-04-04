@@ -62,16 +62,35 @@ passport.use(
       callbackURL: process.env.GOOGLE_CALLBACK_URL as string,
       scope: ["profile", "email"],
     },
-    function (accessToken, refreshToken, profile, done) {
-      done(null, profile);
+
+    async function (accessToken, refreshToken, profile, done) {
+      if (!profile.emails) {
+        return done(new Error("Email not provided in profile"));
+      }
+    
+      const email = profile.emails[0].value; 
+      console.log(email);
+      
+      let user = await Applicant.findOne({ googleId: profile.id });
+      
+      if (!user) {
+        user = new Applicant({
+          googleId: profile.id,
+          email: email 
+        });
+        await user.save();
+      } 
+    
+      return done(null, user);
     }
-  )
+    
+)
 );
 app.get('/login', (req, res) => {
   res.send("<a href='/auth/google'>continue with google</a>");
 });
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/welcome', (req, res) => {
+app.get('/welcome',  passport.authenticate('google', { successRedirect:'/welcome', failureRedirect: '/login' }), (req, res) => {
   res.send("This is the welcome page");
 });
 
