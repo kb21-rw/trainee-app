@@ -6,10 +6,12 @@ const UserTableHeader = ({
   setQuery,
   sortingValues,
   usersPerPageValues,
+  userType,
 }: {
   setQuery: Dispatch<SetStateAction<string>>;
   sortingValues: { title: string; value: string }[];
   usersPerPageValues: number[];
+  userType: string;
 }) => {
   const DEFAULTCOACHESPERPAGE = "10";
   const [sortBy, setSortBy] = useState("entry");
@@ -29,7 +31,9 @@ const UserTableHeader = ({
           <div className="flex gap-2 items-center">
             <Sort />
             <span className="text-base font-normal text-[#5B576A] whitespace-nowrap">
-              Sort coaches by:
+              {userType === "Trainee"
+                ? "Sort trainees by:"
+                : "Sort coaches by:"}
             </span>
           </div>
           <select
@@ -48,7 +52,9 @@ const UserTableHeader = ({
 
         <label className="flex gap-6 items-center">
           <span className="text-base font-normal text-[#5B576A] whitespace-nowrap">
-            Coaches per page:
+            {userType === "Trainee"
+              ? "Trainees per page:"
+              : "Coaches per page:"}
           </span>
           <select
             value={usersPerPage}

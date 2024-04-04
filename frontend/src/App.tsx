@@ -22,14 +22,14 @@ import AllForm from "./pages/Form/AllForms";
 import SingleForm from "./pages/Form/SingleForm";
 import SignIn from "./pages/Applicant/SignIn";
 import ResetPasswordApplicant from "./pages/Applicant/ResetPasswordApplicant";
-
+import OverView from './pages/User/OverView';
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route>
         <Route path="/" element={<Layout />} errorElement={<Error />}>
           <Route element={<ProtectedRoute />}>
-            <Route index element={<h1>Overview page</h1>} />
+            <Route index element={<OverView/>} />
             <Route path="/forms" element={<AllForm />} />
             <Route path="/forms/:id" element={<SingleForm />} />
             <Route path="/trainees" element={<TraineesInfo />} />
