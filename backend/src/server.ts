@@ -15,8 +15,8 @@ import questionRoute from "./routes/questionRoute";
 import { errorHandler } from "./middlewares/errorHandler";
 import CustomError from "./middlewares/customError";
 import { URL_NOT_FOUND } from "./utils/errorCodes";
-
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import Applicant from "./models/Applicant";
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
@@ -33,10 +33,8 @@ mongoose.connection.once("open", () => {
 app.use(cors({ origin: "*", credentials: true }));
 app.use(cookieParser());
 app.use(express.json());
-
 app.use("/auth", authRoute);
 app.use("/users", userRoute);
-
 app.use("/trainees", traineeRoute);
 app.use("/coaches", coachRoute);
 app.use("/forms", formRoute);
@@ -53,7 +51,6 @@ const sessionConfig = {
 };
 
 app.use(session(sessionConfig));
-
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -62,7 +59,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID as string,
       clientSecret: process.env.CLIENT_SECERET as string,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL,
+      callbackURL: process.env.GOOGLE_CALLBACK_URL as string,
       scope: ["profile", "email"],
     },
     function (accessToken, refreshToken, profile, done) {
@@ -70,15 +67,13 @@ passport.use(
     }
   )
 );
-
-
-app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-
-app.get('/auth/google/callback', passport.authenticate('google'), (req, res) => {
-
-  res.send("This is the callback route");
+app.get('/login', (req, res) => {
+  res.send("<a href='/auth/google'>continue with google</a>");
 });
-
+app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+app.get('/welcome', (req, res) => {
+  res.send("This is the welcome page");
+});
 
 app.all("*", (req, res, next) => {
   const err = new CustomError(
