@@ -69,5 +69,4 @@ export const deleteFormService = async (formId: string) => {
   }
 
   await Question.deleteMany({ _id: { $in: form.questionsId } });
-  return true;
 };
