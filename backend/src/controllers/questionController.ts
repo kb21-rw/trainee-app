@@ -10,11 +10,14 @@ import {
   getAllQuestionsService,
   updateQuestionService,
 } from "../services/questionService";
+import { isValidObjectId } from "mongoose";
+import CustomError from "../middlewares/customError";
+import { QUESTION_NOT_FOUND } from "../utils/errorCodes";
 
 export const createQuestion = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { formId } = req.params;
@@ -29,7 +32,7 @@ export const createQuestion = async (
 export const getAllQuestions = async (
   req: Request<object, object, object, Search>,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const searchString = req.query.searchString || "";
@@ -44,7 +47,7 @@ export const getAllQuestions = async (
 export const updateQuestion = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { questionId } = req.params;
@@ -59,10 +62,14 @@ export const updateQuestion = async (
 export const deleteQuestion = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { questionId } = req.params;
+    if (!isValidObjectId(questionId)) {
+      throw new CustomError(QUESTION_NOT_FOUND, "Question not found!", 400);
+    }
+
     await deleteQuestionService(questionId);
     return res.status(204).json({ message: "Question deleted successfully" });
   } catch (error) {

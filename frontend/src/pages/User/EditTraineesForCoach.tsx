@@ -30,6 +30,7 @@ const EditTraineesForCoaches = () => {
         setQuery={setQuery}
         sortingValues={traineeTableSortingValues}
         usersPerPageValues={usersPerPageValues}
+        userType="Trainee"
       />
       <UserTable
         headers={traineeTableHeaders}

@@ -10,6 +10,7 @@ import FormCard from "../../components/ui/FormCard";
 import { IFormType } from "../../utils/types";
 import Loader from "../../components/ui/Loader";
 import { useNavigate } from "react-router-dom";
+import NotFound from "../../components/ui/NotFound";
 
 const AllForms = () => {
   const [searchString, setSearchString] = useState("");
@@ -36,6 +37,10 @@ const AllForms = () => {
       {isFetching ? (
         <div className="h-[50vh] flex items-center justify-center">
           <Loader />
+        </div>
+      ) : data.length === 0 ? (
+        <div className="flex w-screen h-[50vh]">
+          <NotFound type="Form" />
         </div>
       ) : (
         <div className="flex flex-col gap-4">

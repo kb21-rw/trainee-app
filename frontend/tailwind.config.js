@@ -9,6 +9,9 @@ export default {
         "error-light": "#FEE2E2",
         "error-dark": "#AF5356",
       },
+      borderColor: {
+       "gray-250": "#DBD5E0",
+      }
     },
   },
   plugins: [
