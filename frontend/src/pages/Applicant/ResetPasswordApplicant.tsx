@@ -4,7 +4,7 @@ export default function ResetPasswordApplicant() {
   return (
     <section className="signup min-h-screen flex items-center justify-center lg:py-10">
       <div className="md:px-36 px-16 flex flex-col items-center gap-10 pt-10 pb-10 shadow-2xl">
-        <h1 className="text-2xl font-semibold">Reset Password</h1>
+        <h1 className="text-2xl font-semibold">Create new Password</h1>
         <div className="flex flex-col gap-5">
           <form action="" className="form grid gap-5">
             <div className="email grid">
