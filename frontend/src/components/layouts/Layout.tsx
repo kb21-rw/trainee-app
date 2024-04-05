@@ -15,7 +15,7 @@ const Layout = () => {
     (data?.role === "COACH" && coachMenu) ||
     [];
   return (
-    <div className="h-screen flex flex-col px-16 py-4 max-w-[1920px] mx-auto">
+    <div className="h-screen flex flex-col px-16 py-4 max-w-[1920px] mx-auto overflow-x-hidden">
       <nav className="flex items-center justify-between gap-20">
         <div className="flex items-center gap-10">
           {menu.map((element, index) => (
@@ -23,11 +23,11 @@ const Layout = () => {
               key={index}
               to={element.link}
               className={({ isActive }) =>
-                `whitespace-nowrap placeholder:text-red-500 text-xl font-medium ${
+                `whitespace-nowrap text-xl font-medium ${
                   isActive ? "text-primary-dark" : "text-secondary-dark"
                 }`
               }
-              end
+              end={element.link === "/"}
             >
               {element.title}
             </NavLink>

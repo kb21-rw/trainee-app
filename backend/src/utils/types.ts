@@ -11,15 +11,19 @@ export interface CreateFormType {
   description: string;
 }
 
-export type FormType = CreateFormType & MetaType;
-
 export interface CreateQuestionType {
   title: string;
   type: "text" | "dropdown";
   options: string[];
 }
 
+export interface CreateResponseType {
+  text: string;
+}
+
+export type FormType = CreateFormType & MetaType;
 export type QuestionType = CreateQuestionType & MetaType;
+export type ResponseType = CreateResponseType & MetaType;
 
 export interface Search {
   searchString?: string;

@@ -1,7 +1,7 @@
 import CustomError from "../middlewares/customError";
 import Form from "../models/Form";
 import Question from "../models/Question";
-import { getFormsQuery } from "../queries/formQueries";
+import { getFormQuery, getFormsQuery } from "../queries/formQueries";
 import { FORM_NOT_FOUND, INVALID_MONGODB_ID } from "../utils/errorCodes";
 import { CreateFormType } from "../utils/types";
 import mongoose from "mongoose";
@@ -19,7 +19,7 @@ export const updateFormService = async (
 ) => {
   const { title, description } = formData;
   if (!ObjectId.isValid(formId)) {
-    throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
+    throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
   }
 
   const form = await Form.findById(formId);
@@ -47,10 +47,10 @@ export const createFormService = async (formData: CreateFormType) => {
 
 export const getSingleFormService = async (formId: string) => {
   if (!ObjectId.isValid(formId)) {
-    throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
+    throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
   }
 
-  const form = await Form.findById(formId);
+  const form = await getFormQuery(formId);
   if (form === null) {
     throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
   }
@@ -60,7 +60,7 @@ export const getSingleFormService = async (formId: string) => {
 
 export const deleteFormService = async (formId: string) => {
   if (!ObjectId.isValid(formId)) {
-    throw new CustomError(INVALID_MONGODB_ID, "Invalide Document ID", 400);
+    throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
   }
 
   const form = await Form.findByIdAndDelete(formId);
@@ -69,5 +69,4 @@ export const deleteFormService = async (formId: string) => {
   }
 
   await Question.deleteMany({ _id: { $in: form.questionsId } });
-  return true;
 };

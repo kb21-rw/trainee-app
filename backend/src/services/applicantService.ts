@@ -1,25 +1,18 @@
 import { hash } from "bcryptjs";
-import { generateRandomPassword, sendEmail } from "../utils/helpers";
 import Applicant from "../models/Applicant";
-export const applicantSignup = async (applicant: any, body: any) => {
-  let password: string = "";
 
-  password = generateRandomPassword(10);
+export const applicantSignup = async (applicant: any, body: any) => {
+  const { email, password } = body;
+
   const hashedPassword = await hash(password, 10);
+
   const newApplicant = {
-    ...body,
+    email: email,
     password: hashedPassword,
+    role: "applicant",
   };
 
   const createdApplicant = await Applicant.create(newApplicant);
-  if (createdApplicant) {
-    await sendEmail(
-      createdApplicant.role,
-      createdApplicant.email,
-      createdApplicant.role,
-      password
-    );
-  }
 
   return createdApplicant;
 };

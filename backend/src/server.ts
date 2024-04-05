@@ -12,6 +12,7 @@ import traineeRoute from "./routes/traineeRoute";
 import coachRoute from "./routes/coachRoute";
 import formRoute from "./routes/formRoute";
 import questionRoute from "./routes/questionRoute";
+import responseRoute from "./routes/responseRoute";
 import { errorHandler } from "./middlewares/errorHandler";
 import CustomError from "./middlewares/customError";
 import { URL_NOT_FOUND } from "./utils/errorCodes";
@@ -95,6 +96,8 @@ app.get('/callback',  passport.authenticate('google', { successRedirect:'/welcom
 app.get('/welcome', (req, res) => {
   res.send("This is the welcome page");
 });
+
+app.use("/responses", responseRoute);
 
 app.all("*", (req, res, next) => {
   const err = new CustomError(

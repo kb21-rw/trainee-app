@@ -1,6 +1,6 @@
 import React from "react";
 
-const Arrow = () => {
+const CloseIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -10,7 +10,14 @@ const Arrow = () => {
       fill="none"
     >
       <path
-        d="M8 10L12 14L16 10"
+        d="M8 8L16 16"
+        stroke="#070412"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M16 8L8 16"
         stroke="#070412"
         strokeWidth="1.5"
         strokeLinecap="round"
@@ -20,4 +27,4 @@ const Arrow = () => {
   );
 };
 
-export default Arrow;
+export default CloseIcon;
