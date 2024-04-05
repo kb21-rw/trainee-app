@@ -90,7 +90,9 @@ app.get('/login', (req, res) => {
   res.send("<a href='/auth/google'>continue with google</a>");
 });
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/welcome',  passport.authenticate('google', { successRedirect:'/welcome', failureRedirect: '/login' }), (req, res) => {
+app.get('/callback',  passport.authenticate('google', { successRedirect:'/welcome', failureRedirect: '/login' })
+);
+app.get('/welcome', (req, res) => {
   res.send("This is the welcome page");
 });
 
