@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
+
 import mongoose from "mongoose";
 import authRoute from "./routes/authRoute";
 import cors from "cors";
@@ -16,10 +16,9 @@ import responseRoute from "./routes/responseRoute";
 import { errorHandler } from "./middlewares/errorHandler";
 import CustomError from "./middlewares/customError";
 import { URL_NOT_FOUND } from "./utils/errorCodes";
-import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import Applicant from "./models/Applicant";
+import setupPassport from "./passport-setup"
 
-dotenv.config();
+
 const PORT = process.env.PORT || 5000;
 const mongodb_url = process.env.MONGODB_URL || "";
 const app = express();
@@ -41,63 +40,31 @@ app.use("/coaches", coachRoute);
 app.use("/forms", formRoute);
 app.use("/questions", questionRoute);
 app.use("/applicants", applicantRoute);
+app.use("/responses", responseRoute);
 
 const sessionConfig = {
-  secret: 'secret_key',
-  cookie: {
-    secure: false,
-    maxAge: 60 * 60 * 1000,
-    sameSite: 'lax', 
-  },
+  secret: 'your_secret_key',
+  resave: false,
+  saveUninitialized: false
 };
 
 app.use(session(sessionConfig));
 app.use(passport.initialize());
 app.use(passport.session());
+setupPassport();
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.CLIENT_ID as string,
-      clientSecret: process.env.CLIENT_SECERET as string,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL as string,
-      scope: ["profile", "email"],
-    },
-
-    async function (accessToken, refreshToken, profile, done) {
-      if (!profile.emails) {
-        return done(new Error("Email not provided in profile"));
-      }
-    
-      const email = profile.emails[0].value; 
-      console.log(email);
-      
-      let user = await Applicant.findOne({ googleId: profile.id });
-      
-      if (!user) {
-        user = new Applicant({
-          googleId: profile.id,
-          email: email 
-        });
-        await user.save();
-      } 
-    
-      return done(null, user);
-    }
-    
-)
-);
 app.get('/login', (req, res) => {
   res.send("<a href='/auth/google'>continue with google</a>");
 });
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
-app.get('/callback',  passport.authenticate('google', { successRedirect:'/welcome', failureRedirect: '/login' })
+app.get('/callback',  passport.authenticate('google', { successRedirect:'/welcome', failureRedirect: '/login' }
+)
 );
-app.get('/welcome', (req, res) => {
+app.get('/welcome', passport.authenticate('google', { failureRedirect: '/login' }
+),(req, res) => {
   res.send("This is the welcome page");
 });
 
-app.use("/responses", responseRoute);
 
 app.all("*", (req, res, next) => {
   const err = new CustomError(

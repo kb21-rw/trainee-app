@@ -7,6 +7,10 @@ const ApplicantSchema = new Schema(
       unique: true,
       required: true,
     },
+    googleId: {
+      type: String,
+      unique: true,
+    },
     password: {
       type: String,
     },
