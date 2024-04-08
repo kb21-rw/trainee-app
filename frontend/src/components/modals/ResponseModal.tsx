@@ -44,7 +44,7 @@ const ResponseModal = ({
           autoFocus={true}
           register={register}
           options={{
-            required: { value: true, message: "response is required field" },
+            required: { value: true, message: "response is required" },
             maxLength: {
               value: 30,
               message: "Add your response here",
