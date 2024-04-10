@@ -3,15 +3,13 @@ import Google from "../../assets/Google";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import validatePassword, {
   digitRegex,
   lowercaseRegex,
   specialCharRegex,
   uppercaseRegex,
 } from "../../utils/validatePassword";
-// import { Icon } from "react-icons-kit";
-// import { eyeOff } from "react-icons-kit/feather/eyeOff";
-// import { eye } from "react-icons-kit/feather/eye";
 interface userValidation {
   email: string;
   password: string;
@@ -20,6 +18,8 @@ interface userValidation {
 
 export default function SignUp() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false)
+
   const {
     register,
     handleSubmit,
@@ -80,12 +80,12 @@ export default function SignUp() {
                 </span>
               )}
             </div>
-            <div className="password grid">
+            <div className="password grid relative">
               <label htmlFor="password" className="font-semibold">
                 Password
               </label>
               <input
-                type="password"
+                type={showPassword?"text":"password"}
                 id="password"
                 placeholder="Enter your password"
                 value={user.password}
@@ -93,6 +93,9 @@ export default function SignUp() {
                 onChange={(e) => setUser({ ...user, password: e.target.value })}
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 outline-none focus:border-blue-500 focus:border-2"
               />
+              <div onClick={()=> setShowPassword(!showPassword)} className="absolute cursor-pointer top-10 right-2">
+                {showPassword?<FaEye />:<FaEyeSlash />}
+              </div>
               {errors.password && (
                 <span className="error text-red-500">
                   {errors.password.message}
