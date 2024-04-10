@@ -1,7 +1,7 @@
-const uppercaseRegex = /[A-Z]/;
-const lowercaseRegex = /[a-z]/;
-const digitRegex = /\d/;
-const specialCharRegex = /[^\w\s]/;
+export const uppercaseRegex = /[A-Z]/;
+export const lowercaseRegex = /[a-z]/;
+export const digitRegex = /\d/;
+export const specialCharRegex = /[^\w\s]/;
 
 const validatePassword = (value: string) => {
   if (!value) {

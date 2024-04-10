@@ -3,7 +3,12 @@ import Google from "../../assets/Google";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import validatePassword from "../../utils/validatePassword";
+import validatePassword, {
+  digitRegex,
+  lowercaseRegex,
+  specialCharRegex,
+  uppercaseRegex,
+} from "../../utils/validatePassword";
 // import { Icon } from "react-icons-kit";
 // import { eyeOff } from "react-icons-kit/feather/eyeOff";
 // import { eye } from "react-icons-kit/feather/eye";
@@ -95,16 +100,45 @@ export default function SignUp() {
               )}
             </div>
             <div id="message">
-              <h3 className="font-bold">Password must contain the following:</h3>
+              <h3 className="font-bold">
+                Password must contain the following:
+              </h3>
               <div className="px-5">
-                <p className="invalid">
+                <p
+                  className={
+                    uppercaseRegex.test(user.password)
+                      ? `text-green-500`
+                      : `text-red-500`
+                  }
+                >
                   A <b>lowercase</b> letter
                 </p>
-                <p className="invalid">
+                <p
+                  className={
+                    lowercaseRegex.test(user.password)
+                      ? `text-green-500`
+                      : `text-red-500`
+                  }
+                >
                   A <b>capital (uppercase)</b> letter
                 </p>
-                <p className="invalid">
+                <p
+                  className={
+                    digitRegex.test(user.password)
+                      ? `text-green-500`
+                      : `text-red-500`
+                  }
+                >
                   A <b>number</b>
+                </p>
+                <p
+                  className={
+                    specialCharRegex.test(user.password)
+                      ? `text-green-500`
+                      : `text-red-500`
+                  }
+                >
+                  A <b>special character</b>
                 </p>
                 <p
                   className={
@@ -133,7 +167,9 @@ export default function SignUp() {
                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 outline-none focus:border-blue-500 focus:border-2"
               />
             </div>
-            <h1 className="text-red-500">{passwordMessage}</h1>
+            <h1 className="text-red-500">
+              {passwordMessage.length > 1 ? passwordMessage : ""}
+            </h1>
             <div className="flex justify-center">
               <button className="text-white bg-primary-dark w-2/6 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm auto px-2 py-2.5 text-center">
                 Sign up
