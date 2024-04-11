@@ -11,6 +11,7 @@ import coachRoute from "./routes/coachRoute";
 import formRoute from "./routes/formRoute";
 import questionRoute from "./routes/questionRoute";
 import responseRoute from "./routes/responseRoute";
+import overviewRoute from "./routes/overviewRoute";
 import { errorHandler } from "./middlewares/errorHandler";
 import CustomError from "./middlewares/customError";
 import { URL_NOT_FOUND } from "./utils/errorCodes";
@@ -39,6 +40,7 @@ app.use("/coaches", coachRoute);
 app.use("/forms", formRoute);
 app.use("/questions", questionRoute);
 app.use("/responses", responseRoute);
+app.use("/overview", overviewRoute);
 
 app.all("*", (req, res, next) => {
   const err = new CustomError(
