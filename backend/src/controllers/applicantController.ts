@@ -7,10 +7,17 @@ export const signup = async (req: any, res: Response, next: NextFunction) => {
   try {
     const applicant = req.user;
     const body = req.body;
+
     await applicantSchema.validateAsync(body);
     const newApplicant = await applicantSignup(applicant, body);
-    delete newApplicant.password;
-    return res.status(201).send(newApplicant);
+    return res
+      .status(201)
+      .send({
+        email: newApplicant.email,
+        userId: newApplicant.userId,
+        googleId: newApplicant.googleId,
+        role: newApplicant.role,
+      });
   } catch (error: any) {
     next(error);
   }

@@ -2,6 +2,11 @@ import { Schema, model } from "mongoose";
 
 const ApplicantSchema = new Schema(
   {
+    userId:{
+      type: String,
+      unique: true,
+      required: true,
+    },
     email: {
       type: String,
       unique: true,
@@ -9,7 +14,7 @@ const ApplicantSchema = new Schema(
     },
     googleId: {
       type: String,
-      unique: true,
+      default:null,
     },
     password: {
       type: String,
