@@ -1,6 +1,8 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import Applicant from "./models/Applicant";
+import { generateUserId } from "./services/applicantService";
+
 
 export default function setupPassport() {
   passport.use(
@@ -19,9 +21,10 @@ export default function setupPassport() {
         const email = profile.emails[0].value;
 
         let user = await Applicant.findOne({ googleId: profile.id });
-
+    const userId = await generateUserId();
         if (!user) {
           user = new Applicant({
+            userId: userId,
             googleId: profile.id,
             email: email,
           });
@@ -36,7 +39,7 @@ export default function setupPassport() {
   passport.serializeUser(function(user, done) {
     done(null, user);
   });
-  
+
   passport.deserializeUser(async function(id, done) {
     try {
       const user = await Applicant.findById(id); 

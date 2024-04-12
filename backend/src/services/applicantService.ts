@@ -1,7 +1,7 @@
 import { hash, compare } from "bcryptjs";
 import Applicant from "../models/Applicant";
 
-const generateUserId = async () => {
+export const generateUserId = async () => {
   const lastApplicant = await Applicant.findOne().sort({ userId: -1 });
   let lastUserId = 0;
   if (lastApplicant) {
