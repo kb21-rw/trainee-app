@@ -26,7 +26,7 @@ const DeleteModal = ({
         <Button variant="small" clickHandler={closePopup}>
           Cancel
         </Button>
-        <Button variant="large" clickHandler={handleDelete}>
+        <Button variant="small" className='bg-red-500' clickHandler={handleDelete}>
           Delete
         </Button>
       </div>
