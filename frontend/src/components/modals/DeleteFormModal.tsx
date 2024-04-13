@@ -20,14 +20,13 @@ const DeleteModal = ({
     <ModalLayout
       closePopup={closePopup}
       title="Delete Form"
-      size="small"
     >
-      <p>Are you sure you want to delete the form "{formName}"?</p>
+      <p>Are you sure you want to delete the form {formName}?</p>
       <div className="flex justify-end mt-4">
-        <Button variant="outlined" clickHandler={closePopup}>
+        <Button variant="small" clickHandler={closePopup}>
           Cancel
         </Button>
-        <Button variant="danger" clickHandler={handleDelete}>
+        <Button variant="large" clickHandler={handleDelete}>
           Delete
         </Button>
       </div>
