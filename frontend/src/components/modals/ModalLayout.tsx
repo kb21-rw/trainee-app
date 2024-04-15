@@ -1,5 +1,5 @@
 import React, { ReactNode, useEffect } from "react";
-import Close from "../../assets/CloseIcon";
+import CloseIcon from "../../assets/CloseIcon";
 
 const ModalLayout = ({
   children,
@@ -29,7 +29,7 @@ const ModalLayout = ({
             className="bg-[#F8F6FA] h-9 w-9 flex items-center justify-center self-start rounded-s"
             onClick={() => closePopup()}
           >
-            <Close />
+            <CloseIcon />
           </button>
         </div>
         {children}
