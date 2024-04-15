@@ -5,8 +5,8 @@ interface validateProps {
   type: string;
   id: string;
   placeholder: string;
-  value: string;
-  onChange: () => void;
+  value?: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   errorMessage?: string;
   icon?: ReactNode;
   showPassword?: () => void;

@@ -55,7 +55,9 @@ export default function SignUp() {
             id="email"
             placeholder="example@gmail.com"
             value={user.email}
-            onChange={(e) => setUser({ ...user, email: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setUser({ ...user, email: e.target.value })
+            }
             label="Email"
             htmlfor="email"
             errorMessage="Please enter a valid email"
@@ -65,7 +67,7 @@ export default function SignUp() {
             id="password"
             placeholder="Enter your password"
             value={user.password}
-            onChange={(e: any) =>
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setUser({ ...user, password: e.target.value })
             }
             label="Password"
@@ -80,7 +82,9 @@ export default function SignUp() {
             id="repassword"
             placeholder="Re-enter your password"
             value={user.rePassword}
-            onChange={(e) => setUser({ ...user, rePassword: e.target.value })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setUser({ ...user, rePassword: e.target.value })
+            }
             label="Confirm password"
             htmlfor="repassword"
             errorMessage="Please enter a valid email"
