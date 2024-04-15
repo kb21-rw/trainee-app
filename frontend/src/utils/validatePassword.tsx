@@ -7,7 +7,7 @@ export const emailRegex =
 
 const validatePassword = (value: string) => {
   if (!value) {
-    return "Password is required"; // Early return for empty password
+    return "Password is required"; 
   }
 
   if (value.length < 8) {
@@ -30,7 +30,7 @@ const validatePassword = (value: string) => {
     return "Password must contain a special character";
   }
 
-  return false; // Password is valid
+  return false; 
 };
 
 export default validatePassword;
