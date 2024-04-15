@@ -1,6 +1,4 @@
 import React, { ReactNode } from "react";
-// import { useForm } from "react-hook-form";
-
 interface validateProps {
   htmlfor: string;
   label: string;
@@ -15,11 +13,6 @@ interface validateProps {
 }
 
 function InputField(prop: validateProps) {
-  // const {
-  //   register,
-  //   formState: { errors },
-  // } = useForm();
-
   return (
     <div className="grid relative">
       <label htmlFor={prop.htmlfor} className="font-semibold">
@@ -28,11 +21,6 @@ function InputField(prop: validateProps) {
       <input
         type={prop.type}
         id={prop.id}
-        // {...register("email", {
-        //   required: true,
-        //   pattern:
-        //     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-        // })}
         placeholder={prop.placeholder}
         value={prop.value}
         onChange={prop.onChange}
@@ -44,10 +32,6 @@ function InputField(prop: validateProps) {
       >
         {prop.icon}
       </div>
-
-      {/* {errors.email && (
-        <span className="error text-red-500">{prop.errorMessage}</span>
-      )} */}
     </div>
   );
 }
