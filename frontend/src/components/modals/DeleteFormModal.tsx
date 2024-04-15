@@ -21,7 +21,9 @@ const DeleteModal = ({
       closePopup={closePopup}
       title="Delete Form"
     >
-        <p className="px-24">{`Are you sure you want to delete the form: "${formName}" ?`}</p>
+<p className="px-24">
+ Are you sure you want to delete the form: <b>{formName}</b>?
+</p>
       <div className="flex justify-between mt-2 mx-32">
         <Button variant="small"  clickHandler={closePopup}>
           Cancel
