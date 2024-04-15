@@ -6,8 +6,11 @@ import {
   uppercaseRegex,
 } from "./validatePassword";
 
+interface Password{
+  user:{password:string}
+}
 
-function PasswordMessages(prop) {
+function PasswordMessages(prop:Password) {
   return (
     <div id="message">
       <h3 className="font-bold">Password must contain the following:</h3>

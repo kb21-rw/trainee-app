@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { useForm } from "react-hook-form";
+// import { useForm } from "react-hook-form";
 
 interface validateProps {
   htmlfor: string;
@@ -11,14 +11,14 @@ interface validateProps {
   onChange: () => void;
   errorMessage?: string;
   icon?: ReactNode;
-  showPassword?: ()=>void;
+  showPassword?: () => void;
 }
 
 function InputField(prop: validateProps) {
-  const {
-    register,
-    formState: { errors },
-  } = useForm();
+  // const {
+  //   register,
+  //   formState: { errors },
+  // } = useForm();
 
   return (
     <div className="grid relative">
@@ -28,11 +28,11 @@ function InputField(prop: validateProps) {
       <input
         type={prop.type}
         id={prop.id}
-        {...register("email", {
-          required: true,
-          pattern:
-            /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
-        })}
+        // {...register("email", {
+        //   required: true,
+        //   pattern:
+        //     /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/,
+        // })}
         placeholder={prop.placeholder}
         value={prop.value}
         onChange={prop.onChange}
@@ -45,9 +45,9 @@ function InputField(prop: validateProps) {
         {prop.icon}
       </div>
 
-      {errors.email && (
+      {/* {errors.email && (
         <span className="error text-red-500">{prop.errorMessage}</span>
-      )}
+      )} */}
     </div>
   );
 }

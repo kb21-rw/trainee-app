@@ -1,5 +1,5 @@
 import React from "react";
-import Google from "../../components/ui/Google";
+import Google from "../../components/ui/applicants/Google";
 import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {

@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import Google from "../../components/ui/Google";
+import Google from "../../components/ui/applicants/Google";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useForm } from "react-hook-form";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Button from "../../components/ui/Button";
 import InputField from "../Form/InputField";
 import PasswordMessages from "../../utils/PasswordMessages";
+import validatePassword, { emailRegex } from "../../utils/validatePassword";
 interface userValidation {
   email: string;
   password: string;
@@ -17,21 +17,23 @@ export default function SignUp() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
-  const {
-    // register,
-    handleSubmit,
-    // formState: {},
-  } = useForm();
-
   const [user, setUser] = useState<userValidation>({
     email: "",
     password: "",
     rePassword: "",
   });
-  const [passwordMessage,setPasswordMessage] = useState("");
+  const [passwordMessage, setPasswordMessage] = useState("");
 
   const handleUserInfo = () => {
-    if (user.password === user.rePassword) {
+    if (!emailRegex.test(user.email))
+      return setPasswordMessage("Enter a valid email");
+    if (validatePassword(user.password))
+      return setPasswordMessage("Enter a valid password");
+    if (user.password !== user.rePassword) {
+      return setPasswordMessage("Passwords do not match");
+    } else {
+      setPasswordMessage("");
+      console.log(user);
       delete user.rePassword;
       axios
         .post("http://localhost:5000/applicants/signup", user)
@@ -40,8 +42,6 @@ export default function SignUp() {
           setPasswordMessage("");
         })
         .catch((error) => console.log(error));
-    } else {
-      setPasswordMessage("Passwords do not match");
     }
   };
 
@@ -74,19 +74,7 @@ export default function SignUp() {
             icon={showPassword ? <FaEye /> : <FaEyeSlash />}
             showPassword={() => setShowPassword(!showPassword)}
           />
-          <PasswordMessages user={user} />
-          {/* <div className="password grid relative">
-            <input
-              {...register("password", { validate: validatePassword })}
-              onChange={(e) => setUser({ ...user, password: e.target.value })}
-              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2.5 outline-none focus:border-blue-500 focus:border-2"
-            />
-            {errors.password && (
-              <span className="error text-red-500">
-                {errors.password.message}
-              </span> // Access the specific error message
-            )}
-          </div> */}
+          {user.password && <PasswordMessages user={user} />}
           <InputField
             type={showPassword ? "text" : "password"}
             id="repassword"
@@ -103,11 +91,7 @@ export default function SignUp() {
             {passwordMessage.length > 1 ? passwordMessage : ""}
           </h1>
           <div className="flex justify-center">
-            <Button
-              type="submit"
-              variant="small"
-              clickHandler={handleSubmit(handleUserInfo)}
-            >
+            <Button type="submit" variant="small" clickHandler={handleUserInfo}>
               Signup
             </Button>
           </div>
