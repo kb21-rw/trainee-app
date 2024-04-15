@@ -10,7 +10,6 @@ const validatePassword = (value: string) => {
     return "Password is required"; // Early return for empty password
   }
 
-
   if (value.length < 8) {
     return "Password must be at least 8 characters long";
   }
