@@ -1,4 +1,5 @@
 import React, { ReactNode } from "react";
+
 interface validateProps {
   htmlfor: string;
   label: string;
@@ -6,7 +7,7 @@ interface validateProps {
   id: string;
   placeholder: string;
   value?: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: () => void;
   errorMessage?: string;
   icon?: ReactNode;
   showPassword?: () => void;

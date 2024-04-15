@@ -33,7 +33,6 @@ export default function SignUp() {
       return setPasswordMessage("Passwords do not match");
     } else {
       setPasswordMessage("");
-      console.log(user);
       delete user.rePassword;
       axios
         .post("http://localhost:5000/applicants/signup", user)
