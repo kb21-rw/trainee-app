@@ -13,6 +13,7 @@ import coachRoute from "./routes/coachRoute";
 import formRoute from "./routes/formRoute";
 import questionRoute from "./routes/questionRoute";
 import responseRoute from "./routes/responseRoute";
+import overviewRoute from "./routes/overviewRoute";
 import { errorHandler } from "./middlewares/errorHandler";
 import CustomError from "./middlewares/customError";
 import { URL_NOT_FOUND } from "./utils/errorCodes";
@@ -41,6 +42,7 @@ app.use("/forms", formRoute);
 app.use("/questions", questionRoute);
 app.use("/applicants", applicantRoute);
 app.use("/responses", responseRoute);
+app.use("/overview", overviewRoute);
 
 const sessionConfig = {
   secret: 'your_secret_key',
