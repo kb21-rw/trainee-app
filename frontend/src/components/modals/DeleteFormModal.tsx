@@ -25,7 +25,7 @@ const DeleteModal = ({
  Are you sure you want to delete the form: <b>{formName}</b>?
 </p>
       <div className="flex justify-between mt-2 mx-32">
-        <Button variant="small"  clickHandler={closePopup}>
+        <Button variant="small" outlined={true} clickHandler={closePopup}>
           Cancel
         </Button>
         <Button variant="delete" clickHandler={handleDelete}>

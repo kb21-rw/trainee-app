@@ -18,7 +18,7 @@ const Button = ({
       onClick={clickHandler}
       className={`${
         outlined
-          ? "text-primary-dark bg-white border-primary-dark border"
+          ? "text-primary-dark bg-white border-primary-dark border rounded-lg px-6"
           : variant === 'delete'
           ? "bg-red-500 text-white rounded-lg px-6"
           : variant === "small"
