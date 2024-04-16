@@ -35,7 +35,7 @@ export default function SignUp() {
     } else {
       setPasswordMessage("");
       delete user.rePassword;
-      registerUser(user)
+      registerUser(user);
     }
   };
 
@@ -93,7 +93,10 @@ export default function SignUp() {
               Signup
             </Button>
           </div>
-          <Google title={"Sign up with Google"} />
+          <Google
+            title={"Sign up with Google"}
+            link="http://localhost:5000/auth/google"
+          />
           <h3 className="mx-auto">
             Already have an account?
             <span
