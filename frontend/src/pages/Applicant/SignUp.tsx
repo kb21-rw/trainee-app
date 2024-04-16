@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import Google from "../../components/ui/applicants/Google";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+// import axios from "axios";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Button from "../../components/ui/Button";
 import InputField from "../Form/InputField";
 import PasswordMessages from "../../utils/PasswordMessages";
 import validatePassword, { emailRegex } from "../../utils/validatePassword";
+import registerUser from "../../utils/RegisterUser";
 interface userValidation {
   email: string;
   password: string;
@@ -34,13 +35,7 @@ export default function SignUp() {
     } else {
       setPasswordMessage("");
       delete user.rePassword;
-      axios
-        .post("http://localhost:5000/applicants/signup", user)
-        .then(() => {
-          alert("User signed up successfully");
-          setPasswordMessage("");
-        })
-        .catch((error) => console.log(error));
+      registerUser(user)
     }
   };
 
