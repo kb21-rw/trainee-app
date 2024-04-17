@@ -1,4 +1,3 @@
-
 import { hash, compare } from "bcryptjs";
 import Applicant from "../models/Applicant";
 
@@ -8,11 +7,15 @@ export const generateUserId = async () => {
   if (lastApplicant) {
     lastUserId = parseInt(lastApplicant.userId, 10);
   }
-  
-  return String(lastUserId + 1).padStart(4, '0');
+
+  return String(lastUserId + 1).padStart(4, "0");
 };
 
-export const applicantSignup = async (applicant: any, body: any, isGoogleSignup: boolean = false) => {
+export const applicantSignup = async (
+  applicant: any,
+  body: any,
+  isGoogleSignup: boolean = false
+) => {
   const { email, password } = body;
 
   let userId;
@@ -21,7 +24,6 @@ export const applicantSignup = async (applicant: any, body: any, isGoogleSignup:
   } else {
     userId = await generateUserId();
   }
-
 
   const hashedPassword = await hash(password, 10);
 
@@ -32,12 +34,10 @@ export const applicantSignup = async (applicant: any, body: any, isGoogleSignup:
     role: "applicant",
   };
 
-
   const createdApplicant = await Applicant.create(newApplicant);
 
   return createdApplicant;
 };
-
 
 export const applicantSignin = async (applicant: any, body: any) => {
   const { email, password } = body;
@@ -64,26 +64,23 @@ export const applicantSignin = async (applicant: any, body: any) => {
   return "signed in succesfully";
 };
 
-export const applicantResetPassword = async ( body: any)=>{
-const {email,password}= body
+export const applicantResetPassword = async (body: any) => {
+  const { email, password } = body;
 
-let resettingApplicant:any = await Applicant.findOne({ email });
+  let resettingApplicant: any = await Applicant.findOne({ email });
+  if (!resettingApplicant) {
+    return "User does not exist";
+  }
+  const hashedPassword = await hash(password, 10);
 
-// return parseInt(String(lastUserId + 1).padStart(4, '0'));
-if (!resettingApplicant) {
-  return "User does not exist";
-}
-const hashedPassword = await hash(password, 10);
+  const isSamePassword = await compare(password, resettingApplicant.password);
 
-const isSamePassword = await compare(password, resettingApplicant.password);
+  if (isSamePassword) {
+    return "New password must be different from the old password";
+  }
+  resettingApplicant.password = hashedPassword;
 
-if (isSamePassword) {
- return"New password must be different from the old password";
-}
-resettingApplicant.password = hashedPassword;
+  await resettingApplicant.save();
 
-
-await resettingApplicant.save();
-
-return "updated password succesfully"
-}
+  return "updated password succesfully";
+};
