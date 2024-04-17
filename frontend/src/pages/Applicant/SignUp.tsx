@@ -7,7 +7,7 @@ import Button from "../../components/ui/Button";
 import InputField from "../Form/InputField";
 import PasswordMessages from "../../utils/PasswordMessages";
 import validatePassword, { emailRegex } from "../../utils/validatePassword";
-import registerUser from "../../utils/RegisterUser";
+import registerUser, { errorMessage } from "../../utils/RegisterUser";
 interface userValidation {
   email: string;
   password: string;
@@ -23,19 +23,20 @@ export default function SignUp() {
     password: "",
     rePassword: "",
   });
-  const [passwordMessage, setPasswordMessage] = useState("");
+
+  const [errrorMessage, setErrorMessage] = useState("");
 
   const handleUserInfo = () => {
     if (!emailRegex.test(user.email))
-      return setPasswordMessage("Enter a valid email");
+      return setErrorMessage("Enter a valid email");
     if (validatePassword(user.password))
-      return setPasswordMessage("Enter a valid password");
+      return setErrorMessage("Enter a valid password");
     if (user.password !== user.rePassword) {
-      return setPasswordMessage("Passwords do not match");
+      return setErrorMessage("Passwords do not match");
     } else {
-      setPasswordMessage("");
       delete user.rePassword;
-      registerUser(user);
+      registerUser(user, setErrorMessage);
+      setErrorMessage(errorMessage);
     }
   };
 
@@ -86,7 +87,7 @@ export default function SignUp() {
             showPassword={() => setShowPassword(!showPassword)}
           />
           <h1 className="text-red-500">
-            {passwordMessage.length > 1 ? passwordMessage : ""}
+            {errrorMessage.length > 1 ? errrorMessage : ""}
           </h1>
           <div className="flex justify-center">
             <Button type="submit" variant="small" clickHandler={handleUserInfo}>

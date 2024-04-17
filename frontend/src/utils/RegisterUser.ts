@@ -1,17 +1,25 @@
 import axios from "axios";
 
-interface User{
-    email: string;
-    password: string;
+interface User {
+  email: string;
+  password: string;
+  rePassword?: string;
 }
 
-const registerUser = (user:User)=>{
-axios
-  .post("http://localhost:5000/applicants/signup", user)
-  .then(() => {
-    alert("User signed up successfully");
-  })
-  .catch((error) => console.log(error));
-}
+export let errorMessage: string = "";
 
-export default registerUser
+const registerUser = (user: User, setErrorMessage: any) => {
+  axios
+    .post("http://localhost:5000/applicants/signup", user)
+    .then(() => {
+      alert("User signed up successfully");
+    })
+    .catch((error) => {
+      error.message = "User already exists";
+      errorMessage = error.message;
+      user.rePassword = user.password;
+      return setErrorMessage(errorMessage);
+    });
+};
+
+export default registerUser;

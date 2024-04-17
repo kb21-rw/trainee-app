@@ -27,7 +27,6 @@ export const signup = async (req: any, res: Response, next: NextFunction) => {
 
 export const signin = async (req: any, res: Response, next: NextFunction) => {
   try {
-    const applicant = req.user;
     const body = req.body;
 
     const newApplicant = await applicantSignin(applicant, body);
