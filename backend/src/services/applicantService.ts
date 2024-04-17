@@ -7,11 +7,15 @@ export const generateUserId = async () => {
   if (lastApplicant) {
     lastUserId = parseInt(lastApplicant.userId, 10);
   }
-  
-  return String(lastUserId + 1).padStart(4, '0');
+
+  return String(lastUserId + 1).padStart(4, "0");
 };
 
-export const applicantSignup = async (applicant: any, body: any, isGoogleSignup: boolean = false) => {
+export const applicantSignup = async (
+  applicant: any,
+  body: any,
+  isGoogleSignup: boolean = false,
+) => {
   const { email, password } = body;
 
   let userId;
@@ -20,7 +24,6 @@ export const applicantSignup = async (applicant: any, body: any, isGoogleSignup:
   } else {
     userId = await generateUserId();
   }
-
 
   const hashedPassword = await hash(password, 10);
 
@@ -31,24 +34,22 @@ export const applicantSignup = async (applicant: any, body: any, isGoogleSignup:
     role: "applicant",
   };
 
-
   const createdApplicant = await Applicant.create(newApplicant);
 
   return createdApplicant;
 };
 
-
 export const applicantSignin = async (applicant: any, body: any) => {
   const { email, password } = body;
 
   if (!email || !password) {
-    throw new Error("Email and password are required");
+    return;
   }
 
   const signinApplicant = await Applicant.findOne({ email });
 
   if (!signinApplicant) {
-    throw new Error("Invalid email or password");
+    return;
   }
 
   const passwordMatch =
@@ -57,7 +58,7 @@ export const applicantSignin = async (applicant: any, body: any) => {
       : false;
 
   if (!passwordMatch) {
-    throw new Error("Invalid email or password");
+    return;
   }
 
   return "signed in succesfully";
