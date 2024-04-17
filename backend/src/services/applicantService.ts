@@ -6,42 +6,37 @@ export const generateUserId = async () => {
   const lastApplicant = await Applicant.findOne().sort({ userId: -1 });
   let lastUserId = 0;
   if (lastApplicant) {
-    lastUserId = lastApplicant.userId;
+    lastUserId = parseInt(lastApplicant.userId, 10);
   }
   
-  const nextUserId = lastUserId + 1;
-  return nextUserId;
-};
-
- const formatUserId = (userId: number) => {
-  return String(userId).padStart(4, '0');
+  return String(lastUserId + 1).padStart(4, '0');
 };
 
 export const applicantSignup = async (applicant: any, body: any, isGoogleSignup: boolean = false) => {
   const { email, password } = body;
 
-  let userId: number;
+  let userId;
   if (!isGoogleSignup) {
     userId = await generateUserId();
   } else {
     userId = await generateUserId();
   }
 
-  const formattedUserId = formatUserId(userId);
+
   const hashedPassword = await hash(password, 10);
 
   const newApplicant = {
-    userId: formattedUserId,
+    userId: userId,
     email: email,
     password: hashedPassword,
     role: "applicant",
   };
 
+
   const createdApplicant = await Applicant.create(newApplicant);
 
   return createdApplicant;
 };
-
 
 
 export const applicantSignin = async (applicant: any, body: any) => {
@@ -71,11 +66,10 @@ export const applicantSignin = async (applicant: any, body: any) => {
 
 export const applicantResetPassword = async ( body: any)=>{
 const {email,password}= body
-console.log(body);
 
 let resettingApplicant:any = await Applicant.findOne({ email });
-console.log(resettingApplicant);
 
+// return parseInt(String(lastUserId + 1).padStart(4, '0'));
 if (!resettingApplicant) {
   return "User does not exist";
 }
@@ -90,7 +84,6 @@ resettingApplicant.password = hashedPassword;
 
 
 await resettingApplicant.save();
-console.log(formatUserId(resettingApplicant.userId));
 
 return "updated password succesfully"
 }

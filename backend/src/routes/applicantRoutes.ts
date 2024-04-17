@@ -7,6 +7,7 @@ const router = Router();
 router.post("/signup", signup);
 
 router.post("/signin", signin);
-router.patch("/reset/:userId", resetPassword);
+router.patch("/reset/:email", resetPassword);
 
 export default router;
+// "password":"nowpassword!123"

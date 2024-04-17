@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 const ApplicantSchema = new Schema(
   {
     userId:{
-      type: Number,
+      type: String,
       unique: true,
       required: true,
     },
