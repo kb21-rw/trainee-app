@@ -6,6 +6,6 @@ const router = Router();
 router.post("/signup", signup);
 
 router.post("/signin", signin);
-
+// router.patch("/reset/:userId", signin);
 
 export default router;

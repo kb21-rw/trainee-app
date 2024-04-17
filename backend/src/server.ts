@@ -14,7 +14,7 @@ import formRoute from "./routes/formRoute";
 import questionRoute from "./routes/questionRoute";
 import responseRoute from "./routes/responseRoute";
 import overviewRoute from "./routes/overviewRoute";
-import { errorHandler } from "./middlewares/errorHandler";
+// import { errorHandler } from "./middlewares/errorHandler";
 import CustomError from "./middlewares/customError";
 import { URL_NOT_FOUND } from "./utils/errorCodes";
 import setupPassport from "./passport-setup";
@@ -85,4 +85,4 @@ app.all("*", (req, res, next) => {
   next(err);
 });
 
-app.use(errorHandler);
+// app.use(errorHandler);

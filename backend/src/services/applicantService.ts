@@ -62,3 +62,9 @@ export const applicantSignin = async (applicant: any, body: any) => {
 
   return "signed in succesfully";
 };
+
+export const resretPassword = async (applicant: any, body: any)=>{
+const {email,newPassword}= body
+
+
+}
