@@ -42,13 +42,13 @@ export const applicantSignin = async (applicant: any, body: any) => {
   const { email, password } = body;
 
   if (!email || !password) {
-    throw new Error("Email and password are required");
+   return "Email and password are required";
   }
 
   const signinApplicant = await Applicant.findOne({ email });
 
   if (!signinApplicant) {
-    throw new Error("Invalid email or password");
+    return "user does not exist";
   }
 
   const passwordMatch =
@@ -57,7 +57,7 @@ export const applicantSignin = async (applicant: any, body: any) => {
       : false;
 
   if (!passwordMatch) {
-    throw new Error("Invalid email or password");
+    return "Invalid email or password";
   }
 
   return "signed in succesfully";
