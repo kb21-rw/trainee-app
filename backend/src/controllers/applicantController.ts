@@ -29,17 +29,17 @@ export const signin = async (req: any, res: Response, next: NextFunction) => {
   try {
     const body = req.body;
 
-    const newApplicant = await applicantSignin(applicant, body);
-    if (!newApplicant) {
+    const newApplicant = await applicantSignin(body);
+    if (newApplicant.status === 400) {
       const singInError: ErrorObject = {
         message: "",
         kind: "",
         keyValue: "",
-        code: 400,
-        name: "ValidationError",
-        details: [{ message: "Incorrect email or password" }],
-        statusCode: 400,
-        errorCode: 400,
+        code: newApplicant.status,
+        name: newApplicant.errorName,
+        details: [{ message: newApplicant }],
+        statusCode: newApplicant.status,
+        errorCode: newApplicant.status,
       };
       return handleValidationError(singInError, res);
     }

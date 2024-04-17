@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import InputField from "../Form/InputField";
 import Button from "../../components/ui/Button";
 import { useForm } from "react-hook-form";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { loginValidationSchema } from "../../utils/ValidationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -33,7 +33,12 @@ export default function SignIn() {
         navigate("/home");
       }
     } catch (error) {
-      setError("email", { message: "incorrect email or password" });
+      const axiosError = error as AxiosError;
+      const customError = axiosError.response?.data as {
+        type: string;
+        errorMessage: { status: number; message: string };
+      };
+      setError("email", { message: customError.errorMessage.message });
     }
   };
 
@@ -61,7 +66,7 @@ export default function SignIn() {
               register={register("password")}
             />
             {errors.email || errors.password ? (
-              <p>Incorrect email or password.</p>
+              <p>{(errors.email || errors.password)?.message}</p>
             ) : null}
             <div className="flex justify-center">
               <Button type="submit" variant="small">

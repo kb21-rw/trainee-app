@@ -39,17 +39,25 @@ export const applicantSignup = async (
   return createdApplicant;
 };
 
-export const applicantSignin = async (applicant: any, body: any) => {
+export const applicantSignin = async (body: any) => {
   const { email, password } = body;
 
   if (!email || !password) {
-    return "Email and password are required";
+    return {
+      status: 400,
+      message: "Email and password are required",
+      errorName: "ValidationError",
+    };
   }
 
   const signinApplicant = await Applicant.findOne({ email });
 
   if (!signinApplicant) {
-    return "user does not exist";
+    return {
+      status: 400,
+      message: "user does not exist",
+      errorName: "NotFoundError",
+    };
   }
 
   const passwordMatch =
@@ -58,8 +66,12 @@ export const applicantSignin = async (applicant: any, body: any) => {
       : false;
 
   if (!passwordMatch) {
-    return "Invalid email or password";
+    return {
+      status: 400,
+      message: "Invalid email or password",
+      errorName: "ValidationError",
+    };
   }
 
-  return "signed in succesfully";
+  return { status: 200, message: "Signed in successfully", errorName: "" };
 };
