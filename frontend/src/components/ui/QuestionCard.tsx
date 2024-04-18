@@ -1,4 +1,8 @@
-import React from "react";
+import React, {
+  FormEvent,
+  useEffect,
+  useState,
+} from "react";
 import Loader from "./Loader";
 import Delete from "../../assets/DeleteIcon";
 import {
@@ -28,6 +32,9 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
       options,
     },
   });
+
+  const [isOptionsDirty, setIsOptionsDirty] = useState(false);
+
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
   const [deleteQuestion] = useDeleteQuestionMutation();
@@ -38,12 +45,25 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   };
 
   const onSubmit = async (data: any) => {
-    const result = await editQuestion({ jwt, body: data, id: _id });
-    console.log({ result });
+    await editQuestion({ jwt, body: data, id: _id });
+  };
+
+  const optionChangeHandler = (
+    event: FormEvent<HTMLInputElement>,
+    index: number
+  ) => {
+    currentOptions[index] = event.currentTarget.value;
+    setValue("options", currentOptions);
   };
 
   const { type: selectedType } = watch();
   const { options: currentOptions } = watch();
+
+  useEffect(() => {
+    if (JSON.stringify(options) !== JSON.stringify(currentOptions)) {
+      setIsOptionsDirty(true);
+    }
+  }, [options, currentOptions]);
 
   return (
     <div
@@ -96,6 +116,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                   <li key={index} className="flex gap-3 items-center">
                     <span>{index + 1}.</span>
                     <input
+                      onChange={(e) => optionChangeHandler(e, index)}
                       defaultValue={option}
                       className="text-lg flex-1 focus:border-black hover:border-gray-300 hover:border-b focus:duration-300 ease-in-out focus:border-b outline-none py-1 px-0.5"
                     />
@@ -103,12 +124,12 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                 ))}
               </ol>
               <button
-                onClick={() =>
+                onClick={() => {
                   setValue("options", [
                     ...currentOptions,
                     `option ${currentOptions.length + 1}`,
-                  ])
-                }
+                  ]);
+                }}
               >
                 <AddIcon />
               </button>
@@ -127,7 +148,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
         </div>
       </div>
       <div className="max-h-44 flex flex-col justify-center gap-6 p-4 custom-shadow rounded-xl">
-        {isDirty ? (
+        {isDirty || isOptionsDirty ? (
           <div className="flex flex-col gap-6">
             <button type="submit" onClick={handleSubmit(onSubmit)}>
               <SuccessCheckMark />
