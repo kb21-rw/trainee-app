@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -7,7 +7,14 @@ import {
   TableHeader,
   TableRow,
 } from "../../../@/components/ui/table";
+import ResponseModal from "../modals/ResponseModal";
 const OverViewTable = () => {
+  const [addResponse, setAddResponse] = useState(false);
+
+  const modalHandler = () => {
+    setAddResponse(true);
+  };
+
   return (
     <>
       <Table className="min-w-full border-collapse border border-black text-black">
@@ -87,8 +94,17 @@ const OverViewTable = () => {
                 type="text"
                 className="w-full h-full px-2 py-1 focus:outline-none focus:border-blue-500"
                 placeholder="Enter answer"
+                onClick={modalHandler}
               />
+              {addResponse && (
+                <ResponseModal
+                  closePopup={() => setAddResponse(false)}
+                  title="Response"
+                  question="Question wil go here"
+                />
+              )}
             </TableCell>
+            
 
             <TableCell className="border border-black p-0">
               <input
