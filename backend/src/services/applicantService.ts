@@ -7,11 +7,15 @@ export const generateUserId = async () => {
   if (lastApplicant) {
     lastUserId = parseInt(lastApplicant.userId, 10);
   }
-  
-  return String(lastUserId + 1).padStart(4, '0');
+
+  return String(lastUserId + 1).padStart(4, "0");
 };
 
-export const applicantSignup = async (applicant: any, body: any, isGoogleSignup: boolean = false) => {
+export const applicantSignup = async (
+  applicant: any,
+  body: any,
+  isGoogleSignup: boolean = false,
+) => {
   const { email, password } = body;
 
   let userId;
@@ -20,7 +24,6 @@ export const applicantSignup = async (applicant: any, body: any, isGoogleSignup:
   } else {
     userId = await generateUserId();
   }
-
 
   const hashedPassword = await hash(password, 10);
 
@@ -31,24 +34,30 @@ export const applicantSignup = async (applicant: any, body: any, isGoogleSignup:
     role: "applicant",
   };
 
-
   const createdApplicant = await Applicant.create(newApplicant);
 
   return createdApplicant;
 };
 
-
-export const applicantSignin = async (applicant: any, body: any) => {
+export const applicantSignin = async (body: any) => {
   const { email, password } = body;
 
   if (!email || !password) {
-   return "Email and password are required";
+    return {
+      status: 400,
+      message: "Email and password are required",
+      errorName: "ValidationError",
+    };
   }
 
   const signinApplicant = await Applicant.findOne({ email });
 
   if (!signinApplicant) {
-    return "user does not exist";
+    return {
+      status: 400,
+      message: "user does not exist",
+      errorName: "NotFoundError",
+    };
   }
 
   const passwordMatch =
@@ -57,8 +66,12 @@ export const applicantSignin = async (applicant: any, body: any) => {
       : false;
 
   if (!passwordMatch) {
-    return "Invalid email or password";
+    return {
+      status: 400,
+      message: "Invalid email or password",
+      errorName: "ValidationError",
+    };
   }
 
-  return "signed in succesfully";
+  return { status: 200, message: "Signed in successfully", errorName: "" };
 };

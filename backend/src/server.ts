@@ -1,5 +1,4 @@
 import express from "express";
-
 import mongoose from "mongoose";
 import authRoute from "./routes/authRoute";
 import cors from "cors";
@@ -59,28 +58,28 @@ app.get("/login", (req, res) => {
 });
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { scope: ["profile", "email"] }),
 );
 app.get(
   "/callback",
   passport.authenticate("google", {
     successRedirect: "/welcome",
     failureRedirect: "/login",
-  })
+  }),
 );
 app.get(
   "/welcome",
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
     res.send("This is the welcome page");
-  }
+  },
 );
 
 app.all("*", (req, res, next) => {
   const err = new CustomError(
     URL_NOT_FOUND,
     `Can't find ${req.originalUrl} on the server`,
-    404
+    404,
   );
   next(err);
 });

@@ -96,7 +96,7 @@ export default function SignUp() {
           </div>
           <Google
             title={"Sign up with Google"}
-            link="http://localhost:5000/auth/google"
+            link="http://localhost:3000/auth/google"
           />
           <h3 className="mx-auto">
             Already have an account?
