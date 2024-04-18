@@ -37,7 +37,7 @@ const CoachesInfo = () => {
     setShowDeleteModal(false)
   };
 
-  const coachesList = getCoaches(data, coachTableDataItems);
+  const coachesList:string[][] = getCoaches(data, coachTableDataItems);
 
   const coachTobeDeleted= coachesList?.find(coach=>coach[0]==coachTobeDeletedId)
   const coachTobeDeletedName= coachTobeDeleted ?  coachTobeDeleted[1] : ''
