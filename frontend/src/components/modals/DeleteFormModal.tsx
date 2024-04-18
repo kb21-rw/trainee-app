@@ -5,10 +5,16 @@ import Button from "../ui/Button";
 const DeleteModal = ({
   closePopup,
   formName,
+  coachName,
+  TraineeName,
+  userRole,
   onDelete,
 }: {
   closePopup: () => void;
-  formName: string;
+  formName?: string;
+  coachName?: string,
+  TraineeName?:string,
+  userRole?:string,
   onDelete: () => void;
 }) => {
   const handleDelete = () => {
@@ -22,7 +28,7 @@ const DeleteModal = ({
       title="Delete Form"
     >
 <p className="px-24">
- Are you sure you want to delete the form: <b>{formName}</b>?
+ Are you sure you want to delete the {userRole || 'form'}: <b>{formName||coachName||TraineeName}</b>?
 </p>
       <div className="flex justify-between mt-2 mx-32">
         <Button variant="small" outlined={true} clickHandler={closePopup}>
