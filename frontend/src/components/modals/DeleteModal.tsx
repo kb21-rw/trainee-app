@@ -6,14 +6,14 @@ const DeleteModal = ({
   closePopup,
   formName,
   coachName,
-  TraineeName,
+  traineeName,
   userRole,
   onDelete,
 }: {
   closePopup: () => void;
   formName?: string;
   coachName?: string,
-  TraineeName?:string,
+  traineeName?:string,
   userRole?:string,
   onDelete: () => void;
 }) => {
@@ -28,7 +28,7 @@ const DeleteModal = ({
       title="Delete Form"
     >
 <p className="px-24">
- Are you sure you want to delete the {userRole || 'form'}: <b>{formName||coachName||TraineeName}</b>?
+ Are you sure you want to delete the {userRole || 'form'}: <b>{formName||coachName||traineeName}</b>?
 </p>
       <div className="flex justify-between mt-2 mx-32">
         <Button variant="small" outlined={true} clickHandler={closePopup}>
