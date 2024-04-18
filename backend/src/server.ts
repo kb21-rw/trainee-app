@@ -19,7 +19,7 @@ import CustomError from "./middlewares/customError";
 import { URL_NOT_FOUND } from "./utils/errorCodes";
 import setupPassport from "./passport-setup";
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 const mongodb_url = process.env.MONGODB_URL || "";
 const app = express();
 

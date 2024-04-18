@@ -33,9 +33,11 @@ export default function SignIn() {
             </Button>
           </div>
           <Google title={"Sign in with Google"} />
-          <h3 className="mx-auto">
-            Forgot password?
-            <span className="text-primary-dark"> Reset</span>
+          <h3
+            className="mx-auto cursor-pointer"
+            onClick={() => navigate("/applicant/reset-password")}
+          >
+            <span className="text-primary-dark"> Forgot password?</span>
           </h3>
           <h3
             className="text-primary-dark mx-auto cursor-pointer"
