@@ -23,6 +23,7 @@ export default function SignIn() {
   } = useForm<FormValues>({ resolver: zodResolver(loginValidationSchema) });
 
   const onSubmit = async (data: FormValues) => {
+    console.log(data, "thiw will be the dat");
     try {
       const response = await axios.post(
         "http://localhost:3000/applicants/signin",
@@ -33,6 +34,7 @@ export default function SignIn() {
         navigate("/home");
       }
     } catch (error) {
+      console.log(error, "helloooooo");
       const axiosError = error as AxiosError;
       const customError = axiosError.response?.data as {
         type: string;
