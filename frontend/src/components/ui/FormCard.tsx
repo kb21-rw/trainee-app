@@ -8,7 +8,7 @@ import { useDeleteFormMutation } from "../../features/user/apiSlice";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import View from "../../assets/ViewIcon"
-import DeleteModal from "../modals/DeleteFormModal";
+import DeleteModal from "../modals/DeleteModal";
 
 const FormCard = ({ form }: { form: IFormType }) => {
   const navigate = useNavigate();

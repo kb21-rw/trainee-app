@@ -14,7 +14,7 @@ import {
   coachTableDataItems,
   coachTableHeaders,
 } from "../../utils/data";
-import DeleteModal from "../../components/modals/DeleteFormModal";
+import DeleteModal from "../../components/modals/DeleteModal";
 
 const CoachesInfo = () => {
   const cookies = new Cookies();
