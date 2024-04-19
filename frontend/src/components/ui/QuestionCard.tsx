@@ -38,7 +38,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   };
 
   const onSubmit = async (data: any) => {
-    const result = await editQuestion({ jwt, body: data, id: _id });
+    return await editQuestion({ jwt, body: data, id: _id });
   };
 
   const { type: selectedType } = watch();
