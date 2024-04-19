@@ -26,7 +26,7 @@ export default function SignIn() {
     try {
       const response = await axios.post(
         "http://localhost:3000/applicants/signin",
-        data,
+        data
       );
       if (response.status === 201) {
         navigate("/home");
@@ -73,7 +73,10 @@ export default function SignIn() {
               </Button>
             </div>
           </form>
-          <Google title={"Sign in with Google"} />
+          <Google
+            title={"Sign in with Google"}
+            link="http://localhost:3000/auth/google"
+          />
           <h3
             className="mx-auto cursor-pointer"
             onClick={() => navigate("/applicant/reset-password")}

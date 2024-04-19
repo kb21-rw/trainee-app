@@ -27,6 +27,7 @@ function InputField(prop: validateProps) {
         placeholder={prop.placeholder}
         value={prop.value}
         {...prop.register}
+        onChange={prop.onChange}
         className="bg-gray-50 border border-gray-300 w-72 text-gray-900 text-sm rounded-lg p-2.5 outline-none focus:border-blue-500 focus:border-2"
       />
       <div
