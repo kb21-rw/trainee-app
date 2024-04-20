@@ -13,9 +13,20 @@ import { useGetOverviewQuery } from "../../features/user/apiSlice";
 const OverViewTable = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
+  const { data, isFetching, isError } = useGetOverviewQuery({ jwt });
 
-  const { data} = useGetOverviewQuery({ jwt });
-console.log(data)
+  if (isFetching) {
+    return <div>Loading...</div>;
+  }
+
+  if (isError) {
+    return <div>Error fetching data.</div>;
+  }
+
+  if (!Array.isArray(data) || data.length === 0) {
+    return <div>No data available.</div>;
+  }
+
   return (
     <>
       <Table className="min-w-full border-collapse border border-black text-black">
@@ -35,20 +46,16 @@ console.log(data)
             >
               Coach
             </TableHead>
-            <TableHead
-              scope="col"
-              colSpan={2}
-              className="border-black px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider"
-            >
-              Javascript Gate
-            </TableHead>
-            <TableHead
-              scope="col"
-              colSpan={3}
-              className="border border-black px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider"
-            >
-              Css Gate
-            </TableHead>
+            {data.map((form: any) =>(
+              <TableHead
+                key={form._id}
+                scope="col"
+                colSpan={form.questions.length}
+                className="border-black px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider"
+              >
+                {form.title}
+              </TableHead>
+            ))}
           </TableRow>
 
           <TableRow>
@@ -91,7 +98,7 @@ console.log(data)
             <TableCell className="border border-black p-2">Betty</TableCell>
 
             <TableCell className="border border-black p-0">
-            she did well
+              she did well
             </TableCell>
 
             <TableCell className="border border-black p-0">
