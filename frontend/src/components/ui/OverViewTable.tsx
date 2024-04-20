@@ -29,7 +29,7 @@ const OverViewTable = () => {
 
   return (
     <>
-      <Table className="min-w-full border-collapse border border-black text-black">
+ <Table className="min-w-full border-collapse border border-black text-black">
         <TableHeader>
           <TableRow>
             <TableHead
@@ -46,82 +46,57 @@ const OverViewTable = () => {
             >
               Coach
             </TableHead>
-            {data.map((form: any) =>(
+            {data?.map((form,index) => (
               <TableHead
                 key={form._id}
                 scope="col"
                 colSpan={form.questions.length}
-                className="border-black px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider"
-              >
+                className={`px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider ${
+                  index !== data.length - 1 ? "border-r border-black" : ""
+                }`}              >
                 {form.title}
               </TableHead>
             ))}
           </TableRow>
 
           <TableRow>
-            <TableHead
-              scope="col"
-              className="border border-black px-6 py-3 text-left text-sm font-extrabold uppercase tracking-wider"
-            >
-              Question1
-            </TableHead>
-            <TableHead
-              scope="col"
-              className="border border-black px-6 py-3 text-left text-sm font-extrabold uppercase tracking-wider"
-            >
-              Question2
-            </TableHead>
-            <TableHead
-              scope="col"
-              className="border border-black px-6 py-3 text-left text-sm font-extrabold uppercase tracking-wider"
-            >
-              Question1
-            </TableHead>
-            <TableHead
-              scope="col"
-              className="border border-black px-6 py-3 text-left text-sm font-extrabold uppercase tracking-wider"
-            >
-              Question2
-            </TableHead>
-            <TableHead
-              scope="col"
-              className="border border-black px-6 py-3 text-left text-sm font-extrabold uppercase tracking-wider"
-            >
-              Question2
-            </TableHead>
+            {data?.flatMap((form) => 
+              form.questions.map((question) => (
+                <TableHead
+                  key={question._id}
+                  scope="col"
+                  className="border border-black px-6 py-3 text-left text-sm font-extrabold uppercase tracking-wider"
+                >
+                  {question.title}
+                </TableHead>
+              ))
+            )}
           </TableRow>
         </TableHeader>
 
         <TableBody className="bg-white divide-y divide-gray-300">
-          <TableRow>
-            <TableCell className="border border-black p-2">Kevine</TableCell>
-            <TableCell className="border border-black p-2">Betty</TableCell>
-
-            <TableCell className="border border-black p-0">
-              she did well
-            </TableCell>
-
-            <TableCell className="border border-black p-0">
-            she did well
-
-            </TableCell>
-
-            <TableCell className="border border-black p-0">
-            she did well
-
-            </TableCell>
-
-            <TableCell className="border border-black p-0">
-            she did well
-
-            </TableCell>
-
-            <TableCell className="border border-black p-0">
-              she did well
-            </TableCell>
-          </TableRow>
-        </TableBody>
+          {data?.flatMap((form) =>
+        form.questions.flatMap((question) =>
+          question.responses.map((response) => (
+            <TableRow key={response._id}>
+              <TableCell className="border border-black p-2">
+                {response.user?.name ?? 'No name'}
+              </TableCell>
+              <TableCell className="border border-black p-2">
+                {response.user?.coach?.name ?? 'No coach'} 
+              </TableCell>
+              <TableCell className="border border-black p-0">
+                {response.text || "No response"}
+              </TableCell>
+            </TableRow>
+          ))
+        )
+      )} </TableBody>
       </Table>
+
+
+
+
     </>
   );
 };
