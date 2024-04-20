@@ -7,7 +7,15 @@ import {
   TableHeader,
   TableRow,
 } from "../../../@/components/ui/table";
+import Cookies from "universal-cookie";
+
+import { useGetOverviewQuery } from "../../features/user/apiSlice";
 const OverViewTable = () => {
+  const cookies = new Cookies();
+  const jwt = cookies.get("jwt");
+
+  const { data} = useGetOverviewQuery({ jwt });
+console.log(data)
   return (
     <>
       <Table className="min-w-full border-collapse border border-black text-black">
@@ -83,43 +91,26 @@ const OverViewTable = () => {
             <TableCell className="border border-black p-2">Betty</TableCell>
 
             <TableCell className="border border-black p-0">
-              <input
-                type="text"
-                className="w-full h-full px-2 py-1 focus:outline-none focus:border-blue-500"
-                placeholder="Enter answer"
-              />
+            she did well
             </TableCell>
 
             <TableCell className="border border-black p-0">
-              <input
-                type="text"
-                className="w-full h-full px-2 py-1 focus:outline-none focus:border-blue-500"
-                placeholder="Enter answer"
-              />
+            she did well
+
             </TableCell>
 
             <TableCell className="border border-black p-0">
-              <input
-                type="text"
-                className="w-full h-full px-2 py-1 focus:outline-none focus:border-blue-500"
-                placeholder="Enter answer"
-              />
+            she did well
+
             </TableCell>
 
             <TableCell className="border border-black p-0">
-              <input
-                type="text"
-                className="w-full h-full px-2 py-1 focus:outline-none focus:border-blue-500"
-                placeholder="Enter answer"
-              />
+            she did well
+
             </TableCell>
 
             <TableCell className="border border-black p-0">
-              <input
-                type="text"
-                className="w-full h-full px-2 py-1 focus:outline-none focus:border-blue-500"
-                placeholder="Enter answer"
-              />
+              she did well
             </TableCell>
           </TableRow>
         </TableBody>
