@@ -1,5 +1,4 @@
 import express from "express";
-
 import mongoose from "mongoose";
 import authRoute from "./routes/authRoute";
 import cors from "cors";
@@ -19,7 +18,7 @@ import CustomError from "./middlewares/customError";
 import { URL_NOT_FOUND } from "./utils/errorCodes";
 import setupPassport from "./passport-setup";
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 const mongodb_url = process.env.MONGODB_URL || "";
 const app = express();
 
@@ -59,28 +58,28 @@ app.get("/login", (req, res) => {
 });
 app.get(
   "/auth/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { scope: ["profile", "email"] }),
 );
 app.get(
   "/callback",
   passport.authenticate("google", {
     successRedirect: "/welcome",
     failureRedirect: "/login",
-  })
+  }),
 );
 app.get(
   "/welcome",
   passport.authenticate("google", { failureRedirect: "/login" }),
   (req, res) => {
     res.send("This is the welcome page");
-  }
+  },
 );
 
 app.all("*", (req, res, next) => {
   const err = new CustomError(
     URL_NOT_FOUND,
     `Can't find ${req.originalUrl} on the server`,
-    404
+    404,
   );
   next(err);
 });

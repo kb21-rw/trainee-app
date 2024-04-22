@@ -14,7 +14,7 @@ export const generateUserId = async () => {
 export const applicantSignup = async (
   applicant: any,
   body: any,
-  isGoogleSignup: boolean = false
+  isGoogleSignup: boolean = false,
 ) => {
   const { email, password } = body;
 
@@ -39,17 +39,25 @@ export const applicantSignup = async (
   return createdApplicant;
 };
 
-export const applicantSignin = async (applicant: any, body: any) => {
+export const applicantSignin = async (body: any) => {
   const { email, password } = body;
 
   if (!email || !password) {
-    throw new Error("Email and password are required");
+    return {
+      status: 400,
+      message: "Email and password are required",
+      errorName: "ValidationError",
+    };
   }
 
   const signinApplicant = await Applicant.findOne({ email });
 
   if (!signinApplicant) {
-    throw new Error("Invalid email or password");
+    return {
+      status: 400,
+      message: "user does not exist",
+      errorName: "NotFoundError",
+    };
   }
 
   const passwordMatch =
@@ -58,19 +66,24 @@ export const applicantSignin = async (applicant: any, body: any) => {
       : false;
 
   if (!passwordMatch) {
-    throw new Error("Invalid email or password");
+    return {
+      status: 400,
+      message: "Invalid email or password",
+      errorName: "ValidationError",
+    };
   }
 
-  return "signed in succesfully";
+  return { status: 200, message: "Signed in successfully", errorName: "" };
 };
 
 export const applicantResetPassword = async (body: any) => {
   const { email, password } = body;
 
-  let resettingApplicant: any = await Applicant.findOne({ email });
+  const resettingApplicant: any = await Applicant.findOne({ email });
   if (!resettingApplicant) {
     return "User does not exist";
   }
+
   const hashedPassword = await hash(password, 10);
 
   const isSamePassword = await compare(password, resettingApplicant.password);
@@ -78,6 +91,7 @@ export const applicantResetPassword = async (body: any) => {
   if (isSamePassword) {
     return "New password must be different from the old password";
   }
+
   resettingApplicant.password = hashedPassword;
 
   await resettingApplicant.save();

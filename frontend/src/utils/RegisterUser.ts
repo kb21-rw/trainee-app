@@ -10,9 +10,9 @@ export let errorMessage: string = "";
 
 const registerUser = (user: User, setErrorMessage: any) => {
   axios
-    .post("http://localhost:5000/applicants/signup", user)
+    .post("http://localhost:3000/applicants/signup", user)
     .then(() => {
-      alert("User signed up successfully");
+      window.location.href = "http://localhost:5173/applicant/signin";
     })
     .catch((error) => {
       error.message = "User already exists";

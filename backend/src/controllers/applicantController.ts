@@ -3,6 +3,10 @@ import { NextFunction, Response } from "express";
 import { applicantSignup } from "../services/applicantService";
 import { applicantSignin } from "../services/applicantService";
 import { applicantSchema } from "../validations/applicantValidation";
+import {
+  ErrorObject,
+  handleValidationError,
+} from "../middlewares/errorHandler";
 
 export const signup = async (req: any, res: Response, next: NextFunction) => {
   try {
@@ -24,10 +28,24 @@ export const signup = async (req: any, res: Response, next: NextFunction) => {
 
 export const signin = async (req: any, res: Response, next: NextFunction) => {
   try {
-    const applicant = req.user;
     const body = req.body;
-    const newApplicant = await applicantSignin(applicant, body);
-    return res.status(201).send(newApplicant);
+
+    const newApplicant = await applicantSignin(body);
+    if (newApplicant.status === 400) {
+      const singInError: ErrorObject = {
+        message: "",
+        kind: "",
+        keyValue: "",
+        code: newApplicant.status,
+        name: newApplicant.errorName,
+        details: [{ message: newApplicant }],
+        statusCode: newApplicant.status,
+        errorCode: newApplicant.status,
+      };
+      return handleValidationError(singInError, res);
+    }
+
+    res.status(201).send(newApplicant);
   } catch (error: any) {
     next(error);
   }
