@@ -1,4 +1,14 @@
 import { Schema, model } from "mongoose";
+import { Role } from "../utils/types";
+
+export interface UserProperties {
+  _id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: Role;
+  coach: string;
+}
 
 const UserSchema = new Schema(
   {
@@ -18,14 +28,14 @@ const UserSchema = new Schema(
     role: {
       type: String,
       required: true,
-      enum: ["ADMIN", "COACH", "TRAINEE"],
+      enum: Role,
     },
     coach: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
   },
-  { timestamps: {} },
+  { timestamps: {} }
 );
 UserSchema.index({ name: "text" });
 

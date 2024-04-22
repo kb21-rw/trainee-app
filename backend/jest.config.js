@@ -3,11 +3,7 @@ module.exports = {
   testEnvironment: "node",
   testRegex: ".*\\.(integration-|e2e-)?test\\.ts$",
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-  // automock: false,
   roots: ["<rootDir>/src"],
-  // moduleNameMapper: {
-  //   "^../models/Form$": "<rootDir>/src/__mocks__/Form.s",
-  // },
   collectCoverageFrom: [
     "src/**/*.ts",
     "!src/main.ts",

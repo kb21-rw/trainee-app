@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 export interface QuestionProperties {
-  id: string;
+  _id: string;
   title: string;
   type: "text" | "dropdown";
   options: string[];

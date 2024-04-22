@@ -1,14 +1,14 @@
 import { QuestionProperties } from "../models/Question";
 
 export class Question {
-  public readonly id: string;
+  public readonly _id: string;
   public readonly title: string;
   public readonly type: "text" | "dropdown";
   public readonly options: string[];
   public readonly responseIds: string[];
 
   public constructor(data: QuestionProperties) {
-    this.id = data.id;
+    this._id = data._id;
     this.title = data.title;
     this.type = data.type;
     this.options = data.options;
@@ -18,7 +18,7 @@ export class Question {
 
 export class QuestionBuilder {
   private readonly properties: QuestionProperties = {
-    id: "12",
+    _id: "66203fa2a3465a4a588d12q1",
     title: "Test question",
     type: "text",
     options: [],
@@ -45,8 +45,8 @@ export class QuestionBuilder {
     return this;
   }
 
-  public withId(id: string): this {
-    this.properties.id = id;
+  public withId(_id: string): this {
+    this.properties._id = _id;
     return this;
   }
 
