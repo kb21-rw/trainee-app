@@ -75,3 +75,26 @@ export const applicantSignin = async (body: any) => {
 
   return { status: 200, message: "Signed in successfully", errorName: "" };
 };
+
+export const applicantResetPassword = async (body: any) => {
+  const { email, password } = body;
+
+  const resettingApplicant: any = await Applicant.findOne({ email });
+  if (!resettingApplicant) {
+    return "User does not exist";
+  }
+
+  const hashedPassword = await hash(password, 10);
+
+  const isSamePassword = await compare(password, resettingApplicant.password);
+
+  if (isSamePassword) {
+    return "New password must be different from the old password";
+  }
+
+  resettingApplicant.password = hashedPassword;
+
+  await resettingApplicant.save();
+
+  return "updated password succesfully";
+};

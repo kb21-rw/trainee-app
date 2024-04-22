@@ -1,3 +1,4 @@
+import { applicantResetPassword } from "./../services/applicantService";
 import { NextFunction, Response } from "express";
 import { applicantSignup } from "../services/applicantService";
 import { applicantSignin } from "../services/applicantService";
@@ -45,6 +46,29 @@ export const signin = async (req: any, res: Response, next: NextFunction) => {
     }
 
     res.status(201).send(newApplicant);
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const resetPassword = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const body = req.body;
+    const newApplicant = await applicantResetPassword(body);
+    await applicantSchema.validateAsync(body);
+
+    switch (newApplicant) {
+      case "New password must be different from the old password":
+        return res.status(401).send(newApplicant);
+      case "updated password succesfully":
+        return res.status(201).send("pasword changed succesfully");
+      default:
+        return res.status(500).send(" User does not exist");
+    }
   } catch (error: any) {
     next(error);
   }
