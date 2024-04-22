@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Google from "../../components/ui/applicants/Google";
 import { useNavigate } from "react-router-dom";
 import InputField from "../Form/InputField";
@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import axios, { AxiosError } from "axios";
 import { loginValidationSchema } from "../../utils/ValidationSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 interface FormValues {
   email: string;
@@ -15,6 +16,8 @@ interface FormValues {
 
 export default function SignIn() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -46,7 +49,10 @@ export default function SignIn() {
       <div className="md:px-36 px-16 flex flex-col items-center gap-10 pt-10 pb-10 shadow-2xl">
         <h1 className="text-2xl font-semibold">Applicant Sign-In</h1>
         <div className="flex flex-col gap-5">
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="flex flex-col gap-5"
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <InputField
               type="email"
               id="email"
@@ -57,12 +63,14 @@ export default function SignIn() {
             />
 
             <InputField
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               placeholder="Enter your password"
               label="Password"
               htmlfor="password"
               register={register("password")}
+              icon={showPassword ? <FaEye /> : <FaEyeSlash />}
+              showPassword={() => setShowPassword(!showPassword)}
             />
             {errors.email || errors.password ? (
               <p>{(errors.email || errors.password)?.message}</p>
