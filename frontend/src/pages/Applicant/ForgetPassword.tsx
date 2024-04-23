@@ -3,7 +3,7 @@ import emailjs from "@emailjs/browser";
 
 export default function ForgetPassword() {
   const form = useRef();
-  const message = "Cofirm";
+  const message = "http://localhost:5173/applicant/new-password";
 
   const sendEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
