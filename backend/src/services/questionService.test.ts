@@ -1,6 +1,9 @@
 import Form from "../models/Form";
 import { QuestionBuilder } from "../builders/questionBuilder";
-import { createQuestionService } from "./questionService";
+import {
+  createQuestionService,
+  getAllQuestionsService,
+} from "./questionService";
 import { FormBuilder } from "../builders/formBuilder";
 import Question from "../models/Question";
 import User from "../models/User";
@@ -22,7 +25,7 @@ describe("createQuestionService", () => {
     ).rejects.toThrow("Invalid Document ID");
   });
 
-  test("Should return form", async () => {
+  test("Should return form after creating a question", async () => {
     const question = new QuestionBuilder().build();
     const form = new FormBuilder().build();
     const trainee = new UserBuilder();
@@ -49,5 +52,15 @@ describe("createQuestionService", () => {
       questionsId: ["66203fa2a3465a4a588d12q1"],
       title: "Test form",
     });
+  });
+});
+
+describe("getAllQuestionsService", () => {
+  test("Should return list of questions", async () => {
+    const question = new QuestionBuilder().build();
+    (Question.find as jest.Mock).mockReturnValue([question]);
+
+    await expect(getAllQuestionsService("", "")).resolves.toEqual([question]);
+    expect(Question.find).toHaveBeenCalled();
   });
 });
