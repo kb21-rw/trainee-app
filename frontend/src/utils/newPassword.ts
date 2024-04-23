@@ -12,8 +12,8 @@ const newPassword = (user: User, setErrorMessage: any) => {
   axios
     .patch("http://localhost:3000/applicants/reset/:email", user)
     .then(() => {
+      alert("New password created");
       window.location.href = "http://localhost:5173/applicant/signin";
-      console.log(user);
     })
     .catch((error) => {
       error.message = "Email does not exist";

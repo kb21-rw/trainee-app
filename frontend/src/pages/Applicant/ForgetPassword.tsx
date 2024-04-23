@@ -14,7 +14,7 @@ export default function ForgetPassword() {
       })
       .then(
         () => {
-          console.log("SUCCESS!");
+          alert("An email has been sent");
         },
         (error) => {
           console.log("FAILED...", error.text);

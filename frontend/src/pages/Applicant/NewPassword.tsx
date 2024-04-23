@@ -3,9 +3,9 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Button from "../../components/ui/Button";
 import InputField from "../Form/InputField";
 import PasswordMessages from "../../utils/PasswordMessages";
-import validatePassword, { emailRegex } from "../../utils/validatePassword";
 import { useSearchParams } from "react-router-dom";
 import newPassword, { errorMessage } from "../../utils/newPassword";
+import validatePassword from "../../utils/validatePassword";
 interface userValidation {
   email: any;
   password: string;
@@ -27,8 +27,6 @@ export default function SignUp() {
   const [errrorMessage, setErrorMessage] = useState("");
 
   const handleUserInfo = () => {
-    if (!emailRegex.test(user.email))
-      return setErrorMessage("Enter a valid email");
     if (validatePassword(user.password))
       return setErrorMessage("Enter a valid password");
     if (user.password !== user.rePassword) {
