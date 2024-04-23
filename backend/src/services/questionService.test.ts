@@ -3,6 +3,7 @@ import { QuestionBuilder } from "../builders/questionBuilder";
 import {
   createQuestionService,
   getAllQuestionsService,
+  updateQuestionService,
 } from "./questionService";
 import { FormBuilder } from "../builders/formBuilder";
 import Question from "../models/Question";
@@ -62,5 +63,38 @@ describe("getAllQuestionsService", () => {
 
     await expect(getAllQuestionsService("", "")).resolves.toEqual([question]);
     expect(Question.find).toHaveBeenCalled();
+  });
+});
+
+describe("updateQuestionService", () => {
+  test("Should throw if the question is not found", async () => {
+    (Question.findById as jest.Mock).mockReturnValue(null);
+
+    await expect(updateQuestionService("", {})).rejects.toThrow(
+      "Question not found"
+    );
+  });
+
+  test("Should return updated question", async () => {
+    const question = new QuestionBuilder().build();
+    const updatedQuestion = new QuestionBuilder()
+      .withTitle("Updated Question")
+      .withOptions(["true", "false"])
+      .build();
+
+    Object.setPrototypeOf(question, {
+      save: function () {
+        return this;
+      },
+    });
+
+    (Question.findById as jest.Mock).mockReturnValue(question);
+
+    await expect(
+      updateQuestionService(question._id, {
+        title: "Updated Question",
+        options: ["true", "false"],
+      })
+    ).resolves.toEqual(updatedQuestion);
   });
 });

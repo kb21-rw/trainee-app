@@ -61,7 +61,7 @@ export const updateQuestionService = async (
     title,
     type,
     options,
-  }: { title: string; type: "text" | "dropdown"; options: string[] }
+  }: { title?: string; type?: "text" | "dropdown"; options?: string[] }
 ) => {
   const question = await Question.findById(questionId);
   if (!question) {
