@@ -80,7 +80,7 @@ export const updateQuestionService = async (
     question.options = options;
   }
 
-  await question.save();
+  return await question.save();
 };
 
 export const deleteQuestionService = async (questionId: string) => {
