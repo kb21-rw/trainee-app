@@ -4,6 +4,7 @@ import { UseFormRegisterReturn } from "react-hook-form";
 interface validateProps {
   htmlfor: string;
   label: string;
+  name?: string;
   type: string;
   id: string;
   placeholder: string;

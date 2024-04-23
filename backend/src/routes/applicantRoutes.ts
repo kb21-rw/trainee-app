@@ -10,4 +10,3 @@ router.post("/signin", signin);
 router.patch("/reset/:email", resetPassword);
 
 export default router;
-// "password":"nowpassword!123"
