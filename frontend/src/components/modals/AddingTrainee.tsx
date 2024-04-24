@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import ModalLayout from "./ModalLayout";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
@@ -30,11 +30,22 @@ const AddingTraineeModal = ({
       delete data.coach;
     }
 
-    await createTrainee({
+try{
+   await createTrainee({
       jwt,
       body: { ...data, role: "TRAINEE" },
-    });
-  };
+    }).unwrap()
+  }catch(error){
+    console.error('failed to create a trainee',error)
+  }
+ };
+
+  useEffect(()=>{
+    if(isSuccess){
+      setTimeout(closePopup,2000)
+    }
+  },[isSuccess,closePopup])
+
 
   const errorMessage: any =
     errors?.name?.message ||
