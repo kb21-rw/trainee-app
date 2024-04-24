@@ -63,7 +63,7 @@ try{
       {isSuccess && <Alert type="success">Trainee was added succesfully</Alert>}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-12 w-full"
+        className="flex flex-col gap-6 w-full"
       >
         <InputField
           type="text"
