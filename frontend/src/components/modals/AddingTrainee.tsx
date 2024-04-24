@@ -30,14 +30,11 @@ const AddingTraineeModal = ({
       delete data.coach;
     }
 
-try{
    await createTrainee({
       jwt,
       body: { ...data, role: "TRAINEE" },
-    }).unwrap()
-  }catch(error){
-    console.error('failed to create a trainee',error)
-  }
+    })
+  
  };
 
   useEffect(()=>{
