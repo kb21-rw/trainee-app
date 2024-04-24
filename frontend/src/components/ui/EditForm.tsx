@@ -2,6 +2,8 @@ import React from "react";
 import CheckMark from "../../assets/CheckMarkIcon";
 import AddIcon from "../../assets/AddIcon";
 import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup"
+import * as yup from "yup"
 import Cookies from "universal-cookie";
 import {
   useCreateQuestionMutation,
@@ -12,6 +14,14 @@ import SuccessCheckMark from "../../assets/SuccessCheckMarkIcon";
 import Delete from "../../assets/DeleteIcon";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
+import Alert from "./Alert";
+
+const FormSchema = yup
+  .object({
+    title: yup.string().required(),
+    description: yup.string().required(),
+  })
+  .required()
 
 const EditForm = ({
   title,
@@ -29,9 +39,10 @@ const EditForm = ({
   const {
     register,
     handleSubmit,
-    formState: { isDirty },
+    formState: { isDirty, errors },
   } = useForm({
     defaultValues: { title, description },
+    resolver: yupResolver(FormSchema)
   });
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
@@ -81,6 +92,8 @@ const EditForm = ({
           defaultValue={description}
           {...register("description")}
         />
+        {errors.description && <Alert type="error">Description shouldn&#39;t be empty</Alert>}
+        {errors.title && <Alert type='error'>Title shouldn&#39;t be empty</Alert>}
       </div>
       <div className="flex flex-col justify-between gap-6 p-4 custom-shadow rounded-xl">
         {isDirty ? (
