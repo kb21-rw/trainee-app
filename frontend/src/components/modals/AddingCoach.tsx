@@ -48,7 +48,7 @@ const AddingCoachModal = ({
       {isSuccess && <Alert type="success">Coach was added succesfully</Alert>}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-12 w-full"
+        className="flex flex-col gap-8 w-full"
       >
         <InputField
           type="text"
