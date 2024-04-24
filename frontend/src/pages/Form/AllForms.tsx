@@ -24,8 +24,6 @@ const AllForms = () => {
       jwt,
       body: { title: `Form ${data.length}` },
     });
-    console.log(result)
-    
     const id = result.data._id;
     navigate(`/forms/${id}`);
   };

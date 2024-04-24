@@ -38,7 +38,8 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   };
 
   const onSubmit = async (data: any) => {
-    return await editQuestion({ jwt, body: data, id: _id });
+    const result = await editQuestion({ jwt, body: data, id: _id });
+    console.log({ result });
   };
 
   const { type: selectedType } = watch();
@@ -68,7 +69,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                 activeQuestion === _id && "bg-white"
               } focus:border-b-2 border-blue-400 outline-none py-1 px-0.5`}
             />
-            <select className="p-2" {...register("type")} value={type}>
+            <select className="p-2" {...register("type")}>
               {[
                 { label: "Text", value: "text" },
                 { label: "Dropdown", value: "dropdown" },
@@ -80,6 +81,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                   <option
                     key={index}
                     value={currentType.value}
+                    selected={currentType.value === type}
                   >
                     {currentType.label}
                   </option>
