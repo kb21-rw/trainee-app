@@ -2,6 +2,7 @@ import Form from "../models/Form";
 import { QuestionBuilder } from "../builders/questionBuilder";
 import {
   createQuestionService,
+  deleteQuestionService,
   getAllQuestionsService,
   updateQuestionService,
 } from "./questionService";
@@ -96,5 +97,30 @@ describe("updateQuestionService", () => {
         options: ["true", "false"],
       })
     ).resolves.toEqual(updatedQuestion);
+  });
+});
+
+describe("deleteQuestionService", () => {
+  test("Should throw if the question is not found", async () => {
+    const question = new QuestionBuilder().build();
+
+    (Question.findByIdAndDelete as jest.Mock).mockReturnValue(null);
+    (Response.deleteMany as jest.Mock).mockReturnValue(null);
+
+    await expect(deleteQuestionService(question._id)).rejects.toThrow(
+      "Question not found!"
+    );
+  });
+
+  test("Should call Response.deleteMany", async () => {
+    const question = new QuestionBuilder().build();
+
+    (Question.findByIdAndDelete as jest.Mock).mockReturnValue(question);
+
+    await deleteQuestionService(question._id);
+
+    expect(Response.deleteMany).toHaveBeenCalledWith({
+      _id: { $in: expect.any(Array) },
+    });
   });
 });
