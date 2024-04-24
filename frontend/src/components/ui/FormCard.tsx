@@ -5,7 +5,6 @@ import Delete from "../../assets/DeleteIcon";
 import Edit from "../../assets/EditIcon";
 import Cookies from "universal-cookie";
 import { useDeleteFormMutation } from "../../features/user/apiSlice";
-import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import View from "../../assets/ViewIcon"
 import DeleteModal from "../modals/DeleteModal";
@@ -17,7 +16,7 @@ const FormCard = ({ form }: { form: IFormType }) => {
   const jwt = cookie.get("jwt");
   const [showDeleteModal, setShowDeleteModal]= useState(false);
 
-  const [deleteForm, { isLoading: isDeleteFormLoading }] =
+  const [deleteForm] =
     useDeleteFormMutation();
 
   const handleDeleteForm = async (id: string) => {
@@ -27,11 +26,7 @@ const FormCard = ({ form }: { form: IFormType }) => {
 
   return (
     <div className="p-8 custom-shadow flex items-center justify-between rounded-xl">
-      {isDeleteFormLoading && (
-        <div className="absolute h-full">
-          <Loader />
-        </div>
-      )}
+
       <div
         className="flex flex-col gap-4 w-full"
       > 
