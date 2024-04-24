@@ -120,7 +120,7 @@ describe("deleteQuestionService", () => {
     await deleteQuestionService(question._id);
 
     expect(Response.deleteMany).toHaveBeenCalledWith({
-      _id: { $in: expect.any(Array) },
-    });
+      _id: { $in: question.responseIds } },
+    );
   });
 });

@@ -47,8 +47,8 @@ export class FormBuilder {
     return this;
   }
 
-  public withTitle(id: string): this {
-    this.properties.title = id;
+  public withTitle(title: string): this {
+    this.properties.title = title;
     return this;
   }
 
