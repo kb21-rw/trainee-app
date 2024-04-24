@@ -4,7 +4,7 @@ import Question from "../models/Question";
 import Response from "../models/Response";
 import User from "../models/User";
 import { INVALID_MONGODB_ID, NOT_ALLOWED } from "../utils/errorCodes";
-import { CreateResponseType } from "../utils/types";
+import { CreateResponseDto } from "../utils/types";
 
 interface IResponse {
   _id: ObjectId;
@@ -16,7 +16,7 @@ export const createResponseService = async (
   loggedInUserId: string,
   traineeId: string,
   questionId: string,
-  responseData: CreateResponseType
+  responseData: CreateResponseDto
 ) => {
   const { text } = responseData;
 
