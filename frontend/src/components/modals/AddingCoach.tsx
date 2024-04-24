@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import ModalLayout from "./ModalLayout";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
@@ -22,8 +22,18 @@ const AddingCoachModal = ({
     formState: { errors },
   } = useForm();
   const onSubmit = async (data: any) => {
-    await createCoach({ jwt, body: { ...data, role: "COACH" } });
+    try {
+      await createCoach({ jwt, body: { ...data, role: "COACH" } }).unwrap();
+    }catch(error){
+      console.error('failed to add this coach:',error)
+    }
   };
+
+  useEffect(()=>{
+  setTimeout(()=>{
+      closePopup
+   },2000)
+  },[isSuccess,closePopup])
 
   const errorMessage: any =
     errors.name?.message || errors.email?.message || error?.data?.errorMessage;
