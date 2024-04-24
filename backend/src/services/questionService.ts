@@ -2,7 +2,6 @@ import CustomError from "../middlewares/customError";
 import Form from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
-import User from "../models/User";
 import { INVALID_MONGODB_ID, QUESTION_NOT_FOUND } from "../utils/errorCodes";
 import { CreateQuestionType, QuestionType } from "../utils/types";
 
@@ -16,28 +15,14 @@ export const createQuestionService = async (
     throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
   }
 
-  const createdQuestion = await Question.create({
+  const createQuestion = await Question.create({
     title,
     type,
     options,
     questionIds: [],
   });
-  if (createdQuestion) {
-    relatedForm.questionsId.push(createdQuestion._id);
-
-    const trainees = await User.find({ role: "TRAINEE" });
-
-    const responseIds = await Promise.all(
-      trainees.map(async (trainee) => {
-        const response = new Response({
-          userId: trainee._id,
-        });
-        await response.save();
-        return response._id;
-      })
-    );
-    createdQuestion.responseIds = responseIds;
-    createdQuestion.save();
+  if (createQuestion) {
+    relatedForm.questionsId.push(createQuestion._id);
   }
 
   await relatedForm.save();

@@ -12,7 +12,6 @@ export const usersApi: any = createApi({
     "profile",
     "forms",
     "questions",
-    "overview",
   ],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
@@ -321,17 +320,6 @@ export const usersApi: any = createApi({
       },
       invalidatesTags: ["forms"],
     }),
-    getOverview: builder.query({
-      query: ({ jwt }) => ({ 
-        url: '/overview',
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${jwt}`, 
-        },
-      }),
-      providesTags: ['overview'],
-    }),
-
   }),
 });
 
@@ -358,5 +346,4 @@ export const {
   useGetAllQuestionsForFormQuery,
   useCreateQuestionMutation,
   useDeleteQuestionMutation,
-  useGetOverviewQuery,
 } = usersApi;
