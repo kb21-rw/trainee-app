@@ -13,6 +13,7 @@ export const usersApi: any = createApi({
     "forms",
     "questions",
     "overview",
+    "response",
   ],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
@@ -332,6 +333,17 @@ export const usersApi: any = createApi({
       providesTags: ['overview'],
     }),
 
+     addResponse: builder.mutation({
+      query: ({ jwt, body, userId, questionId }) => ({
+         url: `/responses/${questionId}?userId=${userId}`,
+         method: 'PUT',
+         headers: {
+           'Authorization': `Bearer ${jwt}`,
+         },
+         body: { ...body },
+      }),
+      invalidatesTags: ['response'],
+     }),
   }),
 });
 
@@ -359,4 +371,5 @@ export const {
   useCreateQuestionMutation,
   useDeleteQuestionMutation,
   useGetOverviewQuery,
+  useAddResponseMutation,
 } = usersApi;
