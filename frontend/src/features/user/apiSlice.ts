@@ -342,7 +342,7 @@ export const usersApi: any = createApi({
          },
          body: { ...body },
       }),
-      invalidatesTags: ['response'],
+      invalidatesTags: ['overview', 'response'],
      }),
   }),
 });
