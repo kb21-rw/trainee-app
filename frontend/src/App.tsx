@@ -22,7 +22,8 @@ import AllForm from "./pages/Form/AllForms";
 import SingleForm from "./pages/Form/SingleForm";
 import SignIn from "./pages/Applicant/SignIn";
 import OverView from "./pages/User/OverView";
-import AppResetPassword from "./pages/Applicant/ForgetPassword";
+import NewPassword from "./pages/Applicant/NewPassword";
+import ForgetPassword from "./pages/Applicant/ForgetPassword";
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -40,10 +41,8 @@ export default function App() {
         </Route>
         <Route path="/applicant/signup" element={<SignUp />} />
         <Route path="/applicant/signin" element={<SignIn />} />
-        <Route
-          path="/applicant/reset-password"
-          element={<AppResetPassword />}
-        />
+        <Route path="/applicant/reset-password" element={<ForgetPassword />} />
+        <Route path="/applicant/new-password" element={<NewPassword />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
