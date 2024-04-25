@@ -9,6 +9,7 @@ const TextArea = ({
  register,
  options,
  autoFocus,
+ disabled,
 }: {
  label: string;
  placeholder: string;
@@ -18,6 +19,7 @@ const TextArea = ({
  register?: any;
  options?: any;
  autoFocus?: any;
+ disabled?: boolean;
 }) => {
  return (
     <div className={`${styles ? styles : "flex flex-col gap-5"} w-full`}>
@@ -27,14 +29,15 @@ const TextArea = ({
       <div
         className={`${
           styles && "!w-2/3"
-        } w-full border border-gray-200 rounded-md flex justify-between py-2 px-3 h-32`}
+        } w-full border border-gray-200 rounded-md flex justify-between h-32`}
       >
         <textarea
           name={name}
           autoFocus={autoFocus}
-          className="placeholder:text-lg outline-none border-none h-full flex-1 resize-none"
+          className="placeholder:text-lg outline-none border-none h-full flex-1 resize-none py-2 px-3"
           placeholder={placeholder}
           defaultValue={defaultValue}
+          disabled={disabled}
           {...(register && { ...register(name, options) })}
         />
       </div>
