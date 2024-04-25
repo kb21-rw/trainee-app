@@ -14,9 +14,12 @@ const UserSchema = new Schema(
   {
     name: {
       type: String,
-      unique: true,
       required: true,
-    },
+      index:{
+        unique: true,
+        collation:{locale:'en',strength:2}
+    }
+  },
     email: {
       type: String,
       unique: true,
