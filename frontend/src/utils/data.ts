@@ -6,7 +6,8 @@ export const adminMenu = [
 ];
 export const coachMenu = [
   { link: "/", title: "Overview" },
-  { link: "/edit-my-trainees", title: "Edit my trainees" },
+  { link: "/trainees-results", title: "Trainee Results"},
+  { link: "/my-trainees", title: "My trainees" },
 ];
 
 export const usersPerPageValues = [10, 20, 30, 40, 50, 100];
