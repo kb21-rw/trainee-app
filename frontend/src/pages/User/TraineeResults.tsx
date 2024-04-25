@@ -12,12 +12,12 @@ import Cookies from "universal-cookie";
 import { useGetOverviewQuery } from "../../features/user/apiSlice";
 import ResponseModal from "../../components/modals/ResponseModal";
 import { getLoggedInUser } from "../../utils/helper";
-import Loader from "../../components/ui/Loader";
+// import Loader from "../../components/ui/Loader";
 
-const OverView = () => {
+const TraineeResults = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
-  const { data, isFetching, isError } = useGetOverviewQuery({ jwt });
+  const { data, isError } = useGetOverviewQuery({ jwt });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({
@@ -29,15 +29,6 @@ const OverView = () => {
   });
 
   const loggedInUser = getLoggedInUser();
-  console.log(loggedInUser.name);
-
-  if (isFetching) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader />
-      </div>
-    );
-  }
 
   if (isError) {
     return <div>Error fetching data.</div>;
@@ -90,30 +81,35 @@ const OverView = () => {
           <TableBody className="divide-y divide-gray-300 bg-white">
             {data?.flatMap((form) =>
               form.questions.flatMap((question: any) =>
-                question.responses.map((response: any) => (
-                  <TableRow key={response._id}>
-                    <TableCell className="border border-black p-2 whitespace-nowrap w-16">
-                      {response.user?.name ?? "No name"}
-                    </TableCell>
-                    <TableCell
-                      className="border border-black p-2 whitespace-nowrap max-w-xs overflow-hidden text-overflow-ellipsis"
-                      onClick={() => {
-                        setIsModalOpen(true);
-                        setModalData({
-                          formTitle: form.title,
-                          question: question.title,
-                          questionId: question._id,
-                          response: response.text,
-                          userId: response.user._id,
-                        });
-                      }}
-                    >
-                      {response.text || "No response"}
-                    </TableCell>
-                  </TableRow>
-                ))
+                question.responses
+                  .filter(
+                    (response: any) =>
+                      response.user?.coach._id === loggedInUser.id
+                  )
+                  .map((response: any) => (
+                    <TableRow key={response._id}>
+                      <TableCell className="border border-black p-2 whitespace-nowrap w-16">
+                        {response.user?.name ?? "No name"}
+                      </TableCell>
+                      <TableCell
+                        className="border border-black p-2 whitespace-nowrap max-w-xs overflow-hidden text-overflow-ellipsis"
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setModalData({
+                            formTitle: form.title,
+                            question: question.title,
+                            questionId: question._id,
+                            response: response.text,
+                            userId: response.user._id,
+                          });
+                        }}
+                      >
+                        {response.text || "No response"}
+                      </TableCell>
+                    </TableRow>
+                  ))
               )
-            )}{" "}
+            )}
           </TableBody>
         </Table>
         {isModalOpen && (
@@ -132,4 +128,4 @@ const OverView = () => {
   );
 };
 
-export default OverView;
+export default TraineeResults;
