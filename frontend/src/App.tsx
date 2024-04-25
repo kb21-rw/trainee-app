@@ -22,6 +22,8 @@ import AllForm from "./pages/Form/AllForms";
 import SingleForm from "./pages/Form/SingleForm";
 import SignIn from "./pages/Applicant/SignIn";
 import OverView from './pages/User/OverView';
+import TraineeResults from "./pages/User/TraineeResults";
+
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -33,7 +35,8 @@ export default function App() {
             <Route path="/forms/:id" element={<SingleForm />} />
             <Route path="/trainees" element={<TraineesInfo />} />
             <Route path="/administer-coach" element={<CoachesInfo />} />
-            <Route path="/edit-my-trainees" element={<EditMyTrainees />} />
+            <Route path="/my-trainees" element={<EditMyTrainees />} />
+            <Route path="/trainees-results" element={<TraineeResults />} />
             <Route path="/profile-settings" element={<Profile />} />
           </Route>
         </Route>
