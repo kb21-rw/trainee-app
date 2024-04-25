@@ -69,7 +69,7 @@ const EditForm = ({
   };
 
   return (
-    <form className="flex gap-2 " onFocus={() => setActiveQuestion("title")}>
+    <form className="flex gap-2 " onFocus={() => setActiveQuestion("title")} onSubmit={handleSubmit(onSubmit)}>
       {isDeleteFormLoading && (
         <div className="absolute inset-0 h-full w-full">
           <Loader />
@@ -97,7 +97,7 @@ const EditForm = ({
       </div>
       <div className="flex flex-col justify-between gap-6 p-4 custom-shadow rounded-xl">
         {isDirty ? (
-          <button type="submit" onClick={handleSubmit(onSubmit)}>
+          <button type="submit">
             <SuccessCheckMark />
           </button>
         ) : (
