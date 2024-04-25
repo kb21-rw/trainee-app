@@ -16,6 +16,7 @@ const ResponseModal = ({
   userId,
   response,
   includeButton,
+  disabled,
 }: {
   closePopup: () => void;
   title: string;
@@ -24,6 +25,7 @@ const ResponseModal = ({
   userId: string;
   response?: string;
   includeButton?: boolean;
+  disabled?: boolean;
 }) => {
   const {
     register,
@@ -33,14 +35,19 @@ const ResponseModal = ({
 
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
-  const [addResponse, {isLoading, error, isSuccess}] = useAddResponseMutation();
-
+  const [addResponse, { isLoading, error, isSuccess }] =
+    useAddResponseMutation();
 
   const onSubmit = async (data: any) => {
     await addResponse({ jwt, body: { ...data }, questionId, userId });
   };
 
-  const errorMessage: any = errors.name?.message || errors.email?.message || error?.data?.errorMessage;
+  const errorMessage: any =
+    errors.name?.message || errors.email?.message || error?.data?.errorMessage;
+
+    if(isSuccess){
+      closePopup();
+    }
 
   return (
     <ModalLayout closePopup={closePopup} title={title}>
@@ -66,13 +73,13 @@ const ResponseModal = ({
           options={{
             required: { value: true, message: "response is required" },
             maxLength: {
-              value: 30,
               message: "Add your response here",
             },
           }}
+          disabled={disabled}
         />
         <div className="flex justify-end">
-          {includeButton && <Button>Save Response</Button>}
+          {includeButton && <Button type="submit">Save Response</Button>}
         </div>
       </form>
     </ModalLayout>
