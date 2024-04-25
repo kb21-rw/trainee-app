@@ -126,6 +126,7 @@ const OverView = () => {
             userId={modalData.userId}
             response={modalData.response}
             includeButton={false}
+            disabled={true}
           />
         )}
       </div>
