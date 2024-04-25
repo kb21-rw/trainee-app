@@ -61,7 +61,7 @@ export const updateQuestionService = async (
     title,
     type,
     options,
-  }: { title: string; type: "text" | "dropdown"; options: string[] }
+  }: { title?: string; type?: "text" | "dropdown"; options?: string[] }
 ) => {
   const question = await Question.findById(questionId);
   if (!question) {
@@ -80,7 +80,7 @@ export const updateQuestionService = async (
     question.options = options;
   }
 
-  await question.save();
+  return await question.save();
 };
 
 export const deleteQuestionService = async (questionId: string) => {
