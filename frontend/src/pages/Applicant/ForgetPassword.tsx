@@ -1,11 +1,9 @@
 import React, { FormEvent, useRef } from "react";
 import emailjs from "@emailjs/browser";
-import process from "process";
 
 export default function ForgetPassword() {
   const formRef = useRef<HTMLFormElement>(null);
-  const message = process.env.EEMAILMESSAGE;
-
+  const message = import.meta.env.EMAILMESSAGE;
   const sendEmail = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
