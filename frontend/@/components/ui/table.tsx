@@ -1,6 +1,6 @@
-import * as React from "react"
-import PropTypes from 'prop-types'; 
-import { cn } from "../../lib/utils"
+import * as React from "react";
+import PropTypes from "prop-types";
+import { cn } from "../../lib/utils";
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -13,8 +13,8 @@ const Table = React.forwardRef<
       {...props}
     />
   </div>
-))
-Table.displayName = "Table"
+));
+Table.displayName = "Table";
 Table.propTypes = {
   className: PropTypes.string,
 };
@@ -24,10 +24,10 @@ const TableHeader = React.forwardRef<
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
   <thead ref={ref} className={cn("[&_tr]:border-b", className)} {...props} />
-))
-TableHeader.displayName = "TableHeader"
+));
+TableHeader.displayName = "TableHeader";
 TableHeader.propTypes = {
-  className: PropTypes.string, 
+  className: PropTypes.string,
 };
 
 const TableBody = React.forwardRef<
@@ -39,10 +39,10 @@ const TableBody = React.forwardRef<
     className={cn("[&_tr:last-child]:border-0", className)}
     {...props}
   />
-))
-TableBody.displayName = "TableBody"
+));
+TableBody.displayName = "TableBody";
 TableBody.propTypes = {
-  className: PropTypes.string, 
+  className: PropTypes.string,
 };
 
 const TableFooter = React.forwardRef<
@@ -57,12 +57,11 @@ const TableFooter = React.forwardRef<
     )}
     {...props}
   />
-))
-TableFooter.displayName = "TableFooter"
+));
+TableFooter.displayName = "TableFooter";
 TableFooter.propTypes = {
-  className: PropTypes.string, 
+  className: PropTypes.string,
 };
-
 
 const TableRow = React.forwardRef<
   HTMLTableRowElement,
@@ -76,12 +75,11 @@ const TableRow = React.forwardRef<
     )}
     {...props}
   />
-))
-TableRow.displayName = "TableRow"
+));
+TableRow.displayName = "TableRow";
 TableRow.propTypes = {
-  className: PropTypes.string, 
+  className: PropTypes.string,
 };
-
 
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
@@ -95,12 +93,11 @@ const TableHead = React.forwardRef<
     )}
     {...props}
   />
-))
-TableHead.displayName = "TableHead"
+));
+TableHead.displayName = "TableHead";
 TableHead.propTypes = {
-  className: PropTypes.string, 
+  className: PropTypes.string,
 };
-
 
 const TableCell = React.forwardRef<
   HTMLTableCellElement,
@@ -114,12 +111,11 @@ const TableCell = React.forwardRef<
     )}
     {...props}
   />
-))
-TableCell.displayName = "TableCell"
+));
+TableCell.displayName = "TableCell";
 TableCell.propTypes = {
-  className: PropTypes.string, 
+  className: PropTypes.string,
 };
-
 
 const TableCaption = React.forwardRef<
   HTMLTableCaptionElement,
@@ -130,12 +126,11 @@ const TableCaption = React.forwardRef<
     className={cn("mt-4 text-sm text-muted-foreground", className)}
     {...props}
   />
-))
-TableCaption.displayName = "TableCaption"
+));
+TableCaption.displayName = "TableCaption";
 TableCaption.propTypes = {
-  className: PropTypes.string, 
+  className: PropTypes.string,
 };
-
 
 export {
   Table,
@@ -146,4 +141,4 @@ export {
   TableRow,
   TableCell,
   TableCaption,
-}
+};
