@@ -1,5 +1,12 @@
 import { Schema, model } from "mongoose";
 
+export interface FormProperties {
+  _id: string;
+  title: string;
+  description: string;
+  questionsId: string[];
+}
+
 const FormSchema = new Schema(
   {
     title: {
@@ -15,7 +22,7 @@ const FormSchema = new Schema(
       },
     ],
   },
-  { timestamps: {} },
+  { timestamps: {} }
 );
 FormSchema.index({ title: "text", description: "text" });
 

@@ -1,5 +1,13 @@
 import { Schema, model } from "mongoose";
 
+export interface QuestionProperties {
+  _id: string;
+  title: string;
+  type: "text" | "dropdown";
+  options: string[];
+  responseIds: string[];
+}
+
 const QuestionSchema = new Schema(
   {
     title: {

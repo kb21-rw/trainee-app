@@ -14,7 +14,7 @@ export const isAdminOrCoach = (req: any, res: Response, next: () => void) => {
   if (role != "ADMIN" && role != "COACH") {
     return res
       .status(401)
-      .json({ message: "Only coaches and admins are allowed " });
+      .json({ message: "Only coaches and admins are allowed" });
   }
 
   next();

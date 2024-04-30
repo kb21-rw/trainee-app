@@ -29,3 +29,10 @@ export interface Search {
   searchString?: string;
   typeQuery?: string;
 }
+
+export enum Role {
+  "ADMIN" = "ADMIN",
+  "COACH" = "COACH",
+  "TRAINEE" = "TRAINEE",
+  "APPLICANT" = "APPLICANT",
+}

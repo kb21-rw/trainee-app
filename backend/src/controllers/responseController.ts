@@ -13,7 +13,7 @@ export const createResponse = async (
     const loggedInUser = req.user;
     await createResponseValidation.validateAsync(req.body);
     const createdResponse = await createResponseService(
-      loggedInUser.id,
+      loggedInUser,
       userId,
       questionId,
       req.body

@@ -12,6 +12,7 @@ const Button = ({
   clickHandler?: () => void;
   outlined?: boolean;
   type?: "button" | "submit" | "reset" | undefined;
+  disabled?: boolean;
 }) => {
   return (
     <button
