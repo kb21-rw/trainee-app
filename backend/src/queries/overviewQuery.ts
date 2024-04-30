@@ -1,6 +1,10 @@
 import Form from "../models/Form";
+import { ObjectId } from "mongodb";
 
-export const getOverviewQuery = async (searchString: string) => {
+export const getOverviewQuery = async (
+  searchString: string,
+  coachId?: string
+) => {
   const overview = await Form.aggregate([
     {
       $match: { title: { $regex: new RegExp(searchString, "i") } },
@@ -29,7 +33,7 @@ export const getOverviewQuery = async (searchString: string) => {
     {
       $unwind: {
         path: "$responses",
-        preserveNullAndEmptyArrays: true,
+        preserveNullAndEmptyArrays: false,
       },
     },
     {
@@ -43,13 +47,13 @@ export const getOverviewQuery = async (searchString: string) => {
     {
       $unwind: {
         path: "$responses.user",
-        preserveNullAndEmptyArrays: true,
+        preserveNullAndEmptyArrays: false,
       },
     },
     {
       $lookup: {
         from: "users",
-        localField: "questions.responses.user.coach",
+        localField: "responses.user.coach",
         foreignField: "_id",
         as: "responses.user.coach",
       },
@@ -57,7 +61,7 @@ export const getOverviewQuery = async (searchString: string) => {
     {
       $unwind: {
         path: "$responses.user.coach",
-        preserveNullAndEmptyArrays: true,
+        preserveNullAndEmptyArrays: false,
       },
     },
     {
@@ -121,7 +125,17 @@ export const getOverviewQuery = async (searchString: string) => {
                   input: "$responses",
                   as: "response",
                   cond: {
-                    $eq: ["$$response.questionId", "$$question._id"],
+                    $and: [
+                      { $eq: ["$$response.questionId", "$$question._id"] },
+                      coachId
+                        ? {
+                            $eq: [
+                              "$$response.user.coach._id",
+                              new ObjectId(coachId),
+                            ],
+                          }
+                        : { $eq: ["", ""] },
+                    ],
                   },
                 },
               },

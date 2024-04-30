@@ -9,6 +9,15 @@ export const isAdmin = (req: any, res: Response, next: () => void) => {
   next();
 };
 
+export const isCoach = (req: any, res: Response, next: () => void) => {
+  const { role } = req.user;
+  if (role != "COACH") {
+    return res.status(401).json({ message: "Only coaches are allowed " });
+  }
+
+  next();
+};
+
 export const isAdminOrCoach = (req: any, res: Response, next: () => void) => {
   const { role } = req.user;
   if (role != "ADMIN" && role != "COACH") {
