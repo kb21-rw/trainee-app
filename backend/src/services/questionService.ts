@@ -80,6 +80,10 @@ export const updateQuestionService = async (
     question.options = options;
   }
 
+  if (type === "text") {
+    question.options = [];
+  }
+
   return await question.save();
 };
 
