@@ -28,11 +28,19 @@ import Loader from '../../components/ui/Loader';
      return <div>No data available.</div>;
    }
 
-   console.log(data);
+  const traineeMap = new Map();
 
-    const traineeMap = new Map();
+  const getRandomColorAndTextColor = () => {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    const backgroundColor = `rgb(${r},${g},${b})`;
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    const textColor = luminance > 140 ? 'black' : 'white';  
+    return { backgroundColor, textColor }; 
+   };
 
-   data.forEach((form:Form) => {
+    const formStyles = data.map(() => getRandomColorAndTextColor());   data.forEach((form:Form) => {
      form.questions.forEach((question:Question) => {
        question.responses.forEach((response:Response) => {
          if (response.user) {
@@ -44,15 +52,15 @@ import Loader from '../../components/ui/Loader';
              });
            }
 
-
           const traineeInfo = traineeMap.get(response.user._id);
            traineeInfo.responses[`${form._id}-${question._id}`] = response.text ?? "No response";
          }
        });
      });
    });
+   
     return (
-     <div className='py-6 overflow-x-auto'>
+     <div className='py-20 overflow-x-auto'>
        <Table className="min-w-full border-collapse border border-black text-black">
          <TableHeader>
            <TableRow>
@@ -63,7 +71,7 @@ import Loader from '../../components/ui/Loader';
                Coach
              </TableHead>
              {data.map((form, index) => (
-               <TableHead key={form._id} scope="col" colSpan={form.questions.length} className={`px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider ${index !== data.length - 1 ? "border-r border-black" : ""}`}>
+               <TableHead key={form._id} scope="col" colSpan={form.questions.length} className={`px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider ${index !== data.length - 1 ? "border-r border-black" : ""}`}  style={{ backgroundColor: formStyles[index].backgroundColor, color: formStyles[index].textColor }} >
                  {form.title}
                </TableHead>
              ))}
