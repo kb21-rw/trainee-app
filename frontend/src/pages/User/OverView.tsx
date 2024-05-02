@@ -40,7 +40,8 @@ import Loader from '../../components/ui/Loader';
     return { backgroundColor, textColor }; 
    };
 
-    const formStyles = data.map(() => getRandomColorAndTextColor());   data.forEach((form:Form) => {
+    const formStyles = data.map(() => getRandomColorAndTextColor()); 
+    data.forEach((form:Form) => {
      form.questions.forEach((question:Question) => {
        question.responses.forEach((response:Response) => {
          if (response.user) {
@@ -58,7 +59,7 @@ import Loader from '../../components/ui/Loader';
        });
      });
    });
-   
+
     return (
      <div className='py-20 overflow-x-auto'>
        <Table className="min-w-full border-collapse border border-black text-black">
