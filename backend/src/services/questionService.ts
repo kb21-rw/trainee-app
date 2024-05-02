@@ -20,7 +20,7 @@ export const createQuestionService = async (
     title,
     type,
     options,
-    questionIds: [],
+    responseIds: [],
   });
   if (createdQuestion) {
     relatedForm.questionsId.push(createdQuestion._id);
