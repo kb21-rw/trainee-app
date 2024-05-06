@@ -80,6 +80,11 @@ export const updateQuestionService = async (
     question.options = options;
   }
 
+  await Response.updateMany(
+    { _id: { $in: question.responseIds } },
+    { text: null }
+  );
+
   return await question.save();
 };
 
