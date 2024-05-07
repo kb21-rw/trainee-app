@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import SearchInput from "../../components/ui/SearchInput";
-import AddButton from "../../components/ui/AddButton";
+import Plus from "../../assets/PlusIcon";
 import {
   useCreateFormMutation,
   useGetAllFormsQuery,
@@ -11,6 +11,7 @@ import { IFormType } from "../../utils/types";
 import Loader from "../../components/ui/Loader";
 import { useNavigate } from "react-router-dom";
 import NotFound from "../../components/ui/NotFound";
+import Button from "../../components/ui/Button";
 
 const AllForms = () => {
   const [searchString, setSearchString] = useState("");
@@ -19,20 +20,48 @@ const AllForms = () => {
   const jwt = cookie.get("jwt");
   const [createForm] = useCreateFormMutation();
   const { data, isFetching } = useGetAllFormsQuery({ searchString, jwt });
-  const onClickAddForm = async () => {
+  const [clicked, setClick] = useState(false);
+  const onClickAddForm = async (type?: "APPLICANT") => {
+    let requestBody: object;
+    requestBody = { title: `Form ${data.length}` };
+    if (type) {
+      requestBody = { ...requestBody, type };
+    }
+
     const result = await createForm({
       jwt,
-      body: { title: `Form ${data.length}` },
+      body: requestBody,
     });
+
     const id = result.data._id;
-    navigate(`/forms/${id}`);
+    if (clicked) {
+      navigate(`/forms/${id}`);
+    }
   };
 
   return (
     <div className="py-12">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center my-5">
         <SearchInput setSearchQuery={setSearchString} />
-        <AddButton addHandler={onClickAddForm}>Add form</AddButton>
+        <div className="grid gap-1">
+          <Button clickHandler={() => setClick(!clicked)} variant="small">
+            <Plus />
+            Add Form
+          </Button>
+          <div
+            className={
+              !clicked
+                ? "hidden"
+                : `grid text-white bg bg-primary-dark rounded-lg`
+            }
+          >
+            <Button clickHandler={() => onClickAddForm("APPLICANT")}>
+              Applicants
+            </Button>
+            <div className="border w-6/6"></div>
+            <Button clickHandler={() => onClickAddForm()}>Trainee</Button>
+          </div>
+        </div>
       </div>
       {isFetching ? (
         <div className="h-[50vh] flex items-center justify-center">
