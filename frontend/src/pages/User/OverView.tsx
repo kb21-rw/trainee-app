@@ -102,7 +102,7 @@ import ResponseModal from "../../components/modals/ResponseModal";
                  {trainee.coach ?? 'No coach'}
                </TableCell>
                {data.flatMap((form) => form.questions.map((question:Question) => (
-                 <TableCell key={`${form._id}-${question._id}`} className="border border-black p-2 whitespace-nowrap w-16 max-w-md overflow-auto"
+                 <TableCell key={`${form._id}-${question._id}`} className="border border-black p-2 whitespace-nowrap w-16 max-w-md overflow-hidden text-ellipsis"
                  onClick={() => {
                   setIsModalOpen(true);
                   setModalData({
