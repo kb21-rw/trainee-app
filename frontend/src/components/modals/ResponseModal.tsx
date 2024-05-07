@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ModalLayout from "./ModalLayout";
 import Button from "../ui/Button";
 import { useForm } from "react-hook-form";
@@ -42,12 +42,14 @@ const ResponseModal = ({
     await addResponse({ jwt, body: { ...data }, questionId, userId });
   };
 
-  const errorMessage: any =
+  const errorMessage =
     errors.name?.message || errors.email?.message || error?.data?.errorMessage;
 
-    if(isSuccess){
-      closePopup();
+  useEffect(() => {
+    if (isSuccess) {
+      setTimeout(() => closePopup(), 3000);
     }
+  }, [isSuccess, closePopup]);
 
   return (
     <ModalLayout closePopup={closePopup} title={title}>
