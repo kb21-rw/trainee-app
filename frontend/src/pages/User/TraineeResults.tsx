@@ -27,6 +27,8 @@ const TraineeResults = () => {
     userId: "",
     response: "",
     type: "",
+    questionType: "",
+    options: [] as string[],
   });
 
   if (isError) {
@@ -127,6 +129,8 @@ const TraineeResults = () => {
                           trainee.responses[`${form._id}-${question._id}`],
                         userId: trainee.id,
                         type: trainee.type,
+                        questionType: question.options.length > 0? "dropdown" : "text",
+                        options: question.options,
                       });
                     }}
                   >
@@ -148,6 +152,8 @@ const TraineeResults = () => {
           userId={modalData.userId}
           response={modalData.response}
           includeButton={true}
+          questionType={modalData.questionType}
+          options={modalData.options}
         />
       )}
     </div>
