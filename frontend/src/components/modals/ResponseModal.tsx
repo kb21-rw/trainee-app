@@ -17,6 +17,8 @@ const ResponseModal = ({
   response,
   includeButton,
   disabled,
+  questionType,
+  options,
 }: {
   closePopup: () => void;
   title: string;
@@ -26,6 +28,8 @@ const ResponseModal = ({
   response?: string;
   includeButton?: boolean;
   disabled?: boolean;
+  questionType: string;
+  options: string[];
 }) => {
   const {
     register,
@@ -66,20 +70,23 @@ const ResponseModal = ({
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-12 w-full"
       >
-        <TextArea
-          label={question}
-          placeholder={response || "No response"}
-          name="text"
-          register={register}
-          defaultValue={response}
-          options={{
-            required: { value: true, message: "response is required" },
-            maxLength: {
-              message: "Add your response here",
-            },
-          }}
-          disabled={disabled}
-        />
+        {questionType === "text" && (
+          <TextArea
+            label={question}
+            placeholder={response || "No response"}
+            name="text"
+            register={register}
+            defaultValue={response}
+            options={{
+              required: { value: true, message: "response is required" },
+              maxLength: {
+                message: "Add your response here",
+              },
+            }}
+            disabled={disabled}
+          />
+        )}
+        {questionType === "dropdown" && <div>{options.map(option => option)}</div>}
         <div className="flex justify-end">
           {includeButton && <Button type="submit">Save Response</Button>}
         </div>
