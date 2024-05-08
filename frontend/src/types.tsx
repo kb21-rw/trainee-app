@@ -23,7 +23,7 @@ export interface User {
     _id?: string;
     title: string;
     responses: Response[];
-    options: Option[];
+    options: string[];
   }
   
   export interface Form {
