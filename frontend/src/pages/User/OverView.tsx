@@ -26,6 +26,9 @@ import ResponseModal from "../../components/modals/ResponseModal";
     questionId:"",
     userId: "",
     response: "",
+    type: "",
+    questionType: "",
+    options: [] as string[],
   });
 
 
@@ -56,7 +59,7 @@ import ResponseModal from "../../components/modals/ResponseModal";
                name: response.user.name,
                coach: response.user.coach?.name,
                id: response.user._id,
-               responses: {}
+               responses: {},
              });
            }
 
@@ -111,6 +114,9 @@ import ResponseModal from "../../components/modals/ResponseModal";
                     questionId: question._id ?? "",
                     response: trainee.responses[`${form._id}-${question._id}`],
                     userId: trainee.id,
+                    type: trainee.type,
+                    questionType: question.options.length > 0? "dropdown" : "text",
+                    options: question.options,
                   });
                 }}
                  >
@@ -131,6 +137,8 @@ import ResponseModal from "../../components/modals/ResponseModal";
             response={modalData.response}
             includeButton={false}
             disabled={true}
+            questionType={modalData.questionType}
+            options={modalData.options}
           />
         )}
      </div>
