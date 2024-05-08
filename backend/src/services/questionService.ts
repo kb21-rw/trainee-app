@@ -95,5 +95,12 @@ export const deleteQuestionService = async (questionId: string) => {
     throw new CustomError(QUESTION_NOT_FOUND, "Question not found!", 400);
   }
 
+  await Form.updateOne(
+    {
+      questionsId: question.id,
+    },
+    { $pull: { questionsId: question.id } }
+  );
+
   await Response.deleteMany({ _id: { $in: question.responseIds } });
 };
