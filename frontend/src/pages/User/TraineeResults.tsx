@@ -17,7 +17,7 @@ import ResponseModal from "../../components/modals/ResponseModal";
 const TraineeResults = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
-  const { data, isError } = useGetOverviewForCoachQuery({ jwt });
+  const { data, isLoading, isError } = useGetOverviewForCoachQuery({ jwt });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({
@@ -33,6 +33,14 @@ const TraineeResults = () => {
 
   if (isError) {
     return <Loader />;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    );
   }
 
   if (!Array.isArray(data) || data.length === 0) {
@@ -62,7 +70,8 @@ const TraineeResults = () => {
           }
 
           const traineeInfo = traineeMap.get(response.user._id);
-          traineeInfo.responses[`${form._id}-${question._id}`] = response.text ?? "No response";
+          traineeInfo.responses[`${form._id}-${question._id}`] =
+            response.text ?? "No response";
         }
       });
     });
@@ -129,7 +138,8 @@ const TraineeResults = () => {
                           trainee.responses[`${form._id}-${question._id}`],
                         userId: trainee.id,
                         type: trainee.type,
-                        questionType: question.options.length > 0? "dropdown" : "text",
+                        questionType:
+                          question.options.length > 0 ? "dropdown" : "text",
                         options: question.options,
                       });
                     }}
