@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect} from "react";
 import ModalLayout from "./ModalLayout";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
@@ -30,11 +30,19 @@ const AddingTraineeModal = ({
       delete data.coach;
     }
 
-    await createTrainee({
+   await createTrainee({
       jwt,
       body: { ...data, role: "TRAINEE" },
-    });
-  };
+    })
+  
+ };
+
+  useEffect(()=>{
+    if(isSuccess){
+      setTimeout(closePopup,2000)
+    }
+  },[isSuccess,closePopup])
+
 
   const errorMessage: any =
     errors?.name?.message ||
@@ -52,7 +60,7 @@ const AddingTraineeModal = ({
       {isSuccess && <Alert type="success">Trainee was added succesfully</Alert>}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-12 w-full"
+        className="flex flex-col gap-6 w-full"
       >
         <InputField
           type="text"

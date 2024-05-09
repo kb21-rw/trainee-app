@@ -1,44 +1,43 @@
-import { ObjectId } from "mongoose";
 import CustomError from "../middlewares/customError";
 import Question from "../models/Question";
-import Response from "../models/Response";
-import User from "../models/User";
-import { INVALID_MONGODB_ID, NOT_ALLOWED } from "../utils/errorCodes";
 import { CreateResponseDto } from "../utils/types";
-
-interface IResponse {
-  _id: ObjectId;
-  userId: ObjectId;
-  text: string;
-}
+import Response, { ResponseProperties } from "../models/Response";
+import User, { UserProperties } from "../models/User";
+import {
+  NOT_ALLOWED,
+  QUESTION_NOT_FOUND,
+  USER_NOT_FOUND,
+} from "../utils/errorCodes";
 
 export const createResponseService = async (
-  loggedInUserId: string,
+  loggedInUser: UserProperties,
   traineeId: string,
   questionId: string,
   responseData: CreateResponseDto
 ) => {
   const { text } = responseData;
 
-  const trainee = await User.findById(traineeId);
+  const trainee = await User.findOne({
+    $and: [{ _id: traineeId }, { role: "TRAINEE" }],
+  });
+
+  if (!trainee) {
+    throw new CustomError(USER_NOT_FOUND, "Trainee not found!", 400);
+  }
+
   const relatedQuestion = await Question.findById(questionId);
 
-  if (!relatedQuestion || !trainee) {
-    throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
+  if (!relatedQuestion) {
+    throw new CustomError(QUESTION_NOT_FOUND, "Question not found!", 400);
   }
 
-  if (!trainee.coach) {
+  if (
+    loggedInUser.role !== "ADMIN" &&
+    loggedInUser._id !== trainee.coach?.toString()
+  ) {
     throw new CustomError(
       NOT_ALLOWED,
-      "Only trainees can be given response",
-      403
-    );
-  }
-
-  if (loggedInUserId !== trainee.coach.toString()) {
-    throw new CustomError(
-      NOT_ALLOWED,
-      "You can only give response to your trainees",
+      "Only admin or the coach of a train can provide a response",
       403
     );
   }
@@ -49,13 +48,13 @@ export const createResponseService = async (
   ) {
     throw new CustomError(
       NOT_ALLOWED,
-      "You can only choose from the available options",
+      `You can only choose from ${relatedQuestion.options} options`,
       400
     );
   }
 
   const relatedQuestionPopulated = await relatedQuestion.populate<{
-    responseIds: IResponse[];
+    responseIds: ResponseProperties[];
   }>("responseIds");
 
   const oldResponse = relatedQuestionPopulated.responseIds.find(

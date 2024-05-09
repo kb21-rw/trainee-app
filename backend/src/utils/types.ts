@@ -39,3 +39,9 @@ export enum FormType {
   "APPLICANT" = "APPLICANT",
   "TRAINEE" = "TRAINEE"
 }
+export enum Role {
+  "ADMIN" = "ADMIN",
+  "COACH" = "COACH",
+  "TRAINEE" = "TRAINEE",
+  "APPLICANT" = "APPLICANT",
+}

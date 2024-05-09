@@ -1,6 +1,13 @@
 import { Schema, model } from "mongoose";
 import { FormType } from "../utils/types";
 
+export interface FormProperties {
+  _id: string;
+  title: string;
+  description: string;
+  questionsId: string[];
+}
+
 const FormSchema = new Schema(
   {
     title: {

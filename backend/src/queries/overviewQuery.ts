@@ -1,6 +1,10 @@
 import Form from "../models/Form";
+import { ObjectId } from "mongodb";
 
-export const getOverviewQuery = async (searchString: string) => {
+export const getOverviewQuery = async (
+  searchString: string,
+  coachId?: string
+) => {
   const overview = await Form.aggregate([
     {
       $match: { title: { $regex: new RegExp(searchString, "i") } },
@@ -27,112 +31,117 @@ export const getOverviewQuery = async (searchString: string) => {
       },
     },
     {
+      $unwind: {
+        path: "$responses",
+        preserveNullAndEmptyArrays: false,
+      },
+    },
+    {
       $lookup: {
         from: "users",
         localField: "responses.userId",
         foreignField: "_id",
-        as: "users",
+        as: "responses.user",
+      },
+    },
+    {
+      $unwind: {
+        path: "$responses.user",
+        preserveNullAndEmptyArrays: false,
       },
     },
     {
       $lookup: {
         from: "users",
-        localField: "users.coach",
+        localField: "responses.user.coach",
         foreignField: "_id",
-        as: "coaches",
+        as: "responses.user.coach",
+      },
+    },
+    {
+      $unwind: {
+        path: "$responses.user.coach",
+        preserveNullAndEmptyArrays: false,
       },
     },
     {
       $addFields: {
-        users: {
-          $map: {
-            input: "$users",
-            as: "user",
-            in: {
-              $mergeObjects: [
-                "$$user",
-                {
-                  coach: {
-                    $arrayElemAt: [
-                      "$coaches",
-                      {
-                        $indexOfArray: ["$users", "$$user.coach"],
-                      },
-                    ],
-                  },
-                },
-              ],
-            },
-          },
-        },
-      },
-    },
-    {
-      $addFields: {
-        responses: {
-          $cond: {
-            if: {
-              $gt: [
-                {
-                  $size: "$users",
-                },
-                0,
-              ],
-            },
-            then: {
-              $map: {
-                input: "$responses",
-                as: "response",
-                in: {
-                  $mergeObjects: [
-                    "$$response",
-                    {
-                      user: {
-                        $arrayElemAt: [
-                          "$users",
-                          {
-                            $indexOfArray: ["$responses", "$$response"],
-                          },
-                        ],
-                      },
-                    },
-                  ],
-                },
-              },
-            },
-            else: "$responses",
-          },
-        },
+        "responses.questionId": "$questions._id",
       },
     },
     {
       $group: {
-        _id: {
-          _id: "$_id",
-          title: "$title",
-          description: "$description",
+        _id: "$_id",
+        title: {
+          $first: "$title",
+        },
+        description: {
+          $first: "$description",
+        },
+        questionsId: {
+          $first: "$questionsId",
+        },
+        createdAt: {
+          $first: "$createdAt",
+        },
+        updatedAt: {
+          $first: "$updatedAt",
         },
         questions: {
-          $push: {
-            _id: "$questions._id",
-            title: "$questions.title",
-            type: "$questions.type",
-            options: "$questions.options",
-            responses: "$responses",
-          },
+          $push: "$questions",
+        },
+        responses: {
+          $push: "$responses",
+        },
+      },
+    },
+    {
+      $set: {
+        questions: {
+          $setUnion: ["$questions"],
         },
       },
     },
     {
       $project: {
-        _id: "$_id._id",
-        title: "$_id.title",
-        description: "$_id.description",
-        "questions._id": 1,
-        "questions.title": 1,
-        "questions.type": 1,
-        "questions.options": 1,
-        "questions.responses": 1,
+        _id: 1,
+        title: 1,
+        description: 1,
+        createdAt: 1,
+        updatedAt: 1,
+        questions: {
+          $map: {
+            input: "$questions",
+            as: "question",
+            in: {
+              _id: "$$question._id",
+              title: "$$question.title",
+              type: "$$question.type",
+              options: "$$question.options",
+              createdAt: "$$question.createdAt",
+              updatedAt: "$$question.updatedAt",
+              responses: {
+                $filter: {
+                  input: "$responses",
+                  as: "response",
+                  cond: {
+                    $and: [
+                      { $eq: ["$$response.questionId", "$$question._id"] },
+                      coachId
+                        ? {
+                            $eq: [
+                              "$$response.user.coach._id",
+                              new ObjectId(coachId),
+                            ],
+                          }
+                        : { $eq: ["", ""] },
+                    ],
+                  },
+                },
+              },
+            },
+          },
+        },
       },
     },
   ]);
