@@ -4,7 +4,7 @@ import Question from "../models/Question";
 import Response from "../models/Response";
 import { getFormQuery, getFormsQuery } from "../queries/formQueries";
 import { FORM_NOT_FOUND, INVALID_MONGODB_ID } from "../utils/errorCodes";
-import { CreateFormType } from "../utils/types";
+import { CreateFormDto, UpdateFormDto } from "../utils/types";
 import mongoose from "mongoose";
 const { Types } = mongoose;
 const { ObjectId } = Types;
@@ -16,7 +16,7 @@ export const getFormsService = async (searchString: string) => {
 
 export const updateFormService = async (
   formId: string,
-  formData: CreateFormType
+  formData: UpdateFormDto,
 ) => {
   const { title, description } = formData;
   if (!ObjectId.isValid(formId)) {
@@ -40,9 +40,9 @@ export const updateFormService = async (
   return form;
 };
 
-export const createFormService = async (formData: CreateFormType) => {
-  const { title, description } = formData;
-  const createdForm = await Form.create({ title, description });
+export const createFormService = async (formData: CreateFormDto) => {
+  const { title, description, type } = formData;
+  const createdForm = await Form.create({ title, description, type });
   return createdForm;
 };
 
