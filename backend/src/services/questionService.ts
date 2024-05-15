@@ -68,17 +68,13 @@ export const updateQuestionService = async (
     throw new CustomError(QUESTION_NOT_FOUND, "Question not found", 404);
   }
 
-  if (title) {
-    question.title = title;
-  }
+  if (title) question.title = title;
 
-  if (type) {
-    question.type = type;
-  }
+  if (type) question.type = type;
 
-  if (options) {
-    question.options = options;
-  }
+  if (options) question.options = options;
+
+  if (type === "text") question.options = [];
 
   return await question.save();
 };
