@@ -76,6 +76,11 @@ export const updateQuestionService = async (
 
   if (type === "text") question.options = [];
 
+  await Response.updateMany(
+    { _id: { $in: question.responseIds } },
+    { text: null }
+  );
+
   return await question.save();
 };
 
@@ -85,6 +90,13 @@ export const deleteQuestionService = async (questionId: string) => {
   if (!question) {
     throw new CustomError(QUESTION_NOT_FOUND, "Question not found!", 400);
   }
+
+  await Form.updateOne(
+    {
+      questionsId: question.id,
+    },
+    { $pull: { questionsId: question.id } }
+  );
 
   await Response.deleteMany({ _id: { $in: question.responseIds } });
 };

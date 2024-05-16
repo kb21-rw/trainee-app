@@ -1,6 +1,7 @@
 import CustomError from "../middlewares/customError";
 import Form from "../models/Form";
 import Question from "../models/Question";
+import Response from "../models/Response";
 import { getFormQuery, getFormsQuery } from "../queries/formQueries";
 import { FORM_NOT_FOUND, INVALID_MONGODB_ID } from "../utils/errorCodes";
 import { CreateFormDto, UpdateFormDto } from "../utils/types";
@@ -68,5 +69,8 @@ export const deleteFormService = async (formId: string) => {
     throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
   }
 
-  await Question.deleteMany({ _id: { $in: form.questionsId } });
+  form.questionsId.forEach(async (questionId) => {
+    const question = await Question.findByIdAndDelete(questionId);
+    await Response.deleteMany({ _id: { $in: question?.responseIds } });
+  });
 };
