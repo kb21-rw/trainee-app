@@ -8,16 +8,16 @@ import {
   TableRow,
 } from "../../../@/components/ui/table";
 import Cookies from "universal-cookie";
+import { Question, Response, Form } from "../../types";
 
-import { useGetOverviewQuery } from "../../features/user/apiSlice";
+import { useGetOverviewForCoachQuery } from "../../features/user/apiSlice";
+import Loader from "../../components/ui/Loader";
+import { getRandomColorAndTextColor } from "../../utils/helper";
 import ResponseModal from "../../components/modals/ResponseModal";
-import { getLoggedInUser } from "../../utils/helper";
-// import Loader from "../../components/ui/Loader";
-
 const TraineeResults = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
-  const { data, isError } = useGetOverviewQuery({ jwt });
+  const { data, isLoading, isError } = useGetOverviewForCoachQuery({ jwt });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({
@@ -26,105 +26,147 @@ const TraineeResults = () => {
     questionId: "",
     userId: "",
     response: "",
+    type: "",
+    questionType: "",
+    options: [] as string[],
   });
 
-  const loggedInUser = getLoggedInUser();
-
   if (isError) {
-    return <div>Error fetching data.</div>;
+    return <Loader />;
+  }
+
+  if (isLoading) {
+    return (
+      <div className="h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    );
   }
 
   if (!Array.isArray(data) || data.length === 0) {
-    return <div>No data available.</div>;
+    return (
+      <div className="h-screen flex items-center justify-center">
+        No data available.
+      </div>
+    );
   }
 
+  const traineeMap = new Map();
+
+  const formStyles = data.map(() => getRandomColorAndTextColor());
+  data.forEach((form: Form) => {
+    form.questions.forEach((question: Question) => {
+      const questionType = question.options.length > 0 ? "dropdown" : "text";
+      question.responses.forEach((response: Response) => {
+        if (response.user) {
+          if (!traineeMap.has(response.user._id)) {
+            traineeMap.set(response.user._id, {
+              name: response.user.name,
+              coach: response.user.coach?.name,
+              id: response.user._id,
+              responses: {},
+              type: questionType,
+            });
+          }
+
+          const traineeInfo = traineeMap.get(response.user._id);
+          traineeInfo.responses[`${form._id}-${question._id}`] =
+            response.text ?? "No response";
+        }
+      });
+    });
+  });
+
   return (
-    <>
-      <div className="py-6 overflow-x-aut">
-        <Table className="min-w-full border-collapse border border-black text-black">
-          <TableHeader>
-            <TableRow>
+    <div className="py-20 overflow-x-auto">
+      <Table className="min-w-full border-collapse border border-black text-black">
+        <TableHeader>
+          <TableRow>
+            <TableHead
+              scope="col"
+              rowSpan={3}
+              className="border border-black px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider"
+            >
+              Name
+            </TableHead>
+            {data.map((form, index) => (
               <TableHead
+                key={form._id}
                 scope="col"
-                rowSpan={3}
-                className="border border-black px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider"
+                colSpan={form.questions.length}
+                className={`px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider ${
+                  index !== data.length - 1 ? "border-r border-black" : ""
+                }`}
+                style={{ backgroundColor: formStyles[index].backgroundColor }}
               >
-                Name
+                {form.title}
               </TableHead>
-              {data?.map((form, index) => (
+            ))}
+          </TableRow>
+          <TableRow>
+            {data.flatMap((form) =>
+              form.questions.map((question: Question) => (
                 <TableHead
-                  key={form._id}
+                  key={question._id}
                   scope="col"
-                  colSpan={form.questions.length}
-                  className={`px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider ${
-                    index !== data.length - 1 ? "border-r border-black" : ""
-                  }`}
+                  className="border border-black px-6 py-3 text-left text-sm font-extrabold uppercase tracking-wider max-w-md overflow-auto whitespace-nowrap"
                 >
-                  {form.title}
+                  {question.title}
                 </TableHead>
-              ))}
-            </TableRow>
-            <TableRow>
-              {data?.flatMap((form) =>
-                form.questions.map((question: any) => (
-                  <TableHead
-                    key={question._id}
-                    scope="col"
-                    className="border border-black px-6 py-3 text-left text-sm font-extrabold uppercase tracking-wider max-w-md overflow-auto whitespace-nowrap"
+              ))
+            )}
+          </TableRow>
+        </TableHeader>
+        <TableBody className="bg-white divide-y divide-gray-300">
+          {Array.from(traineeMap.values()).map((trainee) => (
+            <TableRow key={trainee.name}>
+              <TableCell className="border border-black p-2 whitespace-nowrap w-16">
+                {trainee.name ?? "No name"}
+              </TableCell>
+              {data.flatMap((form) =>
+                form.questions.map((question: Question) => (
+                  <TableCell
+                    key={`${form._id}-${question._id}`}
+                    className="border border-black p-2 w-16 max-w-md overflow-hidden whitespace-nowrap text-ellipsis"
+                    onClick={() => {
+                      setIsModalOpen(true);
+                      setModalData({
+                        formTitle: form.title,
+                        question: question.title,
+                        questionId: question._id ?? "",
+                        response:
+                          trainee.responses[`${form._id}-${question._id}`],
+                        userId: trainee.id,
+                        type: trainee.type,
+                        questionType:
+                          question.options.length > 0 ? "dropdown" : "text",
+                        options: question.options,
+                      });
+                    }}
                   >
-                    {question.title}
-                  </TableHead>
+                    {trainee.responses[`${form._id}-${question._id}`] ??
+                      "No response"}
+                  </TableCell>
                 ))
               )}
             </TableRow>
-          </TableHeader>
-          <TableBody className="divide-y divide-gray-300 bg-white">
-            {data?.flatMap((form) =>
-              form.questions.flatMap((question: any) =>
-                question.responses
-                  .filter(
-                    (response: any) =>
-                      response.user?.coach._id === loggedInUser.id
-                  )
-                  .map((response: any) => (
-                    <TableRow key={response._id}>
-                      <TableCell className="border border-black p-2 whitespace-nowrap w-16">
-                        {response.user?.name ?? "No name"}
-                      </TableCell>
-                      <TableCell
-                        className="border border-black p-2 whitespace-nowrap max-w-xs overflow-hidden text-overflow-ellipsis"
-                        onClick={() => {
-                          setIsModalOpen(true);
-                          setModalData({
-                            formTitle: form.title,
-                            question: question.title,
-                            questionId: question._id,
-                            response: response.text,
-                            userId: response.user._id,
-                          });
-                        }}
-                      >
-                        {response.text || "No response"}
-                      </TableCell>
-                    </TableRow>
-                  ))
-              )
-            )}
-          </TableBody>
-        </Table>
-        {isModalOpen && (
-          <ResponseModal
-            closePopup={() => setIsModalOpen(false)}
-            title={modalData.formTitle}
-            question={modalData.question}
-            questionId={modalData.questionId}
-            userId={modalData.userId}
-            response={modalData.response}
-            includeButton={true}
-          />
-        )}
-      </div>
-    </>
+          ))}
+        </TableBody>
+      </Table>
+      {isModalOpen && (
+        <ResponseModal
+          closePopup={() => setIsModalOpen(false)}
+          title={modalData.formTitle}
+          question={modalData.question}
+          questionId={modalData.questionId}
+          userId={modalData.userId}
+          response={modalData.response}
+          includeButton={true}
+          questionType={modalData.questionType}
+          options={modalData.options}
+        />
+      )}
+    </div>
   );
 };
 

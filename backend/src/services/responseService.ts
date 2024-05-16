@@ -33,7 +33,7 @@ export const createResponseService = async (
 
   if (
     loggedInUser.role !== "ADMIN" &&
-    loggedInUser._id !== trainee.coach?.toString()
+    loggedInUser.id !== trainee.coach?.toString()
   ) {
     throw new CustomError(
       NOT_ALLOWED,
