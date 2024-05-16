@@ -7,7 +7,10 @@ export const getOverviewQuery = async (
 ) => {
   const overview = await Form.aggregate([
     {
-      $match: { title: { $regex: new RegExp(searchString, "i") } },
+      $match: {
+        title: { $regex: new RegExp(searchString, "i") },
+        type: "TRAINEE",
+      },
     },
     {
       $lookup: {

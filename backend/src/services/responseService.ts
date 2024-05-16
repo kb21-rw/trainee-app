@@ -1,5 +1,6 @@
 import CustomError from "../middlewares/customError";
 import Question from "../models/Question";
+import { CreateResponseDto } from "../utils/types";
 import Response, { ResponseProperties } from "../models/Response";
 import User, { UserProperties } from "../models/User";
 import {
@@ -7,13 +8,12 @@ import {
   QUESTION_NOT_FOUND,
   USER_NOT_FOUND,
 } from "../utils/errorCodes";
-import { CreateResponseType } from "../utils/types";
 
 export const createResponseService = async (
   loggedInUser: UserProperties,
   traineeId: string,
   questionId: string,
-  responseData: CreateResponseType
+  responseData: CreateResponseDto
 ) => {
   const { text } = responseData;
 

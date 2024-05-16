@@ -4,11 +4,11 @@ import Question from "../models/Question";
 import Response from "../models/Response";
 import User from "../models/User";
 import { INVALID_MONGODB_ID, QUESTION_NOT_FOUND } from "../utils/errorCodes";
-import { CreateQuestionType, QuestionType } from "../utils/types";
+import { CreateQuestionDto, IQuestion } from "../utils/types";
 
 export const createQuestionService = async (
   formId: string,
-  questionData: CreateQuestionType
+  questionData: CreateQuestionDto
 ) => {
   const { title, type, options } = questionData;
   const relatedForm = await Form.findById(formId);
@@ -48,7 +48,7 @@ export const getAllQuestionsService = async (
   searchString: string,
   typeQuery: string
 ) => {
-  const questions: QuestionType[] = await Question.find({
+  const questions: IQuestion[] = await Question.find({
     title: { $regex: searchString, $options: "i" },
     type: { $regex: typeQuery, $options: "i" },
   });
@@ -68,17 +68,18 @@ export const updateQuestionService = async (
     throw new CustomError(QUESTION_NOT_FOUND, "Question not found", 404);
   }
 
-  if (title) {
-    question.title = title;
-  }
+  if (title) question.title = title;
 
-  if (type) {
-    question.type = type;
-  }
+  if (type) question.type = type;
 
-  if (options) {
-    question.options = options;
-  }
+  if (options) question.options = options;
+
+  if (type === "text") question.options = [];
+
+  await Response.updateMany(
+    { _id: { $in: question.responseIds } },
+    { text: null }
+  );
 
   return await question.save();
 };
@@ -89,6 +90,13 @@ export const deleteQuestionService = async (questionId: string) => {
   if (!question) {
     throw new CustomError(QUESTION_NOT_FOUND, "Question not found!", 400);
   }
+
+  await Form.updateOne(
+    {
+      questionsId: question.id,
+    },
+    { $pull: { questionsId: question.id } }
+  );
 
   await Response.deleteMany({ _id: { $in: question.responseIds } });
 };
