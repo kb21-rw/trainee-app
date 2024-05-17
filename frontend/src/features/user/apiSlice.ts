@@ -12,6 +12,8 @@ export const usersApi: any = createApi({
     "profile",
     "forms",
     "questions",
+    "response",
+    "overview",
   ],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
@@ -320,6 +322,39 @@ export const usersApi: any = createApi({
       },
       invalidatesTags: ["forms"],
     }),
+    getOverview: builder.query({
+      query: ({ jwt }) => ({ 
+        url: '/overview',
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${jwt}`, 
+        },
+      }),
+      providesTags: ['overview'],
+    }),
+
+    getOverviewForCoach: builder.query({
+      query: ({ jwt }) => ({ 
+        url: '/overview/my-trainees',
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${jwt}`, 
+        },
+      }),
+      providesTags: ['overview'],
+    }),
+
+     addResponse: builder.mutation({
+      query: ({ jwt, body, userId, questionId }) => ({
+         url: `/responses/${questionId}?userId=${userId}`,
+         method: 'PUT',
+         headers: {
+           'Authorization': `Bearer ${jwt}`,
+         },
+         body: { ...body },
+      }),
+      invalidatesTags: ['overview','response'],
+     }),
   }),
 });
 
@@ -346,4 +381,7 @@ export const {
   useGetAllQuestionsForFormQuery,
   useCreateQuestionMutation,
   useDeleteQuestionMutation,
+  useGetOverviewQuery,
+  useAddResponseMutation,
+  useGetOverviewForCoachQuery,
 } = usersApi;

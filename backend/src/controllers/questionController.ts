@@ -52,7 +52,7 @@ export const updateQuestion = async (
   try {
     const { questionId } = req.params;
     await updateQuestionValidation.validateAsync(req.body);
-    const updatedQuestion = updateQuestionService(questionId, req.body);
+    const updatedQuestion = await updateQuestionService(questionId, req.body);
     return res.status(200).json(updatedQuestion);
   } catch (error) {
     next(error);

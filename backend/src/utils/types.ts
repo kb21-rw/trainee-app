@@ -6,26 +6,42 @@ interface MetaType {
   updatedAt: Date;
   __v: number;
 }
-export interface CreateFormType {
+export interface CreateFormDto {
+  title: string;
+  description: string;
+  type: FormType
+}
+export interface UpdateFormDto {
   title: string;
   description: string;
 }
 
-export interface CreateQuestionType {
+export interface CreateQuestionDto {
   title: string;
   type: "text" | "dropdown";
   options: string[];
 }
 
-export interface CreateResponseType {
+export interface CreateResponseDto {
   text: string;
 }
 
-export type FormType = CreateFormType & MetaType;
-export type QuestionType = CreateQuestionType & MetaType;
-export type ResponseType = CreateResponseType & MetaType;
+export type IForm = CreateFormDto & MetaType;
+export type IQuestion = CreateQuestionDto & MetaType;
+export type IResponse = CreateResponseDto & MetaType;
 
 export interface Search {
   searchString?: string;
   typeQuery?: string;
+}
+
+export enum FormType {
+  "APPLICANT" = "APPLICANT",
+  "TRAINEE" = "TRAINEE"
+}
+export enum Role {
+  "ADMIN" = "ADMIN",
+  "COACH" = "COACH",
+  "TRAINEE" = "TRAINEE",
+  "APPLICANT" = "APPLICANT",
 }

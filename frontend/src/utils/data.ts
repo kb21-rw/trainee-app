@@ -2,11 +2,12 @@ export const adminMenu = [
   { link: "/", title: "Overview" },
   { link: "/forms", title: "Forms" },
   { link: "/trainees", title: "Trainees" },
-  { link: "/administer-coach", title: "Administer coach" },
+  { link: "/administer-coach", title: "Coaches" },
 ];
 export const coachMenu = [
   { link: "/", title: "Overview" },
-  { link: "/edit-my-trainees", title: "Edit my trainees" },
+  { link: "/trainees-results", title: "Trainee Results"},
+  { link: "/my-trainees", title: "My trainees" },
 ];
 
 export const usersPerPageValues = [10, 20, 30, 40, 50, 100];

@@ -1,32 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
 import { H2, H6, H7 } from "./Typography";
 import { IFormType } from "../../utils/types";
 import Delete from "../../assets/DeleteIcon";
 import Edit from "../../assets/EditIcon";
 import Cookies from "universal-cookie";
 import { useDeleteFormMutation } from "../../features/user/apiSlice";
-import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import View from "../../assets/ViewIcon"
+import DeleteModal from "../modals/DeleteModal";
 
 const FormCard = ({ form }: { form: IFormType }) => {
   const navigate = useNavigate();
   const questions = form.questions;
   const cookie = new Cookies();
   const jwt = cookie.get("jwt");
-  const [deleteForm, { isLoading: isDeleteFormLoading }] =
+  const [showDeleteModal, setShowDeleteModal]= useState(false);
+
+  const [deleteForm] =
     useDeleteFormMutation();
+
   const handleDeleteForm = async (id: string) => {
-    await deleteForm({ jwt, id });
+    await deleteForm({ jwt, id })
+    setShowDeleteModal(false);
   };
 
   return (
     <div className="p-8 custom-shadow flex items-center justify-between rounded-xl">
-      {isDeleteFormLoading && (
-        <div className="absolute inset-0 h-full w-full">
-          <Loader />
-        </div>
-      )}
+
       <div
         className="flex flex-col gap-4 w-full"
       > 
@@ -51,7 +51,7 @@ const FormCard = ({ form }: { form: IFormType }) => {
           <span>Edit</span>
         </button>
         <button
-          onClick={() => handleDeleteForm(form._id)}
+          onClick={() => setShowDeleteModal(true)}
           className="flex items-center gap-2"
         >
           <Delete /> 
@@ -59,6 +59,11 @@ const FormCard = ({ form }: { form: IFormType }) => {
         </button>
       </div>
       </div>
+      {showDeleteModal &&
+       <DeleteModal
+      formName={form.title}
+      closePopup={()=>setShowDeleteModal(false)}
+      onDelete={()=>handleDeleteForm(form._id)}/>}
     </div>
   );
 };

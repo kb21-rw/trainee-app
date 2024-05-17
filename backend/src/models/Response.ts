@@ -1,4 +1,10 @@
-import { Schema, model } from "mongoose";
+import { ObjectId, Schema, model } from "mongoose";
+
+export interface ResponseProperties {
+  _id: string;
+  userId: ObjectId;
+  text: string;
+}
 
 const ResponseSchema = new Schema(
   {
@@ -8,7 +14,7 @@ const ResponseSchema = new Schema(
     },
     text: {
       type: String,
-      required: true,
+      default: null,
     },
   },
   { timestamps: {} }

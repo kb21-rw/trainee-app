@@ -1,10 +1,12 @@
 import { Router } from "express";
 import { verifyJWT } from "../middlewares/authenticate";
 import { isAdminOrCoach } from "../middlewares/authorization";
-import { getOverview } from "../controllers/overviewControllers";
+import { getMyTraineeOverview, getOverview } from "../controllers/overviewControllers";
 
 const router = Router();
 
 router.get("/", verifyJWT, isAdminOrCoach, getOverview);
+
+router.get("/my-trainees", verifyJWT, isAdminOrCoach, getMyTraineeOverview);
 
 export default router;

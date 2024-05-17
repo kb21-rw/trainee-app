@@ -37,9 +37,13 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
     await deleteQuestion({ jwt, id: _id });
   };
 
+  const changeOptionsHandler = (value: string, index: number) => {
+    currentOptions[index] = value;
+    setValue("options", currentOptions, { shouldDirty: true });
+  };
+
   const onSubmit = async (data: any) => {
-    const result = await editQuestion({ jwt, body: data, id: _id });
-    console.log({ result });
+    return await editQuestion({ jwt, body: data, id: _id });
   };
 
   const { type: selectedType } = watch();
@@ -69,7 +73,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                 activeQuestion === _id && "bg-white"
               } focus:border-b-2 border-blue-400 outline-none py-1 px-0.5`}
             />
-            <select className="p-2" {...register("type")}>
+            <select className="p-2" {...register("type")} value={selectedType}>
               {[
                 { label: "Text", value: "text" },
                 { label: "Dropdown", value: "dropdown" },
@@ -78,11 +82,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                   currentType: { label: string; value: string },
                   index: number
                 ) => (
-                  <option
-                    key={index}
-                    value={currentType.value}
-                    selected={currentType.value === type}
-                  >
+                  <option key={index} value={currentType.value}>
                     {currentType.label}
                   </option>
                 )
@@ -98,16 +98,18 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                     <input
                       defaultValue={option}
                       className="text-lg flex-1 focus:border-black hover:border-gray-300 hover:border-b focus:duration-300 ease-in-out focus:border-b outline-none py-1 px-0.5"
+                      onChange={e => changeOptionsHandler(e.target.value, index)}
                     />
                   </li>
                 ))}
               </ol>
               <button
                 onClick={() =>
-                  setValue("options", [
-                    ...currentOptions,
-                    `option ${currentOptions.length + 1}`,
-                  ])
+                  setValue(
+                    "options",
+                    [...currentOptions, `option ${currentOptions.length + 1}`],
+                    { shouldDirty: true }
+                  )
                 }
               >
                 <AddIcon />
@@ -116,7 +118,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                 <button
                   onClick={() => {
                     currentOptions.pop();
-                    setValue("options", currentOptions);
+                    setValue("options", currentOptions, { shouldDirty: true });
                   }}
                 >
                   <RemoveIcon />

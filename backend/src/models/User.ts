@@ -1,12 +1,25 @@
 import { Schema, model } from "mongoose";
+import { Role } from "../utils/types";
+
+export interface UserProperties {
+  id: string;
+  name: string;
+  email: string;
+  password: string;
+  role: Role;
+  coach: string;
+}
 
 const UserSchema = new Schema(
   {
     name: {
       type: String,
-      unique: true,
       required: true,
-    },
+      index:{
+        unique: true,
+        collation:{locale:'en',strength:2}
+    }
+  },
     email: {
       type: String,
       unique: true,
@@ -18,14 +31,14 @@ const UserSchema = new Schema(
     role: {
       type: String,
       required: true,
-      enum: ["ADMIN", "COACH", "TRAINEE"],
+      enum: Role,
     },
     coach: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
   },
-  { timestamps: {} },
+  { timestamps: {} }
 );
 UserSchema.index({ name: "text" });
 
