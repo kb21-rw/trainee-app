@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import ModalLayout from "./ModalLayout";
 import Button from "../ui/Button";
 import { useForm } from "react-hook-form";
@@ -17,8 +17,6 @@ const ResponseModal = ({
   response,
   includeButton,
   disabled,
-  questionType,
-  options,
 }: {
   closePopup: () => void;
   title: string;
@@ -28,8 +26,6 @@ const ResponseModal = ({
   response?: string;
   includeButton?: boolean;
   disabled?: boolean;
-  questionType: string;
-  options: string[];
 }) => {
   const {
     register,
@@ -46,14 +42,12 @@ const ResponseModal = ({
     await addResponse({ jwt, body: { ...data }, questionId, userId });
   };
 
-  const errorMessage =
+  const errorMessage: any =
     errors.name?.message || errors.email?.message || error?.data?.errorMessage;
 
-  useEffect(() => {
-    if (isSuccess) {
-      setTimeout(() => closePopup(), 3000);
+    if(isSuccess){
+      closePopup();
     }
-  }, [isSuccess, closePopup]);
 
   return (
     <ModalLayout closePopup={closePopup} title={title}>
@@ -70,23 +64,20 @@ const ResponseModal = ({
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-12 w-full"
       >
-        {questionType === "text" && (
-          <TextArea
-            label={question}
-            placeholder={response || "No response"}
-            name="text"
-            register={register}
-            defaultValue={response}
-            options={{
-              required: { value: true, message: "response is required" },
-              maxLength: {
-                message: "Add your response here",
-              },
-            }}
-            disabled={disabled}
-          />
-        )}
-        {questionType === "dropdown" && <div>{options.map(option => option)}</div>}
+        <TextArea
+          label={question}
+          placeholder={response || "No response"}
+          name="text"
+          register={register}
+          defaultValue={response}
+          options={{
+            required: { value: true, message: "response is required" },
+            maxLength: {
+              message: "Add your response here",
+            },
+          }}
+          disabled={disabled}
+        />
         <div className="flex justify-end">
           {includeButton && <Button type="submit">Save Response</Button>}
         </div>

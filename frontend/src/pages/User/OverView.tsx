@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
    Table,
    TableBody,
@@ -12,31 +12,12 @@ import { Question,Response,Form } from '../../types';
 
 import { useGetOverviewQuery } from "../../features/user/apiSlice";
 import Loader from '../../components/ui/Loader';
-import { getRandomColorAndTextColor } from "../../utils/helper";
-import ResponseModal from "../../components/modals/ResponseModal";
  const  OverView = () => {
    const cookies = new Cookies();
    const jwt = cookies.get("jwt");
    const { data, isFetching, isError } = useGetOverviewQuery({ jwt });
-
-   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalData, setModalData] = useState({
-    formTitle: "",
-    question: "",
-    questionId:"",
-    userId: "",
-    response: "",
-    type: "",
-    questionType: "",
-    options: [] as string[],
-  });
-
-
-
     if (isFetching) {
-     return <div className="h-screen flex items-center justify-center">
-       <Loader/>
-     </div>;
+     return <Loader/>;
    }
 
     if (isError) {
@@ -49,6 +30,16 @@ import ResponseModal from "../../components/modals/ResponseModal";
 
   const traineeMap = new Map();
 
+  const getRandomColorAndTextColor = () => {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    const backgroundColor = `rgb(${r},${g},${b})`;
+    const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    const textColor = luminance > 140 ? 'black' : 'white';  
+    return { backgroundColor, textColor }; 
+   };
+
     const formStyles = data.map(() => getRandomColorAndTextColor()); 
     data.forEach((form:Form) => {
      form.questions.forEach((question:Question) => {
@@ -58,8 +49,7 @@ import ResponseModal from "../../components/modals/ResponseModal";
              traineeMap.set(response.user._id, {
                name: response.user.name,
                coach: response.user.coach?.name,
-               id: response.user._id,
-               responses: {},
+               responses: {}
              });
            }
 
@@ -82,14 +72,14 @@ import ResponseModal from "../../components/modals/ResponseModal";
                Coach
              </TableHead>
              {data.map((form, index) => (
-               <TableHead key={form._id} scope="col" colSpan={form.questions.length} className={`px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider ${index !== data.length - 1 ? "border-r border-black" : ""}`}  style={{ backgroundColor: formStyles[index].backgroundColor  }} >
+               <TableHead key={form._id} scope="col" colSpan={form.questions.length} className={`px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider ${index !== data.length - 1 ? "border-r border-black" : ""}`}  style={{ backgroundColor: formStyles[index].backgroundColor, color: formStyles[index].textColor }} >
                  {form.title}
                </TableHead>
              ))}
            </TableRow>
            <TableRow>
              {data.flatMap((form) => form.questions.map((question:Question) => (
-               <TableHead key={question._id} scope="col" className="border border-black px-6 py-3 text-left text-sm font-extrabold uppercase tracking-wider max-w-md overflow-auto whitespace-nowrap">
+               <TableHead key={question._id} scope="col" className="border border-black px-6 py-3 text-left text-sm font-extrabold uppercase tracking-wider">
                  {question.title}
                </TableHead>
              )))}
@@ -105,21 +95,7 @@ import ResponseModal from "../../components/modals/ResponseModal";
                  {trainee.coach ?? 'No coach'}
                </TableCell>
                {data.flatMap((form) => form.questions.map((question:Question) => (
-                 <TableCell key={`${form._id}-${question._id}`} className="border border-black p-2 whitespace-nowrap w-16 max-w-md overflow-hidden text-ellipsis"
-                 onClick={() => {
-                  setIsModalOpen(true);
-                  setModalData({
-                    formTitle: form.title,
-                    question: question.title,
-                    questionId: question._id ?? "",
-                    response: trainee.responses[`${form._id}-${question._id}`],
-                    userId: trainee.id,
-                    type: trainee.type,
-                    questionType: question.options.length > 0? "dropdown" : "text",
-                    options: question.options,
-                  });
-                }}
-                 >
+                 <TableCell key={`${form._id}-${question._id}`} className="border border-black p-2 whitespace-nowrap w-16">
                    {trainee.responses[`${form._id}-${question._id}`] ?? "No response"}
                  </TableCell>
                )))}
@@ -127,20 +103,6 @@ import ResponseModal from "../../components/modals/ResponseModal";
            ))}
          </TableBody>
        </Table>
-       {isModalOpen && (
-          <ResponseModal
-            closePopup={() => setIsModalOpen(false)}
-            title={modalData.formTitle}
-            question={modalData.question}
-            questionId={modalData.questionId}
-            userId={modalData.userId}
-            response={modalData.response}
-            includeButton={false}
-            disabled={true}
-            questionType={modalData.questionType}
-            options={modalData.options}
-          />
-        )}
      </div>
    );}
 
