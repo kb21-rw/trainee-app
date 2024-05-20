@@ -24,6 +24,7 @@ import SignIn from "./pages/Applicant/SignIn";
 import OverView from "./pages/User/OverView";
 import NewPassword from "./pages/Applicant/NewPassword";
 import ForgetPassword from "./pages/Applicant/ForgetPassword";
+import ApplicantQuestions from "./pages/Applicant/ApplicantQuestions";
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -42,6 +43,7 @@ export default function App() {
         <Route path="/applicant/signup" element={<SignUp />} />
         <Route path="/applicant/signin" element={<SignIn />} />
         <Route path="/applicant/reset-password" element={<ForgetPassword />} />
+        <Route path="/applicant/questions" element={<ApplicantQuestions />} />
         <Route path="/applicant/new-password" element={<NewPassword />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
