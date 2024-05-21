@@ -34,7 +34,7 @@ export default function App() {
             <Route path="/forms" element={<AllForm />} />
             <Route path="/forms/:id" element={<SingleForm />} />
             <Route path="/trainees" element={<TraineesInfo />} />
-            <Route path="/administer-coach" element={<CoachesInfo />} />
+            <Route path="/coaches" element={<CoachesInfo />} />
             <Route path="/my-trainees" element={<EditMyTrainees />} />
             <Route path="/trainees-results" element={<TraineeResults />} />
             <Route path="/profile-settings" element={<Profile />} />

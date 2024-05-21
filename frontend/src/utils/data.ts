@@ -2,7 +2,7 @@ export const adminMenu = [
   { link: "/", title: "Overview" },
   { link: "/forms", title: "Forms" },
   { link: "/trainees", title: "Trainees" },
-  { link: "/administer-coach", title: "Administer coach" },
+  { link: "/coaches", title: "Coaches" },
 ];
 export const coachMenu = [
   { link: "/", title: "Overview" },
