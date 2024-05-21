@@ -48,7 +48,7 @@ export const createFormService = async (formData: CreateFormDto) => {
 
 export const getSingleFormService = async (formId: string) => {
   if (!ObjectId.isValid(formId)) {
-    throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
+    throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
   }
 
   const form = await getFormQuery(formId);
