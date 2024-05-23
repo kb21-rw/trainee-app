@@ -18,6 +18,7 @@ const TraineeResults = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
   const { data, isLoading, isError } = useGetOverviewForCoachQuery({ jwt });
+  
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({
