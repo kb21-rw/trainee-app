@@ -14,16 +14,11 @@ export interface User {
     text: string | null;
     user: User;
   }
-
-  export interface Option {
-    title: string;
-  }
   
   export interface Question {
     _id?: string;
     title: string;
     responses: Response[];
-    options: string[];
   }
   
   export interface Form {
