@@ -107,12 +107,13 @@ export const getTrainees = (data: any, dataItems: string[]) => {
  * 
  */
 
-export const getRandomColorAndTextColor = () => {
-  const r = Math.floor(Math.random() * 100);
-  const g = Math.floor(Math.random() * 100);
-  const b = Math.floor(Math.random() * 100);
-  const backgroundColor = `rgb(${r},${g},${b}, 0.4)`;
-  const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-  const textColor = luminance > 140 ? "black" : "white";
-  return { backgroundColor, textColor };
+export const getRandomColorAndTextColor= () => {
+   const skyBlueHue = 200;
+   const saturation = 50;
+   const lightness = 60;
+ 
+   const backgroundColor = `hsl(${skyBlueHue}, ${saturation}%, ${lightness}%, 0.4)`;
+   const textColor = "black";
+ 
+   return { backgroundColor, textColor };
 };
