@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import React, { useEffect, useState } from "react";
 import ModalLayout from "./ModalLayout";
 import Button from "../ui/Button";
@@ -20,6 +22,8 @@ const ResponseModal = ({
   disabled,
   questionType,
   options,
+  checkedOption, 
+  handleCheckChange,
 }: {
   closePopup: () => void;
   title: string;
@@ -31,6 +35,8 @@ const ResponseModal = ({
   disabled?: boolean;
   questionType: string;
   options: string[];
+  checkedOption: string;
+  handleCheckChange: (value: string) => void;
 }) => {
   const {
     register,
@@ -43,16 +49,16 @@ const ResponseModal = ({
   const [addResponse, { isLoading, error, isSuccess }] =
     useAddResponseMutation();
 
-  const [checkedOption, setCheckeOption] = useState('')
+    const [localCheckedOption, setLocalCheckedOption] = useState(checkedOption)
 
-  const handleRadioChange = (value: string) => {
-    setCheckeOption(value)
-  }
+    const handleRadioChange = (value: string) => {
+      handleCheckChange(value);
+    };
 
   const onSubmit = async (data: any) => {
     const responseBody = {
       ...data,
-      ...(questionType === "dropdown" && { text: checkedOption }),
+      ...(questionType === "dropdown" && { text: localCheckedOption }),
     };
     await addResponse({ jwt, body: responseBody, questionId, userId });
   };
@@ -64,7 +70,10 @@ const ResponseModal = ({
     if (isSuccess) {
       setTimeout(() => closePopup(), 3000);
     }
-  }, [isSuccess, closePopup]);
+
+    setLocalCheckedOption(checkedOption);
+  }, [isSuccess, closePopup, checkedOption]);
+
   
   return (
     <ModalLayout closePopup={closePopup} title={title}>
@@ -100,14 +109,15 @@ const ResponseModal = ({
         {questionType === "dropdown" && (
           <div>
             <h1 className="capitalize text-xl pb-5">{question}:</h1>
-            <p>checked Option: {checkedOption}</p>
             {options.map((option, index) => (
               <RadioOption
                 key={option}
                 option={option}
                 id={`option-${index}`}
                 value={option}
+                checked={option === localCheckedOption}
                 onRadioChange={handleRadioChange}
+                disabled={disabled}
               />
             ))}
           </div>
