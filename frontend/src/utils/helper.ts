@@ -99,3 +99,20 @@ export const getTrainees = (data: any, dataItems: string[]) => {
   );
   return traineesData;
 };
+
+/**
+ * Generates a random color and text color for a chart.
+ *
+ * @returns {Object} An object containing the background color and text color for the chart.
+ * 
+ */
+
+export const getRandomColorAndTextColor = () => {
+  const r = Math.floor(Math.random() * 100);
+  const g = Math.floor(Math.random() * 100);
+  const b = Math.floor(Math.random() * 100);
+  const backgroundColor = `rgb(${r},${g},${b}, 0.4)`;
+  const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  const textColor = luminance > 140 ? "black" : "white";
+  return { backgroundColor, textColor };
+};
