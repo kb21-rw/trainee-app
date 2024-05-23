@@ -5,9 +5,11 @@ interface RadioOptionProps {
   id: string;
   value: string;
   onRadioChange: (value: string) => void;
+  checked: boolean;
+  disabled?: boolean;
 }
 
-const RadioOption = ({ option, id, value, onRadioChange }: RadioOptionProps) => {
+const RadioOption = ({ option, id, value, checked, disabled, onRadioChange }: RadioOptionProps) => {
 
   const handleClick = () => {
     onRadioChange(value);
@@ -20,7 +22,9 @@ const RadioOption = ({ option, id, value, onRadioChange }: RadioOptionProps) => 
           id={id}
           name="option"
           onChange={handleClick}
+          checked={checked}
           value={value}
+          disabled={disabled}
         />
         <label htmlFor={id}>{option}</label>
     </div>
