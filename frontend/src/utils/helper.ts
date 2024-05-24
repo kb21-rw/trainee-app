@@ -99,3 +99,21 @@ export const getTrainees = (data: any, dataItems: string[]) => {
   );
   return traineesData;
 };
+
+/**
+ * Generates a random color and text color for a chart.
+ *
+ * @returns {Object} An object containing the background color and text color for the chart.
+ * 
+ */
+
+export const getRandomColorAndTextColor= () => {
+   const skyBlueHue = 200;
+   const saturation = 50;
+   const lightness = 60;
+ 
+   const backgroundColor = `hsl(${skyBlueHue}, ${saturation}%, ${lightness}%, 0.4)`;
+   const textColor = "black";
+ 
+   return { backgroundColor, textColor };
+};

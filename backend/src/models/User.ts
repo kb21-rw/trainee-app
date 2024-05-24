@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 import { Role } from "../utils/types";
 
 export interface UserProperties {
-  _id: string;
+  id: string;
   name: string;
   email: string;
   password: string;
