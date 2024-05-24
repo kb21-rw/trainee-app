@@ -22,10 +22,9 @@ const AllForms = () => {
   const onClickAddForm = async () => {
     const result = await createForm({
       jwt,
-      body: { title: `Form ${data.length}` },
+      body: { title: `Form ${data.length + 1}` },
     });
-    console.log(result)
-    
+
     const id = result.data._id;
     navigate(`/forms/${id}`);
   };
