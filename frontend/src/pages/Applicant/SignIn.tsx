@@ -32,7 +32,7 @@ export default function SignIn() {
         data
       );
       if (response.status === 201) {
-        navigate("/home");
+        navigate("/applicant/questions");
       }
     } catch (error) {
       const axiosError = error as AxiosError;
