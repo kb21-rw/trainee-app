@@ -12,6 +12,7 @@ import React from "react";
 import Profile from "./pages/User/Profile";
 import TraineesInfo from "./pages/User/TraineesInfo";
 import CoachesInfo from "./pages/User/CoachesInfo";
+import AdminPannel from "./pages/Applicant/AdminPannel";
 import { ApiProvider } from "@reduxjs/toolkit/dist/query/react";
 import { usersApi } from "./features/user/apiSlice";
 import ResetPassword from "./pages/User/ResetPassword";
@@ -38,6 +39,7 @@ export default function App() {
             <Route path="/administer-coach" element={<CoachesInfo />} />
             <Route path="/edit-my-trainees" element={<EditMyTrainees />} />
             <Route path="/profile-settings" element={<Profile />} />
+            <Route path="/applicants" element={<AdminPannel />} />
           </Route>
         </Route>
         <Route path="/applicant/signup" element={<SignUp />} />
@@ -48,8 +50,8 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
-      </Route>
-    )
+      </Route>,
+    ),
   );
   return (
     <ApiProvider api={usersApi}>

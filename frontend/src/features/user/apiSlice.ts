@@ -8,6 +8,7 @@ export const usersApi: any = createApi({
   tagTypes: [
     "coaches",
     "trainees",
+    "applicants",
     "myTrainees",
     "profile",
     "forms",
@@ -15,6 +16,20 @@ export const usersApi: any = createApi({
   ],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
+      query: (args) => {
+        const { jwt, query } = args;
+        return {
+          url: `/trainees/all${query}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      providesTags: ["trainees"],
+    }),
+
+    getAllApplicants: builder.query({
       query: (args) => {
         const { jwt, query } = args;
         return {
@@ -135,6 +150,22 @@ export const usersApi: any = createApi({
         const { jwt, id } = args;
         return {
           url: `/users/${id}`,
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      invalidatesTags: ["trainees"],
+    }),
+
+    // after immplementing backend
+
+    deleteApplicant: builder.mutation({
+      query: (args) => {
+        const { jwt, id } = args;
+        return {
+          url: `/trainees/${id}`,
           method: "DELETE",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -325,6 +356,8 @@ export const usersApi: any = createApi({
 
 export const {
   useGetAllTraineesQuery,
+  useGetAllApplicantsQuery,
+  useDeleteApplicantMutation,
   useGetAllCoachesQuery,
   useCreateCoachMutation,
   useCreateTraineeMutation,
