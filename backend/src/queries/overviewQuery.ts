@@ -121,6 +121,7 @@ export const getOverviewQuery = async (
               title: "$$question.title",
               type: "$$question.type",
               options: "$$question.options",
+              multipleChoice:"$$question.multipleChoice",
               createdAt: "$$question.createdAt",
               updatedAt: "$$question.updatedAt",
               responses: {

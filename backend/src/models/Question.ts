@@ -5,6 +5,7 @@ export interface QuestionProperties {
   title: string;
   type: "text" | "dropdown";
   options: string[];
+  multipleChoice: string[];
   responseIds: string[];
 }
 
@@ -22,7 +23,7 @@ const QuestionSchema = new Schema(
     },
 
     options: [String],
-
+    multipleChoice: [String],
     responseIds: {
       type: [Schema.Types.ObjectId],
       ref: "Response",

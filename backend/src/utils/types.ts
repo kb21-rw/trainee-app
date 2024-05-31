@@ -20,6 +20,7 @@ export interface CreateQuestionDto {
   title: string;
   type: "text" | "dropdown";
   options: string[];
+  multipleChoice: string[];
 }
 
 export interface CreateResponseDto {
