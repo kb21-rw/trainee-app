@@ -8,18 +8,19 @@ interface User {
 
 export let errorMessage: string = "";
 
-const registerUser = (user: User, setErrorMessage: any) => {
+const newPassword = (user: User, setErrorMessage: any) => {
   axios
-    .post("http://localhost:3000/applicants/signup", user)
+    .patch("http://localhost:3000/applicants/reset/:email", user)
     .then(() => {
+      alert("New password created");
       window.location.href = "http://localhost:5173/applicant/signin";
     })
     .catch((error) => {
-      error.message = "User already exists";
+      error.message = "Email does not exist";
       errorMessage = error.message;
       user.rePassword = user.password;
       return setErrorMessage(errorMessage);
     });
 };
 
-export default registerUser;
+export default newPassword;

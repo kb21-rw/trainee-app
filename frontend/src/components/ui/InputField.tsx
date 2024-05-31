@@ -11,7 +11,6 @@ const InputField = ({
   defaultValue,
   register,
   options,
-  autoFocus,
 }: {
   label: string;
   type: string;
@@ -21,7 +20,6 @@ const InputField = ({
   defaultValue?: string;
   register?: any;
   options?: any;
-  autoFocus?: any;
 }) => {
   const [show, setShow] = useState<boolean>(false);
   const passwordIcon = () => {
@@ -41,7 +39,6 @@ const InputField = ({
         <input
           type={show ? "text" : type}
           name={name}
-          autoFocus={autoFocus}
           className="placeholder:text-lg outline-none border-none h-full flex-1"
           placeholder={placeholder}
           defaultValue={defaultValue}

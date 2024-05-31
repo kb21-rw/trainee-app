@@ -1,24 +1,25 @@
 import React, { useState } from "react";
-import Google from "../../components/ui/applicants/Google";
-import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Button from "../../components/ui/Button";
 import InputField from "../Form/InputField";
 import PasswordMessages from "../../utils/PasswordMessages";
-import validatePassword, { emailRegex } from "../../utils/validatePassword";
-import registerUser, { errorMessage } from "../../utils/RegisterUser";
+import { useSearchParams } from "react-router-dom";
+import newPassword, { errorMessage } from "../../utils/newPassword";
+import validatePassword from "../../utils/validatePassword";
 interface userValidation {
-  email: string;
+  email: any;
   password: string;
   rePassword?: string;
 }
 
 export default function SignUp() {
-  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
+  const [searchParams] = useSearchParams();
+  const email = searchParams.get("email");
+
   const [user, setUser] = useState<userValidation>({
-    email: "",
+    email: email,
     password: "",
     rePassword: "",
   });
@@ -26,15 +27,13 @@ export default function SignUp() {
   const [errrorMessage, setErrorMessage] = useState("");
 
   const handleUserInfo = () => {
-    if (!emailRegex.test(user.email))
-      return setErrorMessage("Enter a valid email");
     if (validatePassword(user.password))
       return setErrorMessage("Enter a valid password");
     if (user.password !== user.rePassword) {
       return setErrorMessage("Passwords do not match");
     } else {
       delete user.rePassword;
-      registerUser(user, setErrorMessage);
+      newPassword(user, setErrorMessage);
       setErrorMessage(errorMessage);
     }
   };
@@ -42,20 +41,8 @@ export default function SignUp() {
   return (
     <section className="signup min-h-screen flex items-center justify-center lg:py-10">
       <div className="md:px-36 px-16 flex flex-col items-center gap-10 pt-10 pb-10 shadow-2xl">
-        <h1 className="text-2xl font-semibold">Applicant Sign Up</h1>
+        <h1 className="text-2xl font-semibold">New Password</h1>
         <div className="flex flex-col gap-5">
-          <InputField
-            type="email"
-            id="email"
-            placeholder="example@gmail.com"
-            value={user.email}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setUser({ ...user, email: e.target.value })
-            }
-            label="Email"
-            htmlfor="email"
-            errorMessage="Please enter a valid email"
-          />
           <InputField
             type={showPassword ? "text" : "password"}
             id="password"
@@ -93,20 +80,6 @@ export default function SignUp() {
               Signup
             </Button>
           </div>
-          <Google
-            title={"Sign up with Google"}
-            link="http://localhost:3000/auth/google"
-          />
-          <h3 className="mx-auto">
-            Already have an account?
-            <span
-              className="text-primary-dark cursor-pointer"
-              onClick={() => navigate("/applicant/signin")}
-            >
-              {" "}
-              Sign in
-            </span>
-          </h3>
         </div>
       </div>
     </section>

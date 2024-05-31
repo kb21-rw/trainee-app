@@ -14,7 +14,7 @@ const ResponseSchema = new Schema(
     },
     text: {
       type: String,
-      default: null,
+      required: true,
     },
   },
   { timestamps: {} }

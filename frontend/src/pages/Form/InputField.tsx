@@ -1,16 +1,19 @@
 import React, { ReactNode } from "react";
+import { UseFormRegisterReturn } from "react-hook-form";
 
 interface validateProps {
   htmlfor: string;
   label: string;
+  name?: string;
   type: string;
   id: string;
   placeholder: string;
   value?: string;
-  onChange?: () => void;
+  onChange?: React.ComponentProps<"input">["onChange"];
   errorMessage?: string;
   icon?: ReactNode;
   showPassword?: () => void;
+  register?: UseFormRegisterReturn;
 }
 
 function InputField(prop: validateProps) {
@@ -24,6 +27,7 @@ function InputField(prop: validateProps) {
         id={prop.id}
         placeholder={prop.placeholder}
         value={prop.value}
+        {...prop.register}
         onChange={prop.onChange}
         className="bg-gray-50 border border-gray-300 w-72 text-gray-900 text-sm rounded-lg p-2.5 outline-none focus:border-blue-500 focus:border-2"
       />

@@ -9,8 +9,8 @@ interface PropTypes {
 
 const AddButton = ({ children, addHandler }: PropTypes) => {
   return (
-    <div className="flex justify-end items-center my-6">
-      <Button clickHandler={addHandler} variant="small">
+    <div className="flex flex-col justify-end items-center  gap-1">
+      <Button clickHandler={addHandler} clicked={false} variant="small">
         <Plus />
         <span>{children}</span>
       </Button>

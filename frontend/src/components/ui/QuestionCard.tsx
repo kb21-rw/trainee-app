@@ -43,7 +43,8 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   };
 
   const onSubmit = async (data: any) => {
-    return await editQuestion({ jwt, body: data, id: _id });
+    const result = await editQuestion({ jwt, body: data, id: _id });
+    console.log({ result });
   };
 
   const { type: selectedType } = watch();
@@ -82,7 +83,11 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                   currentType: { label: string; value: string },
                   index: number
                 ) => (
-                  <option key={index} value={currentType.value}>
+                  <option
+                    key={index}
+                    value={currentType.value}
+                    selected={currentType.value === type}
+                  >
                     {currentType.label}
                   </option>
                 )

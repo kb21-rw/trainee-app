@@ -14,7 +14,6 @@ import {
   coachTableDataItems,
   coachTableHeaders,
 } from "../../utils/data";
-import DeleteModal from "../../components/modals/DeleteModal";
 
 const CoachesInfo = () => {
   const cookies = new Cookies();
@@ -26,22 +25,13 @@ const CoachesInfo = () => {
   });
   const [isAddingCoach, setIsAddingCoach] = useState(false);
   const [editCoachData, setEditCoachData] = useState<string[] | null>(null);
-  const [showDeleteModal, setShowDeleteModal]= useState(false)
   const [deleteCoach, { isFetching: isDeleteCoachLoading }] =
     useDeleteCoachMutation();
-  const [coachTobeDeletedId,setCoachTobeDeletedId] = useState<string | null>(null)
-  
-  const handleDeleteCoach = async () => {
-    if(coachTobeDeletedId)
-    await deleteCoach({ jwt, id:coachTobeDeletedId});
-    setShowDeleteModal(false)
+  const handleDeleteCoach = async (id: string) => {
+    await deleteCoach({ jwt, id });
   };
 
-  const coachesList:string[][] = getCoaches(data, coachTableDataItems);
-
-  const coachTobeDeleted= coachesList?.find(coach=>coach[0]==coachTobeDeletedId)
-  const coachTobeDeletedName= coachTobeDeleted ?  coachTobeDeleted[1] : ''
-  const coachTobeDeletedRole= coachTobeDeleted ? coachTobeDeleted[3] : ''
+  const coachesList = getCoaches(data, coachTableDataItems);
 
   return (
     <div>
@@ -60,22 +50,11 @@ const CoachesInfo = () => {
           data={coachesList}
           actions={[
             { type: "edit", actionCaller: setEditCoachData },
-            { type: "delete", actionCaller: async (id:string)=>{
-              await setCoachTobeDeletedId(id)
-              setShowDeleteModal(true)
-            } },
+            { type: "delete", actionCaller: handleDeleteCoach },
           ]}
           isLoading={isDeleteCoachLoading || isGetAllCoachesLoading}
         />
       </div>
-      {showDeleteModal && (
-        <DeleteModal
-          coachName={coachTobeDeletedName}
-          userRole={coachTobeDeletedRole}
-          closePopup={() => setShowDeleteModal(false)}
-          onDelete={handleDeleteCoach}
-        />
-      )}
       {isAddingCoach && (
         <AddingCoachModal
           jwt={jwt}
@@ -94,5 +73,3 @@ const CoachesInfo = () => {
 };
 
 export default CoachesInfo;
-
-

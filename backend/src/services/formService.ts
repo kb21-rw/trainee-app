@@ -16,7 +16,7 @@ export const getFormsService = async (searchString: string) => {
 
 export const updateFormService = async (
   formId: string,
-  formData: UpdateFormDto,
+  formData: UpdateFormDto
 ) => {
   const { title, description } = formData;
   if (!ObjectId.isValid(formId)) {
@@ -73,4 +73,5 @@ export const deleteFormService = async (formId: string) => {
     const question = await Question.findByIdAndDelete(questionId);
     await Response.deleteMany({ _id: { $in: question?.responseIds } });
   });
+  await Question.deleteMany({ _id: { $in: form.questionsId } });
 };
