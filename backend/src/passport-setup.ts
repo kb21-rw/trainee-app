@@ -1,15 +1,15 @@
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
-import Applicant from "./models/Applicant";
 import { generateUserId } from "./services/applicantService";
-
+import User from "./models/User";
+import { Role } from "./utils/types";
 
 export default function setupPassport() {
   passport.use(
     new GoogleStrategy(
       {
         clientID: process.env.CLIENT_ID as string,
-        clientSecret: process.env.CLIENT_SECERET as string,
+        clientSecret: process.env.CLIENT_SECRET as string,
         callbackURL: process.env.GOOGLE_CALLBACK_URL as string,
         scope: ["profile", "email"],
       },
@@ -18,15 +18,17 @@ export default function setupPassport() {
           return done(new Error("Email not provided in profile"));
         }
 
-        const email = profile.emails[0].value;
-
-        let user = await Applicant.findOne({ googleId: profile.id });
-    const userId = await generateUserId();
+        let user = await User.findOne({
+          $or: [{ googleId: profile.id }, { email: profile._json.email }],
+        });
         if (!user) {
-          user = new Applicant({
-            userId: userId,
+          const userId = await generateUserId();
+          user = new User({
+            userId,
             googleId: profile.id,
-            email: email,
+            email: profile.emails[0].value,
+            name: profile.displayName,
+            role: Role.APPLICANT,
           });
           await user.save();
         }
@@ -35,16 +37,4 @@ export default function setupPassport() {
       }
     )
   );
-
-  passport.serializeUser(function(user, done) {
-    done(null, user);
-  });
-
-  passport.deserializeUser(async function(id, done) {
-    try {
-      const user = await Applicant.findById(id); 
-      done(null, user); 
-    } catch (err) {
-      done(err, null);
-    }
-  })}
+}
