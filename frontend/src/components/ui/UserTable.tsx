@@ -40,7 +40,7 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
      </tbody>
       ) : data.length === 0 ? (
         <tbody>
-         <tr className="flex h-[50vh]">
+         <tr className="flex h-[50vh] w-screen">
             <NotFound type="User" />
         </tr>
      </tbody>
