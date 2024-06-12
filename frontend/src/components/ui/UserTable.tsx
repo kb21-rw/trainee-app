@@ -8,7 +8,7 @@ interface PropTypes {
   headers: string[];
   isLoading: boolean;
   data: string[][];
-  actions: {
+  actions?: {
     type: string;
     actionCaller:
       | Dispatch<SetStateAction<string[] | null>>
@@ -17,14 +17,15 @@ interface PropTypes {
 }
 
 const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
+
   return (
     <table className="w-full my-8 table-auto">
       <thead className="bg-[#0077B6] bg-opacity-20 h-20">
-        <tr className="w-full">
-          {headers.map((header: string, index: number) => (
+        <tr className="">
+        {headers.map((header: string, index: number) => (
             <td
               key={index}
-              className="first:rounded-l-xl last:rounded-r-xl pl-12 font-semibold"
+              className="first:rounded-l-xl last:rounded-r-xl pl-10"
             >
               {header}
             </td>
@@ -39,26 +40,26 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
      </tbody>
       ) : data.length === 0 ? (
         <tbody>
-         <tr className="flex w-screen h-[50vh]">
+         <tr className="flex h-[50vh]">
             <NotFound type="User" />
         </tr>
      </tbody>
       ) : (
-        <tbody className="w-full">
+        <tbody>
           {data.map((userData: string[], index: number) => (
             <tr
               key={userData[0]}
-              className="border-b border-black h-[100px] w-full"
+              className="border-b border-black h-[100px]"
             >
-              <td className="text-base font-medium pl-12">{index + 1}</td>
+              <td className="text-base font-medium pl-12 pr-10">{index + 1}</td>
               {userData.slice(1).map((item: string, index: number) => (
                 <td key={index} className="text-base font-medium pl-12">
                   {item}
                 </td>
               ))}
-              <td className="text-base font-medium pl-12">
-                <div className="flex items-center gap-4 w-full h-full">
-                  {actions.map((action: any, index: number) => (
+              <td className="text-base font-medium">
+                <div className="flex items-center gap-4 h-full pl-8">
+                  {actions?.map((action: any, index: number) => (
                     <button
                       key={index}
                       onClick={() =>
