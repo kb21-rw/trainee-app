@@ -58,20 +58,17 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
                 </td>
               ))}
               <td className="text-base font-medium">
-                <div className="flex items-center gap-4 h-full pl-8">
-                  {actions?.map((action: any, index: number) => (
-                    <button
-                      key={index}
-                      onClick={() =>
-                        action.actionCaller(
-                          action.type == "delete" ? userData[0] : userData,
-                        )
-                      }
-                    >
-                      {action.type == "delete" && <Delete />}
+                <div className={`flex items-center gap-4 h-ful ${actions && 'pl-10'}`}>
+                 {actions?.length ? actions.map((action: any) => (
+                  <button
+                    key={action.type}
+                    className="flex items-center gap-2"
+                    onClick={() => action.actionCaller(userData[0])}
+                  >
+                       {action.type == "delete" && <Delete />}
                       {action.type == "edit" && <Edit />}
-                    </button>
-                  ))}
+                  </button>
+                 )) : null}
                 </div>
               </td>
             </tr>
