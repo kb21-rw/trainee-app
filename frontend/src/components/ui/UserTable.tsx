@@ -21,11 +21,11 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
   return (
     <table className="w-full my-8 table-auto">
       <thead className="bg-[#0077B6] bg-opacity-20 h-20">
-        <tr>
+        <tr className="">
         {headers.map((header: string, index: number) => (
             <td
               key={index}
-              className="first:rounded-l-xl last:rounded-r-xl pl-12 font-semibold"
+              className="first:rounded-l-xl last:rounded-r-xl pl-10"
             >
               {header}
             </td>
@@ -51,14 +51,14 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
               key={userData[0]}
               className="border-b border-black h-[100px]"
             >
-              <td className="text-base font-medium pl-12 pr-20">{index + 1}</td>
+              <td className="text-base font-medium pl-12 pr-10">{index + 1}</td>
               {userData.slice(1).map((item: string, index: number) => (
                 <td key={index} className="text-base font-medium pl-12">
                   {item}
                 </td>
               ))}
               <td className="text-base font-medium">
-                <div className="flex items-center gap-4 h-full">
+                <div className="flex items-center gap-4 h-full pl-8">
                   {actions?.map((action: any, index: number) => (
                     <button
                       key={index}
