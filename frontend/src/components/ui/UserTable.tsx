@@ -34,7 +34,7 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
       {isLoading ? (
         <tbody>
           <tr className="flex w-screen items-center justify-center h-[50vh]">
-            <td>
+            <td className="w-full flex items-center justify-center">
               <Loader />
             </td>
           </tr>
@@ -42,7 +42,7 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
       ) : data.length === 0 ? (
         <tbody>
           <tr className="flex w-screen h-[50vh]">
-            <td>
+            <td className="w-full h-auto">
               <NotFound type="User" />
             </td>
           </tr>
