@@ -32,21 +32,21 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
         </tr>
       </thead>
       {isLoading ? (
-       <tbody>
-         <tr className="flex w-screen items-center justify-center h-[50vh]">
-         <td>
-         <Loader />
-         </td>
-        </tr>
-     </tbody>
+        <tbody>
+          <tr className="flex w-screen items-center justify-center h-[50vh]">
+            <td>
+              <Loader />
+            </td>
+          </tr>
+        </tbody>
       ) : data.length === 0 ? (
         <tbody>
-         <tr className="flex w-screen h-[50vh]">
+          <tr className="flex w-screen h-[50vh]">
             <td>
-            <NotFound type="User" />
+              <NotFound type="User" />
             </td>
-        </tr>
-     </tbody>
+          </tr>
+        </tbody>
       ) : (
         <tbody className="w-full">
           {data.map((userData: string[], index: number) => (
@@ -67,7 +67,7 @@ const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
                       key={index}
                       onClick={() =>
                         action.actionCaller(
-                          action.type == "delete" ? userData[0] : userData,
+                          action.type == "delete" ? userData[0] : userData
                         )
                       }
                     >
