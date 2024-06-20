@@ -5,7 +5,7 @@ interface NotFoundProps {
 }
 
 const NotFound: React.FC<NotFoundProps> = ({ type }) => {
-  const message = type === "User" ? "No User Found" : "No Form Found";
+  const message = type === "User" ? "No user found" : "No form found";
 
   return (
     <div className="w-full flex flex-col items-center justify-center bg-gray-50">
