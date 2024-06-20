@@ -7,7 +7,6 @@ import {
 } from "../utils/errorCodes";
 import {
   generateRandomPassword,
-  generateResetPasswordMessage,
   sendEmail,
 } from "../utils/helpers";
 import User from "../models/User";
@@ -36,12 +35,31 @@ export const registerService = async (user: any, body: any) => {
 
   const createdUser = await User.create(newUser);
   if (createdUser) {
-    await sendEmail(
-      createdUser.name,
-      createdUser.email,
-      createdUser.role,
+    await sendEmail(createdUser.email, {
+      name: createdUser.name,
+      email: createdUser.email,
+      role: createdUser.role,
       password,
-    );
+    });
+  }
+
+  return createdUser;
+};
+
+export const applicantRegisterService = async (body: any) => {
+  const name = body.name.trim().replace(/\s+/g, " "); // Remove unnecessary extra spaces in names
+  const hashedPassword = await hash(body.password, 10);
+
+  const createdUser = await User.create({
+    ...body,
+    name,
+    password: hashedPassword,
+  });
+  if (createdUser) {
+    await sendEmail(createdUser.email, {
+      name: createdUser.name,
+      userId: createdUser.id,
+    });
   }
 
   return createdUser;
@@ -58,7 +76,7 @@ export const loginService = async (body: any) => {
     throw new CustomError(
       NOT_ALLOWED,
       "Trainees are not allowed to login yet",
-      409,
+      409
     );
   }
 
@@ -72,7 +90,7 @@ export const loginService = async (body: any) => {
     secret,
     {
       expiresIn: ACCESS_TOKEN_EXPIRATION,
-    },
+    }
   );
   return accessToken;
 };
@@ -88,11 +106,6 @@ export const resetPasswordService = async (body: any) => {
   const hashedPassword = await hash(password, 10);
   user.password = hashedPassword;
   await user.save();
-  await sendEmail(
-    user.name,
-    user.email,
-    "Hello " + user.name,
-    generateResetPasswordMessage(user.name, password),
-  );
+  await sendEmail(user.email, { name: user.name, password });
   return password;
 };

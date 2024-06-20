@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Google from "../../components/ui/applicants/Google";
 import { useNavigate } from "react-router-dom";
 import InputField from "../Form/InputField";
 import Button from "../../components/ui/Button";
@@ -81,10 +80,10 @@ export default function SignIn() {
               </Button>
             </div>
           </form>
-          <Google
+          {/* <Google
             title={"Sign in with Google"}
             link="http://localhost:3000/auth/google"
-          />
+          /> */}
           <h3
             className="mx-auto cursor-pointer"
             onClick={() => navigate("/applicant/reset-password")}

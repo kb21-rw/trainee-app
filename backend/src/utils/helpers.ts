@@ -19,11 +19,11 @@ export const generateRandomPassword = (length: number) => {
   return randomString;
 };
 
-const generateMessage = (
+const generateRegisterMessage = (
   name: string,
   email: string,
   role: string,
-  password: string,
+  password: string
 ) => {
   const html = `<html>
     <head>
@@ -55,14 +55,57 @@ const generateMessage = (
   return html;
 };
 
+const generateVerificationMessage = (name: string, userId: string) => {
+  const html = `<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Email verification</title>
+    </head>
+    <body>
+        <div style="font-family: Arial, sans-serif; margin: 20px;">
+            <h1>Hello ${name},</h1>
+            <div>
+              <p>Click this <a href="${process.env.CLIENT_URL}/applicant/verify?userId=${userId}">link</a> to verify your email.</p>
+            </div>
+            <p>Sincerely,<br> The gym</p>
+        </div>
+    </body>
+    </html>
+    `;
+  return html;
+};
+
 export const sendEmail = async (
-  name: string,
-  email: string,
-  role: string,
-  password: string,
+  emailTo: string,
+  data:
+    | { name: string; email: string; role: string; password: string }
+    | { name: string; userId: string }
+    | { name: string; password: string }
 ) => {
   const subject = "Welcome " + name;
-  const message = generateMessage(name, email, role, password);
+  let message = "";
+  if (
+    "name" in data &&
+    "email" in data &&
+    "role" in data &&
+    "password" in data
+  ) {
+    message = generateRegisterMessage(
+      data.name,
+      data.email,
+      data.role,
+      data.password
+    );
+  }
+
+  if ("name" in data && "userId" in data) {
+    message = generateVerificationMessage(data.name, data.userId);
+  }
+
+  if ("name" in data && "password" in data) {
+    message = generateResetPasswordMessage(data.name, data.password);
+  }
+
   const transporter = nodeMailer.createTransport({
     service: "gmail",
     auth: {
@@ -71,8 +114,8 @@ export const sendEmail = async (
     },
   });
   await transporter.sendMail({
-    from: `${name} <${email}>`,
-    to: email,
+    from: `The GYM <thegym@gmail.com>`,
+    to: emailTo,
     subject,
     html: message,
   });
@@ -80,7 +123,7 @@ export const sendEmail = async (
 
 export const generateResetPasswordMessage = (
   name: string,
-  password: string,
+  password: string
 ) => {
   const html = `<html>
     <head>
