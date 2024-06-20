@@ -93,6 +93,14 @@ export const loginService = async (body: any) => {
     throw new CustomError(USER_NOT_FOUND, "User not found", 404);
   }
 
+  if (!user.verified) {
+    throw new CustomError(
+      NOT_ALLOWED,
+      "Please verify your email before logging in ",
+      401
+    );
+  }
+
   if (user.role === "TRAINEE") {
     throw new CustomError(
       NOT_ALLOWED,
