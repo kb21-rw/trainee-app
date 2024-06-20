@@ -22,10 +22,6 @@ const UserSchema = new Schema(
     name: {
       type: String,
       required: true,
-      index: {
-        unique: true,
-        collation: { locale: "en", strength: 2 },
-      },
     },
     email: {
       type: String,
