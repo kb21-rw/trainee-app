@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import Google from "../../components/ui/applicants/Google";
 import { useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Button from "../../components/ui/Button";
 import InputField from "../Form/InputField";
 import PasswordMessages from "../../utils/PasswordMessages";
 import validatePassword, { emailRegex } from "../../utils/validatePassword";
-import registerUser, { errorMessage } from "../../utils/RegisterUser";
+import GoogleIcon from "../../assets/GoogleIcon";
 interface userValidation {
   email: string;
   password: string;
@@ -15,6 +14,7 @@ interface userValidation {
 
 export default function SignUp() {
   const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const [user, setUser] = useState<userValidation>({
@@ -23,7 +23,8 @@ export default function SignUp() {
     rePassword: "",
   });
 
-  const [errrorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+ 
 
   const handleUserInfo = () => {
     if (!emailRegex.test(user.email))
@@ -34,7 +35,6 @@ export default function SignUp() {
       return setErrorMessage("Passwords do not match");
     } else {
       delete user.rePassword;
-      registerUser(user, setErrorMessage);
       setErrorMessage(errorMessage);
     }
   };
@@ -86,17 +86,21 @@ export default function SignUp() {
             showPassword={() => setShowPassword(!showPassword)}
           />
           <h1 className="text-red-500">
-            {errrorMessage.length > 1 ? errrorMessage : ""}
+            {errorMessage.length > 1 ? errorMessage : ""}
           </h1>
           <div className="flex justify-center">
             <Button type="submit" variant="small" clickHandler={handleUserInfo}>
               Signup
             </Button>
           </div>
-          <Google
+          <Button outlined>
+            <GoogleIcon />
+            <span className="ml-2">Sign up with Google</span>
+          </Button>
+          {/* <Google
             title={"Sign up with Google"}
             link="http://localhost:3000/auth/google"
-          />
+          /> */}
           <h3 className="mx-auto">
             Already have an account?
             <span
