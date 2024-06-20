@@ -47,6 +47,10 @@ export default function App() {
           <Route path="signin" element={<SignIn />} />
           <Route path="reset-password" element={<ForgetPassword />} />
           <Route path="new-password" element={<NewPassword />} />
+          <Route
+            path="verify"
+            element={<h1>This page should be created, EMAIL VERIFICATION PAGE</h1>}
+          />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
