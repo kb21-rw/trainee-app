@@ -65,7 +65,7 @@ const generateVerificationMessage = (name: string, userId: string) => {
         <div style="font-family: Arial, sans-serif; margin: 20px;">
             <h1>Hello ${name},</h1>
             <div>
-              <p>Click this <a href="${process.env.CLIENT_URL}/applicant/verify?userId=${userId}">link</a> to verify your email.</p>
+              <p>Click this <a href="${process.env.FRONTEND_URL}/applicant/verify?userId=${userId}">link</a> to verify your email.</p>
             </div>
             <p>Sincerely,<br> The gym</p>
         </div>
@@ -82,7 +82,7 @@ export const sendEmail = async (
     | { name: string; userId: string }
     | { name: string; password: string }
 ) => {
-  const subject = "Welcome " + name;
+  const subject = "Welcome " + data.name;
   let message = "";
   if (
     "name" in data &&

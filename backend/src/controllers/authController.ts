@@ -4,6 +4,7 @@ import {
   loginService,
   registerService,
   resetPasswordService,
+  verifyApplicantService,
 } from "../services/authService";
 import {
   registerSchema,
@@ -35,6 +36,21 @@ export const applicantRegister = async (
     await applicantRegisterSchema.validateAsync(body);
     const newUser = await applicantRegisterService(body);
     return res.status(201).send({ userId: newUser.userId });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const verifyApplicant = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const verifiedUser = await verifyApplicantService(req.query.userId);
+    return res
+      .status(201)
+      .send({ userId: verifiedUser.userId, verified: verifiedUser.verified });
   } catch (error: any) {
     next(error);
   }

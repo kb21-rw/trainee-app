@@ -1,17 +1,16 @@
 import { compare, hash } from "bcryptjs";
 import CustomError from "../middlewares/customError";
 import {
+  DUPLICATE_USER,
   INVALID_CREDENTIAL,
   NOT_ALLOWED,
   USER_NOT_FOUND,
 } from "../utils/errorCodes";
-import {
-  generateRandomPassword,
-  sendEmail,
-} from "../utils/helpers";
+import { generateRandomPassword, sendEmail } from "../utils/helpers";
 import User from "../models/User";
 import { ACCESS_TOKEN_EXPIRATION, secret } from "../constants";
 import jwt from "jsonwebtoken";
+import { Role } from "../utils/types";
 
 export const registerService = async (user: any, body: any) => {
   let newUser;
@@ -47,13 +46,25 @@ export const registerService = async (user: any, body: any) => {
 };
 
 export const applicantRegisterService = async (body: any) => {
+  if (await User.findOne({ email: body.email })) {
+    throw new CustomError(DUPLICATE_USER, "User already exists", 409);
+  }
+
+  let userId = 1;
+  const lastUser = await User.findOne().sort({ userId: -1 });
+  if (lastUser) {
+    userId = parseInt(lastUser.userId, 10) + 1;
+  }
+
   const name = body.name.trim().replace(/\s+/g, " "); // Remove unnecessary extra spaces in names
   const hashedPassword = await hash(body.password, 10);
 
   const createdUser = await User.create({
     ...body,
     name,
+    userId: String(userId).padStart(6, "0"),
     password: hashedPassword,
+    role: Role.APPLICANT,
   });
   if (createdUser) {
     await sendEmail(createdUser.email, {
@@ -63,6 +74,16 @@ export const applicantRegisterService = async (body: any) => {
   }
 
   return createdUser;
+};
+
+export const verifyApplicantService = async (userId: string) => {
+  const user = await User.findByIdAndUpdate(
+    userId,
+    { verified: true },
+    { new: true }
+  );
+  if (!user) throw new CustomError(USER_NOT_FOUND, "User not found!", 404);
+  return user;
 };
 
 export const loginService = async (body: any) => {

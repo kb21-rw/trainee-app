@@ -11,7 +11,7 @@ export const applicantRegisterSchema = Joi.object({
   name: Joi.string().min(3).max(30).required(),
   email: Joi.string().email(),
   password: Joi.string().regex(
-    /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8}$/ // Check for strong password required (Capital/Small letter, special character and a number)
+    /^(?=.*[A-Z])(?=.*[!@#$&*])(?=.*[0-9])(?=.*[a-z]).{8}$/ // Check for strong password required (Capital/Small letter, special character and a number)
   ),
 });
 
