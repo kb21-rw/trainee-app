@@ -86,7 +86,6 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                   <option
                     key={index}
                     value={currentType.value}
-                    selected={currentType.value === type}
                   >
                     {currentType.label}
                   </option>
