@@ -43,8 +43,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   };
 
   const onSubmit = async (data: any) => {
-    const result = await editQuestion({ jwt, body: data, id: _id });
-    console.log({ result });
+    await editQuestion({ jwt, body: data, id: _id });
   };
 
   const { type: selectedType } = watch();
@@ -83,10 +82,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                   currentType: { label: string; value: string },
                   index: number
                 ) => (
-                  <option
-                    key={index}
-                    value={currentType.value}
-                  >
+                  <option key={index} value={currentType.value}>
                     {currentType.label}
                   </option>
                 )
@@ -102,7 +98,9 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
                     <input
                       defaultValue={option}
                       className="text-lg flex-1 focus:border-black hover:border-gray-300 hover:border-b focus:duration-300 ease-in-out focus:border-b outline-none py-1 px-0.5"
-                      onChange={e => changeOptionsHandler(e.target.value, index)}
+                      onChange={(e) =>
+                        changeOptionsHandler(e.target.value, index)
+                      }
                     />
                   </li>
                 ))}
