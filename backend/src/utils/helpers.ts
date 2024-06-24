@@ -1,5 +1,6 @@
 import nodeMailer from "nodemailer";
 import dotenv from "dotenv";
+import User from "../models/User";
 
 dotenv.config();
 
@@ -17,6 +18,16 @@ export const generateRandomPassword = (length: number) => {
   }
 
   return randomString;
+};
+
+export const generateUserId = async () => {
+  let userId = 1;
+  const lastUser = await User.findOne().sort({ userId: -1 });
+  if (lastUser) {
+    userId = parseInt(lastUser.userId, 10) + 1;
+  }
+
+  return String(userId).padStart(6, "0");
 };
 
 const generateRegisterMessage = (
