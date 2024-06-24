@@ -13,7 +13,11 @@ import {
   applicantRegisterSchema,
 } from "../validations/authValidation";
 
-export const register = async (req: any, res: Response, next: NextFunction) => {
+export const register = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const user = req.user;
     const body = req.body;
@@ -27,7 +31,7 @@ export const register = async (req: any, res: Response, next: NextFunction) => {
 };
 
 export const applicantRegister = async (
-  req: any,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
@@ -42,12 +46,12 @@ export const applicantRegister = async (
 };
 
 export const verifyApplicant = async (
-  req: any,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const verifiedUser = await verifyApplicantService(req.query.userId);
+    const verifiedUser = await verifyApplicantService(String(req.query.userId));
     return res
       .status(201)
       .send({ userId: verifiedUser.userId, verified: verifiedUser.verified });
