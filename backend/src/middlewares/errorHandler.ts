@@ -59,8 +59,9 @@ export const errorHandler = (
   error: ErrorObject,
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
+  console.log(error);
   switch (true) {
     case error.name === "ValidationError":
       handleValidationError(error, res);

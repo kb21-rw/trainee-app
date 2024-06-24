@@ -1,4 +1,4 @@
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { editUserSchema } from "../validations/userValidation";
 import {
   getTraineesForCoachService,
@@ -7,13 +7,13 @@ import {
 } from "../services/traineeService";
 
 export const getTrainees = async (
-  req: any,
+  req: Request,
   res: Response,
   next: NextFunction,
 ) => {
-  const searchString = req.query.searchString || "";
+  const searchString = String(req.query.searchString || "");
   const traineesPerPage = Number(req.query.coachesPerPage) || 10;
-  const sortBy = req.query.sortBy || "entry";
+  const sortBy = String(req.query.sortBy || "entry");
   try {
     const trainees = await getTraineesService({
       searchString,
