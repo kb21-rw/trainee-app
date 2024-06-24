@@ -23,6 +23,6 @@ export const traineeTableSortingValues = [
   { title: "Name", value: "name" },
 ];
 export const traineeTableHeaders = ["No", "Name", "Email", "Coach", "Action"];
-export const editTraineeTableHeaders = ["No", "Name", "Email"];
+export const editTraineeTableHeaders = ["No", "Name", "Email", ""];
 export const editTraineeTableItems = ["_id", "name", "email"];
 export const traineeTableDataItems = ["_id", "name", "email", "coach"];
