@@ -9,7 +9,7 @@ interface MetaType {
 export interface CreateFormDto {
   title: string;
   description: string;
-  type: FormType
+  type: FormType;
 }
 export interface UpdateFormDto {
   title: string;
@@ -37,7 +37,7 @@ export interface Search {
 
 export enum FormType {
   "APPLICANT" = "APPLICANT",
-  "TRAINEE" = "TRAINEE"
+  "TRAINEE" = "TRAINEE",
 }
 export enum Role {
   "ADMIN" = "ADMIN",

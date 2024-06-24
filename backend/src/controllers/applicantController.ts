@@ -1,5 +1,5 @@
 import { applicantResetPassword } from "./../services/applicantService";
-import { NextFunction, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { applicantSignup } from "../services/applicantService";
 import { applicantSignin } from "../services/applicantService";
 import { applicantSchema } from "../validations/applicantValidation";
@@ -52,7 +52,7 @@ export const signin = async (req: any, res: Response, next: NextFunction) => {
 };
 
 export const resetPassword = async (
-  req: any,
+  req: Request,
   res: Response,
   next: NextFunction
 ) => {

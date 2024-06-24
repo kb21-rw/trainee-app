@@ -1,14 +1,15 @@
 import { hash, compare } from "bcryptjs";
 import Applicant from "../models/Applicant";
+import User from "../models/User";
 
 export const generateUserId = async () => {
-  const lastApplicant = await Applicant.findOne().sort({ userId: -1 });
-  let lastUserId = 0;
-  if (lastApplicant) {
-    lastUserId = parseInt(lastApplicant.userId, 10);
+  const lastUser = await User.findOne().sort({ userId: -1 });
+  let lastUserId = "0";
+  if (lastUser) {
+    lastUserId = lastUser.userId ?? 0;
   }
 
-  return String(lastUserId + 1).padStart(4, "0");
+  return String(+lastUserId + 1).padStart(5, "0");
 };
 
 export const applicantSignup = async (
