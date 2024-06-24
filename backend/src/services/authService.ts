@@ -34,7 +34,7 @@ export const registerService = async (user: any, body: any) => {
       password: hashedPassword,
     };
   } else {
-    newUser = { ...body, name };
+    newUser = { ...body, name, userId: await generateUserId() };
   }
 
   const createdUser = await User.create(newUser);
