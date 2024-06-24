@@ -4,7 +4,7 @@ import Question from "../models/Question";
 import Response from "../models/Response";
 import { getFormQuery, getFormsQuery } from "../queries/formQueries";
 import { FORM_NOT_FOUND, INVALID_MONGODB_ID } from "../utils/errorCodes";
-import { CreateFormDto, UpdateFormDto } from "../utils/types";
+import { CreateFormDto, FormType, UpdateFormDto } from "../utils/types";
 import mongoose from "mongoose";
 const { Types } = mongoose;
 const { ObjectId } = Types;
@@ -42,6 +42,13 @@ export const updateFormService = async (
 
 export const createFormService = async (formData: CreateFormDto) => {
   const { title, description, type } = formData;
+  if (type === FormType.APPLICANT) {
+    await Form.updateMany(
+      { type: FormType.APPLICANT, isActive: true },
+      { isActive: false }
+    );
+  }
+
   const createdForm = await Form.create({ title, description, type });
   return createdForm;
 };
@@ -69,9 +76,9 @@ export const deleteFormService = async (formId: string) => {
     throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
   }
 
-  form.questionsId.forEach(async (questionId) => {
+  form.questionIds.forEach(async (questionId) => {
     const question = await Question.findByIdAndDelete(questionId);
     await Response.deleteMany({ _id: { $in: question?.responseIds } });
   });
-  await Question.deleteMany({ _id: { $in: form.questionsId } });
+  await Question.deleteMany({ _id: { $in: form.questionIds } });
 };

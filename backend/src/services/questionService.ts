@@ -23,7 +23,7 @@ export const createQuestionService = async (
     responseIds: [],
   });
   if (createdQuestion) {
-    relatedForm.questionsId.push(createdQuestion._id);
+    relatedForm.questionIds.push(createdQuestion._id);
 
     let users: UserProperties[] = [];
 
@@ -101,9 +101,9 @@ export const deleteQuestionService = async (questionId: string) => {
 
   await Form.updateOne(
     {
-      questionsId: question.id,
+      questionIds: question.id,
     },
-    { $pull: { questionsId: question.id } }
+    { $pull: { questionIds: question.id } }
   );
 
   await Response.deleteMany({ _id: { $in: question.responseIds } });
