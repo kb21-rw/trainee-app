@@ -6,7 +6,11 @@ import {
   NOT_ALLOWED,
   USER_NOT_FOUND,
 } from "../utils/errorCodes";
-import { generateRandomPassword, sendEmail } from "../utils/helpers";
+import {
+  generateRandomPassword,
+  generateUserId,
+  sendEmail,
+} from "../utils/helpers";
 import User from "../models/User";
 import { ACCESS_TOKEN_EXPIRATION, secret } from "../constants";
 import jwt from "jsonwebtoken";
@@ -25,6 +29,7 @@ export const registerService = async (user: any, body: any) => {
     const hashedPassword = await hash(password, 10);
     newUser = {
       ...body,
+      userId: await generateUserId(),
       name,
       password: hashedPassword,
     };
@@ -50,19 +55,13 @@ export const applicantRegisterService = async (body: any) => {
     throw new CustomError(DUPLICATE_USER, "User already exists", 409);
   }
 
-  let userId = 1;
-  const lastUser = await User.findOne().sort({ userId: -1 });
-  if (lastUser) {
-    userId = parseInt(lastUser.userId, 10) + 1;
-  }
-
   const name = body.name.trim().replace(/\s+/g, " "); // Remove unnecessary extra spaces in names
   const hashedPassword = await hash(body.password, 10);
 
   const createdUser = await User.create({
     ...body,
     name,
-    userId: String(userId).padStart(6, "0"),
+    userId: await generateUserId(),
     password: hashedPassword,
     role: Role.APPLICANT,
   });
