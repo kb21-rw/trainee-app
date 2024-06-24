@@ -28,7 +28,7 @@ const DeleteModal = ({
       title="Delete Form"
     >
 <p className="px-24">
- Are you sure you want to delete the {userRole || 'form'}: <b>{formName||coachName||traineeName}</b>?
+ Are you sure you want to delete the {userRole?.toLowerCase() || 'form'}: <b>{formName||coachName||traineeName}</b>?
 </p>
       <div className="flex justify-between mt-2 mx-32">
         <Button variant="small" outlined={true} clickHandler={closePopup}>
