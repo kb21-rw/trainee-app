@@ -41,7 +41,6 @@ const CoachesInfo = () => {
 
   const coachTobeDeleted= coachesList?.find(coach=>coach[0]==coachTobeDeletedId)
   const coachTobeDeletedName= coachTobeDeleted ?  coachTobeDeleted[1] : ''
-  const coachTobeDeletedRole= coachTobeDeleted ? coachTobeDeleted[3] : ''
 
   return (
     <div>
@@ -70,10 +69,10 @@ const CoachesInfo = () => {
       </div>
       {showDeleteModal && (
           <DeleteModal
+            title='a Coach'
             closePopup={() => setShowDeleteModal(false)}
             onDelete={handleDeleteCoach}
-            coachName={coachTobeDeletedName}
-            userRole={coachTobeDeletedRole}
+            name={coachTobeDeletedName}
             />
             )}
       {isAddingCoach && (

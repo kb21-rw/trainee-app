@@ -68,7 +68,8 @@ const FormCard = ({ form }: { form: IFormType }) => {
       {
         showDeleteModal && 
         <DeleteModal
-        formName={form.title}
+        title='a form'
+        name={form.title}
         closePopup={()=>setShowDeleteModal(false)}
         onDelete={()=>handleDeleteForm(form._id)}/>
       }

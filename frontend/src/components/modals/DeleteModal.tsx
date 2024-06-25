@@ -4,17 +4,13 @@ import Button from "../ui/Button";
 import { ButtonVariant } from "../../types";
 const DeleteModal = ({
   closePopup,
-  formName,
-  coachName,
-  traineeName,
-  userRole,
+  title,
+  name,
   onDelete,
 }: {
   closePopup: () => void;
-  formName?: string;
-  coachName?: string,
-  traineeName?:string,
-  userRole?:string,
+  title?: string;
+  name?: string,
   onDelete: () => void;
 }) => {
   const handleDelete = () => {
@@ -25,10 +21,10 @@ const DeleteModal = ({
   return (
     <ModalLayout
       closePopup={closePopup}
-      title="Delete Form"
+      title={`Delete ${title}`}
     >
 <p className="px-24">
- Are you sure you want to delete the {userRole?.toLowerCase() || 'form'}: <b>{formName||coachName||traineeName}</b>?
+ Are you sure you want to delete: <b>{name}</b>?
 </p>
       <div className="flex justify-between mt-2 mx-32">
         <Button variant={ButtonVariant.Small} outlined={true} clickHandler={closePopup}>

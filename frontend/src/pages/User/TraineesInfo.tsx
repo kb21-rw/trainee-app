@@ -69,8 +69,8 @@ const TraineesInfo = () => {
       />
       {showDeleteModal && (
         <DeleteModal
-        traineeName={traineeTobeDeletedName}
-        userRole='trainee'
+        title='a Trainee'
+        name={traineeTobeDeletedName}
         closePopup={() => setShowDeleteModal(false)}
         onDelete={handleDeleteTrainee}
         />
