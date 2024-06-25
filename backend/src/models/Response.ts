@@ -3,7 +3,7 @@ import { ObjectId, Schema, model } from "mongoose";
 export interface ResponseProperties {
   _id: string;
   userId: ObjectId;
-  text: string | string[];
+  text: null | string | string[];
 }
 
 const ResponseSchema = new Schema(
@@ -16,8 +16,9 @@ const ResponseSchema = new Schema(
       type: Schema.Types.Mixed,
       default: null,
       validate: {
-        validator: function (value: string | string[]) {
+        validator: function (value: null | string | string[]) {
           return (
+            value === null ||
             typeof value === "string" ||
             (Array.isArray(value) &&
               value.every((item) => typeof item === "string"))
