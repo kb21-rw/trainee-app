@@ -33,3 +33,10 @@ export interface User {
     questions: Question[];
   }
   
+  export enum ButtonVariant{
+    Small = "small",
+    Large = "large",
+    Delete = "delete",
+  }
+
+  export type ButtonType = "button" | "submit" | "reset" | undefined;
