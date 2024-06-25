@@ -10,7 +10,7 @@ export const createQuestionService = async (
   formId: string,
   questionData: CreateQuestionDto
 ) => {
-  const { title, type, options } = questionData;
+  const { title, type, options, multipleChoiceOptions } = questionData;
   const relatedForm = await Form.findById(formId);
   if (!relatedForm) {
     throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
@@ -20,8 +20,10 @@ export const createQuestionService = async (
     title,
     type,
     options,
+    multipleChoiceOptions,
     responseIds: [],
   });
+
   if (createdQuestion) {
     relatedForm.questionsId.push(createdQuestion._id);
 
@@ -37,7 +39,7 @@ export const createQuestionService = async (
       })
     );
     createdQuestion.responseIds = responseIds;
-    createdQuestion.save();
+    await createdQuestion.save();
   }
 
   await relatedForm.save();
@@ -61,7 +63,8 @@ export const updateQuestionService = async (
     title,
     type,
     options,
-  }: { title?: string; type?: "text" | "dropdown"; options?: string[] }
+    multipleChoiceOptions,
+  }: { title?: string; type?: "text" | "dropdown" | "multiple-choice"; options?: string[]; multipleChoiceOptions?: { text: string; isCorrect: boolean }[] }
 ) => {
   const question = await Question.findById(questionId);
   if (!question) {
@@ -69,10 +72,9 @@ export const updateQuestionService = async (
   }
 
   if (title) question.title = title;
-
   if (type) question.type = type;
-
   if (options) question.options = options;
+  if (multipleChoiceOptions) question.multipleChoiceOptions = multipleChoiceOptions;
 
   if (type === "text") question.options = [];
 
