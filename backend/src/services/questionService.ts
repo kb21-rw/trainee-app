@@ -2,9 +2,9 @@ import CustomError from "../middlewares/customError";
 import Form from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
-import User from "../models/User";
-import { INVALID_MONGODB_ID, QUESTION_NOT_FOUND } from "../utils/errorCodes";
-import { CreateQuestionDto, IQuestion } from "../utils/types";
+import User, { UserProperties } from "../models/User";
+import { FORM_NOT_FOUND, QUESTION_NOT_FOUND } from "../utils/errorCodes";
+import { CreateQuestionDto, FormType, IQuestion, Role } from "../utils/types";
 
 export const createQuestionService = async (
   formId: string,
@@ -13,7 +13,7 @@ export const createQuestionService = async (
   const { title, type, options } = questionData;
   const relatedForm = await Form.findById(formId);
   if (!relatedForm) {
-    throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
+    throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
   }
 
   const createdQuestion = await Question.create({
@@ -23,14 +23,22 @@ export const createQuestionService = async (
     responseIds: [],
   });
   if (createdQuestion) {
-    relatedForm.questionsId.push(createdQuestion._id);
+    relatedForm.questionIds.push(createdQuestion._id);
 
-    const trainees = await User.find({ role: "TRAINEE" });
+    let users: UserProperties[] = [];
+
+    if (relatedForm.type === FormType.APPLICANT) {
+      users = await User.find({ role: Role.APPLICANT });
+    }
+
+    if (relatedForm.type === FormType.TRAINEE) {
+      users = await User.find({ role: Role.TRAINEE });
+    }
 
     const responseIds = await Promise.all(
-      trainees.map(async (trainee) => {
+      users.map(async (user) => {
         const response = new Response({
-          userId: trainee._id,
+          userId: user.id,
         });
         await response.save();
         return response._id;
@@ -93,9 +101,9 @@ export const deleteQuestionService = async (questionId: string) => {
 
   await Form.updateOne(
     {
-      questionsId: question.id,
+      questionIds: question.id,
     },
-    { $pull: { questionsId: question.id } }
+    { $pull: { questionIds: question.id } }
   );
 
   await Response.deleteMany({ _id: { $in: question.responseIds } });

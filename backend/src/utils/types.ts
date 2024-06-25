@@ -1,4 +1,4 @@
-import { Date } from "mongoose";
+import { Date, ObjectId } from "mongoose";
 
 interface MetaType {
   _id: string;
@@ -24,6 +24,11 @@ export interface CreateQuestionDto {
 
 export interface CreateResponseDto {
   text: string;
+}
+
+export interface CreateApplicationResponseDto {
+  questionId: ObjectId;
+  answer: string | string[];
 }
 
 export type IForm = CreateFormDto & MetaType;

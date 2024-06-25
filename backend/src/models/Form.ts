@@ -5,7 +5,7 @@ export interface FormProperties {
   _id: string;
   title: string;
   description: string;
-  questionsId: string[];
+  questionIds: string[];
 }
 
 const FormSchema = new Schema(
@@ -16,7 +16,7 @@ const FormSchema = new Schema(
       unique: true,
     },
     description: String,
-    questionsId: [
+    questionIds: [
       {
         type: Schema.Types.ObjectId,
         ref: "Question",
@@ -25,8 +25,12 @@ const FormSchema = new Schema(
     type: {
       type: String,
       enum: FormType,
-      default: FormType.TRAINEE
-    }
+      default: FormType.TRAINEE,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
   { timestamps: {} }
 );

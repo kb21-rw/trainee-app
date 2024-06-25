@@ -1,6 +1,10 @@
 import CustomError from "../middlewares/customError";
 import Question from "../models/Question";
-import { CreateResponseDto } from "../utils/types";
+import {
+  CreateApplicationResponseDto,
+  CreateResponseDto,
+  FormType,
+} from "../utils/types";
 import Response, { ResponseProperties } from "../models/Response";
 import User, { UserProperties } from "../models/User";
 import {
@@ -8,6 +12,7 @@ import {
   QUESTION_NOT_FOUND,
   USER_NOT_FOUND,
 } from "../utils/errorCodes";
+import Form from "../models/Form";
 
 export const createResponseService = async (
   loggedInUser: UserProperties,
@@ -75,4 +80,54 @@ export const createResponseService = async (
   await relatedQuestion.save();
 
   return createdResponse;
+};
+
+export const createApplicantResponseService = async (
+  loggedInUser: UserProperties,
+  responseData: CreateApplicationResponseDto[]
+) => {
+  const applicationForm = await Form.findOne({
+    $and: [{ type: FormType.APPLICANT }, { isActive: true }],
+  });
+
+  if (!applicationForm)
+    throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
+
+  //check if all question in the form are in the responseData
+  if (
+    applicationForm.questionIds.toString() !==
+    responseData.map((response) => response.questionId).toString()
+  )
+    throw new CustomError(NOT_ALLOWED, "Some questions are not answered", 401);
+
+  return Promise.all(
+    responseData.map(async (response) => {
+      const question = await Question.findById(response.questionId)
+        .populate<{
+          responseIds: ResponseProperties[];
+        }>("responseIds")
+        .exec();
+      const oldResponseId = question?.responseIds.find(
+        (oldResponse) => oldResponse.userId.toString() === loggedInUser.id
+      )?._id;
+
+      if (!oldResponseId)
+        throw new CustomError(500, "Can't get a response", 500);
+
+      const updatedResponse = await Response.findByIdAndUpdate(
+        oldResponseId,
+        { text: response.answer },
+        { new: true }
+      );
+
+      if (!updatedResponse)
+        throw new CustomError(500, "Couldn't update response", 500);
+
+      return {
+        questionId: response.questionId,
+        question: question.title,
+        response: updatedResponse.text,
+      };
+    })
+  );
 };

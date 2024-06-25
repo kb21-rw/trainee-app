@@ -15,7 +15,7 @@ export const getOverviewQuery = async (
     {
       $lookup: {
         from: "questions",
-        localField: "questionsId",
+        localField: "questionIds",
         foreignField: "_id",
         as: "questions",
       },
@@ -81,8 +81,8 @@ export const getOverviewQuery = async (
         description: {
           $first: "$description",
         },
-        questionsId: {
-          $first: "$questionsId",
+        questionIds: {
+          $first: "$questionIds",
         },
         createdAt: {
           $first: "$createdAt",
