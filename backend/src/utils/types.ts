@@ -20,10 +20,12 @@ export interface CreateQuestionDto {
   title: string;
   type: "text" | "dropdown";
   options: string[];
+  multipleChoiceOptions?: { text: string; isCorrect: boolean }
 }
 
 export interface CreateResponseDto {
   text: string;
+  selectedOptions?: string[];  
 }
 
 export type IForm = CreateFormDto & MetaType;
