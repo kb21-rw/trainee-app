@@ -15,7 +15,7 @@ export const createResponseService = async (
   questionId: string,
   responseData: CreateResponseDto
 ) => {
-  const { text } = responseData;
+  const { text, selectedOptions } = responseData;
 
   const trainee = await User.findOne({
     $and: [{ _id: traineeId }, { role: "TRAINEE" }],
@@ -37,20 +37,30 @@ export const createResponseService = async (
   ) {
     throw new CustomError(
       NOT_ALLOWED,
-      "Only admin or the coach of a train can provide a response",
+      "Only admin or the coach of a trainee can provide a response",
       403
     );
   }
 
-  if (
-    relatedQuestion.type === "dropdown" &&
-    !relatedQuestion.options.includes(text)
-  ) {
+  if (relatedQuestion.type === "dropdown" && text && !relatedQuestion.options.includes(text)) {
     throw new CustomError(
       NOT_ALLOWED,
       `You can only choose from ${relatedQuestion.options} options`,
       400
     );
+  }
+
+  if (relatedQuestion.type === "multiple-choice" && selectedOptions) {
+    const validOptions = relatedQuestion.multipleChoiceOptions.map(option => option.text);
+    const invalidOptions = selectedOptions.filter(option => !validOptions.includes(option));
+    
+    if (invalidOptions.length > 0) {
+      throw new CustomError(
+        NOT_ALLOWED,
+        `Invalid options selected: ${invalidOptions.join(", ")}`,
+        400
+      );
+    }
   }
 
   const relatedQuestionPopulated = await relatedQuestion.populate<{
@@ -64,13 +74,18 @@ export const createResponseService = async (
   if (oldResponse) {
     const response = await Response.findByIdAndUpdate(
       oldResponse._id,
-      { text },
+      relatedQuestion.type === "multiple-choice" ? { selectedOptions } : { text },
       { new: true }
     );
     return response;
   }
 
-  const createdResponse = await Response.create({ userId: traineeId, text });
+  const createdResponse = await Response.create(
+    relatedQuestion.type === "multiple-choice"
+      ? { userId: traineeId, selectedOptions }
+      : { userId: traineeId, text }
+  );
+
   relatedQuestion.responseIds.push(createdResponse.id);
   await relatedQuestion.save();
 
