@@ -13,7 +13,7 @@ import { isAdmin } from "../middlewares/authorization";
 const router = Router();
 
 router.get("/", verifyJWT, getFormsController);
-router.get("/application-form", verifyJWT, getApplicationFormController);
+router.get("/application", verifyJWT, getApplicationFormController);
 router.get("/:formId", verifyJWT, getSingleFormController);
 
 router.post("/", verifyJWT, isAdmin, createFormController);
