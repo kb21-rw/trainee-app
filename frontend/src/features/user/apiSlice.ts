@@ -14,6 +14,7 @@ export const usersApi: any = createApi({
     "questions",
     "response",
     "overview",
+    "applicantResponse"
   ],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
@@ -355,6 +356,26 @@ export const usersApi: any = createApi({
       }),
       invalidatesTags: ["overview", "response"],
     }),
+
+    getFormForApplicants: builder.query({
+      query: (args) => {
+        const { id } = args;
+        return {
+          url: `/forms/${id}`,
+          method: "GET",
+        };
+      },
+      providesTags: ["forms"],
+    }),
+
+    addApplicantResponse: builder.mutation({
+      query: ({ body }) => ({
+        url: '/responses/application',
+        method: "POST",
+        body: { ...body },
+      }),
+      invalidatesTags: ["applicantResponse"],
+    }),
   }),
 });
 
@@ -384,4 +405,6 @@ export const {
   useGetOverviewQuery,
   useAddResponseMutation,
   useGetOverviewForCoachQuery,
+  useGetFormForApplicantsQuery,
+  useAddApplicantResponseMutation,
 } = usersApi;

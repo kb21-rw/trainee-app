@@ -24,6 +24,7 @@ export interface User {
     title: string;
     responses: Response[];
     options: string[];
+    type: "text" | "dropdown" | "multiple-choice";
   }
   
   export interface Form {
