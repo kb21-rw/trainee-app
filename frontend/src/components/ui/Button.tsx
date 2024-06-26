@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-
+import { ButtonVariant, ButtonType} from "../../types";
 const Button = ({
   children,
   variant,
@@ -8,10 +8,10 @@ const Button = ({
   type,
 }: {
   children: ReactNode;
-  variant?: "small" | "large";
+  variant?: ButtonVariant;
   clickHandler?: () => void;
   outlined?: boolean;
-  type?: "button" | "submit" | "reset" | undefined;
+  type?: ButtonType;
   disabled?: boolean;
   clicked?: boolean;
 }) => {
@@ -20,11 +20,13 @@ const Button = ({
       onClick={clickHandler}
       className={`${
         outlined
-          ? "text-primary-dark bg-white border-primary-dark border"
-          : "bg-primary-dark  text-white"
-      } py-3.5 font-medium text-base flex items-center justify-center ${
-        variant === "small" ? "rounded-lg pl-4 pr-6" : "rounded-xl w-full"
-      } text-center cursor-pointer`}
+        ? "text-primary-dark bg-white border-primary-dark border rounded-lg px-6"
+        : variant === ButtonVariant.Delete
+        ? "bg-red-500 text-white rounded-lg px-6"
+        : variant === ButtonVariant.Small
+        ? "bg-primary-dark text-white rounded-lg pl-4 pr-6"
+        : "bg-primary-dark text-white rounded-lg w-full"
+    } py-4 font-medium text-base flex items-center justify-center text-center cursor-pointer`}
       type={type}
     >
       {children}

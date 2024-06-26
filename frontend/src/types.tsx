@@ -33,3 +33,11 @@ export interface User {
     questions: Question[];
   }
   
+  /* eslint-disable no-unused-vars */
+  export enum ButtonVariant{
+    Small = "small",
+    Large = "large",
+    Delete = "delete",
+  }
+
+  export type ButtonType = "button" | "submit" | "reset" | undefined;

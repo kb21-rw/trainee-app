@@ -16,6 +16,7 @@ import {
   traineeTableSortingValues,
 } from "../../utils/data";
 import AddUserButton from "../../components/ui/AddButton";
+import DeleteModal from '../../components/modals/DeleteModal';
 
 const TraineesInfo = () => {
   const cookies = new Cookies();
@@ -29,11 +30,19 @@ const TraineesInfo = () => {
   const [isAddingTrainee, setIsAddingTrainee] = useState(false);
   const [deleteTrainee, { isFetching: isDeleteTraineeLoading }] =
     useDeleteTraineeMutation();
-  const handleDeleteTrainee = async (id: string) => {
-    await deleteTrainee({ jwt, id });
+    const [showDeleteModal, setShowDeleteModal]= useState(false)
+    const [traineeTobeDeletedId,setTraineeTobeDeletedId]= useState<string | null>(null)
+
+  const handleDeleteTrainee = async () => {
+    if(traineeTobeDeletedId)
+    await deleteTrainee({ jwt, id:traineeTobeDeletedId });
+    setShowDeleteModal(false)
   };
 
   const traineesList: string[][] = getTrainees(data, traineeTableDataItems);
+
+  const traineeTobeDeleted= traineesList?.find(trainee=>trainee[0]== traineeTobeDeletedId)
+  const traineeTobeDeletedName= traineeTobeDeleted ?  traineeTobeDeleted[1] : ''
 
   return (
     <div className="py-8">
@@ -51,10 +60,22 @@ const TraineesInfo = () => {
         data={traineesList}
         actions={[
           { type: "edit", actionCaller: setEditTrainee },
-          { type: "delete", actionCaller: handleDeleteTrainee },
+          { type: "delete", actionCaller: async (id:string)=> {
+            await setTraineeTobeDeletedId(id)
+            setShowDeleteModal(true)
+          } },
         ]}
         isLoading={isDeleteTraineeLoading || isGetAllTraineesLoading}
       />
+      {showDeleteModal && (
+        <DeleteModal
+        title='a Trainee'
+        name={traineeTobeDeletedName}
+        closePopup={() => setShowDeleteModal(false)}
+        onDelete={handleDeleteTrainee}
+        />
+      )
+      }
       {isAddingTrainee && (
         <AddingTraineeModal
           jwt={jwt}
