@@ -14,6 +14,7 @@ export const usersApi: any = createApi({
     "questions",
     "response",
     "overview",
+    "applicantForm",
     "applicantResponse"
   ],
   endpoints: (builder) => ({
@@ -358,14 +359,13 @@ export const usersApi: any = createApi({
     }),
 
     getFormForApplicants: builder.query({
-      query: (args) => {
-        const { id } = args;
+      query: () => {
         return {
-          url: `/forms/${id}`,
+          url: `/forms/application`,
           method: "GET",
         };
       },
-      providesTags: ["forms"],
+      providesTags: ["applicantForm"],
     }),
 
     addApplicantResponse: builder.mutation({
