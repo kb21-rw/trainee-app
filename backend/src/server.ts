@@ -7,6 +7,7 @@ import applicantRoute from "./routes/applicantRoutes";
 import traineeRoute from "./routes/traineeRoute";
 import coachRoute from "./routes/coachRoute";
 import formRoute from "./routes/formRoute";
+import cohortRoutes from "./routes/cohortRoutes";
 import questionRoute from "./routes/questionRoute";
 import responseRoute from "./routes/responseRoute";
 import overviewRoute from "./routes/overviewRoute";
@@ -25,12 +26,13 @@ mongoose.connection.once("open", () => {
   });
 });
 
-app.use(cors({ origin: "*", credentials: true,  }));
+app.use(cors({ origin: "*", credentials: true }));
 app.use(express.json());
 app.use("/auth", authRoute);
 app.use("/users", userRoute);
 app.use("/trainees", traineeRoute);
 app.use("/coaches", coachRoute);
+app.use("/cohorts", cohortRoutes);
 app.use("/forms", formRoute);
 app.use("/questions", questionRoute);
 app.use("/applicants", applicantRoute);

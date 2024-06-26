@@ -19,7 +19,10 @@ const CohortSchema = new Schema(
       required: true,
       unique: true,
     },
-    description: String,
+    description: {
+      type: String,
+      default: null,
+    },
     isActive: {
       type: Boolean,
       required: true,
