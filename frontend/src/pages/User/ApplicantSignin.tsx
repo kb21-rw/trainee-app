@@ -18,15 +18,16 @@ const ApplicantSignin = () => {
   const cookies = new Cookies();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirectUrl = searchParams.get("redirectTo") || "/applicants";
+  const redirectUrl = searchParams.get("redirectTo") || "/applicant";
 
   const onSubmit = async (userData: any) => {
     const result = await login({
       email: userData.email,
       password: userData.password,
     });
-    if (result?.userData?.accessToken) {
-      cookies.set("jwt", result.userData.accessToken, { maxAge: 1800 });
+    console.log(result)
+    if (result?.data?.accessToken) {
+      cookies.set("jwt", result.data.accessToken, { maxAge: 1800 });
       return navigate(redirectUrl);
     }
   };

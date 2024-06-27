@@ -26,9 +26,9 @@ const ApplicantSignup = () => {
       password: userData.password,
     });
     console.log(result);
-    if (result.userData.accessToken) {
-      cookies.set("jwt", result.userData.accessToken, { maxAge: 1800 });
-      return navigate("/applicant");
+    if (result.data.userId) {
+      cookies.set("jwt", result.data.userId, { maxAge: 1800 });
+      return navigate("/login");
     }
   };
 
