@@ -3,7 +3,7 @@ import { Schema, model } from "mongoose";
 export interface QuestionProperties {
   _id: string;
   title: string;
-  type: "text" | "dropdown";
+  type: "text" | "dropdown"| "multiple-choice";
   options: string[];
   responseIds: string[];
 }
@@ -17,7 +17,7 @@ const QuestionSchema = new Schema(
 
     type: {
       type: String,
-      enum: ["text", "dropdown"],
+      enum: ["text", "dropdown","multiple-choice"],
       required: true,
     },
 
