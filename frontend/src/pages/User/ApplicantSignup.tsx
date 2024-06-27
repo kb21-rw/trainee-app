@@ -25,7 +25,6 @@ const ApplicantSignup = () => {
       email: userData.email,
       password: userData.password,
     });
-    console.log(result);
     if (result.data.userId) {
       cookies.set("jwt", result.data.userId, { maxAge: 1800 });
       return navigate("/login");

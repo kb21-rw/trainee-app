@@ -25,7 +25,6 @@ const ApplicantSignin = () => {
       email: userData.email,
       password: userData.password,
     });
-    console.log(result)
     if (result?.data?.accessToken) {
       cookies.set("jwt", result.data.accessToken, { maxAge: 1800 });
       return navigate(redirectUrl);

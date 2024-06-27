@@ -21,7 +21,6 @@ const Login = () => {
   const redirectUrl = searchParams.get("redirectTo") || "/";
   const onSubmit = async (data: any) => {
     const result = await login({ email: data.email, password: data.password });
-    console.log(result.data)
     if (result?.data?.accessToken) {
       cookies.set("jwt", result.data.accessToken, { maxAge: 1800 });
       return navigate(redirectUrl);
