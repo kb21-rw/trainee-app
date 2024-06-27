@@ -26,6 +26,7 @@ import TraineeResults from "./pages/User/TraineeResults";
 import NewPassword from "./pages/Applicant/NewPassword";
 import ForgetPassword from "./pages/Applicant/ForgetPassword";
 import ApplicationForm from "./pages/Applicant/ApplicationForm";
+import ApplicantHomPage from "./pages/Applicant/ApplicantHomPage";
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -44,6 +45,7 @@ export default function App() {
         </Route>
         <Route path="/applicant">
           <Route index element={<ApplicationForm/>} />
+          <Route path="home" element={<ApplicantHomPage/>} />
           <Route path="signup" element={<SignUp />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="reset-password" element={<ForgetPassword />} />
