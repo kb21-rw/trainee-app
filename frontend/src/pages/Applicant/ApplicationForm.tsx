@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 import React, { useState } from "react";
 import { useGetFormForApplicantsQuery } from "../../features/user/apiSlice";
 import Loader from "../../components/ui/Loader";
@@ -26,7 +24,7 @@ const ApplicationForm = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const cookies = new Cookies();
-  const jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2N2Q2MjU3YjIzNjdhOGYzMTdjNjgyNCIsIm5hbWUiOiJLZXZpbmUiLCJlbWFpbCI6Im11Z2lzaGEyMjEwMjIzNDhAZ21haWwuY29tIiwicm9sZSI6IkFQUExJQ0FOVCIsImlhdCI6MTcxOTUxNzA1MSwiZXhwIjoxNzE5NTUzMDUxfQ.pu0Mlja4fgiT6BOLL-EN7wYMlsEv-1iLpww9kJkE-rE"
+  const jwt = cookies.get("jwt");
 
   const { data, isFetching, isError } = useGetFormForApplicantsQuery();
   const [addApplicantResponse] = useAddApplicantResponseMutation();
