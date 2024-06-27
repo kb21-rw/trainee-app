@@ -166,6 +166,15 @@ export const usersApi: any = createApi({
         };
       }
     }),
+    verifyApplicant: builder.mutation({
+      query: (userId) => {
+        return {
+          url: `/auth/applicant/verify?userId=${userId}`,
+          method: "PATCH",
+          
+        };
+      },
+    }),
 
     resetPassword: builder.mutation({
       query: (body) => {
@@ -375,6 +384,7 @@ export const {
   useCreateTraineeMutation,
   useLoginMutation,
   useSignupMutation,
+  useVerifyApplicantMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
   useResetPasswordMutation,
