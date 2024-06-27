@@ -44,6 +44,7 @@ export enum ButtonVariant {
   Small = "small",
   Large = "large",
   Delete = "delete",
+  Edit = "edit"
 }
 
 export type ButtonType = "button" | "submit" | "reset" | undefined;
