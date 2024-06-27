@@ -369,10 +369,13 @@ export const usersApi: any = createApi({
     }),
 
     addApplicantResponse: builder.mutation({
-      query: ({ body }) => ({
+      query: ({jwt, body}) => ({
         url: '/responses/application',
         method: "POST",
-        body: { ...body },
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: [...body],
       }),
       invalidatesTags: ["applicantResponse"],
     }),
