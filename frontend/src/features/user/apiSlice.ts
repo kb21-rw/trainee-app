@@ -157,6 +157,16 @@ export const usersApi: any = createApi({
       invalidatesTags: ["profile"],
     }),
 
+    signup: builder.mutation({
+      query: (body)=>{
+        return {
+          url: "auth/register/applicant",
+          method: "POST",
+          body: {...body},
+        };
+      }
+    }),
+
     resetPassword: builder.mutation({
       query: (body) => {
         return {
@@ -364,6 +374,7 @@ export const {
   useCreateCoachMutation,
   useCreateTraineeMutation,
   useLoginMutation,
+  useSignupMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
   useResetPasswordMutation,

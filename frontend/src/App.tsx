@@ -17,14 +17,16 @@ import { usersApi } from "./features/user/apiSlice";
 import ResetPassword from "./pages/User/ResetPassword";
 import EditMyTrainees from "./pages/User/EditTraineesForCoach";
 import ProtectedRoute from "./components/ProtectedRoutes";
-import SignUp from "./pages/Applicant/SignUp";
+// import SignUp from "./pages/Applicant/SignUp";
 import AllForm from "./pages/Form/AllForms";
 import SingleForm from "./pages/Form/SingleForm";
-import SignIn from "./pages/Applicant/SignIn";
+// import SignIn from "./pages/Applicant/SignIn";
 import OverView from "./pages/User/OverView";
 import TraineeResults from "./pages/User/TraineeResults";
 import NewPassword from "./pages/Applicant/NewPassword";
 import ForgetPassword from "./pages/Applicant/ForgetPassword";
+import ApplicantSignup from "./pages/User/ApplicantSignUp";
+import ApplicantSignin from "./pages/User/ApplicantSignin";
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -43,8 +45,8 @@ export default function App() {
         </Route>
         <Route path="/applicant">
           <Route index element={<h1>Successfully In!</h1>} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="signin" element={<SignIn />} />
+          <Route path="signup" element={<ApplicantSignup />} />
+          <Route path="signin" element={<ApplicantSignin />} />
           <Route path="reset-password" element={<ForgetPassword />} />
           <Route path="new-password" element={<NewPassword />} />
           <Route
