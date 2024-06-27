@@ -17,16 +17,15 @@ import { usersApi } from "./features/user/apiSlice";
 import ResetPassword from "./pages/User/ResetPassword";
 import EditMyTrainees from "./pages/User/EditTraineesForCoach";
 import ProtectedRoute from "./components/ProtectedRoutes";
-// import SignUp from "./pages/Applicant/SignUp";
 import AllForm from "./pages/Form/AllForms";
 import SingleForm from "./pages/Form/SingleForm";
-// import SignIn from "./pages/Applicant/SignIn";
 import OverView from "./pages/User/OverView";
 import TraineeResults from "./pages/User/TraineeResults";
 import NewPassword from "./pages/Applicant/NewPassword";
 import ForgetPassword from "./pages/Applicant/ForgetPassword";
 import ApplicantSignup from "./pages/User/ApplicantSignUp";
 import ApplicantSignin from "./pages/User/ApplicantSignin";
+import ApplicantVerification from "./pages/User/ApplicantVerification";
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -51,7 +50,7 @@ export default function App() {
           <Route path="new-password" element={<NewPassword />} />
           <Route
             path="verify"
-            element={<h1>This page should be created, EMAIL VERIFICATION PAGE</h1>}
+            element={<ApplicantVerification/>}
           />
         </Route>
         <Route path="/login" element={<Login />} />
