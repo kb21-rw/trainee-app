@@ -27,7 +27,7 @@ export interface CreateResponseDto {
 }
 
 export interface CreateApplicationResponseDto {
-  questionId: ObjectId;
+  questionId: string;
   answer: string | string[];
 }
 
