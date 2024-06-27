@@ -42,7 +42,7 @@ export const createResponseService = async (
   ) {
     throw new CustomError(
       NOT_ALLOWED,
-      "Only admin or the coach of a train can provide a response",
+      "Only admin or the coach of a trainee can provide a response",
       403
     );
   }
@@ -53,9 +53,24 @@ export const createResponseService = async (
   ) {
     throw new CustomError(
       NOT_ALLOWED,
-      `You can only choose from ${relatedQuestion.options} options`,
+      `You can only choose from ${relatedQuestion.options.join(", ")} options`,
       400
     );
+  }
+
+  if (relatedQuestion.type === "multiple-choice") {
+    const selectedOptions = Array.isArray(text) ? text : [text];
+    const invalidOptions = selectedOptions.filter(
+      (option) => !relatedQuestion.options.includes(option)
+    );
+
+    if (invalidOptions.length > 0) {
+      throw new CustomError(
+        NOT_ALLOWED,
+        `Invalid options: ${invalidOptions.join(", ")}. You can only choose from ${relatedQuestion.options.join(", ")} options`,
+        400
+      );
+    }
   }
 
   const relatedQuestionPopulated = await relatedQuestion.populate<{
@@ -66,16 +81,18 @@ export const createResponseService = async (
     (response) => response.userId.toString() === traineeId
   );
 
+  const responseText = relatedQuestion.type === "multiple-choice" ? (Array.isArray(text) ? text.join(", ") : text) : text;
+
   if (oldResponse) {
     const response = await Response.findByIdAndUpdate(
       oldResponse._id,
-      { text },
+      { text: responseText },
       { new: true }
     );
     return response;
   }
 
-  const createdResponse = await Response.create({ userId: traineeId, text });
+  const createdResponse = await Response.create({ userId: traineeId, text: responseText });
   relatedQuestion.responseIds.push(createdResponse.id);
   await relatedQuestion.save();
 
@@ -93,7 +110,6 @@ export const createApplicantResponseService = async (
   if (!applicationForm)
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
 
-  //check if all question in the form are in the responseData
   if (
     applicationForm.questionIds.toString() !==
     responseData.map((response) => response.questionId).toString()
