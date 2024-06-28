@@ -20,7 +20,7 @@ const ApplicantVerification = () => {
       const { data } = await verifyApplicant(userId );
 
       if (data?.userId) {
-        navigate("/applicant");
+        navigate("/login");
       } else {
         throw new Error("Verification failed");
       }
