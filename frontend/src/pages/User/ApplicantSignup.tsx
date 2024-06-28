@@ -39,7 +39,7 @@ const ApplicantSignup = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col h-screen justify-center gap-5 md:gap-16 items-center px-5 sm:px-10 md:p-0 max-w-xl mx-auto"
+      className="flex flex-col h-screen justify-center gap-5 md:gap-16 items-center px-5 sm:px-10 md:p-0 max-w-md mx-auto"
     >
       <H1>Sign Up</H1>
       {isLoading && <Loader />}
@@ -49,47 +49,50 @@ const ApplicantSignup = () => {
             {errorMessage}
           </div>
         )}
-
-        <InputField
-          name="name"
-          type="text"
-          label="Name"
-          placeholder="Your name"
-          register={register("name", {
-            required: { value: true, message: "Name is a required field" },
-          })}
-        />
-        <InputField
-          name="email"
-          type="email"
-          label="Email address"
-          placeholder="example@gmail.com"
-          register={register("email", {
-            required: { value: true, message: "Email is a required field" },
-          })}
-          errors={errors}
-        />
-        <InputField
-          name="password"
-          type="password"
-          label="Password"
-          placeholder="password"
-          register={register("password", {
-            required: { value: true, message: "Password is a required field" },
-            pattern: {
-              value:
-                /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-              message:
-                "Password must be at least 8 characters long and include :uppercase, lowercase, number, and special character.",
-            },
-          })}
-          errors={errors}
-        />
+        <div className="flex flex-col gap-5 mx-24">
+          <InputField
+            name="name"
+            type="text"
+            label="Name"
+            placeholder="Your name"
+            register={register("name", {
+              required: { value: true, message: "Name is a required field" },
+            })}
+          />
+          <InputField
+            name="email"
+            type="email"
+            label="Email address"
+            placeholder="example@gmail.com"
+            register={register("email", {
+              required: { value: true, message: "Email is a required field" },
+            })}
+            errors={errors}
+          />
+          <InputField
+            name="password"
+            type="password"
+            label="Password"
+            placeholder="password"
+            register={register("password", {
+              required: {
+                value: true,
+                message: "Password is a required field",
+              },
+              pattern: {
+                value:
+                  /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+                message:
+                  "Password must be at least 8 characters long and include :uppercase, lowercase, number, and special character.",
+              },
+            })}
+            errors={errors}
+          />
+        </div>
       </div>
-
       <Button>Sign Up</Button>
       <div className="">
-        Already have an account?{" "}
+        {`Already have an account?  `}
         <Link to="/applicant/signin" className="text-primary-dark">
           Login
         </Link>

@@ -39,7 +39,7 @@ const ApplicantSignin = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col h-screen justify-center gap-5 md:gap-16 items-center px-5 sm:px-10 md:p-0 max-w-xl mx-auto"
+      className="flex flex-col h-screen justify-center gap-5 md:gap-16 items-center px-5 sm:px-10 md:p-0 max-w-md mx-auto"
     >
       <H1>Sign In</H1>
       {isLoading && <Loader />}
@@ -49,31 +49,35 @@ const ApplicantSignin = () => {
             {errorMessage}
           </div>
         )}
-        <InputField
-          name="email"
-          type="email"
-          label="Email address"
-          placeholder="example@gmail.com"
-          register={register("email", {
-            required: { value: true, message: "Email is a required field" },
-          })}
-          errors={errors}
-        />
-        <InputField
-          name="password"
-          type="password"
-          label="Password"
-          placeholder="password"
-          register={register("password", {
-            required: { value: true, message: "Password is a required field" },
-          })}
-          errors={errors}
-        />
+        <div className="flex flex-col gap-5 mx-24">
+          <InputField
+            name="email"
+            type="email"
+            label="Email address"
+            placeholder="example@gmail.com"
+            register={register("email", {
+              required: { value: true, message: "Email is a required field" },
+            })}
+            errors={errors}
+          />
+          <InputField
+            name="password"
+            type="password"
+            label="Password"
+            placeholder="password"
+            register={register("password", {
+              required: {
+                value: true,
+                message: "Password is a required field",
+              },
+            })}
+            errors={errors}
+          />
+        </div>
       </div>
-
       <Button>Sign In</Button>
       <div className="">
-        {`Don't have an account?`}
+        {`Don't have an account?  `}
         <Link to="/applicant/signup" className="text-primary-dark">
           Sign Up
         </Link>
