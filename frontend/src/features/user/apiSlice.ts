@@ -359,10 +359,13 @@ export const usersApi: any = createApi({
     }),
 
     getFormForApplicants: builder.query({
-      query: () => {
+      query: (jwt) => {
         return {
           url: `/forms/application`,
           method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          }
         };
       },
       providesTags: ["applicantForm"],
@@ -375,7 +378,7 @@ export const usersApi: any = createApi({
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
-        body: [...body],
+        body: body,
       }),
       invalidatesTags: ["applicantResponse"],
     }),
