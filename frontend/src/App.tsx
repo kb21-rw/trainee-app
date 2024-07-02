@@ -43,7 +43,7 @@ export default function App() {
             <Route path="/profile-settings" element={<Profile />} />
           </Route>
         </Route>
-        <Route path="/applicant">
+        <Route path="/applicant" element={<ProtectedRoute/>}>
           <Route index element={<ApplicationForm/>} />
           <Route path="home" element={<ApplicantHomePage/>} />
           <Route path="signup" element={<SignUp />} />
