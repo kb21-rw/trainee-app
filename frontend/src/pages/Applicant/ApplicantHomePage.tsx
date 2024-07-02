@@ -1,24 +1,12 @@
 import React from "react";
+import SuccessCheckMarkIcon from "../../assets/SuccessCheckMarkIcon";
 
 const ApplicantHomePage = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-400 to-primary-dark">
       <div className="max-w-md p-8 bg-white rounded-lg shadow-lg">
         <div className="flex items-center justify-center mb-6">
-          <svg
-            className="w-12 h-12 text-green-500"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-            ></path>
-          </svg>
+          <SuccessCheckMarkIcon />
         </div>
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-4">
           Your application has been submitted successfully!
