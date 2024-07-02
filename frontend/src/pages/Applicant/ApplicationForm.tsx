@@ -26,7 +26,7 @@ const ApplicationForm = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
 
-  const { data, isFetching, isError } = useGetFormForApplicantsQuery();
+  const { data, isFetching, isError } = useGetFormForApplicantsQuery(jwt);
   const [addApplicantResponse] = useAddApplicantResponseMutation();
 
   const form = data?.[0];
