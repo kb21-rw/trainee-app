@@ -43,16 +43,20 @@ export default function App() {
             <Route path="/profile-settings" element={<Profile />} />
           </Route>
         </Route>
-        <Route path="/applicant" element={<ProtectedRoute/>}>
-          <Route index element={<ApplicationForm/>} />
-          <Route path="home" element={<ApplicantHomePage/>} />
+        <Route path="/applicant">
+          <Route element={<ProtectedRoute />}>
+            <Route path="home" element={<ApplicantHomePage />} />
+            <Route index element={<ApplicationForm />} />
+          </Route>
           <Route path="signup" element={<SignUp />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="reset-password" element={<ForgetPassword />} />
           <Route path="new-password" element={<NewPassword />} />
           <Route
             path="verify"
-            element={<h1>This page should be created, EMAIL VERIFICATION PAGE</h1>}
+            element={
+              <h1>This page should be created, EMAIL VERIFICATION PAGE</h1>
+            }
           />
         </Route>
         <Route path="/login" element={<Login />} />
