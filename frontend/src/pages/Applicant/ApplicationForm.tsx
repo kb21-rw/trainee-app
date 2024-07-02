@@ -83,7 +83,7 @@ const ApplicationForm = () => {
         role="alert"
       >
         <strong className="font-bold text-5xl space-y-5">Error!</strong>
-        <span className="block sm:inline text-xl">{isError}</span>
+        <span className="block sm:inline text-xl">{errorMessage}</span>
         <span>Please try again later.</span>
       </div>
     );
