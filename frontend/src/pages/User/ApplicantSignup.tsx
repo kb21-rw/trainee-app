@@ -99,7 +99,7 @@ const ApplicantSignup = () => {
         </div>
       </div>
       <Button>Sign Up</Button>
-      <div className="">
+      <div>
         {`Already have an account?  `}
         <Link to="/applicant/signin" className="text-primary-dark">
           Login

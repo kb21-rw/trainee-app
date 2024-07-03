@@ -18,7 +18,7 @@ const ApplicantSignin = () => {
   const cookies = new Cookies();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirectUrl = searchParams.get("redirectTo") || "/applicant";
+  const redirectUrl = searchParams.get("redirectTo") || "/applicant/application";
 
   const onSubmit = async (userData: any) => {
     const result = await login({
@@ -78,8 +78,8 @@ const ApplicantSignin = () => {
         </div>
       </div>
       <Button>Sign In</Button>
-      <div className="">
-        {`Don't have an account?  `}
+      <div>
+        {`Don't have an account?`}
         <Link to="/applicant/signup" className="text-primary-dark">
           Sign Up
         </Link>
