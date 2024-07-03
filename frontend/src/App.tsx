@@ -21,9 +21,7 @@ import AllForm from "./pages/Form/AllForms";
 import SingleForm from "./pages/Form/SingleForm";
 import OverView from "./pages/User/OverView";
 import TraineeResults from "./pages/User/TraineeResults";
-import NewPassword from "./pages/Applicant/NewPassword";
-import ForgetPassword from "./pages/Applicant/ForgetPassword";
-import ApplicantSignup from "./pages/User/ApplicantSignUp";
+import ApplicantSignup from "./pages/User/ApplicantSignup";
 import ApplicantSignin from "./pages/User/ApplicantSignin";
 import ApplicantVerification from "./pages/User/ApplicantVerification";
 export default function App() {
@@ -46,8 +44,6 @@ export default function App() {
           <Route index element={<h1>Successfully In!</h1>} />
           <Route path="signup" element={<ApplicantSignup />} />
           <Route path="signin" element={<ApplicantSignin />} />
-          <Route path="reset-password" element={<ForgetPassword />} />
-          <Route path="new-password" element={<NewPassword />} />
           <Route
             path="verify"
             element={<ApplicantVerification/>}
