@@ -3,7 +3,7 @@ import { useSignupMutation } from "../../features/user/apiSlice";
 import { useForm } from "react-hook-form";
 import Cookies from "universal-cookie";
 import { Link, useNavigate } from "react-router-dom";
-import InputField from "../Form/InputField";
+import InputField from "../../components/ui/InputField";
 import Button from "../../components/ui/Button";
 import { H1 } from "../../components/ui/Typography";
 import Loader from "../../components/ui/Loader";
@@ -55,18 +55,25 @@ const ApplicantSignup = () => {
             type="text"
             label="Name"
             placeholder="Your name"
-            register={register("name", {
+            register={register}
+            options={{
               required: { value: true, message: "Name is a required field" },
-            })}
+            }}
+            errors={errors}
           />
           <InputField
             name="email"
             type="email"
             label="Email address"
             placeholder="example@gmail.com"
-            register={register("email", {
+            register={register}
+            options={{
               required: { value: true, message: "Email is a required field" },
-            })}
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: "Invalid email address",
+              }, // checks if the email follows the standard format.
+            }}
             errors={errors}
           />
           <InputField
@@ -74,7 +81,8 @@ const ApplicantSignup = () => {
             type="password"
             label="Password"
             placeholder="password"
-            register={register("password", {
+            register={register}
+            options={{
               required: {
                 value: true,
                 message: "Password is a required field",
@@ -84,8 +92,8 @@ const ApplicantSignup = () => {
                   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
                 message:
                   "Password must be at least 8 characters long and include :uppercase, lowercase, number, and special character.",
-              },
-            })}
+              }, // checks if password is valid
+            }}
             errors={errors}
           />
         </div>

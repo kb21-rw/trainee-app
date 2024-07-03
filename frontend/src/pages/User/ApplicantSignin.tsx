@@ -5,7 +5,7 @@ import Cookies from "universal-cookie";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import Loader from "../../components/ui/Loader";
 import { H1 } from "../../components/ui/Typography";
-import InputField from "../Form/InputField";
+import InputField from "../../components/ui/InputField";
 import Button from "../../components/ui/Button";
 
 const ApplicantSignin = () => {
@@ -55,9 +55,10 @@ const ApplicantSignin = () => {
             type="email"
             label="Email address"
             placeholder="example@gmail.com"
-            register={register("email", {
+            register={register}
+            options={{
               required: { value: true, message: "Email is a required field" },
-            })}
+            }}
             errors={errors}
           />
           <InputField
@@ -65,12 +66,13 @@ const ApplicantSignin = () => {
             type="password"
             label="Password"
             placeholder="password"
-            register={register("password", {
+            register={register}
+            options={{
               required: {
                 value: true,
                 message: "Password is a required field",
               },
-            })}
+            }}
             errors={errors}
           />
         </div>
