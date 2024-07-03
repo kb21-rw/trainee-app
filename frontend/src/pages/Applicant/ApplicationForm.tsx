@@ -6,7 +6,6 @@ import FormInput from "../../components/ui/FormInput";
 import Button from "../../components/ui/Button";
 import { useAddApplicantResponseMutation } from "../../features/user/apiSlice";
 import { useForm } from "react-hook-form";
-import Alert from "../../components/ui/Alert";
 import Cookies from "universal-cookie";
 import ReviewFormModal from "../../components/modals/ReviewFormModal";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +25,7 @@ const ApplicationForm = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
 
-  const { data, isFetching, isError } = useGetFormForApplicantsQuery();
+  const { data, isFetching, isError } = useGetFormForApplicantsQuery(jwt);
   const [addApplicantResponse] = useAddApplicantResponseMutation();
 
   const form = data?.[0];
@@ -41,10 +40,12 @@ const ApplicationForm = () => {
     isError?.data?.errorMessage;
 
   const handleFormSubmit = (formData: any) => {
-    const responses = formData.responses.map((response: ApplicationFormResponse) => ({
-      questionId: response.questionId,
-      answer: response.answer,
-    }));
+    const responses = formData.responses.map(
+      (response: ApplicationFormResponse) => ({
+        questionId: response.questionId,
+        answer: response.answer,
+      })
+    );
     setReviewData(responses);
     setIsModalOpen(true);
   };
@@ -55,9 +56,11 @@ const ApplicationForm = () => {
         jwt,
         body: reviewData,
       });
-      navigate('/applicant/home')
-    } catch (error) {
-      throw new Error("Error submitting form");
+
+      navigate(`/applicant/home`)
+
+    } catch (error: any) {
+      throw new Error("Error submitting form", error);
     }
   };
 
@@ -66,12 +69,6 @@ const ApplicationForm = () => {
     setIsModalOpen(false);
   };
 
-  if (errorMessage) {
-    return (
-      <div> {errorMessage && <Alert type="error">{errorMessage}</Alert>}</div>
-    );
-  }
-
   if (isFetching)
     return (
       <div className="h-[50vh] flex items-center justify-center">
@@ -79,94 +76,97 @@ const ApplicationForm = () => {
       </div>
     );
 
-  if (isError) {
-    return <div>Something went wrong</div>;
+  if(isError || errorMessage) {
+    return (
+      <div
+        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded flex flex-col justify-center items-center"
+        role="alert"
+      >
+        <strong className="font-bold text-5xl space-y-5">Error!</strong>
+        <span className="block sm:inline text-xl">{errorMessage}</span>
+        <span>Please try again later.</span>
+      </div>
+    );
   }
 
-  return (
-    <div className="w-full border bg-gray-200 p-10 h-full">
-      <div className="w-3/5 mx-auto container mt-10 bg-white rounded-xl shadow">
-        <div className="border-t-[#673AB7] border-t-8 rounded-xl w-full p-4"></div>
-        <form className="w-full px-5 h-auto" onSubmit={handleSubmit(handleFormSubmit)}>
-          <div className="text-center">
-            <h2 className="capitalize text-4xl font-bold mb-4 text-black/80">
-              {formTitle}
-            </h2>
-            <p className="font-normal text-black/60">{formDescription}</p>
-          </div>
-          <div className="w-full mt-10">
-            {formQuestions.map((question: Question, index: number) => (
-              <div key={index}>
-                <h1 className="capitalize text-xl font-medium mb-1">
-                  <span className="mr-2">{index + 1}.</span>
-                  {question.title}
-                </h1>
-                {question.type === "text" && (
-                  <FormInput
-                    {...register(`responses[${index}].questionId`, {
-                      value: question._id,
-                    })}
-                    {...register(`responses[${index}].answer`, {
-                      required: true,
-                    })}
-                    className="border-b border-black/90 text-gray-500 text-lg w-full mb-4 pl-4 focus:border-b-2 focus:border-b-[#4285F4] transition-all duration-500"
-                  />
-                )}
-                {question.type === "dropdown" && (
-                  <div className="py-3">
-                    {question.options?.map(
-                      (option: string, optionIndex: number) => (
-                        <div
-                          key={optionIndex}
-                          className="flex items-center px-5 py-1"
-                        >
-                          <input
-                            type="radio"
-                            id={`option_${optionIndex}`}
-                            {...register(`responses[${index}].questionId`, {
-                              value: question._id,
-                              required: true,
-                            })}
-                            {...register(`responses[${index}].answer`, {
-                              value: option,
-                            })}
-                            value={option}
-                            className="mr-2 w-4 h-4 text-indigo-600 focus:ring-indigo-500"
-                          />
-                          <label
-                            htmlFor={`option_${optionIndex}`}
-                            className="text-lg capitalize text-gray-600"
-                          >
-                            {option}
-                          </label>
-                        </div>
-                      )
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
 
-          <div className="flex justify-center py-5">
+  return (
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="max-w-3xl w-full bg-white rounded-lg shadow-lg">
+    <div className="border-t-[#673AB7] border-t-8 rounded-xl w-full p-4"></div>
+      <div className="px-8 py-6">
+        <div className="border-b border-gray-200">
+          <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">
+            {formTitle}
+          </h2>
+          <p className="text-gray-600 text-center mb-6">{formDescription}</p>
+        </div>
+        <form className="mt-8" onSubmit={handleSubmit(handleFormSubmit)}>
+          {formQuestions.map((question: Question, index: number) => (
+            <div key={index} className="mb-6">
+              <h3 className="text-lg font-semibold text-gray-700 mb-2">
+                {index + 1}. {question.title}
+              </h3>
+              {question.type === "text" && (
+                <FormInput
+                  {...register(`responses[${index}].questionId`, {
+                    value: question._id,
+                  })}
+                  {...register(`responses[${index}].answer`, {
+                    required: true,
+                  })}
+                  className="border-b border-gray-300 rounded-md text-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-primary-dark focus:border-transparent"
+                />
+              )}
+              {question.type === "dropdown" && (
+                <div className="space-y-4">
+                  {question.options?.map((option: string, optionIndex: number) => (
+                    <div key={optionIndex} className="flex items-center">
+                      <input
+                        type="radio"
+                        id={`option_${optionIndex}`}
+                        {...register(`responses[${index}].questionId`, {
+                          value: question._id,
+                          required: true,
+                        })}
+                        {...register(`responses[${index}].answer`, {
+                          value: option,
+                        })}
+                        value={option}
+                        className="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500"
+                      />
+                      <label
+                        htmlFor={`option_${optionIndex}`}
+                        className="ml-3 block text-sm font-medium text-gray-700"
+                      >
+                        {option}
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+          <div className="flex justify-center">
             <Button variant={ButtonVariant.Small} type="submit">
               Submit
             </Button>
           </div>
         </form>
       </div>
-      {isModalOpen && (
-        <ReviewFormModal
-          title="Confirm Submission"
-          closePopup={() => setIsModalOpen(false)}
-          formQuestions={formQuestions}
-          responses={reviewData}
-          setReviewData = {setReviewData}
-          handleConfirm={handleConfirm}
-          handleEdit={handleEdit}
-        />
-      )}
     </div>
+    {isModalOpen && (
+      <ReviewFormModal
+        title="Confirm Submission"
+        closePopup={() => setIsModalOpen(false)}
+        formQuestions={formQuestions}
+        responses={reviewData}
+        setReviewData={setReviewData}
+        handleConfirm={handleConfirm}
+        handleEdit={handleEdit}
+      />
+    )}
+  </div>
   );
 };
 

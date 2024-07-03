@@ -6,6 +6,7 @@ import PasswordMessages from "../../utils/PasswordMessages";
 import { useSearchParams } from "react-router-dom";
 import newPassword, { errorMessage } from "../../utils/newPassword";
 import validatePassword from "../../utils/validatePassword";
+import { ButtonVariant } from "../../types";
 interface userValidation {
   email: any;
   password: string;
@@ -76,7 +77,7 @@ export default function SignUp() {
             {errrorMessage.length > 1 ? errrorMessage : ""}
           </h1>
           <div className="flex justify-center">
-            <Button type="submit" variant="small" clickHandler={handleUserInfo}>
+            <Button type="submit" variant={ButtonVariant.Small} clickHandler={handleUserInfo}>
               Signup
             </Button>
           </div>
