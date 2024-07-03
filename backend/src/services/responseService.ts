@@ -53,21 +53,27 @@ export const createResponseService = async (
   ) {
     throw new CustomError(
       NOT_ALLOWED,
-      `You can only choose from ${relatedQuestion.options.join(", ")} options`,
+      `You can only choose from ${relatedQuestion.options.join(",")} options`,
       400
     );
   }
 
+  const selectedOptions = Array.isArray(text) ? text : [text];
+
   if (relatedQuestion.type === "multiple-choice") {
-    const selectedOptions = Array.isArray(text) ? text : [text];
+    console.log('Selected Options:', selectedOptions);
+    console.log('Available Options:', relatedQuestion.options);
+    
+    const availableOptions = relatedQuestion.options.join(',').split(',').map(option => option.trim());
+
     const invalidOptions = selectedOptions.filter(
-      (option) => !relatedQuestion.options.includes(option)
+      (option) => !availableOptions.includes(option)
     );
 
     if (invalidOptions.length > 0) {
       throw new CustomError(
         NOT_ALLOWED,
-        `Invalid options: ${invalidOptions.join(", ")}. You can only choose from ${relatedQuestion.options.join(", ")} options`,
+        `Invalid options: ${invalidOptions.join(", ")}. You can only choose from ${availableOptions.join(", ")} options`,
         400
       );
     }
@@ -81,7 +87,7 @@ export const createResponseService = async (
     (response) => response.userId.toString() === traineeId
   );
 
-  const responseText = relatedQuestion.type === "multiple-choice" ? (Array.isArray(text) ? text.join(", ") : text) : text;
+  const responseText = relatedQuestion.type === "multiple-choice" ? selectedOptions.join(", ") : text;
 
   if (oldResponse) {
     const response = await Response.findByIdAndUpdate(
