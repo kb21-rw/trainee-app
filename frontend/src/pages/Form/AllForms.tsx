@@ -12,6 +12,7 @@ import Loader from "../../components/ui/Loader";
 import { useNavigate } from "react-router-dom";
 import NotFound from "../../components/ui/NotFound";
 import Button from "../../components/ui/Button";
+import { ButtonVariant } from "../../types";
 
 const AllForms = () => {
   const [searchString, setSearchString] = useState("");
@@ -44,7 +45,7 @@ const AllForms = () => {
       <div className="flex justify-between items-center my-5">
         <SearchInput setSearchQuery={setSearchString} />
         <div className="grid gap-1">
-          <Button clickHandler={() => setClick(!clicked)} variant="small">
+          <Button clickHandler={() => setClick(!clicked)} variant={ButtonVariant.Small}>
             <Plus />
             Add Form
           </Button>

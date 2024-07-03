@@ -74,7 +74,7 @@ const EditTraineeModal = ({
         />
         <InputField
           type="email"
-          label="Email adress"
+          label="Email address"
           placeholder=""
           name="email"
           defaultValue={traineeData[2]}

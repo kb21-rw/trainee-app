@@ -3,7 +3,7 @@ import React, { ReactNode, useState, useEffect } from "react";
 const Alert = ({
   children,
   type,
-  displayDuration = 5000,
+  displayDuration = 2000,
 }: {
   children: ReactNode;
   type: "error" | "success";

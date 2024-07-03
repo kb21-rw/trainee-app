@@ -24,6 +24,8 @@ import TraineeResults from "./pages/User/TraineeResults";
 import ApplicantSignup from "./pages/User/ApplicantSignup";
 import ApplicantSignin from "./pages/User/ApplicantSignin";
 import ApplicantVerification from "./pages/User/ApplicantVerification";
+import ApplicationForm from "./pages/Applicant/ApplicationForm";
+import ApplicantHomePage from "./pages/Applicant/ApplicantHomePage";
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -41,13 +43,13 @@ export default function App() {
           </Route>
         </Route>
         <Route path="/applicant">
-          <Route index element={<h1>Successfully In!</h1>} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="home" element={<ApplicantHomePage />} />
+            <Route index element={<ApplicationForm />} />
+          </Route>
           <Route path="signup" element={<ApplicantSignup />} />
           <Route path="signin" element={<ApplicantSignin />} />
-          <Route
-            path="verify"
-            element={<ApplicantVerification/>}
-          />
+          <Route path="verify" element={<ApplicantVerification />} />
         </Route>
         <Route path="/login" element={<Login />} />
         <Route path="/reset-password" element={<ResetPassword />} />
