@@ -29,7 +29,7 @@ const Login = () => {
       const userRole = decodedToken.role;
 
       if (userRole === "APPLICANT") {
-        navigate("/applicant/application");
+        navigate("/applicant/apply");
       } else {
         navigate(redirectUrl);
       }

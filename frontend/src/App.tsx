@@ -45,7 +45,7 @@ export default function App() {
         <Route path="/applicant">
           <Route element={<ProtectedRoute />}>
             <Route path="home" element={<ApplicantHomePage />} />
-            <Route index element={<ApplicationForm />} />
+            <Route path="apply" element={<ApplicationForm />} />
           </Route>
           <Route path="signup" element={<ApplicantSignup />} />
           <Route path="signin" element={<ApplicantSignin />} />
