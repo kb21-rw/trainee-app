@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import OpenEye from "../../assets/OpenEyeIcon";
 import ClosedEye from "../../assets/ClosedEyeIcon";
+import { FieldErrors } from "react-hook-form";
 
 const InputField = ({
   label,
@@ -11,6 +12,8 @@ const InputField = ({
   defaultValue,
   register,
   options,
+  errorMessage,
+  errors,
 }: {
   label: string;
   type: string;
@@ -20,11 +23,15 @@ const InputField = ({
   defaultValue?: string;
   register?: any;
   options?: any;
+  errorMessage?: any;
+  errors?: FieldErrors;
 }) => {
   const [show, setShow] = useState<boolean>(false);
   const passwordIcon = () => {
     return show ? <OpenEye /> : <ClosedEye />;
   };
+
+  errorMessage = name && errors && errors[name]?.message;
 
   return (
     <div className={`${styles ? styles : "flex flex-col gap-5"} w-full`}>
@@ -44,6 +51,9 @@ const InputField = ({
           defaultValue={defaultValue}
           {...(register && { ...register(name, options) })}
         />
+        {errorMessage && (
+          <div className="text-red-500">{errorMessage.toString()}</div>
+        )}
 
         {type === "password" && (
           <button type="button" onClick={() => setShow(!show)}>
