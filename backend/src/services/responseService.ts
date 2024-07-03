@@ -61,13 +61,10 @@ export const createResponseService = async (
   const selectedOptions = Array.isArray(text) ? text : [text];
 
   if (relatedQuestion.type === "multiple-choice") {
-    console.log('Selected Options:', selectedOptions);
-    console.log('Available Options:', relatedQuestion.options);
-    
-    const availableOptions = relatedQuestion.options.join(',').split(',').map(option => option.trim());
+    const availableOptions = relatedQuestion.options.join(',').split(',').map((option: string) => option.trim());
 
     const invalidOptions = selectedOptions.filter(
-      (option) => !availableOptions.includes(option)
+      (option: string) => !availableOptions.includes(option)
     );
 
     if (invalidOptions.length > 0) {
@@ -89,20 +86,29 @@ export const createResponseService = async (
 
   const responseText = relatedQuestion.type === "multiple-choice" ? selectedOptions.join(", ") : text;
 
+  let response;
   if (oldResponse) {
-    const response = await Response.findByIdAndUpdate(
+    response = await Response.findByIdAndUpdate(
       oldResponse._id,
       { text: responseText },
       { new: true }
     );
-    return response;
+  } else {
+    response = await Response.create({ userId: traineeId, text: responseText });
+    relatedQuestion.responseIds.push(response.id);
+    await relatedQuestion.save();
   }
 
-  const createdResponse = await Response.create({ userId: traineeId, text: responseText });
-  relatedQuestion.responseIds.push(createdResponse.id);
-  await relatedQuestion.save();
+  if (!response) {
+    throw new CustomError(500, "Failed to save the response", 500);
+  }
 
-  return createdResponse;
+  const responseBody = {
+    ...response.toObject(),
+    text: response.text.split(',').map((option: string) => option.trim())
+  };
+
+  return responseBody;
 };
 
 export const createApplicantResponseService = async (
