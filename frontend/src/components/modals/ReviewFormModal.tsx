@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React from "react";
 import { ApplicationFormResponse, ButtonVariant, Question } from "../../types";
 import Button from "../../components/ui/Button";
