@@ -397,7 +397,7 @@ export const usersApi: any = createApi({
         headers: {
           Authorization: `Bearer ${jwt}`,
         },
-        body: body,
+        body,
       }),
       invalidatesTags: ["applicantResponse"],
     }),
