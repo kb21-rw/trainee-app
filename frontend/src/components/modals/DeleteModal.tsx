@@ -9,8 +9,8 @@ const DeleteModal = ({
   onDelete,
 }: {
   closePopup: () => void;
-  title?: string;
-  name?: string,
+  title: string;
+  name: string,
   onDelete: () => void;
 }) => {
   const handleDelete = () => {
