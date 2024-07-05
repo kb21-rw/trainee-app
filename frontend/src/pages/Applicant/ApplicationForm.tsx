@@ -57,7 +57,7 @@ const ApplicationForm = () => {
         body: reviewData,
       });
 
-      navigate(`/applicant/home`)
+      navigate(`/applicant`)
 
     } catch (error: any) {
       throw new Error("Error submitting form", error);

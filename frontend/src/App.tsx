@@ -30,29 +30,31 @@ export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route>
-        <Route path="/" element={<Layout />} errorElement={<Error />}>
+        <Route path="/" errorElement={<Error />}>
           <Route element={<ProtectedRoute />}>
-            <Route index element={<OverView />} />
-            <Route path="/forms" element={<AllForm />} />
-            <Route path="/forms/:id" element={<SingleForm />} />
-            <Route path="/trainees" element={<TraineesInfo />} />
-            <Route path="/coaches" element={<CoachesInfo />} />
-            <Route path="/my-trainees" element={<EditMyTrainees />} />
-            <Route path="/trainees-results" element={<TraineeResults />} />
-            <Route path="/profile-settings" element={<Profile />} />
+            <Route element={<Layout />}>
+              <Route index element={<OverView />} />
+              <Route path="/forms" element={<AllForm />} />
+              <Route path="/forms/:id" element={<SingleForm />} />
+              <Route path="/trainees" element={<TraineesInfo />} />
+              <Route path="/coaches" element={<CoachesInfo />} />
+              <Route path="/my-trainees" element={<EditMyTrainees />} />
+              <Route path="/trainees-results" element={<TraineeResults />} />
+              <Route path="/profile-settings" element={<Profile />} />
+            </Route>
+            <Route path="/applicant">
+              <Route index element={<ApplicantHomePage />} />
+              <Route path="apply" element={<ApplicationForm />} />
+            </Route>
           </Route>
-        </Route>
-        <Route path="/applicant">
-          <Route element={<ProtectedRoute />}>
-            <Route path="home" element={<ApplicantHomePage />} />
-            <Route path="apply" element={<ApplicationForm />} />
+          <Route path="/applicant">
+            <Route path="signup" element={<ApplicantSignup />} />
+            <Route path="signin" element={<ApplicantSignin />} />
+            <Route path="verify" element={<ApplicantVerification />} />
           </Route>
-          <Route path="signup" element={<ApplicantSignup />} />
-          <Route path="signin" element={<ApplicantSignin />} />
-          <Route path="verify" element={<ApplicantVerification />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
-        <Route path="/login" element={<Login />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     )
