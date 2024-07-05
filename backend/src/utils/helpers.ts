@@ -1,6 +1,5 @@
 import nodeMailer from "nodemailer";
 import dotenv from "dotenv";
-import User from "../models/User";
 
 dotenv.config();
 
@@ -20,21 +19,11 @@ export const generateRandomPassword = (length: number) => {
   return randomString;
 };
 
-export const generateUserId = async () => {
-  let userId = 1;
-  const lastUser = await User.findOne().sort({ userId: -1 });
-  if (lastUser) {
-    userId = parseInt(lastUser.userId, 10) + 1;
-  }
-
-  return String(userId).padStart(6, "0");
-};
-
-const generateRegisterMessage = (
+const generateMessage = (
   name: string,
   email: string,
   role: string,
-  password: string
+  password: string,
 ) => {
   const html = `<html>
     <head>
@@ -66,57 +55,14 @@ const generateRegisterMessage = (
   return html;
 };
 
-const generateVerificationMessage = (name: string, userId: string) => {
-  const html = `<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Email verification</title>
-    </head>
-    <body>
-        <div style="font-family: Arial, sans-serif; margin: 20px;">
-            <h1>Hello ${name},</h1>
-            <div>
-              <p>Click this <a href="${process.env.FRONTEND_URL}/applicant/verify?userId=${userId}">link</a> to verify your email.</p>
-            </div>
-            <p>Sincerely,<br> The gym</p>
-        </div>
-    </body>
-    </html>
-    `;
-  return html;
-};
-
 export const sendEmail = async (
-  emailTo: string,
-  data:
-    | { name: string; email: string; role: string; password: string }
-    | { name: string; userId: string }
-    | { name: string; password: string }
+  name: string,
+  email: string,
+  role: string,
+  password: string,
 ) => {
-  const subject = "Welcome " + data.name;
-  let message = "";
-  if (
-    "name" in data &&
-    "email" in data &&
-    "role" in data &&
-    "password" in data
-  ) {
-    message = generateRegisterMessage(
-      data.name,
-      data.email,
-      data.role,
-      data.password
-    );
-  }
-
-  if ("name" in data && "userId" in data) {
-    message = generateVerificationMessage(data.name, data.userId);
-  }
-
-  if ("name" in data && "password" in data) {
-    message = generateResetPasswordMessage(data.name, data.password);
-  }
-
+  const subject = "Welcome " + name;
+  const message = generateMessage(name, email, role, password);
   const transporter = nodeMailer.createTransport({
     service: "gmail",
     auth: {
@@ -125,8 +71,8 @@ export const sendEmail = async (
     },
   });
   await transporter.sendMail({
-    from: `The GYM <thegym@gmail.com>`,
-    to: emailTo,
+    from: `${name} <${email}>`,
+    to: email,
     subject,
     html: message,
   });
@@ -134,7 +80,7 @@ export const sendEmail = async (
 
 export const generateResetPasswordMessage = (
   name: string,
-  password: string
+  password: string,
 ) => {
   const html = `<html>
     <head>

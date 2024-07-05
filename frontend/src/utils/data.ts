@@ -2,7 +2,7 @@ export const adminMenu = [
   { link: "/", title: "Overview" },
   { link: "/forms", title: "Forms" },
   { link: "/trainees", title: "Trainees" },
-  { link: "/coaches", title: "Coaches" },
+  { link: "/administer-coach", title: "Coaches" },
 ];
 export const coachMenu = [
   { link: "/", title: "Overview" },
@@ -23,6 +23,4 @@ export const traineeTableSortingValues = [
   { title: "Name", value: "name" },
 ];
 export const traineeTableHeaders = ["No", "Name", "Email", "Coach", "Action"];
-export const editTraineeTableHeaders = ["No", "Name", "Email", ""];
-export const editTraineeTableItems = ["_id", "name", "email"];
 export const traineeTableDataItems = ["_id", "name", "email", "coach"];

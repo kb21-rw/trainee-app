@@ -1,4 +1,4 @@
-import { Date, ObjectId } from "mongoose";
+import { Date } from "mongoose";
 
 interface MetaType {
   _id: string;
@@ -9,7 +9,7 @@ interface MetaType {
 export interface CreateFormDto {
   title: string;
   description: string;
-  type: FormType;
+  type: FormType
 }
 export interface UpdateFormDto {
   title: string;
@@ -26,11 +26,6 @@ export interface CreateResponseDto {
   text: string;
 }
 
-export interface CreateApplicationResponseDto {
-  questionId: string;
-  answer: string | string[];
-}
-
 export type IForm = CreateFormDto & MetaType;
 export type IQuestion = CreateQuestionDto & MetaType;
 export type IResponse = CreateResponseDto & MetaType;
@@ -42,7 +37,7 @@ export interface Search {
 
 export enum FormType {
   "APPLICANT" = "APPLICANT",
-  "TRAINEE" = "TRAINEE",
+  "TRAINEE" = "TRAINEE"
 }
 export enum Role {
   "ADMIN" = "ADMIN",

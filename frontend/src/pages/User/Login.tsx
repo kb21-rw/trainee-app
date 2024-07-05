@@ -7,7 +7,6 @@ import { H1 } from "../../components/ui/Typography";
 import Button from "../../components/ui/Button";
 import InputField from "../../components/ui/InputField";
 import Loader from "../../components/ui/Loader";
-import jwt_decode from "jwt-decode";
 
 const Login = () => {
   const [login, { isLoading, error }] = useLoginMutation();
@@ -24,15 +23,7 @@ const Login = () => {
     const result = await login({ email: data.email, password: data.password });
     if (result?.data?.accessToken) {
       cookies.set("jwt", result.data.accessToken, { maxAge: 1800 });
-
-      const decodedToken: any = jwt_decode(result.data.accessToken);
-      const userRole = decodedToken.role;
-
-      if (userRole === "APPLICANT") {
-        navigate("/applicant/apply");
-      } else {
-        navigate(redirectUrl);
-      }
+      return navigate(redirectUrl);
     }
   };
 

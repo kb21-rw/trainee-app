@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { ProfileSchema } from "../validations/userValidation";
 import {
   deleteUserService,
@@ -37,7 +37,7 @@ export const updateProfile = async (
 };
 
 export const deleteUser = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction,
 ) => {

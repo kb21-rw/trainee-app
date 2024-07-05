@@ -1,12 +1,7 @@
-import { applicantResetPassword } from "./../services/applicantService";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Response } from "express";
 import { applicantSignup } from "../services/applicantService";
 import { applicantSignin } from "../services/applicantService";
 import { applicantSchema } from "../validations/applicantValidation";
-import {
-  ErrorObject,
-  handleValidationError,
-} from "../middlewares/errorHandler";
 
 export const signup = async (req: any, res: Response, next: NextFunction) => {
   try {
@@ -29,45 +24,23 @@ export const signup = async (req: any, res: Response, next: NextFunction) => {
 export const signin = async (req: any, res: Response, next: NextFunction) => {
   try {
     const body = req.body;
+    const applicant = req.user;
 
-    const newApplicant = await applicantSignin(body);
-    if (newApplicant.status === 400) {
-      const singInError: ErrorObject = {
-        message: "",
-        kind: "",
-        keyValue: "",
-        code: newApplicant.status,
-        name: newApplicant.errorName,
-        details: [{ message: newApplicant }],
-        statusCode: newApplicant.status,
-        errorCode: newApplicant.status,
-      };
-      return handleValidationError(singInError, res);
+    const { email, password } = body;
+    if (!email || !password) {
+      return res.status(400).send("Email and password are required");
     }
 
-    res.status(201).send(newApplicant);
-  } catch (error: any) {
-    next(error);
-  }
-};
-
-export const resetPassword = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const body = req.body;
-    const newApplicant = await applicantResetPassword(body);
-    await applicantSchema.validateAsync(body);
+    const newApplicant = await applicantSignin(req.user, body);
 
     switch (newApplicant) {
-      case "New password must be different from the old password":
+      case "user does not exist":
+      case "Invalid email or password":
         return res.status(401).send(newApplicant);
-      case "updated password succesfully":
-        return res.status(201).send("pasword changed succesfully");
+      case "signed in succesfully":
+        return res.status(201).send(newApplicant);
       default:
-        return res.status(500).send(" User does not exist");
+        return res.status(500).send("Internal Server Error");
     }
   } catch (error: any) {
     next(error);

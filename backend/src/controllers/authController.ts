@@ -1,23 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  applicantRegisterService,
   loginService,
   registerService,
   resetPasswordService,
-  verifyApplicantService,
 } from "../services/authService";
 import {
   registerSchema,
   loginSchema,
   resetPasswordSchema,
-  applicantRegisterSchema,
 } from "../validations/authValidation";
 
-export const register = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
+export const register = async (req: any, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
     const body = req.body;
@@ -30,40 +23,10 @@ export const register = async (
   }
 };
 
-export const applicantRegister = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const body = req.body;
-    await applicantRegisterSchema.validateAsync(body);
-    const newUser = await applicantRegisterService(body);
-    return res.status(201).send({ userId: newUser.userId });
-  } catch (error: any) {
-    next(error);
-  }
-};
-
-export const verifyApplicant = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
-) => {
-  try {
-    const verifiedUser = await verifyApplicantService(String(req.query.userId));
-    return res
-      .status(201)
-      .send({ userId: verifiedUser.userId, verified: verifiedUser.verified });
-  } catch (error: any) {
-    next(error);
-  }
-};
-
 export const login = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     await loginSchema.validateAsync(req.body);
@@ -83,7 +46,7 @@ export const login = async (
 export const resetPassword = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   try {
     const body = req.body;

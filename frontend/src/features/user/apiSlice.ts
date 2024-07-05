@@ -14,8 +14,6 @@ export const usersApi: any = createApi({
     "questions",
     "response",
     "overview",
-    "applicantForm",
-    "applicantResponse"
   ],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
@@ -157,25 +155,6 @@ export const usersApi: any = createApi({
         };
       },
       invalidatesTags: ["profile"],
-    }),
-
-    signup: builder.mutation({
-      query: (body)=>{
-        return {
-          url: "auth/register/applicant",
-          method: "POST",
-          body: {...body},
-        };
-      }
-    }),
-    verifyApplicant: builder.mutation({
-      query: (userId) => {
-        return {
-          url: `/auth/applicant/verify?userId=${userId}`,
-          method: "PATCH",
-          
-        };
-      },
     }),
 
     resetPassword: builder.mutation({
@@ -344,63 +323,38 @@ export const usersApi: any = createApi({
       invalidatesTags: ["forms"],
     }),
     getOverview: builder.query({
-      query: ({ jwt }) => ({
-        url: "/overview",
-        method: "GET",
+      query: ({ jwt }) => ({ 
+        url: '/overview',
+        method: 'GET',
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          'Authorization': `Bearer ${jwt}`, 
         },
       }),
-      providesTags: ["overview"],
+      providesTags: ['overview'],
     }),
 
     getOverviewForCoach: builder.query({
-      query: ({ jwt }) => ({
-        url: "/overview/my-trainees",
-        method: "GET",
+      query: ({ jwt }) => ({ 
+        url: '/overview/my-trainees',
+        method: 'GET',
         headers: {
-          Authorization: `Bearer ${jwt}`,
+          'Authorization': `Bearer ${jwt}`, 
         },
       }),
-      providesTags: ["overview"],
+      providesTags: ['overview'],
     }),
 
-    addResponse: builder.mutation({
+     addResponse: builder.mutation({
       query: ({ jwt, body, userId, questionId }) => ({
-        url: `/responses/${questionId}?userId=${userId}`,
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: { ...body },
+         url: `/responses/${questionId}?userId=${userId}`,
+         method: 'PUT',
+         headers: {
+           'Authorization': `Bearer ${jwt}`,
+         },
+         body: { ...body },
       }),
-      invalidatesTags: ["overview", "response"],
-    }),
-
-    getFormForApplicants: builder.query({
-      query: (jwt) => {
-        return {
-          url: `/forms/application`,
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          }
-        };
-      },
-      providesTags: ["applicantForm"],
-    }),
-
-    addApplicantResponse: builder.mutation({
-      query: ({jwt, body}) => ({
-        url: '/responses/application',
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${jwt}`,
-        },
-        body: body,
-      }),
-      invalidatesTags: ["applicantResponse"],
-    }),
+      invalidatesTags: ['overview','response'],
+     }),
   }),
 });
 
@@ -410,8 +364,6 @@ export const {
   useCreateCoachMutation,
   useCreateTraineeMutation,
   useLoginMutation,
-  useSignupMutation,
-  useVerifyApplicantMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
   useResetPasswordMutation,
@@ -432,6 +384,4 @@ export const {
   useGetOverviewQuery,
   useAddResponseMutation,
   useGetOverviewForCoachQuery,
-  useGetFormForApplicantsQuery,
-  useAddApplicantResponseMutation,
 } = usersApi;

@@ -2,7 +2,7 @@
 import { Request, Response, NextFunction } from "express";
 
 import CustomError from "./customError";
-export interface ErrorObject {
+interface ErrorObject {
   message: string;
   kind: string;
   keyValue: any;
@@ -13,7 +13,7 @@ export interface ErrorObject {
   errorCode: number | string;
 }
 
-export const handleValidationError = (error: ErrorObject, res: Response) => {
+const handleValidationError = (error: ErrorObject, res: Response) => {
   return res.status(400).json({
     type: "ValidationError",
     errorMessage: error.details[0].message,
@@ -59,9 +59,8 @@ export const errorHandler = (
   error: ErrorObject,
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
-  console.log(error);
   switch (true) {
     case error.name === "ValidationError":
       handleValidationError(error, res);

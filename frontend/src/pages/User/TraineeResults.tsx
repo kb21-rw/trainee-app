@@ -18,7 +18,6 @@ const TraineeResults = () => {
   const cookies = new Cookies();
   const jwt = cookies.get("jwt");
   const { data, isLoading, isError } = useGetOverviewForCoachQuery({ jwt });
-  
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState({
@@ -30,7 +29,6 @@ const TraineeResults = () => {
     type: "",
     questionType: "",
     options: [] as string[],
-    checkedOption: "",
   });
 
   if (isError) {
@@ -143,7 +141,6 @@ const TraineeResults = () => {
                         questionType:
                           question.options.length > 0 ? "dropdown" : "text",
                         options: question.options,
-                        checkedOption: trainee.responses[`${form._id}-${question._id}`] ? trainee.responses[`${form._id}-${question._id}`]: "",
                       });
                     }}
                   >
@@ -167,8 +164,6 @@ const TraineeResults = () => {
           includeButton={true}
           questionType={modalData.questionType}
           options={modalData.options}
-          checkedOption={modalData.checkedOption}
-          handleCheckChange={(value: string) => setModalData({ ...modalData, checkedOption: value })}
         />
       )}
     </div>

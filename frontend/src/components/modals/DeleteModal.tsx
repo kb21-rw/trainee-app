@@ -1,16 +1,20 @@
 import React from "react";
 import ModalLayout from "./ModalLayout";
 import Button from "../ui/Button";
-import { ButtonVariant } from "../../types";
+
 const DeleteModal = ({
   closePopup,
-  title,
-  name,
+  formName,
+  coachName,
+  traineeName,
+  userRole,
   onDelete,
 }: {
   closePopup: () => void;
-  title?: string;
-  name?: string,
+  formName?: string;
+  coachName?: string,
+  traineeName?:string,
+  userRole?:string,
   onDelete: () => void;
 }) => {
   const handleDelete = () => {
@@ -21,16 +25,16 @@ const DeleteModal = ({
   return (
     <ModalLayout
       closePopup={closePopup}
-      title={`Delete ${title}`}
+      title="Delete Form"
     >
 <p className="px-24">
- Are you sure you want to delete: <b>{name}</b>?
+ Are you sure you want to delete the {userRole || 'form'}: <b>{formName||coachName||traineeName}</b>?
 </p>
       <div className="flex justify-between mt-2 mx-32">
-        <Button variant={ButtonVariant.Small} outlined={true} clickHandler={closePopup}>
+        <Button variant="small" outlined={true} clickHandler={closePopup}>
           Cancel
         </Button>
-        <Button variant={ButtonVariant.Delete} clickHandler={handleDelete}>
+        <Button variant="delete" clickHandler={handleDelete}>
           Delete
         </Button>
       </div>

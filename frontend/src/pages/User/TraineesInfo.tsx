@@ -30,18 +30,19 @@ const TraineesInfo = () => {
   const [isAddingTrainee, setIsAddingTrainee] = useState(false);
   const [deleteTrainee, { isFetching: isDeleteTraineeLoading }] =
     useDeleteTraineeMutation();
-    const [showDeleteModal, setShowDeleteModal]= useState(false)
-    const [traineeTobeDeletedId,setTraineeTobeDeletedId]= useState<string | null>(null)
-
+  const [showDeleteModal, setShowDeleteModal]=useState(false)
+  const [traineeTobeDeletedId,setTraineeTobeDeletedId] = useState<string | null>(null)
+    
   const handleDeleteTrainee = async () => {
     if(traineeTobeDeletedId)
     await deleteTrainee({ jwt, id:traineeTobeDeletedId });
     setShowDeleteModal(false)
   };
 
+
   const traineesList: string[][] = getTrainees(data, traineeTableDataItems);
 
-  const traineeTobeDeleted= traineesList?.find(trainee=>trainee[0]== traineeTobeDeletedId)
+  const traineeTobeDeleted= traineesList?.find(trainee=>trainee[0] == traineeTobeDeletedId)
   const traineeTobeDeletedName= traineeTobeDeleted ?  traineeTobeDeleted[1] : ''
 
   return (
@@ -60,7 +61,7 @@ const TraineesInfo = () => {
         data={traineesList}
         actions={[
           { type: "edit", actionCaller: setEditTrainee },
-          { type: "delete", actionCaller: async (id:string)=> {
+          { type: "delete", actionCaller: async(id:string)=>{
             await setTraineeTobeDeletedId(id)
             setShowDeleteModal(true)
           } },
@@ -69,13 +70,12 @@ const TraineesInfo = () => {
       />
       {showDeleteModal && (
         <DeleteModal
-        title='a Trainee'
-        name={traineeTobeDeletedName}
-        closePopup={() => setShowDeleteModal(false)}
+        traineeName={traineeTobeDeletedName}
+        userRole='trainee'
+        closePopup={()=>setShowDeleteModal(false)}
         onDelete={handleDeleteTrainee}
         />
-      )
-      }
+      )}
       {isAddingTrainee && (
         <AddingTraineeModal
           jwt={jwt}
