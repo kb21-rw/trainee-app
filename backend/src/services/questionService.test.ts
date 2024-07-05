@@ -51,7 +51,7 @@ describe("createQuestionService", () => {
     ).resolves.toEqual({
       _id: "66203fa2a3465a4a588d12f1",
       description: "form description",
-      questionsId: ["66203fa2a3465a4a588d12q1"],
+      questionIds: ["66203fa2a3465a4a588d12q1"],
       title: "Test form",
     });
   });

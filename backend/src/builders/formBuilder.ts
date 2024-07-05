@@ -4,13 +4,13 @@ export class Form {
   public readonly _id: string;
   public readonly title: string;
   public readonly description: string;
-  public readonly questionsId: string[];
+  public readonly questionIds: string[];
 
   public constructor(data: FormProperties) {
     this._id = data._id;
     this.title = data.title;
     this.description = data.description;
-    this.questionsId = data.questionsId;
+    this.questionIds = data.questionIds;
   }
 }
 
@@ -19,7 +19,7 @@ export class FormBuilder {
     _id: "66203fa2a3465a4a588d12f1",
     title: "Test form",
     description: "form description",
-    questionsId: [],
+    questionIds: [],
   };
 
   public static from(properties: Partial<FormProperties>): FormBuilder {
@@ -57,8 +57,8 @@ export class FormBuilder {
     return this;
   }
 
-  public withQuestionsId(questionsId: string[]): this {
-    this.properties.questionsId = questionsId;
+  public withQuestionIds(questionIds: string[]): this {
+    this.properties.questionIds = questionIds;
     return this;
   }
 

@@ -29,6 +29,7 @@ import ResponseModal from "../../components/modals/ResponseModal";
     type: "",
     questionType: "",
     options: [] as string[],
+    checkedOption: "",
   });
 
 
@@ -117,6 +118,7 @@ import ResponseModal from "../../components/modals/ResponseModal";
                     type: trainee.type,
                     questionType: question.options.length > 0? "dropdown" : "text",
                     options: question.options,
+                    checkedOption: trainee.responses[`${form._id}-${question._id}`] ? trainee.responses[`${form._id}-${question._id}`]: "",
                   });
                 }}
                  >
@@ -139,6 +141,8 @@ import ResponseModal from "../../components/modals/ResponseModal";
             disabled={true}
             questionType={modalData.questionType}
             options={modalData.options}
+            checkedOption={modalData.checkedOption}
+            handleCheckChange={(value: string) => setModalData({ ...modalData, checkedOption: value })}
           />
         )}
      </div>

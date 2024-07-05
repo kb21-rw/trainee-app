@@ -10,6 +10,7 @@ import {
   updateFormService,
   getSingleFormService,
   deleteFormService,
+  getApplicationFormService,
 } from "../services/formService";
 
 export const createFormController = async (
@@ -77,6 +78,19 @@ export const getSingleFormController = async (
   try {
     const { formId } = req.params;
     const form = await getSingleFormService(formId);
+    return res.status(200).json(form);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getApplicationFormController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    const form = await getApplicationFormService();
     return res.status(200).json(form);
   } catch (error) {
     return next(error);

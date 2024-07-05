@@ -1,6 +1,12 @@
 import { Response, NextFunction } from "express";
-import { createResponseValidation } from "../validations/responseValidation";
-import { createResponseService } from "../services/responseService";
+import {
+  createApplicantResponseValidation,
+  createResponseValidation,
+} from "../validations/responseValidation";
+import {
+  createApplicantResponseService,
+  createResponseService,
+} from "../services/responseService";
 
 export const createResponse = async (
   req: any,
@@ -16,6 +22,24 @@ export const createResponse = async (
       loggedInUser,
       userId,
       questionId,
+      req.body
+    );
+    return res.status(201).json(createdResponse);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createApplicantResponse = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const loggedInUser = req.user;
+    await createApplicantResponseValidation.validateAsync(req.body);
+    const createdResponse = await createApplicantResponseService(
+      loggedInUser,
       req.body
     );
     return res.status(201).json(createdResponse);

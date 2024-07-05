@@ -26,22 +26,21 @@ const CoachesInfo = () => {
   });
   const [isAddingCoach, setIsAddingCoach] = useState(false);
   const [editCoachData, setEditCoachData] = useState<string[] | null>(null);
-  const [showDeleteModal, setShowDeleteModal]= useState(false)
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteCoach, { isFetching: isDeleteCoachLoading }] =
     useDeleteCoachMutation();
-  const [coachTobeDeletedId,setCoachTobeDeletedId] = useState<string | null>(null)
+  const [coachTobeDeletedId,setCoachTobeDeletedId]= useState<string | null>(null)
   
   const handleDeleteCoach = async () => {
     if(coachTobeDeletedId)
-    await deleteCoach({ jwt, id:coachTobeDeletedId});
-    setShowDeleteModal(false)
+    await deleteCoach({ jwt, id:coachTobeDeletedId });
+    setShowDeleteModal(false);
   };
 
-  const coachesList:string[][] = getCoaches(data, coachTableDataItems);
+  const coachesList: string[][] = getCoaches(data, coachTableDataItems);
 
   const coachTobeDeleted= coachesList?.find(coach=>coach[0]==coachTobeDeletedId)
   const coachTobeDeletedName= coachTobeDeleted ?  coachTobeDeleted[1] : ''
-  const coachTobeDeletedRole= coachTobeDeleted ? coachTobeDeleted[3] : ''
 
   return (
     <div>
@@ -60,7 +59,7 @@ const CoachesInfo = () => {
           data={coachesList}
           actions={[
             { type: "edit", actionCaller: setEditCoachData },
-            { type: "delete", actionCaller: async (id:string)=>{
+            { type: "delete", actionCaller: async (id: string)=> {
               await setCoachTobeDeletedId(id)
               setShowDeleteModal(true)
             } },
@@ -69,13 +68,13 @@ const CoachesInfo = () => {
         />
       </div>
       {showDeleteModal && (
-        <DeleteModal
-          coachName={coachTobeDeletedName}
-          userRole={coachTobeDeletedRole}
-          closePopup={() => setShowDeleteModal(false)}
-          onDelete={handleDeleteCoach}
-        />
-      )}
+          <DeleteModal
+            title='a Coach'
+            closePopup={() => setShowDeleteModal(false)}
+            onDelete={handleDeleteCoach}
+            name={coachTobeDeletedName}
+            />
+            )}
       {isAddingCoach && (
         <AddingCoachModal
           jwt={jwt}
@@ -94,5 +93,3 @@ const CoachesInfo = () => {
 };
 
 export default CoachesInfo;
-
-

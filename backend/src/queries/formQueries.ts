@@ -9,7 +9,7 @@ export const getFormsQuery = async (searchString: string) => {
     {
       $lookup: {
         from: "questions",
-        localField: "questionsId",
+        localField: "questionIds",
         foreignField: "_id",
         as: "questions",
       },
@@ -26,6 +26,43 @@ export const getFormsQuery = async (searchString: string) => {
 };
 
 export const getFormQuery = async (formId: string) => {
-  const forms: any = await Form.findById(formId).populate("questionsId").exec();
+  const forms: any = await Form.findById(formId).populate("questionIds").exec();
   return forms;
+};
+
+export const getApplicationFormQuery = async () => {
+  return await Form.aggregate([
+    {
+      $match: {
+        type: "APPLICANT",
+        isActive: true,
+      },
+    },
+    {
+      $lookup: {
+        from: "questions",
+        localField: "questionIds",
+        foreignField: "_id",
+        as: "questions",
+      },
+    },
+    {
+      $project: {
+        title: 1,
+        description: 1,
+        questions: {
+          $map: {
+            input: "$questions",
+            as: "question",
+            in: {
+              _id: "$$question._id",
+              title: "$$question.title",
+              type: "$$question.type",
+              options: "$$question.options",
+            },
+          },
+        },
+      },
+    },
+  ]);
 };

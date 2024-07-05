@@ -7,6 +7,7 @@ import Cookies from "universal-cookie";
 import { useDeleteFormMutation } from "../../features/user/apiSlice";
 import { useNavigate } from "react-router-dom";
 import View from "../../assets/ViewIcon"
+import Loader from "./Loader";
 import DeleteModal from "../modals/DeleteModal";
 
 const FormCard = ({ form }: { form: IFormType }) => {
@@ -14,19 +15,24 @@ const FormCard = ({ form }: { form: IFormType }) => {
   const questions = form.questions;
   const cookie = new Cookies();
   const jwt = cookie.get("jwt");
-  const [showDeleteModal, setShowDeleteModal]= useState(false);
+  const [showDeleteModal, setShowDeleteModal]=useState(false);
 
-  const [deleteForm] =
+  const [deleteForm, { isLoading: isDeleteFormLoading }] =
     useDeleteFormMutation();
-
+    
   const handleDeleteForm = async (id: string) => {
-    await deleteForm({ jwt, id })
-    setShowDeleteModal(false);
+    await deleteForm({ jwt, id });
+    setShowDeleteModal(false)
   };
 
   return (
     <div className="p-8 custom-shadow flex items-center justify-between rounded-xl">
 
+      {isDeleteFormLoading && (
+        <div className="absolute inset-0 h-full w-full">
+          <Loader />
+        </div>
+      )}
       <div
         className="flex flex-col gap-4 w-full"
       > 
@@ -59,11 +65,14 @@ const FormCard = ({ form }: { form: IFormType }) => {
         </button>
       </div>
       </div>
-      {showDeleteModal &&
-       <DeleteModal
-      formName={form.title}
-      closePopup={()=>setShowDeleteModal(false)}
-      onDelete={()=>handleDeleteForm(form._id)}/>}
+      {
+        showDeleteModal && 
+        <DeleteModal
+        title='a form'
+        name={form.title}
+        closePopup={()=>setShowDeleteModal(false)}
+        onDelete={()=>handleDeleteForm(form._id)}/>
+      }
     </div>
   );
 };

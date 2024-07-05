@@ -1,4 +1,6 @@
-import React, { useEffect } from "react";
+/* eslint-disable no-unused-vars */
+
+import React, { useEffect, useState } from "react";
 import ModalLayout from "./ModalLayout";
 import Button from "../ui/Button";
 import { useForm } from "react-hook-form";
@@ -7,6 +9,7 @@ import TextArea from "../ui/TextArea";
 import Cookies from "universal-cookie";
 import { useAddResponseMutation } from "../../features/user/apiSlice";
 import Loader from "../ui/Loader";
+import RadioOption from "../ui/RadioOption";
 
 const ResponseModal = ({
   closePopup,
@@ -19,6 +22,8 @@ const ResponseModal = ({
   disabled,
   questionType,
   options,
+  checkedOption, 
+  handleCheckChange,
 }: {
   closePopup: () => void;
   title: string;
@@ -30,6 +35,8 @@ const ResponseModal = ({
   disabled?: boolean;
   questionType: string;
   options: string[];
+  checkedOption: string;
+  handleCheckChange: (value: string) => void;
 }) => {
   const {
     register,
@@ -42,8 +49,18 @@ const ResponseModal = ({
   const [addResponse, { isLoading, error, isSuccess }] =
     useAddResponseMutation();
 
+    const [localCheckedOption, setLocalCheckedOption] = useState(checkedOption)
+
+    const handleRadioChange = (value: string) => {
+      handleCheckChange(value);
+    };
+
   const onSubmit = async (data: any) => {
-    await addResponse({ jwt, body: { ...data }, questionId, userId });
+    const responseBody = {
+      ...data,
+      ...(questionType === "dropdown" && { text: localCheckedOption }),
+    };
+    await addResponse({ jwt, body: responseBody, questionId, userId });
   };
 
   const errorMessage =
@@ -53,8 +70,11 @@ const ResponseModal = ({
     if (isSuccess) {
       setTimeout(() => closePopup(), 3000);
     }
-  }, [isSuccess, closePopup]);
 
+    setLocalCheckedOption(checkedOption);
+  }, [isSuccess, closePopup, checkedOption]);
+
+  
   return (
     <ModalLayout closePopup={closePopup} title={title}>
       {isLoading && (
@@ -86,7 +106,22 @@ const ResponseModal = ({
             disabled={disabled}
           />
         )}
-        {questionType === "dropdown" && <div>{options.map(option => option)}</div>}
+        {questionType === "dropdown" && (
+          <div>
+            <h1 className="capitalize text-xl pb-5">{question}:</h1>
+            {options.map((option, index) => (
+              <RadioOption
+                key={option}
+                option={option}
+                id={`option-${index}`}
+                value={option}
+                checked={option === localCheckedOption}
+                onRadioChange={handleRadioChange}
+                disabled={disabled}
+              />
+            ))}
+          </div>
+        )}
         <div className="flex justify-end">
           {includeButton && <Button type="submit">Save Response</Button>}
         </div>

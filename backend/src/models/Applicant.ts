@@ -2,7 +2,7 @@ import { Schema, model } from "mongoose";
 
 const ApplicantSchema = new Schema(
   {
-    userId:{
+    userId: {
       type: String,
       unique: true,
       required: true,
@@ -14,7 +14,7 @@ const ApplicantSchema = new Schema(
     },
     googleId: {
       type: String,
-      default:null,
+      default: null,
     },
     password: {
       type: String,
