@@ -33,3 +33,6 @@ npm-debug.log
 
 .env
 dist
+
+# ignore vscode settings
+.vscode/
