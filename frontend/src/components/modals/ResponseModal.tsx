@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-
 import React, { useEffect, useState } from "react";
 import ModalLayout from "./ModalLayout";
 import Button from "../ui/Button";
@@ -36,7 +34,8 @@ const ResponseModal = ({
   questionType: string;
   options: string[];
   checkedOption: string;
-  handleCheckChange: (value: string) => void;
+  // eslint-disable-next-line no-unused-vars
+  handleCheckChange: (_value: string) => void;
 }) => {
   const {
     register,
