@@ -26,6 +26,7 @@ import ApplicantSignin from "./pages/User/ApplicantSignin";
 import ApplicantVerification from "./pages/User/ApplicantVerification";
 import ApplicationForm from "./pages/Applicant/ApplicationForm";
 import ApplicantHomePage from "./pages/Applicant/ApplicantHomePage";
+import Applicants from "./pages/User/Applicants";
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -36,6 +37,7 @@ export default function App() {
               <Route index element={<OverView />} />
               <Route path="/forms" element={<AllForm />} />
               <Route path="/forms/:id" element={<SingleForm />} />
+              <Route path="/applicants" element={<Applicants />} />
               <Route path="/trainees" element={<TraineesInfo />} />
               <Route path="/coaches" element={<CoachesInfo />} />
               <Route path="/my-trainees" element={<EditMyTrainees />} />
