@@ -15,8 +15,9 @@ import {
   traineeTableHeaders,
   traineeTableSortingValues,
 } from "../../utils/data";
-import AddUserButton from "../../components/ui/AddButton";
-import DeleteModal from '../../components/modals/DeleteModal';
+import DeleteModal from "../../components/modals/DeleteModal";
+import Button from "../../components/ui/Button";
+import PlusIcon from "../../assets/PlusIcon";
 
 const TraineesInfo = () => {
   const cookies = new Cookies();
@@ -30,25 +31,35 @@ const TraineesInfo = () => {
   const [isAddingTrainee, setIsAddingTrainee] = useState(false);
   const [deleteTrainee, { isFetching: isDeleteTraineeLoading }] =
     useDeleteTraineeMutation();
-    const [showDeleteModal, setShowDeleteModal]= useState(false)
-    const [traineeTobeDeletedId,setTraineeTobeDeletedId]= useState<string | null>(null)
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [traineeTobeDeletedId, setTraineeTobeDeletedId] = useState<
+    string | null
+  >(null);
 
   const handleDeleteTrainee = async () => {
-    if(traineeTobeDeletedId)
-    await deleteTrainee({ jwt, id:traineeTobeDeletedId });
-    setShowDeleteModal(false)
+    if (traineeTobeDeletedId)
+      await deleteTrainee({ jwt, id: traineeTobeDeletedId });
+    setShowDeleteModal(false);
   };
 
   const traineesList: string[][] = getTrainees(data, traineeTableDataItems);
 
-  const traineeTobeDeleted= traineesList?.find(trainee=>trainee[0]== traineeTobeDeletedId)
-  const traineeTobeDeletedName= traineeTobeDeleted ?  traineeTobeDeleted[1] : ''
+  const traineeTobeDeleted = traineesList?.find(
+    (trainee) => trainee[0] == traineeTobeDeletedId
+  );
+  const traineeTobeDeletedName = traineeTobeDeleted
+    ? traineeTobeDeleted[1]
+    : "";
 
   return (
     <div className="py-8">
-      <AddUserButton addHandler={() => setIsAddingTrainee(true)}>
-        Add trainee
-      </AddUserButton>
+      <div className="flex justify-end mb-4">
+        <Button onClick={() => setIsAddingTrainee(true)}>
+          <div className="flex items-center right-0">
+            <PlusIcon /> <span>Add trainee</span>
+          </div>
+        </Button>
+      </div>
       <UserTableHeader
         setQuery={setQuery}
         sortingValues={traineeTableSortingValues}
@@ -60,22 +71,24 @@ const TraineesInfo = () => {
         data={traineesList}
         actions={[
           { type: "edit", actionCaller: setEditTrainee },
-          { type: "delete", actionCaller: async (id:string)=> {
-            await setTraineeTobeDeletedId(id)
-            setShowDeleteModal(true)
-          } },
+          {
+            type: "delete",
+            actionCaller: async (id: string) => {
+              await setTraineeTobeDeletedId(id);
+              setShowDeleteModal(true);
+            },
+          },
         ]}
         isLoading={isDeleteTraineeLoading || isGetAllTraineesLoading}
       />
       {showDeleteModal && (
         <DeleteModal
-        title='a Trainee'
-        name={traineeTobeDeletedName}
-        closePopup={() => setShowDeleteModal(false)}
-        onDelete={handleDeleteTrainee}
+          title="a Trainee"
+          name={traineeTobeDeletedName}
+          closePopup={() => setShowDeleteModal(false)}
+          onDelete={handleDeleteTrainee}
         />
-      )
-      }
+      )}
       {isAddingTrainee && (
         <AddingTraineeModal
           jwt={jwt}

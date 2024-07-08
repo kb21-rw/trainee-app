@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export interface User {
   _id?: string;
   name: string;
@@ -39,12 +40,13 @@ export interface ApplicationFormResponse {
   answer: string | string[];
 }
 
-/* eslint-disable no-unused-vars */
 export enum ButtonVariant {
-  Small = "small",
-  Large = "large",
-  Delete = "delete",
-  Edit = "edit"
+  Primary = "Primary",
+  Danger = "Danger",
 }
 
-export type ButtonType = "button" | "submit" | "reset" | undefined;
+export enum ButtonSize {
+  Small = "Small",
+  Medium = "Medium",
+  Large = "Large",
+}

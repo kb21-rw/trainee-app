@@ -106,7 +106,7 @@ const AddingTraineeModal = ({
           </select>
         </div>
         <div className="flex gap-2">
-          <Button outlined clickHandler={closePopup}>
+          <Button outlined onClick={closePopup}>
             Cancel
           </Button>
           <Button>Save</Button>

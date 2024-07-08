@@ -98,7 +98,7 @@ const ApplicantSignup = () => {
           />
         </div>
       </div>
-      <Button>Sign Up</Button>
+      <Button type="submit">Sign Up</Button>
       <div>
         {`Already have an account?  `}
         <Link to="/applicant/signin" className="text-primary-dark">

@@ -8,6 +8,7 @@ import Button from "../../components/ui/Button";
 import InputField from "../../components/ui/InputField";
 import Loader from "../../components/ui/Loader";
 import jwt_decode from "jwt-decode";
+import { ButtonSize } from "../../types";
 
 const Login = () => {
   const [login, { isLoading, error }] = useLoginMutation();
@@ -42,9 +43,11 @@ const Login = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col h-screen justify-center gap-5 md:gap-16 items-center px-5 sm:px-10 md:p-0 max-w-xl mx-auto"
+      className="flex flex-col h-screen justify-center gap-5 md:gap-16  px-5 sm:px-10 md:p-0 max-w-xl mx-auto"
     >
-      <H1>Member login</H1>
+      <div className="text-center">
+        <H1>Member login</H1>
+      </div>
       {isLoading && <Loader />}
       <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
         {errorMessage && (
@@ -74,8 +77,8 @@ const Login = () => {
         />
       </div>
 
-      <Button>Login</Button>
-      <div className="">
+      <Button size={ButtonSize.Large} type="submit">Login</Button>
+      <div className="text-center">
         Forgot password?{" "}
         <Link to="/reset-password" className="text-primary-dark">
           Reset
