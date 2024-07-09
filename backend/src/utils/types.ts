@@ -11,6 +11,10 @@ export interface CreateFormDto {
   description: string;
   type: FormType;
 }
+export interface CreateCohortDto {
+  name: string;
+  description?: string;
+}
 export interface UpdateFormDto {
   title: string;
   description: string;
