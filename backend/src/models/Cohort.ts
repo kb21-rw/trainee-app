@@ -21,7 +21,7 @@ const CohortSchema = new Schema(
     },
     description: {
       type: String,
-      default: null,
+      default: "",
     },
     isActive: {
       type: Boolean,
@@ -29,7 +29,7 @@ const CohortSchema = new Schema(
       default: true,
     },
     applicationFormId: {
-      type: Boolean,
+      type: Schema.Types.ObjectId,
       default: null,
     },
     applicants: [
