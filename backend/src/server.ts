@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import authRoute from "./routes/authRoute";
 import cors from "cors";
 import userRoute from "./routes/userRoute";
-import applicantRoute from "./routes/applicantRoutes";
 import traineeRoute from "./routes/traineeRoute";
 import coachRoute from "./routes/coachRoute";
 import formRoute from "./routes/formRoute";
@@ -35,7 +34,6 @@ app.use("/coaches", coachRoute);
 app.use("/cohorts", cohortRoutes);
 app.use("/forms", formRoute);
 app.use("/questions", questionRoute);
-app.use("/applicants", applicantRoute);
 app.use("/responses", responseRoute);
 app.use("/overview", overviewRoute);
 

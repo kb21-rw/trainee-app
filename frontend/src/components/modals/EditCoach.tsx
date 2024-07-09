@@ -58,7 +58,7 @@ const EditCoachModal = ({
         />
         <InputField
           type="text"
-          label="Email adress"
+          label="Email address"
           placeholder=""
           name="email"
           defaultValue={coachData[2]}

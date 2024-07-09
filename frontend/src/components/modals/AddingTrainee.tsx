@@ -57,7 +57,7 @@ const AddingTraineeModal = ({
         </div>
       )}
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
-      {isSuccess && <Alert type="success">Trainee was added succesfully</Alert>}
+      {isSuccess && <Alert type="success">Trainee was added successfully</Alert>}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-6 w-full"
