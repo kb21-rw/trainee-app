@@ -1,6 +1,7 @@
 import { compare, hash } from "bcryptjs";
 import CustomError from "../middlewares/customError";
 import {
+  COHORT_NOT_FOUND,
   DUPLICATE_USER,
   INVALID_CREDENTIAL,
   NOT_ALLOWED,
@@ -15,6 +16,7 @@ import User from "../models/User";
 import { ACCESS_TOKEN_EXPIRATION, secret } from "../constants";
 import jwt from "jsonwebtoken";
 import { Role } from "../utils/types";
+import Cohort from "../models/Cohort";
 
 export const registerService = async (user: any, body: any) => {
   let newUser;
@@ -55,6 +57,12 @@ export const applicantRegisterService = async (body: any) => {
     throw new CustomError(DUPLICATE_USER, "User already exists", 409);
   }
 
+  const currentCohort = await Cohort.findOne({ isActive: true });
+
+  if (!currentCohort) {
+    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found", 404);
+  }
+
   const name = body.name.trim().replace(/\s+/g, " "); // Remove unnecessary extra spaces in names
   const hashedPassword = await hash(body.password, 10);
 
@@ -65,6 +73,10 @@ export const applicantRegisterService = async (body: any) => {
     password: hashedPassword,
     role: Role.APPLICANT,
   });
+
+  currentCohort.applicants.push(createdUser.id);
+  await currentCohort.save();
+
   if (createdUser) {
     await sendEmail(createdUser.email, {
       name: createdUser.name,
