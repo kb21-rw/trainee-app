@@ -50,3 +50,8 @@ export enum Role {
   "TRAINEE" = "TRAINEE",
   "APPLICANT" = "APPLICANT",
 }
+export enum QuestionType {
+  TEXT = "text",
+  SINGLESELECT = "single-select",
+  MULTIPLE_CHOICE = "multiple-choice",
+}

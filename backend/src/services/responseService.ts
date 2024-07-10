@@ -4,6 +4,7 @@ import {
   CreateApplicationResponseDto,
   CreateResponseDto,
   FormType,
+  QuestionType,
 } from "../utils/types";
 import Response, { ResponseProperties } from "../models/Response";
 import User, { UserProperties } from "../models/User";
@@ -48,7 +49,7 @@ export const createResponseService = async (
   }
 
   if (
-    relatedQuestion.type === "dropdown" &&
+    relatedQuestion.type === QuestionType.SINGLESELECT &&
     !relatedQuestion.options.includes(text)
   ) {
     throw new CustomError(
@@ -60,8 +61,8 @@ export const createResponseService = async (
 
   const selectedOptions = Array.isArray(text) ? text : [text];
 
-  if (relatedQuestion.type === "multiple-choice") {
-    const availableOptions = relatedQuestion.options.join(',').split(',').map((option: string) => option.trim());
+  if (relatedQuestion.type === QuestionType.MULTIPLE_CHOICE) {
+    const availableOptions = relatedQuestion.options
 
     const invalidOptions = selectedOptions.filter(
       (option: string) => !availableOptions.includes(option)
@@ -84,7 +85,7 @@ export const createResponseService = async (
     (response) => response.userId.toString() === traineeId
   );
 
-  const responseText = relatedQuestion.type === "multiple-choice" ? selectedOptions.join(", ") : text;
+  const responseText = relatedQuestion.type === QuestionType.MULTIPLE_CHOICE ? selectedOptions.join(", ") : text;
 
   let response;
   if (oldResponse) {
