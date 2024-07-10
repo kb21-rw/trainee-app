@@ -1,4 +1,5 @@
 import CustomError from "../middlewares/customError";
+import Cohort from "../models/Cohort";
 import Form from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
@@ -7,7 +8,11 @@ import {
   getFormQuery,
   getFormsQuery,
 } from "../queries/formQueries";
-import { FORM_NOT_FOUND, INVALID_MONGODB_ID } from "../utils/errorCodes";
+import {
+  COHORT_NOT_FOUND,
+  FORM_NOT_FOUND,
+  INVALID_MONGODB_ID,
+} from "../utils/errorCodes";
 import { CreateFormDto, FormType, UpdateFormDto } from "../utils/types";
 import mongoose from "mongoose";
 const { Types } = mongoose;
@@ -54,6 +59,14 @@ export const createFormService = async (formData: CreateFormDto) => {
   }
 
   const createdForm = await Form.create({ title, description, type });
+  const currentCohort = await Cohort.findOne({ isActive: true });
+  if (!currentCohort) {
+    throw new CustomError(COHORT_NOT_FOUND, "Not active cohort found!", 404);
+  }
+
+  currentCohort.forms.push(createdForm.id);
+  await currentCohort.save();
+
   return createdForm;
 };
 
