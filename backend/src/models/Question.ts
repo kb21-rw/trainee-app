@@ -3,7 +3,7 @@ import { QuestionType } from "../utils/types";
 export interface QuestionProperties {
   _id: string;
   title: string;
-  type: QuestionType.TEXT | QuestionType.SINGLESELECT | QuestionType.MULTIPLE_CHOICE;
+  type: QuestionType;
   options: string[];
   responseIds: string[];
 }
@@ -17,7 +17,7 @@ const QuestionSchema = new Schema(
 
     type: {
       type: String,
-      enum: [QuestionType.TEXT, QuestionType.SINGLESELECT,QuestionType.MULTIPLE_CHOICE],
+      enum: QuestionType,
       required: true,
     },
 

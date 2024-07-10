@@ -49,7 +49,7 @@ export const createResponseService = async (
   }
 
   if (
-    relatedQuestion.type === QuestionType.SINGLESELECT &&
+    relatedQuestion.type === QuestionType.SINGLE_SELECT &&
     !relatedQuestion.options.includes(text)
   ) {
     throw new CustomError(
@@ -61,7 +61,7 @@ export const createResponseService = async (
 
   const selectedOptions = Array.isArray(text) ? text : [text];
 
-  if (relatedQuestion.type === QuestionType.MULTIPLE_CHOICE) {
+  if (relatedQuestion.type === QuestionType.MULTI_SELECT) {
     const availableOptions = relatedQuestion.options
 
     const invalidOptions = selectedOptions.filter(
@@ -85,7 +85,7 @@ export const createResponseService = async (
     (response) => response.userId.toString() === traineeId
   );
 
-  const responseText = relatedQuestion.type === QuestionType.MULTIPLE_CHOICE ? selectedOptions.join(", ") : text;
+  const responseText = relatedQuestion.type === QuestionType.MULTI_SELECT ? selectedOptions.join(", ") : text;
 
   let response;
   if (oldResponse) {
@@ -106,7 +106,7 @@ export const createResponseService = async (
 
   const responseBody = {
     ...response.toObject(),
-    text: response.text.split(',').map((option: string) => option.trim())
+    text: response.text
   };
 
   return responseBody;

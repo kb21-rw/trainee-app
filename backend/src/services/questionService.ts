@@ -69,7 +69,7 @@ export const updateQuestionService = async (
     title,
     type,
     options,
-  }: { title?: string; type?: QuestionType.TEXT | QuestionType.MULTIPLE_CHOICE; options?: string[] }
+  }: { title?: string; type?: QuestionType; options?: string[] }
 ) => {
   const question = await Question.findById(questionId);
   if (!question) {
@@ -82,7 +82,7 @@ export const updateQuestionService = async (
 
   if (options) question.options = options;
 
-  if (type === "text") question.options = [];
+  if (type === QuestionType.TEXT) question.options = [];
 
   await Response.updateMany(
     { _id: { $in: question.responseIds } },

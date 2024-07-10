@@ -51,7 +51,7 @@ export enum Role {
   "APPLICANT" = "APPLICANT",
 }
 export enum QuestionType {
-  TEXT = "text",
-  SINGLESELECT = "single-select",
-  MULTIPLE_CHOICE = "multiple-choice",
+  TEXT = "TEXT",
+  SINGLE_SELECT = "SINGLE_SELECT",
+  MULTI_SELECT = "MULTI_SELECT",
 }
