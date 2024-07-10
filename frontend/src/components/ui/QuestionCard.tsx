@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Loader from "./Loader";
 import Delete from "../../assets/DeleteIcon";
 import {
@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import AddIcon from "../../assets/AddIcon";
 import RemoveIcon from "../../assets/RemoveIcon";
 import Reset from "../../assets/ResetIcon";
+import DeleteModal from "../modals/DeleteModal";
 
 const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   const { title, type, options, _id } = question;
@@ -32,9 +33,11 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   const jwt = cookies.get("jwt");
   const [deleteQuestion] = useDeleteQuestionMutation();
   const [editQuestion] = useEditQuestionMutation();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const handleDeleteQuestion = async () => {
+  const handleDeleteQuestion = async (_id: string) => {
     await deleteQuestion({ jwt, id: _id });
+    setShowDeleteModal(false);
   };
 
   const changeOptionsHandler = (value: string, index: number) => {
@@ -142,12 +145,22 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
           </div>
         ) : null}
         <button
-          onClick={handleDeleteQuestion}
+          onClick={()=>setShowDeleteModal(true)}
           className="flex items-center gap-2"
         >
           <Delete />
+          <span>Delete</span>
         </button>
       </div>
+      {
+      showDeleteModal &&
+        <DeleteModal
+          title="a question"
+          name={title}
+          closePopup={() => setShowDeleteModal(false)}
+          onDelete={() => handleDeleteQuestion(_id)}
+        />
+      }
     </div>
   );
 };
