@@ -1,4 +1,4 @@
-import { Date, ObjectId } from "mongoose";
+import { Date } from "mongoose";
 
 interface MetaType {
   _id: string;

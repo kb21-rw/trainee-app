@@ -129,13 +129,6 @@ export const createApplicantResponseService = async (
     responseData.map((response) => response.questionId).toString()
   )
 
-  //check if all question in the form are in the responseData
-  const areAllQuestionsAnswered = applicationForm.questionIds.every(
-    (questionId) =>
-      responseData.map((response) => response.questionId).includes(questionId.toString())
-  );
-  
-  if (!areAllQuestionsAnswered )
 
     throw new CustomError(NOT_ALLOWED, "Some questions are not answered", 401);
 
