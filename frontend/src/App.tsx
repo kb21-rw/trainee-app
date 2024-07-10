@@ -25,6 +25,8 @@ import OverView from "./pages/User/OverView";
 import TraineeResults from "./pages/User/TraineeResults";
 import NewPassword from "./pages/Applicant/NewPassword";
 import ForgetPassword from "./pages/Applicant/ForgetPassword";
+import ApplicationForm from "./pages/Applicant/ApplicationForm";
+import ApplicantHomePage from "./pages/Applicant/ApplicantHomePage";
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -42,14 +44,19 @@ export default function App() {
           </Route>
         </Route>
         <Route path="/applicant">
-          <Route index element={<h1>Successfully In!</h1>} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="home" element={<ApplicantHomePage />} />
+            <Route index element={<ApplicationForm />} />
+          </Route>
           <Route path="signup" element={<SignUp />} />
           <Route path="signin" element={<SignIn />} />
           <Route path="reset-password" element={<ForgetPassword />} />
           <Route path="new-password" element={<NewPassword />} />
           <Route
             path="verify"
-            element={<h1>This page should be created, EMAIL VERIFICATION PAGE</h1>}
+            element={
+              <h1>This page should be created, EMAIL VERIFICATION PAGE</h1>
+            }
           />
         </Route>
         <Route path="/login" element={<Login />} />

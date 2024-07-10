@@ -123,10 +123,20 @@ export const createApplicantResponseService = async (
   if (!applicationForm)
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
 
+
   if (
     applicationForm.questionIds.toString() !==
     responseData.map((response) => response.questionId).toString()
   )
+
+  //check if all question in the form are in the responseData
+  const areAllQuestionsAnswered = applicationForm.questionIds.every(
+    (questionId) =>
+      responseData.map((response) => response.questionId).includes(questionId.toString())
+  );
+  
+  if (!areAllQuestionsAnswered )
+
     throw new CustomError(NOT_ALLOWED, "Some questions are not answered", 401);
 
   return Promise.all(
