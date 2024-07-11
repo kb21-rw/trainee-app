@@ -53,10 +53,10 @@ export const createQuestionService = async (
       })
     );
     createdQuestion.responseIds = responseIds;
-    createdQuestion.save();
+    await createdQuestion.save();
   }
 
-  return relatedForm.save();
+  return await relatedForm.save();
 };
 
 export const getAllQuestionsService = async (

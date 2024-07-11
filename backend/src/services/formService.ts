@@ -51,12 +51,6 @@ export const updateFormService = async (
 
 export const createFormService = async (formData: CreateFormDto) => {
   const { title, description, type } = formData;
-  if (type === FormType.APPLICANT) {
-    await Form.updateMany(
-      { type: FormType.APPLICANT, isActive: true },
-      { isActive: false }
-    );
-  }
 
   const createdForm = await Form.create({ title, description, type });
   const currentCohort = await Cohort.findOne({ isActive: true });
@@ -64,7 +58,12 @@ export const createFormService = async (formData: CreateFormDto) => {
     throw new CustomError(COHORT_NOT_FOUND, "Not active cohort found!", 404);
   }
 
-  currentCohort.forms.push(createdForm.id);
+  if (type === FormType.APPLICANT) {
+    currentCohort.applicationFormId = createdForm.id;
+  } else {
+    currentCohort.forms.push(createdForm.id);
+  }
+
   await currentCohort.save();
 
   return createdForm;
