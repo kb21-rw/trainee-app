@@ -47,7 +47,7 @@ export const createResponseService = async (
       403
     );
   }
-  
+
   const selectedOptions = Array.isArray(text) ? text : [text];
 
   if (relatedQuestion.type !== QuestionType.TEXT) {
@@ -72,7 +72,7 @@ export const createResponseService = async (
     (response) => response.userId.toString() === traineeId
   );
 
-  const responseText = relatedQuestion.type === QuestionType.MULTI_SELECT ? selectedOptions.join(", ") : text;
+  const responseText = relatedQuestion.type === QuestionType.MULTI_SELECT ? selectedOptions : text;
 
   let response;
   if (oldResponse) {
