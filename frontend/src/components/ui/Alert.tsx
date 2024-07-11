@@ -21,7 +21,7 @@ const Alert = ({
   return (
     isAlertVisible && (
       <div
-        className={`w-full py-2 flex justify-center items-center rounded-lg absolute top-14 ${
+        className={`w-[600px] py-2 flex justify-center items-center rounded-lg absolute top-14 border-green-600 ${
           type === "error" && "bg-error-light text-error-dark"
         } ${type === "success" && "bg-green-300 text-white"}`}
       >
