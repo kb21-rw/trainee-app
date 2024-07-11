@@ -47,35 +47,22 @@ export const createResponseService = async (
       403
     );
   }
-
-  if (
-    relatedQuestion.type === QuestionType.SINGLE_SELECT &&
-    !relatedQuestion.options.includes(text)
-  ) {
-    throw new CustomError(
-      NOT_ALLOWED,
-      `You can only choose from ${relatedQuestion.options.join(",")} options`,
-      400
-    );
-  }
-
+  
   const selectedOptions = Array.isArray(text) ? text : [text];
 
-  if (relatedQuestion.type === QuestionType.MULTI_SELECT) {
-    const availableOptions = relatedQuestion.options
-
-    const invalidOptions = selectedOptions.filter(
-      (option: string) => !availableOptions.includes(option)
+  if (relatedQuestion.type !== QuestionType.TEXT) {
+    const invalidOptions = selectedOptions.every(
+      (option: string) => !relatedQuestion.options.includes(option)
     );
 
-    if (invalidOptions.length > 0) {
+    if (invalidOptions) {
       throw new CustomError(
         NOT_ALLOWED,
-        `Invalid options: ${invalidOptions.join(", ")}. You can only choose from ${availableOptions.join(", ")} options`,
+        `You can only choose from ${relatedQuestion.options.join(", ")} options`,
         400
       );
     }
-  }
+}
 
   const relatedQuestionPopulated = await relatedQuestion.populate<{
     responseIds: ResponseProperties[];
@@ -100,13 +87,9 @@ export const createResponseService = async (
     await relatedQuestion.save();
   }
 
-  if (!response) {
-    throw new CustomError(500, "Failed to save the response", 500);
-  }
-
   const responseBody = {
-    ...response.toObject(),
-    text: response.text
+    ...response?.toObject(),
+    text: response?.text
   };
 
   return responseBody;
