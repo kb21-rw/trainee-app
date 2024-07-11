@@ -58,11 +58,13 @@ export const createResponseService = async (
     if (invalidOptions) {
       throw new CustomError(
         NOT_ALLOWED,
-        `You can only choose from ${relatedQuestion.options.join(", ")} options`,
+        `You can only choose from ${relatedQuestion.options.join(
+          ", "
+        )} options`,
         400
       );
     }
-}
+  }
 
   const relatedQuestionPopulated = await relatedQuestion.populate<{
     responseIds: ResponseProperties[];
@@ -72,7 +74,8 @@ export const createResponseService = async (
     (response) => response.userId.toString() === traineeId
   );
 
-  const responseText = relatedQuestion.type === QuestionType.MULTI_SELECT ? selectedOptions : text;
+  const responseText =
+    relatedQuestion.type === QuestionType.MULTI_SELECT ? selectedOptions : text;
 
   let response;
   if (oldResponse) {
@@ -89,7 +92,7 @@ export const createResponseService = async (
 
   const responseBody = {
     ...response?.toObject(),
-    text: response?.text
+    text: response?.text,
   };
 
   return responseBody;
@@ -106,13 +109,14 @@ export const createApplicantResponseService = async (
   if (!applicationForm)
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
 
-
+  //check if all question in the form are in the responseData
   if (
-    applicationForm.questionIds.toString() !==
-    responseData.map((response) => response.questionId).toString()
+    applicationForm.questionIds.every((questionId) =>
+      responseData
+        .map((response) => response.questionId)
+        .includes(questionId.toString())
+    )
   )
-
-
     throw new CustomError(NOT_ALLOWED, "Some questions are not answered", 401);
 
   return Promise.all(
