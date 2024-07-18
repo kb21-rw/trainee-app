@@ -75,8 +75,8 @@ const Login = () => {
       </div>
 
       <Button>Login</Button>
-      <div className="">
-        Forgot password?{" "}
+      <div className="flex gap-2">
+        <span>Forgot password?</span>
         <Link to="/reset-password" className="text-primary-dark">
           Reset
         </Link>
