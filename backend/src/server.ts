@@ -10,6 +10,7 @@ import cohortRoutes from "./routes/cohortRoutes";
 import questionRoute from "./routes/questionRoute";
 import responseRoute from "./routes/responseRoute";
 import overviewRoute from "./routes/overviewRoute";
+import applicantRoutes from "./routes/applicantRoutes";
 import { errorHandler } from "./middlewares/errorHandler";
 import CustomError from "./middlewares/customError";
 import { URL_NOT_FOUND } from "./utils/errorCodes";
@@ -36,6 +37,7 @@ app.use("/forms", formRoute);
 app.use("/questions", questionRoute);
 app.use("/responses", responseRoute);
 app.use("/overview", overviewRoute);
+app.use("/applicants", applicantRoutes);
 
 app.all("*", (req, res, next) => {
   const err = new CustomError(
