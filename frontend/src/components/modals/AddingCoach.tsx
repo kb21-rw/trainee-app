@@ -1,12 +1,12 @@
-import React,{useEffect} from "react";
+import React, { useEffect } from "react";
 import ModalLayout from "./ModalLayout";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useCreateCoachMutation } from "../../features/user/apiSlice";
 import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
-
+import { CreateCoach } from "../../types";
 const AddingCoachModal = ({
   closePopup,
   jwt,
@@ -14,26 +14,26 @@ const AddingCoachModal = ({
   closePopup: () => void;
   jwt: string;
 }) => {
-  const [createCoach, { isLoading, error, isSuccess }] =
-    useCreateCoachMutation();
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
-  const onSubmit = async (data: any) => {
+  const [createCoach, { isLoading, error, isSuccess }] = useCreateCoachMutation();
+  const { register, handleSubmit, formState: { errors } } = useForm<CreateCoach>();
+
+  const onSubmit: SubmitHandler<CreateCoach> = async (data) =>{
     try {
       await createCoach({ jwt, body: { ...data, role: "COACH" } }).unwrap();
-    }catch(error){
-      console.error('failed to add this coach:',error)
+    } catch (error){
+      return 'false'
     }
   };
 
-  useEffect(()=>{
-  setTimeout(()=>{
-      closePopup
-   },2000)
-  },[isSuccess,closePopup])
+  useEffect(() => {
+    if (isSuccess) {
+      const timer = setTimeout(() => {
+        closePopup();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess, closePopup]);
 
   const errorMessage: any =
     errors.name?.message || errors.email?.message || error?.data?.errorMessage;

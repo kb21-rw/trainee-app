@@ -52,7 +52,7 @@ const InputField = ({
           {...(register && { ...register(name, options) })}
         />
         {errorMessage && (
-          <div className="text-red-500">{errorMessage.toString()}</div>
+          <div className="absolute text-red-500">{errorMessage.toString()}</div>
         )}
 
         {type === "password" && (
