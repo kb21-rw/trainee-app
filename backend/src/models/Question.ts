@@ -1,11 +1,11 @@
-import { Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
+import { IResponse } from "./Response";
 
-export interface QuestionProperties {
-  _id: string;
+export interface IQuestion extends Document {
   title: string;
   type: "text" | "dropdown";
   options: string[];
-  responseIds: string[];
+  responseIds: IResponse["_id"][];
 }
 
 const QuestionSchema = new Schema(
