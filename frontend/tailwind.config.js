@@ -14,7 +14,7 @@ export default {
        "gray-250": "#DBD5E0",
       },
       width: {
-        'alert-width': '37.5rem', // 600px
+        'alert-width': '37.5rem', 
       },
     },
   },
