@@ -3,13 +3,13 @@ import { Role } from "../utils/types";
 
 export interface UserProperties {
   id: string;
-  userId: number;
+  userId: string;
   name: string;
   email: string;
   password: string;
   role: Role;
   coach: string;
-  googleId: string;
+  googleId: null | string;
 }
 
 const UserSchema = new Schema(
