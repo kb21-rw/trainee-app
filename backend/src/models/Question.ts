@@ -1,9 +1,9 @@
 import { Schema, model } from "mongoose";
-
+import { QuestionType } from "../utils/types";
 export interface QuestionProperties {
   _id: string;
   title: string;
-  type: "text" | "dropdown";
+  type: QuestionType;
   options: string[];
   responseIds: string[];
 }
@@ -17,7 +17,7 @@ const QuestionSchema = new Schema(
 
     type: {
       type: String,
-      enum: ["text", "dropdown"],
+      enum: QuestionType,
       required: true,
     },
 
