@@ -1,9 +1,10 @@
 import { Document, Schema, model } from "mongoose";
 import { IResponse } from "./Response";
+import { QuestionType } from "../utils/types";
 
 export interface IQuestion extends Document {
   title: string;
-  type: "text" | "dropdown";
+  type: QuestionType;
   options: string[];
   responseIds: IResponse["_id"][];
 }
@@ -17,7 +18,7 @@ const QuestionSchema = new Schema(
 
     type: {
       type: String,
-      enum: ["text", "dropdown"],
+      enum: QuestionType,
       required: true,
     },
 

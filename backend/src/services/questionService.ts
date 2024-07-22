@@ -9,7 +9,12 @@ import {
   FORM_NOT_FOUND,
   QUESTION_NOT_FOUND,
 } from "../utils/errorCodes";
-import { CreateQuestionDto, FormType, IQuestion } from "../utils/types";
+import {
+  CreateQuestionDto,
+  FormType,
+  IQuestion,
+  QuestionType,
+} from "../utils/types";
 
 export const createQuestionService = async (
   formId: string,
@@ -76,7 +81,7 @@ export const updateQuestionService = async (
     title,
     type,
     options,
-  }: { title?: string; type?: "text" | "dropdown"; options?: string[] }
+  }: { title?: string; type?: QuestionType; options?: string[] }
 ) => {
   const question = await Question.findById(questionId);
   if (!question) {
@@ -89,7 +94,7 @@ export const updateQuestionService = async (
 
   if (options) question.options = options;
 
-  if (type === "text") question.options = [];
+  if (type === QuestionType.TEXT) question.options = [];
 
   await Response.updateMany(
     { _id: { $in: question.responseIds } },
