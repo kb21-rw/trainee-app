@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-
 import React, { useEffect, useState } from "react";
 import ModalLayout from "./ModalLayout";
 import Button from "../ui/Button";
@@ -10,6 +9,7 @@ import Cookies from "universal-cookie";
 import { useAddResponseMutation } from "../../features/user/apiSlice";
 import Loader from "../ui/Loader";
 import RadioOption from "../ui/RadioOption";
+import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
 
 const ResponseModal = ({
   closePopup,
@@ -22,7 +22,7 @@ const ResponseModal = ({
   disabled,
   questionType,
   options,
-  checkedOption, 
+  checkedOption,
   handleCheckChange,
 }: {
   closePopup: () => void;
@@ -43,19 +43,16 @@ const ResponseModal = ({
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  const cookies = new Cookies();
-  const jwt = cookies.get("jwt");
   const [addResponse, { isLoading, error, isSuccess }] =
     useAddResponseMutation();
-
-    const [localCheckedOption, setLocalCheckedOption] = useState(checkedOption)
-
-    const handleRadioChange = (value: string) => {
-      handleCheckChange(value);
-    };
+  const [localCheckedOption, setLocalCheckedOption] = useState(checkedOption);
+  const handleRadioChange = (value: string) => {
+    handleCheckChange(value);
+  };
 
   const onSubmit = async (data: any) => {
+    const cookies = new Cookies();
+    const jwt = cookies.get("jwt");
     const responseBody = {
       ...data,
       ...(questionType === "dropdown" && { text: localCheckedOption }),
@@ -66,15 +63,12 @@ const ResponseModal = ({
   const errorMessage =
     errors.name?.message || errors.email?.message || error?.data?.errorMessage;
 
+  useAutoCloseModal(isSuccess, closePopup);
+
   useEffect(() => {
-    if (isSuccess) {
-      setTimeout(() => closePopup(), 3000);
-    }
-
     setLocalCheckedOption(checkedOption);
-  }, [isSuccess, closePopup, checkedOption]);
+  }, [checkedOption]);
 
-  
   return (
     <ModalLayout closePopup={closePopup} title={title}>
       {isLoading && (
