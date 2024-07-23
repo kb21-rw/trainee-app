@@ -5,6 +5,8 @@ export interface IUser extends Document {
   userId: number;
   name: string;
   email: string;
+  verified: boolean;
+  applied: boolean;
   password: string;
   role: Role;
   coach: string;
@@ -28,6 +30,10 @@ const UserSchema = new Schema(
       required: true,
     },
     verified: {
+      type: Boolean,
+      default: false,
+    },
+    applied: {
       type: Boolean,
       default: false,
     },
