@@ -2,7 +2,7 @@ import Cohort from "../models/Cohort";
 
 export const getApplicantsQuery = async (
   filters: {
-    searchString: string;
+    nameSearchRegex: string;
     sortBy: string;
     applicantsPerPage: number;
   },
@@ -10,37 +10,47 @@ export const getApplicantsQuery = async (
 ) => {
   const applicants = await Cohort.aggregate([
     {
-      $match: {
-        cohort,
+      $match: cohort,
+    },
+    {
+      $unwind: {
+        path: "$applicants",
       },
     },
     {
       $lookup: {
         from: "users",
-        localField: "_id",
-        foreignField: "applicant",
-        as: "trainees",
+        localField: "applicants",
+        foreignField: "_id",
+        as: "applicant",
       },
     },
     {
-      $project: {
-        _id: 1,
-        name: 1,
-        email: 1,
-        role: 1,
-        trainees: {
-          _id: 1,
-          name: 1,
-          email: 1,
-          role: 1,
+      $unwind: {
+        path: "$applicant",
+      },
+    },
+    {
+      $sort: { [`applicant.${filters.sortBy}`]: 1 },
+    },
+    {
+      $limit: filters.applicantsPerPage,
+    },
+    {
+      $match: {
+        "applicant.name": {
+          $regex: filters.nameSearchRegex,
+          $options: "i",
         },
       },
     },
     {
-      $sort: { [filters.sortBy]: 1 },
-    },
-    {
-      $limit: filters.applicantsPerPage,
+      $group: {
+        _id: "$_id",
+        applicants: {
+          $push: "$applicant",
+        },
+      },
     },
   ]);
   return applicants;
