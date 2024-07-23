@@ -54,6 +54,11 @@ export enum Role {
   "TRAINEE" = "TRAINEE",
   "APPLICANT" = "APPLICANT",
 }
+
+export enum ApplicantDecision {
+  "ACCEPTED" = "ACCEPTED",
+  "REJECTED" = "REJECTED",
+}
 export enum QuestionType {
   TEXT = "TEXT",
   SINGLE_SELECT = "SINGLE_SELECT",

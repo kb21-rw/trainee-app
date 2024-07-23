@@ -6,8 +6,8 @@ import {
   FormType,
   QuestionType,
 } from "../utils/types";
-import Response, { ResponseProperties } from "../models/Response";
-import User, { UserProperties } from "../models/User";
+import Response, { IResponse } from "../models/Response";
+import User, { IUser } from "../models/User";
 import {
   NOT_ALLOWED,
   QUESTION_NOT_FOUND,
@@ -16,7 +16,7 @@ import {
 import Form from "../models/Form";
 
 export const createResponseService = async (
-  loggedInUser: UserProperties,
+  loggedInUser: IUser,
   traineeId: string,
   questionId: string,
   responseData: CreateResponseDto
@@ -67,7 +67,7 @@ export const createResponseService = async (
   }
 
   const relatedQuestionPopulated = await relatedQuestion.populate<{
-    responseIds: ResponseProperties[];
+    responseIds: IResponse[];
   }>("responseIds");
 
   const oldResponse = relatedQuestionPopulated.responseIds.find(
@@ -99,7 +99,7 @@ export const createResponseService = async (
 };
 
 export const createApplicantResponseService = async (
-  loggedInUser: UserProperties,
+  loggedInUser: IUser,
   responseData: CreateApplicationResponseDto[]
 ) => {
   const applicationForm = await Form.findOne({
@@ -123,7 +123,7 @@ export const createApplicantResponseService = async (
     responseData.map(async (response) => {
       const question = await Question.findById(response.questionId)
         .populate<{
-          responseIds: ResponseProperties[];
+          responseIds: IResponse[];
         }>("responseIds")
         .exec();
       const oldResponseId = question?.responseIds.find(
