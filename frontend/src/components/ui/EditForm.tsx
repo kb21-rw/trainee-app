@@ -4,7 +4,7 @@ import AddIcon from "../../assets/AddIcon";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import Cookies from "universal-cookie";
+import { getJWT } from "../../utils/helper";
 import {
   useCreateQuestionMutation,
   useDeleteFormMutation,
@@ -44,14 +44,8 @@ const EditForm = ({
     defaultValues: { title, description },
     resolver: yupResolver(FormSchema),
   });
-  // const cookies = new Cookies();
-  // const jwt = cookies.get("jwt");
 
-  const getJWT = () => {
-    const cookies = new Cookies();
-    return cookies.get("jwt");
-  };
-
+ 
   const [editForm] = useEditFormMutation();
   const navigate = useNavigate();
   const onSubmit = async (data: any) => {

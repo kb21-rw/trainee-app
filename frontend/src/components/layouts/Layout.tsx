@@ -1,12 +1,13 @@
 import React from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import Cookies from "universal-cookie";
 import { adminMenu, coachMenu } from "../../utils/data";
 import { useGetProfileQuery } from "../../features/user/apiSlice";
+import { getJWT } from "../../utils/helper";
+import Cookies from "universal-cookie";
 
 const Layout = () => {
+  const jwt: string = getJWT();
   const cookies = new Cookies();
-  const jwt = cookies.get("jwt");
   const navigate = useNavigate();
 
   const { data } = useGetProfileQuery(jwt);

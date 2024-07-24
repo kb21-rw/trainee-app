@@ -1,5 +1,4 @@
 import React from "react";
-import Cookies from "universal-cookie";
 import { H1 } from "../../components/ui/Typography";
 import Button from "../../components/ui/Button";
 import InputField from "../../components/ui/InputField";
@@ -10,12 +9,12 @@ import {
   useUpdateProfileMutation,
 } from "../../features/user/apiSlice";
 import { useForm } from "react-hook-form";
+import { getJWT } from "../../utils/helper";
 
 const Profile = () => {
   const [updateProfile, { isLoading, isSuccess, error }] =
     useUpdateProfileMutation();
-  const cookies = new Cookies();
-  const jwt = cookies.get("jwt");
+  const jwt:string = getJWT()
   const { data } = useGetProfileQuery(jwt);
   const {
     register,
