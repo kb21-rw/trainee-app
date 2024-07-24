@@ -7,16 +7,14 @@ import {
    TableHeader,
    TableRow,
  } from "../../../@/components/ui/table";
- import Cookies from "universal-cookie";
 import { Question,Response,Form } from '../../types';
 
 import { useGetOverviewQuery } from "../../features/user/apiSlice";
 import Loader from '../../components/ui/Loader';
-import { getRandomColorAndTextColor } from "../../utils/helper";
+import { getJWT, getRandomColorAndTextColor } from "../../utils/helper";
 import ResponseModal from "../../components/modals/ResponseModal";
  const  OverView = () => {
-   const cookies = new Cookies();
-   const jwt = cookies.get("jwt");
+   const jwt:string = getJWT()
    const { data, isFetching, isError } = useGetOverviewQuery({ jwt });
 
    const [isModalOpen, setIsModalOpen] = useState(false);

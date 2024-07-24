@@ -7,16 +7,14 @@ import {
   TableHeader,
   TableRow,
 } from "../../../@/components/ui/table";
-import Cookies from "universal-cookie";
 import { Question, Response, Form } from "../../types";
 
 import { useGetOverviewForCoachQuery } from "../../features/user/apiSlice";
 import Loader from "../../components/ui/Loader";
-import { getRandomColorAndTextColor } from "../../utils/helper";
+import { getJWT, getRandomColorAndTextColor } from "../../utils/helper";
 import ResponseModal from "../../components/modals/ResponseModal";
 const TraineeResults = () => {
-  const cookies = new Cookies();
-  const jwt = cookies.get("jwt");
+  const jwt:string = getJWT()
   const { data, isLoading, isError } = useGetOverviewForCoachQuery({ jwt });
   
 

@@ -5,11 +5,11 @@ import Button from "../ui/Button";
 import { useForm } from "react-hook-form";
 import Alert from "../ui/Alert";
 import TextArea from "../ui/TextArea";
-import Cookies from "universal-cookie";
 import { useAddResponseMutation } from "../../features/user/apiSlice";
 import Loader from "../ui/Loader";
 import RadioOption from "../ui/RadioOption";
 import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
+import { getJWT } from "../../utils/helper";
 
 const ResponseModal = ({
   closePopup,
@@ -51,8 +51,7 @@ const ResponseModal = ({
   };
 
   const onSubmit = async (data: any) => {
-    const cookies = new Cookies();
-    const jwt = cookies.get("jwt");
+    const jwt: string = getJWT()
     const responseBody = {
       ...data,
       ...(questionType === "dropdown" && { text: localCheckedOption }),
