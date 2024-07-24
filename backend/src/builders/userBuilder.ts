@@ -32,7 +32,7 @@ export class UserBuilder extends Builder<typeof User, UserProperties> {
     googleId: null,
     name: "trainee name",
     email: "trainee@gmail.com",
-    password: " $2a$10$qMiI0IyA/BCuHyjgqn/f8.IDjrqn7rMrHoH4LZmYoYdXlhWI8QGiu",
+    password: "$2a$10$qMiI0IyA/BCuHyjgqn/f8.IDjrqn7rMrHoH4LZmYoYdXlhWI8QGiu",
     role: Role.TRAINEE,
     coach: "My coach",
   };
