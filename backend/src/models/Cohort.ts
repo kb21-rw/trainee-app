@@ -1,15 +1,16 @@
-import { ObjectId, Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
+import { IForm } from "./Form";
+import { IUser } from "./User";
 
-export interface CohortProperties {
-  _id: string;
+export interface ICohort extends Document {
   name: string;
   description: string;
   isActive: boolean;
-  applicationFormId: ObjectId;
-  applicants: ObjectId[];
-  trainees: ObjectId[];
-  coaches: ObjectId[];
-  forms: ObjectId[];
+  applicationFormId: IForm["_id"];
+  applicants: IUser["_id"][];
+  trainees: IUser["_id"][];
+  coaches: IUser["_id"][];
+  forms: IForm["_id"][];
 }
 
 const CohortSchema = new Schema(

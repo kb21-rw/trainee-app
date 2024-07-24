@@ -1,4 +1,4 @@
-import { Date, ObjectId } from "mongoose";
+import { Date } from "mongoose";
 
 interface MetaType {
   _id: string;
@@ -53,4 +53,14 @@ export enum Role {
   "COACH" = "COACH",
   "TRAINEE" = "TRAINEE",
   "APPLICANT" = "APPLICANT",
+}
+
+export enum ApplicantDecision {
+  "ACCEPTED" = "ACCEPTED",
+  "REJECTED" = "REJECTED",
+}
+export enum QuestionType {
+  TEXT = "TEXT",
+  SINGLE_SELECT = "SINGLE_SELECT",
+  MULTI_SELECT = "MULTI_SELECT",
 }

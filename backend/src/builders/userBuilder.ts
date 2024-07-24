@@ -1,19 +1,22 @@
 import { hashSync } from "bcryptjs";
-import { UserProperties } from "../models/User";
+import { IUser } from "../models/User";
 import { Role } from "../utils/types";
 import { Builder } from ".";
 
+type PartialIUserWithRequiredId = { id: IUser["id"] } & Partial<
+  Omit<IUser, "id">
+>;
 export class User {
   public readonly id: string;
-  public readonly userId: string;
-  public readonly name: string;
-  public readonly email: string;
-  public readonly password: string;
-  public readonly role: Role;
-  public readonly coach: string;
-  public readonly googleId: null | string;
+  public readonly userId?: string;
+  public readonly name?: string;
+  public readonly email?: string;
+  public readonly password?: string;
+  public readonly role?: Role;
+  public readonly coach?: string;
+  public readonly googleId?: null | string;
 
-  public constructor(data: UserProperties) {
+  public constructor(data: PartialIUserWithRequiredId) {
     this.id = data.id;
     this.userId = data.userId;
     this.name = data.name;
@@ -25,8 +28,11 @@ export class User {
   }
 }
 
-export class UserBuilder extends Builder<typeof User, UserProperties> {
-  protected readonly properties: UserProperties = {
+export class UserBuilder extends Builder<
+  typeof User,
+  PartialIUserWithRequiredId
+> {
+  protected readonly properties: PartialIUserWithRequiredId = {
     id: "66203fa2a3465a4a588d12u1",
     userId: "000001",
     googleId: null,
@@ -41,12 +47,14 @@ export class UserBuilder extends Builder<typeof User, UserProperties> {
     super(User);
   }
 
-  public static from(properties: Partial<UserProperties>): UserBuilder {
+  public static from(
+    properties: Partial<PartialIUserWithRequiredId>
+  ): UserBuilder {
     return new UserBuilder().with(properties);
   }
 
-  public with(properties: Partial<UserProperties>): this {
-    let key: keyof UserProperties;
+  public with(properties: Partial<IUser>): this {
+    let key: keyof IUser;
 
     for (key in properties) {
       const value = properties[key];
@@ -58,11 +66,6 @@ export class UserBuilder extends Builder<typeof User, UserProperties> {
       }
     }
 
-    return this;
-  }
-
-  public withId(id: string): this {
-    this.properties.id = id;
     return this;
   }
 
@@ -91,7 +94,7 @@ export class UserBuilder extends Builder<typeof User, UserProperties> {
     return this;
   }
 
-  public build(): UserProperties {
+  public build(): PartialIUserWithRequiredId {
     return new User({
       ...this.properties,
     });

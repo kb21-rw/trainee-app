@@ -1,10 +1,20 @@
+import { Types } from "mongoose";
 import CustomError from "../middlewares/customError";
+import Cohort from "../models/Cohort";
 import Form from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
-import User, { UserProperties } from "../models/User";
-import { FORM_NOT_FOUND, QUESTION_NOT_FOUND } from "../utils/errorCodes";
-import { CreateQuestionDto, FormType, IQuestion, Role } from "../utils/types";
+import {
+  COHORT_NOT_FOUND,
+  FORM_NOT_FOUND,
+  QUESTION_NOT_FOUND,
+} from "../utils/errorCodes";
+import {
+  CreateQuestionDto,
+  FormType,
+  IQuestion,
+  QuestionType,
+} from "../utils/types";
 
 export const createQuestionService = async (
   formId: string,
@@ -16,6 +26,11 @@ export const createQuestionService = async (
     throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
   }
 
+  const currentCohort = await Cohort.findOne({ isActive: true });
+  if (!currentCohort) {
+    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found", 404);
+  }
+
   const createdQuestion = await Question.create({
     title,
     type,
@@ -23,33 +38,30 @@ export const createQuestionService = async (
     responseIds: [],
   });
   if (createdQuestion) {
-    relatedForm.questionIds.push(createdQuestion._id);
+    relatedForm.questionIds.push(createdQuestion.id);
 
-    let users: UserProperties[] = [];
+    let userIds: Types.ObjectId[] = [];
 
     if (relatedForm.type === FormType.APPLICANT) {
-      users = await User.find({ role: Role.APPLICANT });
+      userIds = currentCohort.applicants;
     }
 
     if (relatedForm.type === FormType.TRAINEE) {
-      users = await User.find({ role: Role.TRAINEE });
+      userIds = currentCohort.trainees;
     }
 
     const responseIds = await Promise.all(
-      users.map(async (user) => {
-        const response = new Response({
-          userId: user.id,
-        });
+      userIds.map(async (userId) => {
+        const response = new Response({ userId });
         await response.save();
         return response._id;
       })
     );
     createdQuestion.responseIds = responseIds;
-    createdQuestion.save();
+    await createdQuestion.save();
   }
 
-  await relatedForm.save();
-  return relatedForm;
+  return await relatedForm.save();
 };
 
 export const getAllQuestionsService = async (
@@ -69,7 +81,7 @@ export const updateQuestionService = async (
     title,
     type,
     options,
-  }: { title?: string; type?: "text" | "dropdown"; options?: string[] }
+  }: { title?: string; type?: QuestionType; options?: string[] }
 ) => {
   const question = await Question.findById(questionId);
   if (!question) {
@@ -82,7 +94,7 @@ export const updateQuestionService = async (
 
   if (options) question.options = options;
 
-  if (type === "text") question.options = [];
+  if (type === QuestionType.TEXT) question.options = [];
 
   await Response.updateMany(
     { _id: { $in: question.responseIds } },
