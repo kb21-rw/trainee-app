@@ -6,9 +6,9 @@ import FormInput from "../../components/ui/FormInput";
 import Button from "../../components/ui/Button";
 import { useAddApplicantResponseMutation } from "../../features/user/apiSlice";
 import { useForm } from "react-hook-form";
-import Cookies from "universal-cookie";
 import ReviewFormModal from "../../components/modals/ReviewFormModal";
 import { useNavigate } from "react-router-dom";
+import { getJWT } from "../../utils/helper";
 
 const ApplicationForm = () => {
   const {
@@ -22,8 +22,7 @@ const ApplicationForm = () => {
   const [reviewData, setReviewData] = useState<ApplicationFormResponse[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const cookies = new Cookies();
-  const jwt = cookies.get("jwt");
+  const jwt:string = getJWT()
 
   const { data, isFetching, isError } = useGetFormForApplicantsQuery(jwt);
   const [addApplicantResponse] = useAddApplicantResponseMutation();

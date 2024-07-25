@@ -1,4 +1,4 @@
-import React,{useEffect} from "react";
+import React from "react";
 import ModalLayout from "./ModalLayout";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
@@ -9,6 +9,7 @@ import {
 } from "../../features/user/apiSlice";
 import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
+import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
 
 const AddingTraineeModal = ({
   closePopup,
@@ -30,19 +31,13 @@ const AddingTraineeModal = ({
       delete data.coach;
     }
 
-   await createTrainee({
+    await createTrainee({
       jwt,
       body: { ...data, role: "TRAINEE" },
-    })
-  
- };
+    });
+  };
 
-  useEffect(()=>{
-    if(isSuccess){
-      setTimeout(closePopup,2000)
-    }
-  },[isSuccess,closePopup])
-
+  useAutoCloseModal(isSuccess, closePopup);
 
   const errorMessage: any =
     errors?.name?.message ||
@@ -57,7 +52,9 @@ const AddingTraineeModal = ({
         </div>
       )}
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
-      {isSuccess && <Alert type="success">Trainee was added successfully</Alert>}
+      {isSuccess && (
+        <Alert type="success">Trainee was added successfully</Alert>
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-6 w-full"

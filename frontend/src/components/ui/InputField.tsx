@@ -31,7 +31,7 @@ const InputField = ({
     return show ? <OpenEye /> : <ClosedEye />;
   };
 
-  errorMessage = name && errors && errors[name]?.message;
+  const fieldErrorMessage = name && errors && errors[name]?.message;
 
   return (
     <div className={`${styles ? styles : "flex flex-col gap-5"} w-full`}>
@@ -51,8 +51,10 @@ const InputField = ({
           defaultValue={defaultValue}
           {...(register && { ...register(name, options) })}
         />
-        {errorMessage && (
-          <div className="absolute text-red-500">{errorMessage.toString()}</div>
+        {(fieldErrorMessage || errorMessage) && (
+          <div className="absolute text-red-500">
+            {(fieldErrorMessage || errorMessage).toString()}
+          </div>
         )}
 
         {type === "password" && (

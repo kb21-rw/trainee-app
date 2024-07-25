@@ -5,13 +5,13 @@ import {
   useDeleteQuestionMutation,
   useEditQuestionMutation,
 } from "../../features/user/apiSlice";
-import Cookies from "universal-cookie";
 import SuccessCheckMark from "../../assets/SuccessCheckMarkIcon";
 import { useForm } from "react-hook-form";
 import AddIcon from "../../assets/AddIcon";
 import RemoveIcon from "../../assets/RemoveIcon";
 import Reset from "../../assets/ResetIcon";
 import DeleteModal from "../modals/DeleteModal";
+import { getJWT } from "../../utils/helper";
 
 const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   const { title, type, options, _id } = question;
@@ -29,8 +29,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
       options,
     },
   });
-  const cookies = new Cookies();
-  const jwt = cookies.get("jwt");
+  const jwt:string = getJWT()
   const [deleteQuestion] = useDeleteQuestionMutation();
   const [editQuestion] = useEditQuestionMutation();
   const [showDeleteModal, setShowDeleteModal] = useState(false);

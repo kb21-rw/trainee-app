@@ -8,11 +8,9 @@ import {
   QUESTION_NOT_FOUND,
   USER_NOT_FOUND,
 } from "../utils/errorCodes";
-import {
-  generateRandomPassword,
-  generateUserId,
-  sendEmail,
-} from "../utils/helpers";
+import { sendEmail } from "../utils/helpers/email";
+import { generateRandomPassword } from "../utils/helpers/password";
+import { generateUserId } from "../utils/helpers/user";
 import User from "../models/User";
 import { ACCESS_TOKEN_EXPIRATION, secret } from "../constants";
 import jwt from "jsonwebtoken";

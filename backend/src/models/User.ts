@@ -2,13 +2,14 @@ import { Document, Schema, model } from "mongoose";
 import { Role } from "../utils/types";
 
 export interface IUser extends Document {
-  userId: number;
+  id: string;
+  userId: string;
   name: string;
   email: string;
   password: string;
   role: Role;
   coach: string;
-  googleId: string;
+  googleId: null | string;
 }
 
 const UserSchema = new Schema(
