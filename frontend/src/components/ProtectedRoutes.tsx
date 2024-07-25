@@ -1,10 +1,9 @@
 import React from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import Cookies from "universal-cookie";
+import { getJWT } from "../utils/helper";
 
 const ProtectedRoute = () => {
-  const cookies = new Cookies();
-  const jwt = cookies.get("jwt");
+  const jwt:string = getJWT()
   const location = useLocation();
   const pathname = location.pathname;
   if (jwt) {

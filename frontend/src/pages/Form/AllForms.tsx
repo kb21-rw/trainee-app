@@ -4,7 +4,6 @@ import {
   useCreateFormMutation,
   useGetAllFormsQuery,
 } from "../../features/user/apiSlice";
-import Cookies from "universal-cookie";
 import FormCard from "../../components/ui/FormCard";
 import { IFormType } from "../../utils/types";
 import Loader from "../../components/ui/Loader";
@@ -12,12 +11,12 @@ import { useNavigate } from "react-router-dom";
 import NotFound from "../../components/ui/NotFound";
 import Button from "../../components/ui/Button";
 import PlusIcon from "../../assets/PlusIcon";
+import { getJWT } from "../../utils/helper";
 
 const AllForms = () => {
   const [searchString, setSearchString] = useState("");
   const navigate = useNavigate();
-  const cookie = new Cookies();
-  const jwt = cookie.get("jwt");
+  const jwt:string = getJWT()
   const [createForm] = useCreateFormMutation();
   const { data, isFetching } = useGetAllFormsQuery({ searchString, jwt });
   const [clicked, setClick] = useState(false);

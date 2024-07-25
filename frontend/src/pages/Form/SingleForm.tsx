@@ -1,17 +1,16 @@
 import React, { useState } from "react";
 import { useGetFormQuery } from "../../features/user/apiSlice";
-import Cookies from "universal-cookie";
 import Loader from "../../components/ui/Loader";
 import { useNavigate, useParams } from "react-router-dom";
 import EditForm from "../../components/ui/EditForm";
 import Back from "../../assets/BackIcon";
 import QuestionCard from "../../components/ui/QuestionCard";
+import { getJWT } from "../../utils/helper";
 
 const SingleForm = () => {
   const navigate = useNavigate();
-  const cookie = new Cookies();
   const id = useParams().id || "";
-  const jwt = cookie.get("jwt");
+  const jwt:string = getJWT()
   const { data, isFetching } = useGetFormQuery({ id, jwt });
   const title = data?.title;
   const description = data?.description || "";

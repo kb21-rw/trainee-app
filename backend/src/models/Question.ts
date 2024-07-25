@@ -3,6 +3,7 @@ import { IResponse } from "./Response";
 import { QuestionType } from "../utils/types";
 
 export interface IQuestion extends Document {
+  id: string,
   title: string;
   type: QuestionType;
   options: string[];

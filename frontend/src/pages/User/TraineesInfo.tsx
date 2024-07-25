@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Cookies from "universal-cookie";
 import {
   useDeleteTraineeMutation,
   useGetAllTraineesQuery,
@@ -8,7 +7,7 @@ import AddingTraineeModal from "../../components/modals/AddingTrainee";
 import EditTrainee from "../../components/modals/EditTrainee";
 import UserTable from "../../components/ui/UserTable";
 import UserTableHeader from "../../components/ui/UserTableHeader";
-import { getTrainees } from "../../utils/helper";
+import { getJWT, getTrainees } from "../../utils/helper";
 import {
   usersPerPageValues,
   traineeTableDataItems,
@@ -20,8 +19,7 @@ import Button from "../../components/ui/Button";
 import PlusIcon from "../../assets/PlusIcon";
 
 const TraineesInfo = () => {
-  const cookies = new Cookies();
-  const jwt: string = cookies.get("jwt");
+  const jwt: string = getJWT()
   const [query, setQuery] = useState("");
   const [editTrainee, setEditTrainee] = useState<string[] | null>(null);
   const { data, isFetching: isGetAllTraineesLoading } = useGetAllTraineesQuery({

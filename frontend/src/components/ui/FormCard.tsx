@@ -3,18 +3,17 @@ import { H2, H6, H7 } from "./Typography";
 import { IFormType } from "../../utils/types";
 import Delete from "../../assets/DeleteIcon";
 import Edit from "../../assets/EditIcon";
-import Cookies from "universal-cookie";
 import { useDeleteFormMutation } from "../../features/user/apiSlice";
 import { useNavigate } from "react-router-dom";
 import View from "../../assets/ViewIcon";
 import Loader from "./Loader";
 import DeleteModal from "../modals/DeleteModal";
+import { getJWT } from "../../utils/helper";
 
 const FormCard = ({ form }: { form: IFormType }) => {
   const navigate = useNavigate();
   const questions = form.questions;
-  const cookie = new Cookies();
-  const jwt = cookie.get("jwt");
+  const jwt:string = getJWT()
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [deleteForm, { isLoading: isDeleteFormLoading }] =

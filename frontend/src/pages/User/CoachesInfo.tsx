@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import Cookies from "universal-cookie";
 import { useGetAllCoachesQuery } from "../../features/user/apiSlice";
 import { useDeleteCoachMutation } from "../../features/user/apiSlice";
 import AddingCoachModal from "../../components/modals/AddingCoach";
 import UserTable from "../../components/ui/UserTable";
 import EditCoach from "../../components/modals/EditCoach";
 import UserTableHeader from "../../components/ui/UserTableHeader";
-import { getCoaches } from "../../utils/helper";
+import { getCoaches, getJWT } from "../../utils/helper";
 import {
   usersPerPageValues,
   coachTableSortingValues,
@@ -18,8 +17,7 @@ import Button from "../../components/ui/Button";
 import PlusIcon from "../../assets/PlusIcon";
 
 const CoachesInfo = () => {
-  const cookies = new Cookies();
-  const jwt = cookies.get("jwt");
+  const jwt:string = getJWT()
   const [query, setQuery] = useState("");
   const { data, isFetching: isGetAllCoachesLoading } = useGetAllCoachesQuery({
     jwt,

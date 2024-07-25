@@ -21,9 +21,9 @@ import AllForm from "./pages/Form/AllForms";
 import SingleForm from "./pages/Form/SingleForm";
 import OverView from "./pages/User/OverView";
 import TraineeResults from "./pages/User/TraineeResults";
-import ApplicantSignup from "./pages/User/ApplicantSignup";
-import ApplicantSignin from "./pages/User/ApplicantSignin";
-import ApplicantVerification from "./pages/User/ApplicantVerification";
+import ApplicantSignup from "./pages/Applicant/ApplicantSignup";
+import ApplicantSignin from "./pages/Applicant/ApplicantSignin";
+import ApplicantVerification from "./pages/Applicant/ApplicantVerification";
 import ApplicationForm from "./pages/Applicant/ApplicationForm";
 import ApplicantHomePage from "./pages/Applicant/ApplicantHomePage";
 export default function App() {
