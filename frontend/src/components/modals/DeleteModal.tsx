@@ -27,7 +27,7 @@ const DeleteModal = ({
  Are you sure you want to delete: <b>{name}</b>?
 </p>
       <div className="flex justify-between mt-2 mx-32">
-        <Button outlined={true} onClick={closePopup}>
+        <Button outlined onClick={closePopup}>
           Cancel
         </Button>
         <Button variant={ButtonVariant.Danger} onClick={handleDelete}>
