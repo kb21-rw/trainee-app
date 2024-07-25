@@ -37,8 +37,8 @@ const UserSchema = new Schema(
     },
     role: {
       type: String,
-      required: true,
       enum: Role,
+      default: Role.PROSPECT
     },
     coach: {
       type: Schema.Types.ObjectId,
