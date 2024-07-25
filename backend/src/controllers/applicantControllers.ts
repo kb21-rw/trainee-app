@@ -3,7 +3,7 @@ import { applicationDecisionSchema } from "../validations/applicantValidation";
 import { applicantDecisionService } from "../services/applicantService";
 
 export const decision = async (
-    req: Request,
+    req: any,
     res: Response,
     next: NextFunction
   ) => {
