@@ -1,8 +1,8 @@
-import { ObjectId, Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
+import { IUser } from "./User";
 
-export interface ResponseProperties {
-  _id: string;
-  userId: ObjectId;
+export interface IResponse extends Document {
+  userId: IUser["_id"];
   text: null | string | string[];
 }
 

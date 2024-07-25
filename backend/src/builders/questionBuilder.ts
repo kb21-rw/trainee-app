@@ -1,13 +1,13 @@
-import { QuestionProperties } from "../models/Question";
+import { IQuestion } from "../models/Question";
 
 export class Question {
   public readonly _id: string;
-  public readonly title: string;
-  public readonly type: "text" | "dropdown";
-  public readonly options: string[];
-  public readonly responseIds: string[];
+  public readonly title?: string;
+  public readonly type?: "text" | "dropdown";
+  public readonly options?: string[];
+  public readonly responseIds?: string[];
 
-  public constructor(data: QuestionProperties) {
+  public constructor(data: Partial<IQuestion>) {
     this._id = data._id;
     this.title = data.title;
     this.type = data.type;
@@ -17,7 +17,7 @@ export class Question {
 }
 
 export class QuestionBuilder {
-  private readonly properties: QuestionProperties = {
+  private readonly properties: Partial<IQuestion> = {
     _id: "66203fa2a3465a4a588d12q1",
     title: "Test question",
     type: "text",
@@ -25,12 +25,12 @@ export class QuestionBuilder {
     responseIds: [],
   };
 
-  public static from(properties: Partial<QuestionProperties>): QuestionBuilder {
+  public static from(properties: Partial<IQuestion>): QuestionBuilder {
     return new QuestionBuilder().with(properties);
   }
 
-  public with(properties: Partial<QuestionProperties>): this {
-    let key: keyof QuestionProperties;
+  public with(properties: Partial<IQuestion>): this {
+    let key: keyof IQuestion;
 
     for (key in properties) {
       const value = properties[key];
@@ -70,7 +70,7 @@ export class QuestionBuilder {
     return this;
   }
 
-  public build(): QuestionProperties {
+  public build(): Partial<IQuestion> {
     return new Question({
       ...this.properties,
     });

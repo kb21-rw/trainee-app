@@ -1,9 +1,11 @@
 import { compare, hash } from "bcryptjs";
 import CustomError from "../middlewares/customError";
 import {
+  COHORT_NOT_FOUND,
   DUPLICATE_USER,
   INVALID_CREDENTIAL,
   NOT_ALLOWED,
+  QUESTION_NOT_FOUND,
   USER_NOT_FOUND,
 } from "../utils/errorCodes";
 import {
@@ -15,6 +17,10 @@ import User from "../models/User";
 import { ACCESS_TOKEN_EXPIRATION, secret } from "../constants";
 import jwt from "jsonwebtoken";
 import { Role } from "../utils/types";
+import Cohort from "../models/Cohort";
+import Form from "../models/Form";
+import Response from "../models/Response";
+import Question from "../models/Question";
 
 export const registerService = async (user: any, body: any) => {
   let newUser;
@@ -55,6 +61,12 @@ export const applicantRegisterService = async (body: any) => {
     throw new CustomError(DUPLICATE_USER, "User already exists", 409);
   }
 
+  const currentCohort = await Cohort.findOne({ isActive: true });
+
+  if (!currentCohort) {
+    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found", 404);
+  }
+
   const name = body.name.trim().replace(/\s+/g, " "); // Remove unnecessary extra spaces in names
   const hashedPassword = await hash(body.password, 10);
 
@@ -65,6 +77,25 @@ export const applicantRegisterService = async (body: any) => {
     password: hashedPassword,
     role: Role.APPLICANT,
   });
+
+  currentCohort.applicants.push(createdUser.id);
+  await currentCohort.save();
+
+  // Create responses for all question in that cohort
+  const applicationForm = await Form.findById(currentCohort.applicationFormId);
+  if (applicationForm) {
+    applicationForm.questionIds.forEach(async (questionId) => {
+      const question = await Question.findById(questionId);
+      if (!question) {
+        throw new CustomError(QUESTION_NOT_FOUND, "Question not found", 404);
+      }
+
+      const response = await Response.create({ userId: createdUser.id });
+      question.responseIds.push(response.id);
+      await question.save();
+    });
+  }
+
   if (createdUser) {
     await sendEmail(createdUser.email, {
       name: createdUser.name,

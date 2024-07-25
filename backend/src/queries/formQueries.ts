@@ -18,6 +18,7 @@ export const getFormsQuery = async (searchString: string) => {
       $project: {
         title: 1,
         description: 1,
+        type:1,
         questions: 1,
       },
     },

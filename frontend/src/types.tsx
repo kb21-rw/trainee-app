@@ -10,6 +10,12 @@ export interface Coach {
   name: string;
 }
 
+export interface CreateCoach {
+  name: string;
+  email: string;
+  password: string;
+}
+
 export interface Response {
   _id?: string;
   text: string | null;

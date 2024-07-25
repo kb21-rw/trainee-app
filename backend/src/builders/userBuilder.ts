@@ -1,16 +1,16 @@
 import { hashSync } from "bcryptjs";
-import { UserProperties } from "../models/User";
+import { IUser } from "../models/User";
 import { Role } from "../utils/types";
 
 export class User {
   public readonly _id: string;
-  public readonly name: string;
-  public readonly email: string;
-  public readonly password: string;
-  public readonly role: Role;
-  public readonly coach: string;
+  public readonly name?: string;
+  public readonly email?: string;
+  public readonly password?: string;
+  public readonly role?: Role;
+  public readonly coach?: string;
 
-  public constructor(data: UserProperties) {
+  public constructor(data: Partial<IUser>) {
     this._id = data._id;
     this.name = data.name;
     this.email = data.email;
@@ -21,7 +21,7 @@ export class User {
 }
 
 export class UserBuilder {
-  private readonly properties: UserProperties = {
+  private readonly properties: Partial<IUser> = {
     _id: "66203fa2a3465a4a588d12u1",
     name: "trainee name",
     email: "trainee@gmail.com",
@@ -30,12 +30,12 @@ export class UserBuilder {
     coach: "My coach",
   };
 
-  public static from(properties: Partial<UserProperties>): UserBuilder {
+  public static from(properties: Partial<IUser>): UserBuilder {
     return new UserBuilder().with(properties);
   }
 
-  public with(properties: Partial<UserProperties>): this {
-    let key: keyof UserProperties;
+  public with(properties: Partial<IUser>): this {
+    let key: keyof IUser;
 
     for (key in properties) {
       const value = properties[key];
@@ -80,7 +80,7 @@ export class UserBuilder {
     return this;
   }
 
-  public build(): UserProperties {
+  public build(): Partial<IUser> {
     return new User({
       ...this.properties,
     });

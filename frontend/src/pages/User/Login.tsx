@@ -77,12 +77,22 @@ const Login = () => {
         />
       </div>
 
-      <Button size={ButtonSize.Large} type="submit">Login</Button>
-      <div className="text-center">
-        Forgot password?{" "}
-        <Link to="/reset-password" className="text-primary-dark">
-          Reset
-        </Link>
+      <Button size={ButtonSize.Large} type="submit">
+        Login
+      </Button>
+      <div className="flex flex-col text-center">
+        <span>
+          Forgot password?{" "}
+          <Link to="/reset-password" className="text-primary-dark">
+            Reset
+          </Link>
+        </span>
+        <span>
+          Don&apos;t have an account ?{" "}
+          <Link to="/applicant/signup" className="text-primary-dark">
+            Sign up
+          </Link>
+        </span>
       </div>
     </form>
   );

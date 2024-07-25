@@ -83,6 +83,12 @@ const ApplicantSignin = () => {
         <Link to="/applicant/signup" className="text-primary-dark">
           Sign Up
         </Link>
+        <div className="flex gap-2">
+          <span>Forgot password?</span>
+          <Link to="/reset-password" className="text-primary-dark">
+            Reset
+          </Link>
+        </div>
       </div>
     </form>
   );
