@@ -9,8 +9,8 @@ const DeleteModal = ({
   onDelete,
 }: {
   closePopup: () => void;
-  title?: string;
-  name?: string,
+  title: string;
+  name: string,
   onDelete: () => void;
 }) => {
   const handleDelete = () => {
@@ -27,10 +27,10 @@ const DeleteModal = ({
  Are you sure you want to delete: <b>{name}</b>?
 </p>
       <div className="flex justify-between mt-2 mx-32">
-        <Button variant={ButtonVariant.Small} outlined={true} clickHandler={closePopup}>
+        <Button outlined onClick={closePopup}>
           Cancel
         </Button>
-        <Button variant={ButtonVariant.Delete} clickHandler={handleDelete}>
+        <Button variant={ButtonVariant.Danger} onClick={handleDelete}>
           Delete
         </Button>
       </div>

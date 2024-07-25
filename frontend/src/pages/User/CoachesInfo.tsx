@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import AddUserButton from "../../components/ui/AddButton";
 import { useGetAllCoachesQuery } from "../../features/user/apiSlice";
 import { useDeleteCoachMutation } from "../../features/user/apiSlice";
 import AddingCoachModal from "../../components/modals/AddingCoach";
@@ -14,6 +13,8 @@ import {
   coachTableHeaders,
 } from "../../utils/data";
 import DeleteModal from "../../components/modals/DeleteModal";
+import Button from "../../components/ui/Button";
+import PlusIcon from "../../assets/PlusIcon";
 
 const CoachesInfo = () => {
   const jwt:string = getJWT()
@@ -27,25 +28,32 @@ const CoachesInfo = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteCoach, { isFetching: isDeleteCoachLoading }] =
     useDeleteCoachMutation();
-  const [coachTobeDeletedId,setCoachTobeDeletedId]= useState<string | null>(null)
-  
+  const [coachTobeDeletedId, setCoachTobeDeletedId] = useState<string | null>(
+    null
+  );
+
   const handleDeleteCoach = async () => {
-    if(coachTobeDeletedId)
-    await deleteCoach({ jwt, id:coachTobeDeletedId });
+    if (coachTobeDeletedId) await deleteCoach({ jwt, id: coachTobeDeletedId });
     setShowDeleteModal(false);
   };
 
   const coachesList: string[][] = getCoaches(data, coachTableDataItems);
 
-  const coachTobeDeleted= coachesList?.find(coach=>coach[0]==coachTobeDeletedId)
-  const coachTobeDeletedName= coachTobeDeleted ?  coachTobeDeleted[1] : ''
+  const coachTobeDeleted = coachesList?.find(
+    (coach) => coach[0] == coachTobeDeletedId
+  );
+  const coachTobeDeletedName = coachTobeDeleted ? coachTobeDeleted[1] : "";
 
   return (
     <div>
       <div className="py-8">
-        <AddUserButton addHandler={() => setIsAddingCoach(true)}>
-          Add coach
-        </AddUserButton>
+        <div className="flex justify-end mb-4">
+          <Button onClick={() => setIsAddingCoach(true)}>
+            <div className="flex items-center right-0">
+              <PlusIcon /> <span>Add coach</span>
+            </div>
+          </Button>
+        </div>
         <UserTableHeader
           setQuery={setQuery}
           sortingValues={coachTableSortingValues}
@@ -57,22 +65,25 @@ const CoachesInfo = () => {
           data={coachesList}
           actions={[
             { type: "edit", actionCaller: setEditCoachData },
-            { type: "delete", actionCaller: async (id: string)=> {
-              await setCoachTobeDeletedId(id)
-              setShowDeleteModal(true)
-            } },
+            {
+              type: "delete",
+              actionCaller: async (id: string) => {
+                await setCoachTobeDeletedId(id);
+                setShowDeleteModal(true);
+              },
+            },
           ]}
           isLoading={isDeleteCoachLoading || isGetAllCoachesLoading}
         />
       </div>
       {showDeleteModal && (
-          <DeleteModal
-            title='a Coach'
-            closePopup={() => setShowDeleteModal(false)}
-            onDelete={handleDeleteCoach}
-            name={coachTobeDeletedName}
-            />
-            )}
+        <DeleteModal
+          title="a Coach"
+          closePopup={() => setShowDeleteModal(false)}
+          onDelete={handleDeleteCoach}
+          name={coachTobeDeletedName}
+        />
+      )}
       {isAddingCoach && (
         <AddingCoachModal
           jwt={jwt}

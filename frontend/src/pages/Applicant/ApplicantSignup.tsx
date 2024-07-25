@@ -98,9 +98,10 @@ const ApplicantSignup = () => {
           />
         </div>
       </div>
-      <Button>Sign Up</Button>
+      <Button type="submit">Sign Up</Button>
+
       <div className="flex gap-2">
-       <span>Already have an account?</span>
+        <span>Already have an account?</span>
         <Link to="/applicant/signin" className="text-primary-dark">
           Login
         </Link>
