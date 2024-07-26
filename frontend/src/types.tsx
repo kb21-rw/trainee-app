@@ -15,6 +15,10 @@ export interface CreateCoach {
   email: string;
   password: string;
 }
+export interface CreateCohort {
+  name: string;
+  description: string;
+}
 
 export interface Response {
   _id?: string;
@@ -56,3 +60,4 @@ export enum ButtonSize {
   Medium = "Medium",
   Large = "Large",
 }
+
