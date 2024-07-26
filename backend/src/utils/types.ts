@@ -14,6 +14,7 @@ export interface CreateFormDto {
 export interface CreateCohortDto {
   name: string;
   description?: string;
+  stages: { tile: string; description: string }[];
 }
 export interface UpdateFormDto {
   title: string;

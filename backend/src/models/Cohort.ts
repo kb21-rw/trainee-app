@@ -36,6 +36,7 @@ const CohortSchema = new Schema(
         id: { type: String, default: () => new Types.ObjectId().toString() },
         title: { type: String, unique: true },
         description: { type: String, default: "" },
+        _id: false,
       },
     ],
     applicationFormId: {
