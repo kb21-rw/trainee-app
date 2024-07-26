@@ -2,7 +2,7 @@ import React from "react";
 import ModalLayout from "./ModalLayout";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import {
     useCreateCohortMutation,
 } from "../../features/user/apiSlice";
@@ -10,6 +10,7 @@ import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
 import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
 import TextArea from "../ui/TextArea";
+import { CreateCohort } from "../../types";
 
 const AddingCohortModal = ({
   closePopup,
@@ -24,8 +25,9 @@ const AddingCohortModal = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  const onSubmit = async (data: any) => {
+  } = useForm<CreateCohort>();
+
+  const onSubmit: SubmitHandler<CreateCohort> = async (data) => {
     await createCohort({
       jwt,
       body: data,
@@ -36,7 +38,7 @@ const AddingCohortModal = ({
 
   const errorMessage: any =
     errors?.name?.message ||
-    errors?.email?.message ||
+    errors?.description?.message ||
     error?.data?.errorMessage;
 
   return (
