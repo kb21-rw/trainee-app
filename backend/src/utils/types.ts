@@ -65,3 +65,15 @@ export enum QuestionType {
   SINGLE_SELECT = "SINGLE_SELECT",
   MULTI_SELECT = "MULTI_SELECT",
 }
+
+export interface AcceptedBody {
+  userId: string;
+  decision: ApplicantDecision;
+}
+
+export interface RejectedBody {
+  userId: string;
+  decision: ApplicantDecision;
+  stageId: string;
+  feedback: string;
+}

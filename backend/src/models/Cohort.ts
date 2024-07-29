@@ -34,7 +34,7 @@ const CohortSchema = new Schema(
     stages: [
       {
         id: { type: String, default: () => new Types.ObjectId().toString() },
-        title: { type: String, unique: true },
+        title: { type: String, unique: true, required: true },
         description: { type: String, default: "" },
         _id: false,
       },
@@ -79,4 +79,4 @@ const CohortSchema = new Schema(
 );
 CohortSchema.index({ name: "text", description: "text" });
 
-export default model("Cohort", CohortSchema);
+export default model<ICohort>("Cohort", CohortSchema);

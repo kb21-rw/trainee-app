@@ -1,16 +1,25 @@
-import { Types } from "mongoose";
 import CustomError from "../middlewares/customError";
 import Cohort from "../models/Cohort";
 import { COHORT_NOT_FOUND, NOT_ALLOWED } from "../utils/errorCodes";
-import { ApplicantDecision } from "../utils/types";
-import { IQuestion } from "../models/Question";
-import Response from "../models/Response";
+import { AcceptedBody, ApplicantDecision, RejectedBody } from "../utils/types";
+import { acceptUser, rejectUser } from "../utils/helpers/applicants";
+
+const isAcceptedBody = (
+  body: AcceptedBody | RejectedBody
+): body is AcceptedBody => {
+  return body.decision === ApplicantDecision.ACCEPTED;
+};
+
+const isRejectedBody = (
+  body: AcceptedBody | RejectedBody
+): body is RejectedBody => {
+  return body.decision === ApplicantDecision.REJECTED;
+};
 
 export const applicantDecisionService = async (
-  user: any,
-  body: { applicantId: string; decision: ApplicantDecision }
+  body: AcceptedBody | RejectedBody
 ) => {
-  const { applicantId, decision } = body;
+  const { userId } = body;
   const currentCohort = await Cohort.findOne({ isActive: true });
 
   if (!currentCohort) {
@@ -19,7 +28,7 @@ export const applicantDecisionService = async (
 
   const cohortApplicants = currentCohort.applicants.map((id) => id.toString());
 
-  if (!cohortApplicants.includes(applicantId)) {
+  if (!cohortApplicants.includes(userId)) {
     throw new CustomError(
       NOT_ALLOWED,
       "Applicant is not in the current cohort!",
@@ -27,30 +36,15 @@ export const applicantDecisionService = async (
     );
   }
 
-  if (decision === ApplicantDecision.ACCEPTED) {
-    currentCohort.applicants = currentCohort.applicants.filter(
-      (id) => id.toString() !== applicantId
-    );
-    currentCohort.trainees.push(new Types.ObjectId(applicantId));
-    await currentCohort.save();
+  currentCohort.applicants = currentCohort.applicants.filter(
+    (id) => id.toString() !== userId
+  );
 
-    // I used any on forms because I couldn't tell typescript that the nested properties populated would actually be the documents will all methods that I'll need to use on them.
-    const populatedCohort = await currentCohort.populate<{ forms: any[] }>({
-      path: "forms",
-      populate: { path: "questionIds" },
-    });
-
-    // Go through questions of all forms creating responses for them
-    populatedCohort.forms.forEach((form) => {
-      form.questionIds.forEach(async (question: IQuestion) => {
-        const createdResponse = await Response.create({ userId: applicantId });
-        question.responseIds.push(createdResponse.id);
-        await question.save();
-      });
-    });
-
-    return { user: applicantId, accepted: true };
+  if (isAcceptedBody(body)) {
+    return await acceptUser(currentCohort, userId);
   }
 
-  return { user, body };
+  if (isRejectedBody(body)) {
+    return await rejectUser(currentCohort, body);
+  }
 };
