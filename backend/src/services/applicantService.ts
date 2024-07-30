@@ -5,6 +5,25 @@ import { COHORT_NOT_FOUND, NOT_ALLOWED } from "../utils/errorCodes";
 import { ApplicantDecision } from "../utils/types";
 import { IQuestion } from "../models/Question";
 import Response from "../models/Response";
+import { getApplicantsQuery } from "../queries/applicantQueries";
+
+export const getApplicantsService = async (
+  {
+    nameSearch,
+    sortBy,
+    applicantsPerPage,
+  }: {
+    nameSearch: string;
+    sortBy: string;
+    applicantsPerPage: number;
+  },
+  cohortId?: string
+) => {
+  return await getApplicantsQuery(
+    { nameSearchRegex: `.*${nameSearch}.*`, sortBy, applicantsPerPage },
+    cohortId ? { id: cohortId } : undefined
+  );
+};
 
 export const applicantDecisionService = async (
   user: any,
