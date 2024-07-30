@@ -4,7 +4,6 @@ import Form from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
 import {
-  getApplicationFormQuery,
   getFormQuery,
   getFormsQuery,
 } from "../queries/formQueries";
@@ -77,15 +76,6 @@ export const getSingleFormService = async (formId: string) => {
   const form = await getFormQuery(formId);
   if (form === null) {
     throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
-  }
-
-  return form;
-};
-
-export const getApplicationFormService = async () => {
-  const form = await getApplicationFormQuery();
-  if (!form) {
-    throw new CustomError(FORM_NOT_FOUND, "Applications are closed", 404);
   }
 
   return form;

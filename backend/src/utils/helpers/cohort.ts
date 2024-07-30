@@ -6,7 +6,7 @@ export const getCurrentCohort = async () => {
   const currentCohort = await Cohort.findOne({ isActive: true });
 
   if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found", 404);
+    throw new CustomError(COHORT_NOT_FOUND, "Active cohort not found", 404);
   }
 
   return currentCohort;

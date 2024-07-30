@@ -102,7 +102,13 @@ export const createApplicantResponseService = async (
   loggedInUser: IUser,
   responseData: CreateApplicationResponseDto[]
 ) => {
+
   const currentCohort = await getCurrentCohort();
+
+  if (!currentCohort.applicationFormId) {
+    throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
+  }
+
   const applicationForm = await Form.findById(currentCohort.applicationFormId);
 
   if (!applicationForm)
