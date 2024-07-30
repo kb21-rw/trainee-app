@@ -12,6 +12,7 @@ import { generateUserId } from "../utils/helpers/user";
 import User from "../models/User";
 import { ACCESS_TOKEN_EXPIRATION, secret } from "../constants";
 import jwt from "jsonwebtoken";
+import { getCurrentCohort } from "../utils/helpers/cohort";
 
 export const registerService = async (user: any, body: any) => {
   let newUser;
@@ -52,6 +53,8 @@ export const applicantRegisterService = async (body: any) => {
     throw new CustomError(DUPLICATE_USER, "User already exists", 409);
   }
 
+  const currentCohort = await getCurrentCohort()
+
   const name = body.name.trim().replace(/\s+/g, " "); // Remove unnecessary extra spaces in names
   const hashedPassword = await hash(body.password, 10);
 
@@ -61,6 +64,9 @@ export const applicantRegisterService = async (body: any) => {
     userId: await generateUserId(),
     password: hashedPassword,
   });
+
+  currentCohort.potentialApplicants.push(createdUser.id);
+  await currentCohort.save();
 
   await sendEmail(createdUser.email, {
     name: createdUser.name,
