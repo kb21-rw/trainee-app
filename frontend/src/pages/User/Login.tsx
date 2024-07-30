@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import React from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../features/user/apiSlice";
@@ -30,7 +32,7 @@ const Login = () => {
       const userRole = decodedToken.role;
 
       if (userRole === "APPLICANT") {
-        navigate("/applicant/apply");
+        navigate("/apply");
       } else {
         navigate(redirectUrl);
       }
