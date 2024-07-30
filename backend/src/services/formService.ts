@@ -12,9 +12,11 @@ import {
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
   INVALID_MONGODB_ID,
+  APPLICATION_DEADLINE_OVERDUE,
 } from "../utils/errorCodes";
 import { CreateFormDto, FormType, UpdateFormDto } from "../utils/types";
 import mongoose from "mongoose";
+import dayjs from "dayjs";
 const { Types } = mongoose;
 const { ObjectId } = Types;
 
@@ -55,11 +57,22 @@ export const createFormService = async (formData: CreateFormDto) => {
   const createdForm = await Form.create({ title, description, type });
   const currentCohort = await Cohort.findOne({ isActive: true });
   if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "Not active cohort found!", 404);
+    throw new CustomError(COHORT_NOT_FOUND, "No active cohort found!", 404);
+  }
+
+  const now = dayjs();
+  const applicationEndDate = dayjs(currentCohort.applicationForm.applicationPeriod.endDate);
+
+  if (now.isAfter(applicationEndDate)) {
+    throw new CustomError(
+      APPLICATION_DEADLINE_OVERDUE,
+      "Application deadline has passed!",
+      400
+    );
   }
 
   if (type === FormType.APPLICANT) {
-    currentCohort.applicationFormId = createdForm.id;
+    currentCohort.applicationForm.applicationFormId = createdForm.id;
   } else {
     currentCohort.forms.push(createdForm.id);
   }
@@ -86,6 +99,22 @@ export const getApplicationFormService = async () => {
   const form = await getApplicationFormQuery();
   if (!form) {
     throw new CustomError(FORM_NOT_FOUND, "Applications are closed", 404);
+  }
+
+  const currentCohort = await Cohort.findOne({ isActive: true });
+  if (!currentCohort) {
+    throw new CustomError(COHORT_NOT_FOUND, "No active cohort found!", 404);
+  }
+
+  const now = dayjs();
+  const applicationEndDate = dayjs(currentCohort.applicationForm.applicationPeriod.endDate);
+
+  if (now.isAfter(applicationEndDate)) {
+    throw new CustomError(
+      APPLICATION_DEADLINE_OVERDUE,
+      "Application deadline has passed!",
+      400
+    );
   }
 
   return form;

@@ -1,4 +1,5 @@
 import { Document, Schema, model } from "mongoose";
+import dayjs from "dayjs";
 import { IForm } from "./Form";
 import { IUser } from "./User";
 
@@ -6,11 +7,18 @@ export interface ICohort extends Document {
   name: string;
   description: string;
   isActive: boolean;
-  applicationFormId: IForm["_id"];
   applicants: IUser["_id"][];
   trainees: IUser["_id"][];
   coaches: IUser["_id"][];
   forms: IForm["_id"][];
+applicationForm:{
+  applicationFormId: IForm["_id"];
+  applicationPeriod: {
+    startDate: Date;
+    endDate: Date;
+  };
+}
+
 }
 
 const CohortSchema = new Schema(
@@ -28,10 +36,6 @@ const CohortSchema = new Schema(
       type: Boolean,
       required: true,
       default: true,
-    },
-    applicationFormId: {
-      type: Schema.Types.ObjectId,
-      default: null,
     },
     applicants: [
       {
@@ -57,9 +61,28 @@ const CohortSchema = new Schema(
         ref: "Form",
       },
     ],
+    applicationForm:{
+      applicationFormId: {
+        type: Schema.Types.ObjectId,
+        default: null,
+      },
+      applicationPeriod: {
+        startDate: {
+          type: Date,
+          required: true,
+          default: dayjs().startOf('day').toDate(),
+        },
+        endDate: {
+          type: Date,
+          required: true,
+          default: dayjs().add(30, 'day').endOf('day').toDate(),
+        },
+      },
+    }
   },
   { timestamps: {} }
 );
+
 CohortSchema.index({ name: "text", description: "text" });
 
-export default model("Cohort", CohortSchema);
+export default model<ICohort>("Cohort", CohortSchema);
