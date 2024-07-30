@@ -27,7 +27,7 @@ export const getApplicationFormService = async () => {
   }
 
   const form = await Form.findById(currentCohort.applicationFormId)
-    .select("title descriptions questionsIds")
+    .select("title descriptions questionIds")
     .populate({
       path: "questionIds",
       select: "title type options",
