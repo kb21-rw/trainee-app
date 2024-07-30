@@ -3,7 +3,6 @@ import Question from "../models/Question";
 import {
   CreateApplicationResponseDto,
   CreateResponseDto,
-  FormType,
   QuestionType,
 } from "../utils/types";
 import Response, { IResponse } from "../models/Response";
@@ -14,6 +13,7 @@ import {
   USER_NOT_FOUND,
 } from "../utils/errorCodes";
 import Form from "../models/Form";
+import { getCurrentCohort } from "../utils/helpers/cohort";
 
 export const createResponseService = async (
   loggedInUser: IUser,
@@ -102,9 +102,14 @@ export const createApplicantResponseService = async (
   loggedInUser: IUser,
   responseData: CreateApplicationResponseDto[]
 ) => {
-  const applicationForm = await Form.findOne({
-    $and: [{ type: FormType.APPLICANT }, { isActive: true }],
-  });
+
+  const currentCohort = await getCurrentCohort();
+
+  if (!currentCohort.applicationFormId) {
+    throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
+  }
+
+  const applicationForm = await Form.findById(currentCohort.applicationFormId);
 
   if (!applicationForm)
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
