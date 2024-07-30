@@ -15,6 +15,7 @@ import {
 } from "../utils/errorCodes";
 import Form from "../models/Form";
 import Cohort from "../models/Cohort";
+import { getCurrentCohort } from "../utils/helpers/cohort";
 
 export const createResponseService = async (
   loggedInUser: IUser,
@@ -103,11 +104,8 @@ export const createApplicantResponseService = async (
   loggedInUser: IUser,
   responseData: CreateApplicationResponseDto[]
 ) => {
-  const currentCohort = await Cohort.findOne({ isActive: true });
 
-  if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "Cohort can not be found!", 404);
-  }
+  const currentCohort = await getCurrentCohort();
 
   if (!currentCohort.applicationFormId) {
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
