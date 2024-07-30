@@ -11,6 +11,11 @@ export const coachMenu = [
   { link: "/my-trainees", title: "My trainees" },
 ];
 
+export const applicantMenu = [
+  { link: "/home", title: "Home" },
+  { link: "/apply", title: "Application" },
+]
+
 export const usersPerPageValues = [10, 20, 30, 40, 50, 100];
 export const cohortsPerPage = [10, 20, 30, 40, 50, 100];
 export const coachTableSortingValues = [
