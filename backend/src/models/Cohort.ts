@@ -4,6 +4,7 @@ import { IForm } from "./Form";
 import { IUser } from "./User";
 
 export interface ICohort extends Document {
+  id: string;
   name: string;
   description: string;
   isActive: boolean;
@@ -12,8 +13,8 @@ export interface ICohort extends Document {
   coaches: IUser["_id"][];
   forms: IForm["_id"][];
 applicationForm:{
-  applicationFormId: IForm["_id"];
-  applicationPeriod: {
+  id: IForm["_id"];
+  period: {
     startDate: Date;
     endDate: Date;
   };
@@ -62,11 +63,11 @@ const CohortSchema = new Schema(
       },
     ],
     applicationForm:{
-      applicationFormId: {
+      id: {
         type: Schema.Types.ObjectId,
         default: null,
       },
-      applicationPeriod: {
+      period: {
         startDate: {
           type: Date,
           required: true,

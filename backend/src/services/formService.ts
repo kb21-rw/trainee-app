@@ -4,7 +4,6 @@ import Form from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
 import {
-  getApplicationFormQuery,
   getFormQuery,
   getFormsQuery,
 } from "../queries/formQueries";
@@ -61,7 +60,7 @@ export const createFormService = async (formData: CreateFormDto) => {
   }
 
   const now = dayjs();
-  const applicationEndDate = dayjs(currentCohort.applicationForm.applicationPeriod.endDate);
+  const applicationEndDate = dayjs(currentCohort.applicationForm.period.endDate);
 
   if (now.isAfter(applicationEndDate)) {
     throw new CustomError(
@@ -72,7 +71,7 @@ export const createFormService = async (formData: CreateFormDto) => {
   }
 
   if (type === FormType.APPLICANT) {
-    currentCohort.applicationForm.applicationFormId = createdForm.id;
+    currentCohort.applicationForm.id = createdForm.id;
   } else {
     currentCohort.forms.push(createdForm.id);
   }
@@ -90,31 +89,6 @@ export const getSingleFormService = async (formId: string) => {
   const form = await getFormQuery(formId);
   if (form === null) {
     throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
-  }
-
-  return form;
-};
-
-export const getApplicationFormService = async () => {
-  const form = await getApplicationFormQuery();
-  if (!form) {
-    throw new CustomError(FORM_NOT_FOUND, "Applications are closed", 404);
-  }
-
-  const currentCohort = await Cohort.findOne({ isActive: true });
-  if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "No active cohort found!", 404);
-  }
-
-  const now = dayjs();
-  const applicationEndDate = dayjs(currentCohort.applicationForm.applicationPeriod.endDate);
-
-  if (now.isAfter(applicationEndDate)) {
-    throw new CustomError(
-      APPLICATION_DEADLINE_OVERDUE,
-      "Application deadline has passed!",
-      400
-    );
   }
 
   return form;
