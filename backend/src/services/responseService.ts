@@ -8,13 +8,11 @@ import {
 import Response, { IResponse } from "../models/Response";
 import User, { IUser } from "../models/User";
 import {
-  COHORT_NOT_FOUND,
   NOT_ALLOWED,
   QUESTION_NOT_FOUND,
   USER_NOT_FOUND,
 } from "../utils/errorCodes";
 import Form from "../models/Form";
-import Cohort from "../models/Cohort";
 import { getCurrentCohort } from "../utils/helpers/cohort";
 
 export const createResponseService = async (
