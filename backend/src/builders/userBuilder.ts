@@ -39,7 +39,7 @@ export class UserBuilder extends Builder<
     name: "trainee name",
     email: "trainee@gmail.com",
     password: "$2a$10$qMiI0IyA/BCuHyjgqn/f8.IDjrqn7rMrHoH4LZmYoYdXlhWI8QGiu",
-    role: Role.TRAINEE,
+    role: Role.Trainee,
     coach: "My coach",
   };
 

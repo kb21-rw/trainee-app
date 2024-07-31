@@ -25,7 +25,7 @@ const FormSchema = new Schema(
     type: {
       type: String,
       enum: FormType,
-      default: FormType.TRAINEE,
+      default: FormType.Trainee,
     },
     isActive: {
       type: Boolean,
