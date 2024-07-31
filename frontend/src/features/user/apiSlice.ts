@@ -381,7 +381,7 @@ export const usersApi: any = createApi({
     getFormForApplicants: builder.query({
       query: (jwt) => {
         return {
-          url: `/forms/application`,
+          url: `/cohorts/application`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
