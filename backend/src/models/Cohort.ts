@@ -45,17 +45,10 @@ const CohortSchema = new Schema(
       type: Schema.Types.ObjectId,
       default: null,
     },
-<<<<<<< HEAD
     forms: [
       {
         type: Schema.Types.ObjectId,
         ref: "Form",
-=======
-    potentialApplicants: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "User",
->>>>>>> dev-mvp
       },
     ],
     applicants: [

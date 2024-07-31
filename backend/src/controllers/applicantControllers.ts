@@ -11,23 +11,14 @@ export const decision = async (
   next: NextFunction
 ) => {
   try {
-<<<<<<< HEAD
     const body = req.body;
     await applicationDecisionSchema.validateAsync(body);
     const decision = await applicantDecisionService(body);
-=======
-    const user = req.user;
-    const body = req.body;
-    await applicationDecisionSchema.validateAsync(body);
-    const decision = await applicantDecisionService(user, body);
->>>>>>> dev-mvp
     return res.status(201).send(decision);
   } catch (error: any) {
     next(error);
   }
 };
-<<<<<<< HEAD
-=======
 
 export const getApplicants = async (
   req: Request,
@@ -51,4 +42,3 @@ export const getApplicants = async (
     next(error);
   }
 };
->>>>>>> dev-mvp
