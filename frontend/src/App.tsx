@@ -26,6 +26,7 @@ import ApplicantSignin from "./pages/Applicant/ApplicantSignin";
 import ApplicantVerification from "./pages/Applicant/ApplicantVerification";
 import ApplicationForm from "./pages/Applicant/ApplicationForm";
 import ApplicantHomePage from "./pages/Applicant/ApplicantHomePage";
+import ThankYouNote from "./pages/Applicant/ThankYouNote";
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -52,6 +53,7 @@ export default function App() {
             <Route path="signin" element={<ApplicantSignin />} />
             <Route path="verify" element={<ApplicantVerification />} />
           </Route>
+          <Route path="/signup/thank-you" element={<ThankYouNote/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Route>

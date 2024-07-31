@@ -17,6 +17,9 @@ export default {
       width: {
         'alert-width': '37.5rem', 
       },
+      fontFamily: {
+        'thank-you': ['Caveat Brush', 'cursive'],
+      },
     },
   },
   plugins: [
