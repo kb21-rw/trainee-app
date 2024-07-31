@@ -46,7 +46,7 @@ export const applicantDecisionService = async (
     );
   }
 
-  if (decision === ApplicantDecision.ACCEPTED) {
+  if (decision === ApplicantDecision.Accepted) {
     currentCohort.applicants = currentCohort.applicants.filter(
       (id) => id.toString() !== applicantId
     );
