@@ -1,7 +1,11 @@
 import { NextFunction, Request, Response } from "express";
-import { createCohortValidation } from "../validations/cohortValidation";
+import {
+  applicationDecisionSchema,
+  createCohortValidation,
+} from "../validations/cohortValidation";
 import {
   createCohortService,
+  decisionService,
   getApplicationFormService,
   getCohortsService,
 } from "../services/cohortService";
@@ -45,5 +49,20 @@ export const getCohortsController = async (
     return res.status(200).json(cohorts);
   } catch (error) {
     return next(error);
+  }
+};
+
+export const decision = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const body = req.body;
+    await applicationDecisionSchema.validateAsync(body);
+    const decision = await decisionService(body);
+    return res.status(201).send(decision);
+  } catch (error: any) {
+    next(error);
   }
 };

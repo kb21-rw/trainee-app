@@ -14,6 +14,7 @@ export interface CreateFormDto {
 export interface CreateCohortDto {
   name: string;
   description?: string;
+  stages: { tile: string; description: string }[];
 }
 export interface UpdateFormDto {
   title: string;
@@ -64,4 +65,16 @@ export enum QuestionType {
   Text = "Text",
   SingleSelect = "SingleSelect",
   MultiSelect = "MultiSelect",
+}
+
+export interface AcceptedBody {
+  userId: string;
+  decision: ApplicantDecision;
+}
+
+export interface RejectedBody {
+  userId: string;
+  decision: ApplicantDecision;
+  stageId: string;
+  feedback: string;
 }

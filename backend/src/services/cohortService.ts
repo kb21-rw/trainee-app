@@ -7,7 +7,28 @@ import {
   FORM_NOT_FOUND,
   NOT_ALLOWED,
 } from "../utils/errorCodes";
-import { CreateCohortDto } from "../utils/types";
+import {
+  acceptUserHandler,
+  rejectUserHandler,
+} from "../utils/helpers/applicants";
+import {
+  AcceptedBody,
+  ApplicantDecision,
+  CreateCohortDto,
+  RejectedBody,
+} from "../utils/types";
+
+const isAcceptedBody = (
+  body: AcceptedBody | RejectedBody
+): body is AcceptedBody => {
+  return body.decision === ApplicantDecision.Accepted;
+};
+
+const isRejectedBody = (
+  body: AcceptedBody | RejectedBody
+): body is RejectedBody => {
+  return body.decision === ApplicantDecision.Rejected;
+};
 
 export const getCohortsService = async (searchString: string) => {
   return await getCohortsQuery(searchString);
@@ -52,4 +73,35 @@ export const getApplicationFormService = async () => {
   const { questionIds, ...rest } = form;
 
   return { ...rest, questions: questionIds };
+};
+
+export const decisionService = async (body: AcceptedBody | RejectedBody) => {
+  const { userId } = body;
+  const currentCohort = await Cohort.findOne({ isActive: true });
+
+  if (!currentCohort) {
+    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found", 404);
+  }
+
+  const cohortApplicants = currentCohort.applicants.map((id) => id.toString());
+
+  if (!cohortApplicants.includes(userId)) {
+    throw new CustomError(
+      NOT_ALLOWED,
+      "Applicant is not in the current cohort!",
+      401
+    );
+  }
+
+  currentCohort.applicants = currentCohort.applicants.filter(
+    (id) => id.toString() !== userId
+  );
+
+  if (isAcceptedBody(body)) {
+    return await acceptUserHandler(currentCohort, userId);
+  }
+
+  if (isRejectedBody(body)) {
+    return await rejectUserHandler(currentCohort, body);
+  }
 };
