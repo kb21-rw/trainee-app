@@ -3,10 +3,12 @@ import { IForm } from "./Form";
 import { IUser } from "./User";
 
 export interface ICohort extends Document {
+  id: string;
   name: string;
   description: string;
   isActive: boolean;
   applicationFormId: IForm["_id"];
+  potentialApplicants: IUser["_id"][];
   applicants: IUser["_id"][];
   trainees: IUser["_id"][];
   coaches: IUser["_id"][];
@@ -43,10 +45,17 @@ const CohortSchema = new Schema(
       type: Schema.Types.ObjectId,
       default: null,
     },
+<<<<<<< HEAD
     forms: [
       {
         type: Schema.Types.ObjectId,
         ref: "Form",
+=======
+    potentialApplicants: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+>>>>>>> dev-mvp
       },
     ],
     applicants: [

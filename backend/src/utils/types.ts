@@ -54,6 +54,7 @@ export enum Role {
   "COACH" = "COACH",
   "TRAINEE" = "TRAINEE",
   "APPLICANT" = "APPLICANT",
+  "PROSPECT" = "PROSPECT",
 }
 
 export enum ApplicantDecision {

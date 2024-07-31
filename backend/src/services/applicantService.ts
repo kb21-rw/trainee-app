@@ -1,6 +1,7 @@
 import CustomError from "../middlewares/customError";
 import Cohort from "../models/Cohort";
 import { COHORT_NOT_FOUND, NOT_ALLOWED } from "../utils/errorCodes";
+<<<<<<< HEAD
 import { AcceptedBody, ApplicantDecision, RejectedBody } from "../utils/types";
 import { acceptUser, rejectUser } from "../utils/helpers/applicants";
 
@@ -14,6 +15,29 @@ const isRejectedBody = (
   body: AcceptedBody | RejectedBody
 ): body is RejectedBody => {
   return body.decision === ApplicantDecision.REJECTED;
+=======
+import { ApplicantDecision } from "../utils/types";
+import { IQuestion } from "../models/Question";
+import Response from "../models/Response";
+import { getApplicantsQuery } from "../queries/applicantQueries";
+
+export const getApplicantsService = async (
+  {
+    nameSearch,
+    sortBy,
+    applicantsPerPage,
+  }: {
+    nameSearch: string;
+    sortBy: string;
+    applicantsPerPage: number;
+  },
+  cohortId?: string
+) => {
+  return await getApplicantsQuery(
+    { nameSearchRegex: `.*${nameSearch}.*`, sortBy, applicantsPerPage },
+    cohortId ? { id: cohortId } : undefined
+  );
+>>>>>>> dev-mvp
 };
 
 export const applicantDecisionService = async (

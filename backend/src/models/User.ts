@@ -6,6 +6,8 @@ export interface IUser extends Document {
   userId: string;
   name: string;
   email: string;
+  verified: boolean;
+  applied: boolean;
   password: string;
   role: Role;
   coach: string;
@@ -32,13 +34,17 @@ const UserSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    applied: {
+      type: Boolean,
+      default: false,
+    },
     password: {
       type: String,
     },
     role: {
       type: String,
-      required: true,
       enum: Role,
+      default: Role.PROSPECT
     },
     coach: {
       type: Schema.Types.ObjectId,
