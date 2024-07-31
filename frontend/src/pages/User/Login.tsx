@@ -10,7 +10,7 @@ import Button from "../../components/ui/Button";
 import InputField from "../../components/ui/InputField";
 import Loader from "../../components/ui/Loader";
 import jwt_decode from "jwt-decode";
-import { ButtonSize } from "../../types";
+import { ButtonSize } from "../../utils/types";
 
 const Login = () => {
   const [login, { isLoading, error }] = useLoginMutation();

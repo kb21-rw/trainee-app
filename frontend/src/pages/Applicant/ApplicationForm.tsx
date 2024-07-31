@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useGetFormForApplicantsQuery } from "../../features/user/apiSlice";
 import Loader from "../../components/ui/Loader";
-import { ApplicationFormResponse, ButtonVariant, Question } from "../../types";
+import { ApplicationFormResponse, ButtonVariant, Question } from "../../utils/types";
 import FormInput from "../../components/ui/FormInput";
 import Button from "../../components/ui/Button";
 import { useAddApplicantResponseMutation } from "../../features/user/apiSlice";

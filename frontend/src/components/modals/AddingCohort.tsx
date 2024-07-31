@@ -10,7 +10,7 @@ import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
 import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
 import TextArea from "../ui/TextArea";
-import { CreateCohort } from "../../types";
+import { CreateCohort } from "../../utils/types";
 
 const AddingCohortModal = ({
   closePopup,

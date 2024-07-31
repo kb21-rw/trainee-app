@@ -6,7 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useCreateCoachMutation } from "../../features/user/apiSlice";
 import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
-import { CreateCoach } from "../../types";
+import { CreateCoach } from "../../utils/types";
 import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
 const AddingCoachModal = ({
   closePopup,
