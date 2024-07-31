@@ -50,7 +50,9 @@ const Login = () => {
       <div className="text-center">
         <H1>Member login</H1>
       </div>
+      <div className="flex items-center justify-center">
       {isLoading && <Loader />}
+      </div>
       <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
         {errorMessage && (
           <div className="py-2 bg-error-light text-error-dark flex justify-center items-center rounded-lg">
