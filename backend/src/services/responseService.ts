@@ -105,11 +105,11 @@ export const createApplicantResponseService = async (
 
   const currentCohort = await getCurrentCohort();
 
-  if (!currentCohort.applicationFormId) {
+  if (!currentCohort.applicationForm.id) {
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
   }
 
-  const applicationForm = await Form.findById(currentCohort.applicationFormId);
+  const applicationForm = await Form.findById(currentCohort.applicationForm.id);
 
   if (!applicationForm)
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);

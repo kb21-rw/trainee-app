@@ -5,7 +5,7 @@ import {
   APPLICATION_DEADLINE_OVERDUE,
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
-  NOT_ALLOWED,
+  NOT_ALLOWED
 } from "../utils/errorCodes";
 import { CreateCohortDto } from "../utils/types";
 import dayjs from "dayjs";
@@ -28,9 +28,10 @@ export const getApplicationFormService = async () => {
     throw new CustomError(NOT_ALLOWED, "Applications aren't open yet", 401);
   }
 
-
   const now = dayjs();
-  const applicationEndDate = dayjs(currentCohort.applicationForm.period.endDate);
+  const applicationEndDate = dayjs(
+    currentCohort.applicationForm.period.endDate
+  );
 
   if (now.isAfter(applicationEndDate)) {
     throw new CustomError(
@@ -39,8 +40,6 @@ export const getApplicationFormService = async () => {
       400
     );
   }
-
-
 
   const form = await Form.findById(currentCohort.applicationForm.id)
     .select("title descriptions questionIds")
