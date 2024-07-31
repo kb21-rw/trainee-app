@@ -13,7 +13,7 @@ export const applicationDecisionSchema = Joi.object({
   userId: Joi.string()
     .hex()
     .length(24)
-    .message("A applicantId is not valid")
+    .message("userId is not valid")
     .required(),
   decision: Joi.string()
     .valid(ApplicantDecision.ACCEPTED, ApplicantDecision.REJECTED)
@@ -23,7 +23,7 @@ export const applicationDecisionSchema = Joi.object({
     then: Joi.string()
       .hex()
       .length(24)
-      .message("A applicantId is not valid")
+      .message("stageId is not valid")
       .required(),
   }),
   feedback: Joi.string().optional(),

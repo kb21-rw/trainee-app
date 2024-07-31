@@ -1,17 +1,26 @@
 import { Types } from "mongoose";
 import { ICohort } from "../../models/Cohort";
 import Response from "../../models/Response";
-import { IQuestion } from "../../models/Question";
 import { RejectedBody } from "../types";
 import CustomError from "../../middlewares/customError";
 import { STAGE_NOT_FOUND } from "../errorCodes";
+import { IQuestion } from "../../models/Question";
+import { IForm } from "../../models/Form";
 
-export const acceptUserHandler = async (currentCohort: ICohort, userId: string) => {
+export const acceptUserHandler = async (
+  currentCohort: ICohort,
+  userId: string
+) => {
   currentCohort.trainees.push(new Types.ObjectId(userId));
   await currentCohort.save();
 
-  // I used any on forms because I couldn't tell typescript that the nested properties populated would actually be the documents will all methods that I'll need to use on them.
-  const populatedCohort = await currentCohort.populate<{ forms: any[] }>({
+  type PopulatedForm = Omit<IForm, "questionIds"> & {
+    questionIds: IQuestion[];
+  };
+
+  const populatedCohort = await currentCohort.populate<{
+    forms: PopulatedForm[];
+  }>({
     path: "forms",
     populate: { path: "questionIds" },
   });
