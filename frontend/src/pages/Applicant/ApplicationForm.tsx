@@ -7,15 +7,11 @@ import Button from "../../components/ui/Button";
 import { useAddApplicantResponseMutation } from "../../features/user/apiSlice";
 import { useForm } from "react-hook-form";
 import ReviewFormModal from "../../components/modals/ReviewFormModal";
-import ApplicantSuccessModal from "../../components/modals/ApplicationSuccess"; // Import ApplicantSuccessModal
+import ApplicantSuccessModal from "../../components/modals/ApplicationSuccess";
 import { getJWT } from "../../utils/helper";
 
 const ApplicationForm = () => {
-  const {
-    handleSubmit,
-    register,
-    formState: { errors },
-  } = useForm();
+  const { handleSubmit, register } = useForm();
 
   const [reviewData, setReviewData] = useState<ApplicationFormResponse[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,17 +19,12 @@ const ApplicationForm = () => {
 
   const jwt: string = getJWT();
 
-  const { data, isFetching, isError } = useGetFormForApplicantsQuery(jwt);
-  const [addApplicantResponse, {isSuccess}] =
+  const { data, isFetching } = useGetFormForApplicantsQuery(jwt);
+  const [addApplicantResponse, { isSuccess }] =
     useAddApplicantResponseMutation();
 
   const formTitle = data?.title;
-  const formQuestions = data?.questions || [];
-
-  const errorMessage =
-    errors.name?.message ||
-    errors.email?.message ||
-    isError?.data?.errorMessage;
+  const formQuestions = data?.questions ?? [];
 
   const handleFormSubmit = (formData: any) => {
     const responses = formData.responses.map(
@@ -52,7 +43,7 @@ const ApplicationForm = () => {
         jwt,
         body: reviewData,
       });
-      if(isSuccess) setIsSubmissionSuccessful(true);
+      if (isSuccess) setIsSubmissionSuccessful(true);
     } catch (error: any) {
       throw new Error("Error submitting form", error);
     }
@@ -70,15 +61,21 @@ const ApplicationForm = () => {
       </div>
     );
 
-  if (isError || errorMessage) {
+  if (formQuestions.length === 0) {
     return (
-      <div
-        className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded flex flex-col justify-center items-center"
-        role="alert"
-      >
-        <strong className="font-bold text-5xl space-y-5">Error!</strong>
-        <span className="block sm:inline text-xl">{errorMessage}</span>
-        <span>Please try again later.</span>
+      <div className="flex justify-center items-center h-96">
+        <div
+          className="flex flex-col items-center bg-green-100 border border-green-400 px-4 py-3 rounded space-y-2"
+          role="alert"
+        >
+          <h1 className="text-3xl text-green-700">Oops! 🫢</h1>
+          <strong className="font-bold text-center text-green-700">
+            No application found!
+          </strong>
+          <span className="block sm:inline text-center text-gray-500">
+            Unfortunately, there is no open application
+          </span>
+        </div>
       </div>
     );
   }
@@ -161,7 +158,9 @@ const ApplicationForm = () => {
         />
       )}
       {isSubmissionSuccessful && (
-        <ApplicantSuccessModal closePopup={() => setIsSubmissionSuccessful(false)} />
+        <ApplicantSuccessModal
+          closePopup={() => setIsSubmissionSuccessful(false)}
+        />
       )}
     </div>
   );
