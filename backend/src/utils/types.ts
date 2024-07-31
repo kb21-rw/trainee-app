@@ -46,25 +46,25 @@ export interface Search {
 }
 
 export enum FormType {
-  "APPLICANT" = "APPLICANT",
-  "TRAINEE" = "TRAINEE",
+  Applicant = "Applicant",
+  Trainee = "Trainee",
 }
 export enum Role {
-  "ADMIN" = "ADMIN",
-  "COACH" = "COACH",
-  "TRAINEE" = "TRAINEE",
-  "APPLICANT" = "APPLICANT",
-  "PROSPECT" = "PROSPECT",
+  Admin = "Admin",
+  Coach = "Coach",
+  Trainee = "Trainee",
+  Applicant = "Applicant",
+  Prospect = "Prospect",
 }
 
 export enum ApplicantDecision {
-  "ACCEPTED" = "ACCEPTED",
-  "REJECTED" = "REJECTED",
+  Accepted = "Accepted",
+  Rejected = "Rejected",
 }
 export enum QuestionType {
-  TEXT = "TEXT",
-  SINGLE_SELECT = "SINGLE_SELECT",
-  MULTI_SELECT = "MULTI_SELECT",
+  Text = "Text",
+  SingleSelect = "SingleSelect",
+  MultiSelect = "MultiSelect",
 }
 
 export interface AcceptedBody {

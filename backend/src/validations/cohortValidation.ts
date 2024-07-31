@@ -16,10 +16,10 @@ export const applicationDecisionSchema = Joi.object({
     .message("userId is not valid")
     .required(),
   decision: Joi.string()
-    .valid(ApplicantDecision.ACCEPTED, ApplicantDecision.REJECTED)
+    .valid(ApplicantDecision.Accepted, ApplicantDecision.Rejected)
     .required(),
   stageId: Joi.when("decision", {
-    is: Joi.valid(ApplicantDecision.REJECTED),
+    is: Joi.valid(ApplicantDecision.Rejected),
     then: Joi.string()
       .hex()
       .length(24)

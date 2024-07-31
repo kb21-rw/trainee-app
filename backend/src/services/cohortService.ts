@@ -20,13 +20,13 @@ import {
 const isAcceptedBody = (
   body: AcceptedBody | RejectedBody
 ): body is AcceptedBody => {
-  return body.decision === ApplicantDecision.ACCEPTED;
+  return body.decision === ApplicantDecision.Accepted;
 };
 
 const isRejectedBody = (
   body: AcceptedBody | RejectedBody
 ): body is RejectedBody => {
-  return body.decision === ApplicantDecision.REJECTED;
+  return body.decision === ApplicantDecision.Rejected;
 };
 
 export const createCohortService = async (cohortData: CreateCohortDto) => {

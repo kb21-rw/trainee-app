@@ -3,7 +3,7 @@ import { Role } from "../utils/types";
 
 export const isAdmin = (req: any, res: Response, next: () => void) => {
   const { role } = req.user;
-  if (role != Role.ADMIN) {
+  if (role != Role.Admin) {
     return res.status(401).json({ message: "Only admins are allowed " });
   }
 
@@ -12,7 +12,7 @@ export const isAdmin = (req: any, res: Response, next: () => void) => {
 
 export const isCoach = (req: any, res: Response, next: () => void) => {
   const { role } = req.user;
-  if (role != Role.COACH) {
+  if (role != Role.Coach) {
     return res.status(401).json({ message: "Only coaches are allowed " });
   }
 
@@ -21,7 +21,7 @@ export const isCoach = (req: any, res: Response, next: () => void) => {
 
 export const isAdminOrCoach = (req: any, res: Response, next: () => void) => {
   const { role } = req.user;
-  if (role != Role.ADMIN && role != Role.COACH) {
+  if (role != Role.Admin && role != Role.Coach) {
     return res
       .status(401)
       .json({ message: "Only coaches and admins are allowed" });
@@ -32,7 +32,7 @@ export const isAdminOrCoach = (req: any, res: Response, next: () => void) => {
 
 export const isApplicant = (req: any, res: Response, next: () => void) => {
   const { role } = req.user;
-  if (role != Role.APPLICANT) {
+  if (role != Role.Applicant) {
     return res.status(401).json({ message: "Only applicants are allowed" });
   }
 
