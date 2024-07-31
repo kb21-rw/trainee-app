@@ -45,6 +45,8 @@ export interface Search {
   typeQuery?: string;
 }
 
+export type GetCohortDto = { _id: string } | { isActive: true };
+
 export enum FormType {
   Applicant = "Applicant",
   Trainee = "Trainee",

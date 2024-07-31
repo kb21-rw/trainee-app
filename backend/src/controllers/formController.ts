@@ -3,7 +3,6 @@ import {
   createFormValidation,
   editFormValidation,
 } from "../validations/formValidation";
-import { Search } from "../utils/types";
 import {
   getFormsService,
   createFormService,
@@ -15,7 +14,7 @@ import {
 export const createFormController = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     await createFormValidation.validateAsync(req.body);
@@ -27,13 +26,21 @@ export const createFormController = async (
 };
 
 export const getFormsController = async (
-  req: Request<object, object, object, Search>,
+  req: Request<
+    object,
+    object,
+    object,
+    { searchString?: string; cohort?: string }
+  >,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
-    const searchString = req.query.searchString || "";
-    const forms = await getFormsService(searchString);
+    const searchString = req.query.searchString ?? "";
+    const cohort: { _id: string } | { isActive: true } = req.query.cohort
+      ? { _id: req.query.cohort }
+      : { isActive: true };
+    const forms = await getFormsService(searchString, cohort);
     return res.status(200).json(forms);
   } catch (error) {
     next(error);
@@ -43,7 +50,7 @@ export const getFormsController = async (
 export const updateFormController = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { formId } = req.params;
@@ -58,7 +65,7 @@ export const updateFormController = async (
 export const deleteFormController = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const formId = req.params.formId;
@@ -72,7 +79,7 @@ export const deleteFormController = async (
 export const getSingleFormController = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { formId } = req.params;
