@@ -1,12 +1,17 @@
 import CustomError from "../middlewares/customError";
 import Cohort from "../models/Cohort";
 import Form from "../models/Form";
+import { getCohortsQuery } from "../queries/cohortQueries";
 import {
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
   NOT_ALLOWED,
 } from "../utils/errorCodes";
 import { CreateCohortDto } from "../utils/types";
+
+export const getCohortsService = async (searchString: string) => {
+  return await getCohortsQuery(searchString);
+};
 
 export const createCohortService = async (cohortData: CreateCohortDto) => {
   await Cohort.updateOne({ isActive: true }, { isActive: false });
