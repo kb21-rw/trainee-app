@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { ApplicantDecision } from "../utils/types";
 
 export const createCohortValidation = Joi.object({
   name: Joi.string().min(3).max(100).required(),
@@ -6,4 +7,24 @@ export const createCohortValidation = Joi.object({
   stages: Joi.array().items(
     Joi.object({ title: Joi.string().min(1), description: Joi.string() })
   ),
+});
+
+export const applicationDecisionSchema = Joi.object({
+  userId: Joi.string()
+    .hex()
+    .length(24)
+    .message("A applicantId is not valid")
+    .required(),
+  decision: Joi.string()
+    .valid(ApplicantDecision.ACCEPTED, ApplicantDecision.REJECTED)
+    .required(),
+  stageId: Joi.when("decision", {
+    is: Joi.valid(ApplicantDecision.REJECTED),
+    then: Joi.string()
+      .hex()
+      .length(24)
+      .message("A applicantId is not valid")
+      .required(),
+  }),
+  feedback: Joi.string().optional(),
 });

@@ -6,7 +6,7 @@ import { RejectedBody } from "../types";
 import CustomError from "../../middlewares/customError";
 import { STAGE_NOT_FOUND } from "../errorCodes";
 
-export const acceptUser = async (currentCohort: ICohort, userId: string) => {
+export const acceptUserHandler = async (currentCohort: ICohort, userId: string) => {
   currentCohort.trainees.push(new Types.ObjectId(userId));
   await currentCohort.save();
 
@@ -28,7 +28,7 @@ export const acceptUser = async (currentCohort: ICohort, userId: string) => {
   return { user: userId, message: "The applicant was accepted successfully!" };
 };
 
-export const rejectUser = async (
+export const rejectUserHandler = async (
   currentCohort: ICohort,
   { userId, stageId, feedback }: RejectedBody
 ) => {
