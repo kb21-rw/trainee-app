@@ -27,11 +27,8 @@ const ApplicationForm = () => {
   const [addApplicantResponse, {isSuccess}] =
     useAddApplicantResponseMutation();
 
-  const form = data?.[0];
-
-  const formTitle = form?.title;
-  const formDescription = form?.description || "";
-  const formQuestions = form?.questions || [];
+  const formTitle = data?.title;
+  const formQuestions = data?.questions || [];
 
   const errorMessage =
     errors.name?.message ||
@@ -95,7 +92,6 @@ const ApplicationForm = () => {
             <h2 className="text-3xl font-bold text-gray-800 mb-4 text-center">
               {formTitle}
             </h2>
-            <p className="text-gray-600 text-center mb-6">{formDescription}</p>
           </div>
           <form className="mt-8" onSubmit={handleSubmit(handleFormSubmit)}>
             {formQuestions.map((question: Question, index: number) => (
