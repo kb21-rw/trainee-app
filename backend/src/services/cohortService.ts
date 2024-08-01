@@ -2,13 +2,11 @@ import CustomError from "../middlewares/customError";
 import Cohort from "../models/Cohort";
 import Form from "../models/Form";
 import {
-  APPLICATION_DEADLINE_OVERDUE,
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
   NOT_ALLOWED
 } from "../utils/errorCodes";
 import { CreateCohortDto } from "../utils/types";
-import dayjs from "dayjs";
 
 export const createCohortService = async (cohortData: CreateCohortDto) => {
   await Cohort.updateOne({ isActive: true }, { isActive: false });
@@ -26,19 +24,6 @@ export const getApplicationFormService = async () => {
 
   if (!currentCohort.applicationForm.id) {
     throw new CustomError(NOT_ALLOWED, "Applications aren't open yet", 401);
-  }
-
-  const now = dayjs();
-  const applicationEndDate = dayjs(
-    currentCohort.applicationForm.period.endDate
-  );
-
-  if (now.isAfter(applicationEndDate)) {
-    throw new CustomError(
-      APPLICATION_DEADLINE_OVERDUE,
-      "Application deadline has passed!",
-      400
-    );
   }
 
   const form = await Form.findById(currentCohort.applicationForm.id)
