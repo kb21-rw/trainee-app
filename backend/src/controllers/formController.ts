@@ -10,6 +10,8 @@ import {
   getSingleFormService,
   deleteFormService,
 } from "../services/formService";
+import { Types } from "mongoose";
+import { mongodbIdValidation } from "../validations/generalValidation";
 
 export const createFormController = async (
   req: Request,
@@ -36,9 +38,10 @@ export const getFormsController = async (
   next: NextFunction
 ) => {
   try {
+    req.query.cohort && await mongodbIdValidation.validateAsync(req.query.cohort);
     const searchString = req.query.searchString ?? "";
-    const cohort: { _id: string } | { isActive: true } = req.query.cohort
-      ? { _id: req.query.cohort }
+    const cohort: { _id: Types.ObjectId } | { isActive: true } = req.query.cohort
+      ? { _id: new Types.ObjectId(req.query.cohort) }
       : { isActive: true };
     const forms = await getFormsService(searchString, cohort);
     return res.status(200).json(forms);

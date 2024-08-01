@@ -8,7 +8,7 @@ export const getFormsQuery = async (
 ) => {
   const cohorts = await Cohort.aggregate([
     {
-      $match: cohort ,
+      $match: cohort,
     },
     {
       $lookup: {
@@ -16,6 +16,39 @@ export const getFormsQuery = async (
         localField: "forms",
         foreignField: "_id",
         as: "forms",
+      },
+    },
+    {
+      $unwind: {
+        path: "$forms",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $addFields: {
+        formsMatching: {
+          $regexMatch: {
+            input: "$forms.title",
+            regex: searchString,
+            options: "i",
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        name: { $first: "$name" },
+        description: { $first: "description" },
+        forms: {
+          $push: {
+            $cond: {
+              if: "$formsMatching",
+              then: "$forms",
+              else: "$$REMOVE",
+            },
+          },
+        },
       },
     },
     {
@@ -33,7 +66,7 @@ export const getFormsQuery = async (
     },
   ]);
 
-  return cohorts[0]
+  return cohorts[0];
 };
 
 export const getFormQuery = async (formId: string) => {

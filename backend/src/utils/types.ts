@@ -1,4 +1,4 @@
-import { Date } from "mongoose";
+import { Date, Types } from "mongoose";
 
 interface MetaType {
   _id: string;
@@ -45,7 +45,7 @@ export interface Search {
   typeQuery?: string;
 }
 
-export type GetCohortDto = { _id: string } | { isActive: true };
+export type GetCohortDto = { _id: Types.ObjectId } | { isActive: true };
 
 export enum FormType {
   Applicant = "Applicant",
