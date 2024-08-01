@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export interface IFormType {
   _id: string;
   title: string;
@@ -58,13 +59,13 @@ export interface ApplicationFormResponse {
 }
 
 export enum ButtonVariant {
-  "Primary" = "Primary",
-  "Danger" = "Danger",
+  Primary = "Primary",
+  Danger = "Danger",
 }
 
 export enum ButtonSize {
-  "Small" = "Small",
-  "Medium" = "Medium",
-  "Large" = "Large",
+  Small = "Small",
+  Medium = "Medium",
+  Large = "Large",
 }
 
