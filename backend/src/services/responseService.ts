@@ -119,7 +119,6 @@ export const createApplicantResponseService = async (
   const now = dayjs();
   const applicationEndDate = dayjs(new Date(currentCohort.applicationForm.endDate)
   );
-  console.log(now.isAfter(applicationEndDate),applicationEndDate,'applicationEndDate')
 
   if (now.isAfter(applicationEndDate)) {
     throw new CustomError(
@@ -128,7 +127,7 @@ export const createApplicantResponseService = async (
       400
     );
   }
-  
+
   //check if all question in the form are in the responseData
   if (
     !applicationForm.questionIds.every((questionId) =>
