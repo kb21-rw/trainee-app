@@ -19,6 +19,7 @@ export default {
       },
       fontFamily: {
         'thank-you': ['Caveat Brush', 'cursive'],
+        'lato': ['Lato','Sans-serif']
       },
     },
   },

@@ -1,11 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Caveat+Brush&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-body {
-  font-family: "Lato", sans-serif;
-}
 
 .custom-shadow {
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
