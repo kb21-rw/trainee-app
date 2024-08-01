@@ -1,5 +1,4 @@
 import { Document, Schema, model } from "mongoose";
-import dayjs from "dayjs";
 import { IForm } from "./Form";
 import { IUser } from "./User";
 
@@ -14,10 +13,8 @@ export interface ICohort extends Document {
   forms: IForm["_id"][];
 applicationForm:{
   id: IForm["_id"];
-  period: {
     startDate: Date;
     endDate: Date;
-  };
 }
 
 }
@@ -67,18 +64,16 @@ const CohortSchema = new Schema(
         type: Schema.Types.ObjectId,
         default: null,
       },
-      period: {
         startDate: {
           type: Date,
           required: true,
-          default: dayjs().startOf('day').toDate(),
+          default: null,
         },
         endDate: {
           type: Date,
           required: true,
-          default: dayjs().add(30, 'day').endOf('day').toDate(),
+          default: null
         },
-      },
     }
   },
   { timestamps: {} }
