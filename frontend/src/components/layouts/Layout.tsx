@@ -1,6 +1,6 @@
 import React from "react";
-import { NavLink, Outlet, useNavigate } from "react-router-dom";
-import { adminMenu, coachMenu } from "../../utils/data";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { adminMenu, applicantMenu, coachMenu } from "../../utils/data";
 import { useGetProfileQuery } from "../../features/user/apiSlice";
 import { getJWT } from "../../utils/helper";
 import Cookies from "universal-cookie";
@@ -14,10 +14,11 @@ const Layout = () => {
   const menu =
     (data?.role === "ADMIN" && adminMenu) ||
     (data?.role === "COACH" && coachMenu) ||
+    (data?.role === "APPLICANT" && applicantMenu) ||
     [];
   return (
-    <div className="h-screen flex flex-col px-16 py-4 max-w-[1920px] mx-auto overflow-x-hidden">
-      <nav className="flex items-center justify-between gap-20">
+    <div className="flex flex-col px-16 py-4 max-w-[1920px] mx-auto overflow-x-hidden">
+      <nav className="flex items-center justify-between gap-20 py-6 border-b-2 border-b-gray-200 shadow-b">
         <div className="flex items-center gap-10">
           {menu.map((element, index) => (
             <NavLink
@@ -61,6 +62,18 @@ const Layout = () => {
       <div className="flex-1">
         <Outlet />
       </div>
+      <footer className="container w-screen fixed bottom-0 py-4 flex justify-between items-center">
+        <div>
+          <p>
+            &copy;<span className="font-bold">The GYM</span>{" "}
+            {new Date().getFullYear()} <span></span>, All rights reserved
+          </p>
+        </div>
+        <div className="flex items-center space-x-5">
+          <Link to="#" className="hover:text-primary-dark">Privacy Policy</Link>
+          <Link to="#" className="hover:text-primary-dark">Terms and Conditions</Link>
+        </div>
+      </footer>
     </div>
   );
 };

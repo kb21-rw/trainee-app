@@ -1,7 +1,7 @@
 import React from "react";
 import ModalLayout from "./ModalLayout";
 import Button from "../ui/Button";
-import { ButtonVariant } from "../../types";
+import { ButtonVariant } from "../../utils/types";
 const DeleteModal = ({
   closePopup,
   title,

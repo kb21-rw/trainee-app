@@ -18,7 +18,7 @@ const ApplicantSignin = () => {
   const cookies = new Cookies();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const redirectUrl = searchParams.get("redirectTo") || "/applicant/apply";
+  const redirectUrl = searchParams.get("redirectTo") || "/apply";
 
   const onSubmit = async (userData: any) => {
     const result = await login({

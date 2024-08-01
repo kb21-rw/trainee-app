@@ -42,11 +42,11 @@ export const createQuestionService = async (
 
     let userIds: Types.ObjectId[] = [];
 
-    if (relatedForm.type === FormType.APPLICANT) {
+    if (relatedForm.type === FormType.Applicant) {
       userIds = currentCohort.applicants;
     }
 
-    if (relatedForm.type === FormType.TRAINEE) {
+    if (relatedForm.type === FormType.Trainee) {
       userIds = currentCohort.trainees;
     }
 
@@ -94,7 +94,7 @@ export const updateQuestionService = async (
 
   if (options) question.options = options;
 
-  if (type === QuestionType.TEXT) question.options = [];
+  if (type === QuestionType.Text) question.options = [];
 
   await Response.updateMany(
     { _id: { $in: question.responseIds } },
