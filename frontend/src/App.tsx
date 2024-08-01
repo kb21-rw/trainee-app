@@ -25,8 +25,10 @@ import ApplicantSignup from "./pages/Applicant/ApplicantSignup";
 import ApplicantSignin from "./pages/Applicant/ApplicantSignin";
 import ApplicantVerification from "./pages/Applicant/ApplicantVerification";
 import ApplicationForm from "./pages/Applicant/ApplicationForm";
+import ThankYouNote from "./pages/Applicant/ThankYouNote";
 import Cohort from "./pages/Cohort/Cohort";
 import HomePage from "./pages/Applicant/HomePage";
+
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -54,6 +56,7 @@ export default function App() {
             <Route path="signin" element={<ApplicantSignin />} />
             <Route path="verify" element={<ApplicantVerification />} />
           </Route>
+          <Route path="/signup/thank-you" element={<ThankYouNote/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
