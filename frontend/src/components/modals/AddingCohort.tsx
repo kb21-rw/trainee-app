@@ -3,83 +3,91 @@ import ModalLayout from "./ModalLayout";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { useCreateCoachMutation } from "../../features/user/apiSlice";
+import {
+    useCreateCohortMutation,
+} from "../../features/user/apiSlice";
 import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
-import { CreateCoach } from "../../utils/types";
 import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
-const AddingCoachModal = ({
+import TextArea from "../ui/TextArea";
+import { CreateCohort } from "../../utils/types";
+
+const AddingCohortModal = ({
   closePopup,
   jwt,
 }: {
   closePopup: () => void;
   jwt: string;
 }) => {
-  const [createCoach, { isLoading, error, isSuccess }] =
-    useCreateCoachMutation();
+  const [createCohort, { isLoading, error, isSuccess }] =
+    useCreateCohortMutation();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<CreateCoach>();
+  } = useForm<CreateCohort>();
 
-  const onSubmit: SubmitHandler<CreateCoach> = async (data) => {
-    try {
-      await createCoach({ jwt, body: { ...data, role: "COACH" } }).unwrap();
-    } catch (error) {
-      return "false";
-    }
+  const onSubmit: SubmitHandler<CreateCohort> = async (data) => {
+    await createCohort({
+      jwt,
+      body: data,
+    });
   };
 
   useAutoCloseModal(isSuccess, closePopup);
+
   const errorMessage: any =
-    errors.name?.message || errors.email?.message || error?.data?.errorMessage;
+    errors?.name?.message ||
+    errors?.description?.message ||
+    error?.data?.errorMessage;
+
   return (
-    <ModalLayout closePopup={closePopup} title="Add coach">
+    <ModalLayout closePopup={closePopup} title="Add Cohort">
       {isLoading && (
         <div className="flex items-center justify-center">
           <Loader />
         </div>
       )}
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
-      {isSuccess && <Alert type="success">Coach was added succesfully</Alert>}
+      {isSuccess && (
+        <Alert type="success">Cohort was created successfully</Alert>
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-8 w-full"
+        className="flex flex-col gap-6 w-full"
       >
         <InputField
           type="text"
-          label="Name"
-          placeholder="Coach name"
+          label="Cohort Name"
+          placeholder="Cohort name"
           name="name"
           register={register}
           options={{
-            required: { value: true, message: "name is required field" },
+            required: { value: true, message: "Cohort name is required field" },
             maxLength: {
               value: 30,
               message: "Name must not exceed 30 characters",
             },
           }}
         />
-        <InputField
-          type="email"
-          label="Email address"
-          placeholder="example@mail.com"
-          name="email"
+        <TextArea
+          name="description"
+          label="Cohort Description"
+          placeholder="Cohort description"
           register={register}
           options={{
-            required: { value: true, message: "email is required field" },
+            required: { value: true, message: "Cohort description is a required field" },
           }}
         />
         <div className="flex gap-2">
           <Button outlined onClick={closePopup}>
             Cancel
           </Button>
-          <Button>Save</Button>
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </ModalLayout>
   );
 };
 
-export default AddingCoachModal;
+export default AddingCohortModal;
