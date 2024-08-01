@@ -88,7 +88,7 @@ const Profile = () => {
         />
       </div>
       <div className="w-2/3 ml-auto">
-        <Button>Save</Button>
+        <Button type="submit">Save</Button>
       </div>
     </form>
   );

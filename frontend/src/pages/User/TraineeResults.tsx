@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../@/components/ui/table";
-import { Question, Response, Form } from "../../types";
+import { Question, Response, Form } from "../../utils/types";
 
 import { useGetOverviewForCoachQuery } from "../../features/user/apiSlice";
 import Loader from "../../components/ui/Loader";

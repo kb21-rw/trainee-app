@@ -28,7 +28,7 @@ export class QuestionBuilder extends Builder<
   protected readonly properties: PartialIQuestionWithRequiredId = {
     id: "66203fa2a3465a4a588d12q1",
     title: "Test question",
-    type: QuestionType.TEXT,
+    type: QuestionType.Text,
     options: [],
     responseIds: [],
   };
