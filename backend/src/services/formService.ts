@@ -11,11 +11,9 @@ import {
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
   INVALID_MONGODB_ID,
-  APPLICATION_DEADLINE_OVERDUE,
 } from "../utils/errorCodes";
 import { CreateFormDto, FormType, UpdateFormDto } from "../utils/types";
 import mongoose from "mongoose";
-import dayjs from "dayjs";
 const { Types } = mongoose;
 const { ObjectId } = Types;
 
@@ -57,17 +55,6 @@ export const createFormService = async (formData: CreateFormDto) => {
   const currentCohort = await Cohort.findOne({ isActive: true });
   if (!currentCohort) {
     throw new CustomError(COHORT_NOT_FOUND, "No active cohort found!", 404);
-  }
-
-  const now = dayjs();
-  const applicationEndDate = dayjs(currentCohort.applicationForm.period.endDate);
-
-  if (now.isAfter(applicationEndDate)) {
-    throw new CustomError(
-      APPLICATION_DEADLINE_OVERDUE,
-      "Application deadline has passed!",
-      400
-    );
   }
 
   if (type === FormType.APPLICANT) {
