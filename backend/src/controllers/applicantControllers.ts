@@ -21,6 +21,7 @@ export const decision = async (
   }
 };
 
+
 export const getApplicants = async (
   req: any,
   res: Response,

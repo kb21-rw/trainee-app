@@ -4,6 +4,7 @@ import {
   CreateApplicationResponseDto,
   CreateResponseDto,
   QuestionType,
+  Role,
 } from "../utils/types";
 import Response, { IResponse } from "../models/Response";
 import User, { IUser } from "../models/User";
@@ -40,7 +41,7 @@ export const createResponseService = async (
   }
 
   if (
-    loggedInUser.role !== "ADMIN" &&
+    loggedInUser.role !== Role.Admin &&
     loggedInUser.id !== trainee.coach?.toString()
   ) {
     throw new CustomError(
@@ -52,7 +53,7 @@ export const createResponseService = async (
 
   const selectedOptions = Array.isArray(text) ? text : [text];
 
-  if (relatedQuestion.type !== QuestionType.TEXT) {
+  if (relatedQuestion.type !== QuestionType.Text) {
     const invalidOptions = selectedOptions.every(
       (option: string) => !relatedQuestion.options.includes(option)
     );
@@ -77,7 +78,7 @@ export const createResponseService = async (
   );
 
   const responseText =
-    relatedQuestion.type === QuestionType.MULTI_SELECT ? selectedOptions : text;
+    relatedQuestion.type === QuestionType.MultiSelect ? selectedOptions : text;
 
   let response;
   if (oldResponse) {

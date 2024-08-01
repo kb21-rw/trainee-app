@@ -57,8 +57,10 @@ export const createFormService = async (formData: CreateFormDto) => {
     throw new CustomError(COHORT_NOT_FOUND, "No active cohort found!", 404);
   }
 
+
   if (type === FormType.APPLICANT) {
     currentCohort.applicationForm.id = createdForm.id;
+
   } else {
     currentCohort.forms.push(createdForm.id);
   }

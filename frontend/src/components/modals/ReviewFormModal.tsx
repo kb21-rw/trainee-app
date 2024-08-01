@@ -1,5 +1,5 @@
 import React from "react";
-import { ApplicationFormResponse, Question } from "../../types";
+import { ApplicationFormResponse, Question } from "../../utils/types";
 import Button from "../../components/ui/Button";
 import ModalLayout from "./ModalLayout";
 import EditIcon from "../../assets/EditIcon";
