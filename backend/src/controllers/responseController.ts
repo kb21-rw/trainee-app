@@ -1,14 +1,14 @@
 import { Response, NextFunction } from "express";
 import {
   createApplicantResponseValidation,
-  createResponseValidation,
+  createCoachResponseValidation,
 } from "../validations/responseValidation";
 import {
   createApplicantResponseService,
-  createResponseService,
+  createCoachResponseService,
 } from "../services/responseService";
 
-export const createResponse = async (
+export const createCoachResponse = async (
   req: any,
   res: Response,
   next: NextFunction
@@ -17,8 +17,8 @@ export const createResponse = async (
     const { questionId } = req.params;
     const { userId } = req.query;
     const loggedInUser = req.user;
-    await createResponseValidation.validateAsync(req.body);
-    const createdResponse = await createResponseService(
+    await createCoachResponseValidation.validateAsync(req.body);
+    const createdResponse = await createCoachResponseService(
       loggedInUser,
       userId,
       questionId,

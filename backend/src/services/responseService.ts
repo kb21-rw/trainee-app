@@ -11,12 +11,13 @@ import User, { IUser } from "../models/User";
 import {
   NOT_ALLOWED,
   QUESTION_NOT_FOUND,
+  RESPONSE_NOT_FOUND,
   USER_NOT_FOUND,
 } from "../utils/errorCodes";
 import Form from "../models/Form";
 import { getCurrentCohort } from "../utils/helpers/cohort";
 
-export const createResponseService = async (
+export const createCoachResponseService = async (
   loggedInUser: IUser,
   traineeId: string,
   questionId: string,
@@ -24,18 +25,28 @@ export const createResponseService = async (
 ) => {
   const { text } = responseData;
 
+  const currentCohort = await getCurrentCohort();
+
   const trainee = await User.findOne({
     $and: [{ _id: traineeId }, { role: "TRAINEE" }],
   });
 
-  if (!trainee) {
-    throw new CustomError(USER_NOT_FOUND, "Trainee not found!", 400);
+  if (!trainee || !currentCohort.trainees.includes(trainee.id)) {
+    throw new CustomError(
+      USER_NOT_FOUND,
+      "The trainee does not exist in the current cohort!",
+      400
+    );
   }
 
   const relatedQuestion = await Question.findById(questionId);
 
   if (!relatedQuestion) {
-    throw new CustomError(QUESTION_NOT_FOUND, "Question not found!", 400);
+    throw new CustomError(
+      QUESTION_NOT_FOUND,
+      "The question you're responding to does not exist!",
+      400
+    );
   }
 
   if (
@@ -49,14 +60,14 @@ export const createResponseService = async (
     );
   }
 
-  const selectedOptions = Array.isArray(text) ? text : [text];
+  const selectedOptions = Array.isArray(text) ? [...new Set(text)] : [text];
 
   if (relatedQuestion.type !== QuestionType.Text) {
-    const invalidOptions = selectedOptions.every(
-      (option: string) => !relatedQuestion.options.includes(option)
+    const areOptionsValid = selectedOptions.every((option: string) =>
+      relatedQuestion.options.includes(option)
     );
 
-    if (invalidOptions) {
+    if (!areOptionsValid) {
       throw new CustomError(
         NOT_ALLOWED,
         `You can only choose from ${relatedQuestion.options.join(
@@ -78,32 +89,27 @@ export const createResponseService = async (
   const responseText =
     relatedQuestion.type === QuestionType.MultiSelect ? selectedOptions : text;
 
-  let response;
-  if (oldResponse) {
-    response = await Response.findByIdAndUpdate(
-      oldResponse._id,
-      { text: responseText },
-      { new: true }
+  if (!oldResponse) {
+    throw new CustomError(
+      RESPONSE_NOT_FOUND,
+      "Responses not found, make sure you're responding to the form in the current cohort",
+      404
     );
-  } else {
-    response = await Response.create({ userId: traineeId, text: responseText });
-    relatedQuestion.responseIds.push(response.id);
-    await relatedQuestion.save();
   }
 
-  const responseBody = {
-    ...response?.toObject(),
-    text: response?.text,
-  };
+  const response = await Response.findByIdAndUpdate(
+    oldResponse._id,
+    { text: responseText },
+    { new: true }
+  );
 
-  return responseBody;
+  return response;
 };
 
 export const createApplicantResponseService = async (
   loggedInUser: IUser,
   responseData: CreateApplicationResponseDto[]
 ) => {
-
   const currentCohort = await getCurrentCohort();
 
   if (!currentCohort.applicationFormId) {
