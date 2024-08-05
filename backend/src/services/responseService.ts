@@ -12,9 +12,11 @@ import {
   NOT_ALLOWED,
   QUESTION_NOT_FOUND,
   USER_NOT_FOUND,
+  APPLICATION_DEADLINE_OVERDUE
 } from "../utils/errorCodes";
 import Form from "../models/Form";
 import { getCurrentCohort } from "../utils/helpers/cohort";
+import dayjs from "dayjs";
 
 export const createResponseService = async (
   loggedInUser: IUser,
@@ -106,18 +108,30 @@ export const createApplicantResponseService = async (
 
   const currentCohort = await getCurrentCohort();
 
-  if (!currentCohort.applicationFormId) {
+  if (!currentCohort.applicationForm.id) {
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
   }
 
-  const applicationForm = await Form.findById(currentCohort.applicationFormId);
+  const applicationForm = await Form.findById(currentCohort.applicationForm.id);
 
   if (!applicationForm)
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
 
+  const now = dayjs();
+  const applicationEndDate = dayjs(new Date(currentCohort.applicationForm.endDate)
+  );
+
+  if (now.isAfter(applicationEndDate)) {
+    throw new CustomError(
+      APPLICATION_DEADLINE_OVERDUE,
+      "Application deadline has passed!",
+      400
+    );
+  }
+
   //check if all question in the form are in the responseData
   if (
-    applicationForm.questionIds.every((questionId) =>
+    !applicationForm.questionIds.every((questionId) =>
       responseData
         .map((response) => response.questionId)
         .includes(questionId.toString())
