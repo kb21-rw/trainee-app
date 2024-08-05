@@ -7,6 +7,7 @@ import {
   createCohortService,
   decisionService,
   getApplicationFormService,
+  getCohortsService,
 } from "../services/cohortService";
 
 export const createCohortController = async (
@@ -31,6 +32,21 @@ export const getApplicationFormController = async (
   try {
     const form = await getApplicationFormService();
     return res.status(200).json(form);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getCohortsController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const cohorts = await getCohortsService(
+      String(req.query.searchString ?? "")
+    );
+    return res.status(200).json(cohorts);
   } catch (error) {
     return next(error);
   }
