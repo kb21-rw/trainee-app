@@ -12,9 +12,10 @@ const Layout = () => {
 
   const { data } = useGetProfileQuery(jwt);
   const menu =
-    (data?.role === "ADMIN" && adminMenu) ||
-    (data?.role === "COACH" && coachMenu) ||
-    (data?.role === "APPLICANT" && applicantMenu) ||
+    (data?.role === "Admin" && adminMenu) ||
+    (data?.role === "Coach" && coachMenu) ||
+    (data?.role === "Applicant" && applicantMenu) ||
+    (data?.role === "Prospect" && applicantMenu) ||
     [];
   return (
     <div className="flex flex-col font-lato px-16 py-4 max-w-[1920px] mx-auto overflow-x-hidden">

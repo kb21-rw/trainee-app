@@ -16,7 +16,7 @@ const EditCoachModal = ({
   jwt: string;
   coachData: string[];
 }) => {
-  const roles = ["ADMIN", "COACH"];
+  const roles = ["Admin", "Coach"];
   const [editCoach, { isLoading, isSuccess, error }] = useEditCoachMutation();
 
   const {

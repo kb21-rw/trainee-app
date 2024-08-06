@@ -19,14 +19,14 @@ const EditTraineeModal = ({
   closePopup: () => void;
   jwt: string;
   traineeData: string[];
-  role: "ADMIN" | "COACH";
+  role: "Admin" | "Coach";
 }) => {
   const [editTrainee, { isLoading, error, isSuccess: isEditTraineeSuccess }] =
     useEditTraineeMutation();
   const query = "?coachesPerPage=100";
   const allCoaches = useGetAllCoachesQuery(
     { jwt, query },
-    { skip: role !== "ADMIN" },
+    { skip: role !== "Admin" },
   );
   const {
     register,
@@ -83,7 +83,7 @@ const EditTraineeModal = ({
             required: { value: true, message: "Email is required field" },
           }}
         />
-        {role === "ADMIN" && (
+        {role === "Admin" && (
           <div className="flex flex-col gap-5">
             <label htmlFor="role" className="text-lg font-medium">
               Assign coach

@@ -98,7 +98,7 @@ const TraineesInfo = () => {
           jwt={jwt}
           closePopup={() => setEditTrainee(null)}
           traineeData={editTrainee}
-          role="ADMIN"
+          role="Admin"
         />
       )}
     </div>
