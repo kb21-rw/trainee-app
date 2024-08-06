@@ -12,6 +12,7 @@ import RemoveIcon from "../../assets/RemoveIcon";
 import Reset from "../../assets/ResetIcon";
 import DeleteModal from "../modals/DeleteModal";
 import { getJWT } from "../../utils/helper";
+import { QuestionType } from "../../utils/types";
 
 const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   const { title, type, options, _id } = question;
@@ -77,8 +78,8 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
             />
             <select className="p-2" {...register("type")} value={selectedType}>
               {[
-                { label: "Text", value: "text" },
-                { label: "Dropdown", value: "dropdown" },
+                { label: "Text", value: QuestionType.Text },
+                { label: "Single Select", value: QuestionType.SingleSelect },
               ].map(
                 (
                   currentType: { label: string; value: string },
@@ -91,7 +92,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
               )}
             </select>
           </div>
-          {selectedType === "dropdown" && (
+          {selectedType === QuestionType.SingleSelect && (
             <div>
               <ol className="w-full my-4">
                 {currentOptions.map((option: string, index: number) => (
