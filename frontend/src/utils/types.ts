@@ -43,7 +43,7 @@ export interface Question {
   title: string;
   responses: Response[];
   options: string[];
-  type: "text" | "dropdown" | "multiple-choice";
+  type: QuestionType
 }
 
 export interface Form {
@@ -67,5 +67,11 @@ export enum ButtonSize {
   Small = "Small",
   Medium = "Medium",
   Large = "Large",
+}
+
+export enum QuestionType {
+  Text = "Text",
+  SingleSelect = "SingleSelect",
+  MultiSelect = "MultiSelect",
 }
 
