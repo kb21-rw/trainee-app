@@ -17,7 +17,7 @@ const Layout = () => {
     (data?.role === "APPLICANT" && applicantMenu) ||
     [];
   return (
-    <div className="flex flex-col px-16 py-4 max-w-[1920px] mx-auto overflow-x-hidden">
+    <div className="flex flex-col font-lato px-16 py-4 max-w-[1920px] mx-auto overflow-x-hidden">
       <nav className="flex items-center justify-between gap-20 py-6 border-b-2 border-b-gray-200 shadow-b">
         <div className="flex items-center gap-10">
           {menu.map((element, index) => (
