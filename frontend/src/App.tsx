@@ -28,6 +28,7 @@ import ApplicationForm from "./pages/Applicant/ApplicationForm";
 import ThankYouNote from "./pages/Applicant/ThankYouNote";
 import Cohort from "./pages/Cohort/Cohort";
 import HomePage from "./pages/Applicant/HomePage";
+import SavedApplication from "./pages/Applicant/SavedApplication";
 
 export default function App() {
   const router = createBrowserRouter(
@@ -46,8 +47,9 @@ export default function App() {
               <Route path="/trainees-results" element={<TraineeResults />} />
               <Route path="/profile-settings" element={<Profile />} />
               <Route path="/">
-                <Route path="/home" element={<HomePage />} />
+                <Route path="home" element={<HomePage />} />
                 <Route path="apply" element={<ApplicationForm />} />
+                <Route path="saved-application" element={<SavedApplication />} />
               </Route>
             </Route>
           </Route>
