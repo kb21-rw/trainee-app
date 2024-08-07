@@ -4,6 +4,7 @@ import { adminMenu, applicantMenu, coachMenu } from "../../utils/data";
 import { useGetProfileQuery } from "../../features/user/apiSlice";
 import { getJWT } from "../../utils/helper";
 import Cookies from "universal-cookie";
+import { UserRole } from "../../utils/types";
 
 const Layout = () => {
   const jwt: string = getJWT();
@@ -12,10 +13,10 @@ const Layout = () => {
 
   const { data } = useGetProfileQuery(jwt);
   const menu =
-    (data?.role === "Admin" && adminMenu) ||
-    (data?.role === "Coach" && coachMenu) ||
-    (data?.role === "Applicant" && applicantMenu) ||
-    (data?.role === "Prospect" && applicantMenu) ||
+    (data?.role === UserRole.Admin && adminMenu) ||
+    (data?.role === UserRole.Coach && coachMenu) ||
+    (data?.role === UserRole.Applicant && applicantMenu) ||
+    (data?.role === UserRole.Prospect && applicantMenu) ||
     [];
   return (
     <div className="flex flex-col font-lato px-16 py-4 max-w-[1920px] mx-auto overflow-x-hidden">

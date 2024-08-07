@@ -10,7 +10,7 @@ import Button from "../../components/ui/Button";
 import InputField from "../../components/ui/InputField";
 import Loader from "../../components/ui/Loader";
 import jwt_decode from "jwt-decode";
-import { ButtonSize } from "../../utils/types";
+import { ButtonSize, UserRole } from "../../utils/types";
 
 const Login = () => {
   const [login, { isLoading, error }] = useLoginMutation();
@@ -31,8 +31,8 @@ const Login = () => {
       const decodedToken: any = jwt_decode(result.data.accessToken);
       const userRole = decodedToken.role;
 
-      if (userRole === "APPLICANT") {
-        navigate("/apply");
+      if (userRole === UserRole.Applicant) {
+        navigate("/home");
       } else {
         navigate(redirectUrl);
       }

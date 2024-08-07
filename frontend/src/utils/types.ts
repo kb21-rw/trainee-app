@@ -75,3 +75,11 @@ export enum QuestionType {
   MultiSelect = "MultiSelect",
 }
 
+export enum UserRole {
+  Admin = "Admin",
+  Trainee = "Trainee",
+  Coach = "Coach",
+  Applicant = "Applicant",
+  Prospect = "Prospect",
+}
+

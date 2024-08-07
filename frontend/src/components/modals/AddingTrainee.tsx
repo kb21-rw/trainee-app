@@ -10,6 +10,7 @@ import {
 import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
 import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
+import { UserRole } from "../../utils/types";
 
 const AddingTraineeModal = ({
   closePopup,
@@ -33,7 +34,7 @@ const AddingTraineeModal = ({
 
     await createTrainee({
       jwt,
-      body: { ...data, role: "TRAINEE" },
+      body: { ...data, role: UserRole.Trainee },
     });
   };
 

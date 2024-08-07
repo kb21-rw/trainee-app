@@ -9,6 +9,7 @@ import Alert from "../ui/Alert";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
 import Loader from "../ui/Loader";
+import { UserRole } from "../../utils/types";
 
 const EditTraineeModal = ({
   closePopup,
@@ -19,14 +20,14 @@ const EditTraineeModal = ({
   closePopup: () => void;
   jwt: string;
   traineeData: string[];
-  role: "Admin" | "Coach";
+  role: UserRole.Admin
 }) => {
   const [editTrainee, { isLoading, error, isSuccess: isEditTraineeSuccess }] =
     useEditTraineeMutation();
   const query = "?coachesPerPage=100";
   const allCoaches = useGetAllCoachesQuery(
     { jwt, query },
-    { skip: role !== "Admin" },
+    { skip: role !== UserRole.Admin },
   );
   const {
     register,
@@ -83,7 +84,7 @@ const EditTraineeModal = ({
             required: { value: true, message: "Email is required field" },
           }}
         />
-        {role === "Admin" && (
+        {role === UserRole.Admin && (
           <div className="flex flex-col gap-5">
             <label htmlFor="role" className="text-lg font-medium">
               Assign coach
