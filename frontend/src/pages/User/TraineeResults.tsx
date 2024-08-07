@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "../../../@/components/ui/table";
-import { Question, Response, Form } from "../../utils/types";
+import { Question, Response, Form, QuestionType } from "../../utils/types";
 
 import { useGetOverviewForCoachQuery } from "../../features/user/apiSlice";
 import Loader from "../../components/ui/Loader";
@@ -56,7 +56,8 @@ const TraineeResults = () => {
   const formStyles = data.map(() => getRandomColorAndTextColor());
   data.forEach((form: Form) => {
     form.questions.forEach((question: Question) => {
-      const questionType = question.options.length > 0 ? "dropdown" : "text";
+      const questionType = question.options.length > 0 ? QuestionType.SingleSelect
+       : QuestionType.Text;
       question.responses.forEach((response: Response) => {
         if (response.user) {
           if (!traineeMap.has(response.user._id)) {
@@ -139,7 +140,7 @@ const TraineeResults = () => {
                         userId: trainee.id,
                         type: trainee.type,
                         questionType:
-                          question.options.length > 0 ? "dropdown" : "text",
+                          question.options.length > 0 ? QuestionType.SingleSelect : QuestionType.Text,
                         options: question.options,
                         checkedOption: trainee.responses[`${form._id}-${question._id}`] ? trainee.responses[`${form._id}-${question._id}`]: "",
                       });

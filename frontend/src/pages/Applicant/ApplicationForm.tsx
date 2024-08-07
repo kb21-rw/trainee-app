@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useGetFormForApplicantsQuery } from "../../features/user/apiSlice";
 import Loader from "../../components/ui/Loader";
-import { ApplicationFormResponse, ButtonVariant, Question } from "../../utils/types";
+import { ApplicationFormResponse, ButtonVariant, Question, QuestionType } from "../../utils/types";
 import FormInput from "../../components/ui/FormInput";
 import Button from "../../components/ui/Button";
 import { useAddApplicantResponseMutation } from "../../features/user/apiSlice";
@@ -96,7 +96,7 @@ const ApplicationForm = () => {
                 <h3 className="text-lg font-semibold text-gray-700 mb-2">
                   {index + 1}. {question.title}
                 </h3>
-                {question.type === "text" && (
+                {question.type === QuestionType.Text && (
                   <FormInput
                     {...register(`responses[${index}].questionId`, {
                       value: question._id,
@@ -107,7 +107,7 @@ const ApplicationForm = () => {
                     className="border-b border-gray-300 rounded-md text-lg py-2 px-4 w-full focus:outline-none focus:ring-2 focus:ring-primary-dark focus:border-transparent"
                   />
                 )}
-                {question.type === "dropdown" && (
+                {question.type === QuestionType.SingleSelect && (
                   <div className="space-y-4">
                     {question.options?.map(
                       (option: string, optionIndex: number) => (

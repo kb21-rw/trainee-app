@@ -6,7 +6,7 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { useCreateCoachMutation } from "../../features/user/apiSlice";
 import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
-import { CreateCoach } from "../../utils/types";
+import { CreateCoach, UserRole } from "../../utils/types";
 import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
 const AddingCoachModal = ({
   closePopup,
@@ -25,7 +25,7 @@ const AddingCoachModal = ({
 
   const onSubmit: SubmitHandler<CreateCoach> = async (data) => {
     try {
-      await createCoach({ jwt, body: { ...data, role: "COACH" } }).unwrap();
+      await createCoach({ jwt, body: { ...data, role: UserRole.Coach } }).unwrap();
     } catch (error) {
       return "false";
     }

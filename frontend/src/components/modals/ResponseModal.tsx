@@ -9,6 +9,7 @@ import Loader from "../ui/Loader";
 import RadioOption from "../ui/RadioOption";
 import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
 import { getJWT } from "../../utils/helper";
+import { QuestionType } from "../../utils/types";
 
 const ResponseModal = ({
   closePopup,
@@ -54,7 +55,7 @@ const ResponseModal = ({
     const jwt: string = getJWT()
     const responseBody = {
       ...data,
-      ...(questionType === "dropdown" && { text: localCheckedOption }),
+      ...(questionType === QuestionType.Text && { text: localCheckedOption }),
     };
     await addResponse({ jwt, body: responseBody, questionId, userId });
   };
@@ -99,7 +100,7 @@ const ResponseModal = ({
             disabled={disabled}
           />
         )}
-        {questionType === "dropdown" && (
+        {questionType === QuestionType.SingleSelect && (
           <div>
             <h1 className="capitalize text-xl pb-5">{question}:</h1>
             {options.map((option, index) => (

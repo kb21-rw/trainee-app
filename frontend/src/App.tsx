@@ -45,7 +45,7 @@ export default function App() {
               <Route path="/my-trainees" element={<EditMyTrainees />} />
               <Route path="/trainees-results" element={<TraineeResults />} />
               <Route path="/profile-settings" element={<Profile />} />
-              <Route>
+              <Route path="/">
                 <Route path="/home" element={<HomePage />} />
                 <Route path="apply" element={<ApplicationForm />} />
               </Route>
