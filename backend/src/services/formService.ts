@@ -58,7 +58,7 @@ export const createFormService = async (formData: CreateFormDto) => {
   }
 
 
-  if (type === FormType.APPLICANT) {
+  if (type === FormType.Applicant) {
     currentCohort.applicationForm.id = createdForm.id;
 
   } else {
