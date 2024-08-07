@@ -64,18 +64,25 @@ const Layout = () => {
       <div className="flex-1">
         <Outlet />
       </div>
-      <footer className="container w-screen fixed bottom-0 py-4 flex justify-between items-center">
-        <div>
-          <p>
-            &copy;<span className="font-bold">The GYM</span>{" "}
-            {new Date().getFullYear()} <span></span>, All rights reserved
-          </p>
-        </div>
-        <div className="flex items-center space-x-5">
-          <Link to="#" className="hover:text-primary-dark">Privacy Policy</Link>
-          <Link to="#" className="hover:text-primary-dark">Terms and Conditions</Link>
-        </div>
-      </footer>
+      {data?.role === UserRole.Prospect ||
+        (data?.role === UserRole.Applicant && (
+          <footer className="container w-screen fixed bottom-0 py-4 flex justify-between items-center">
+            <div>
+              <p>
+                &copy;<span className="font-bold">The GYM</span>{" "}
+                {new Date().getFullYear()} <span></span>, All rights reserved
+              </p>
+            </div>
+            <div className="flex items-center space-x-5">
+              <Link to="#" className="hover:text-primary-dark">
+                Privacy Policy
+              </Link>
+              <Link to="#" className="hover:text-primary-dark">
+                Terms and Conditions
+              </Link>
+            </div>
+          </footer>
+        ))}
     </div>
   );
 };
