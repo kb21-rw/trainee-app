@@ -107,7 +107,7 @@ const AddingTraineeModal = ({
           <Button outlined onClick={closePopup}>
             Cancel
           </Button>
-          <Button>Save</Button>
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </ModalLayout>
