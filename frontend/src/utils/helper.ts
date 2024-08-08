@@ -14,9 +14,8 @@ import jwtDecode from 'jwt-decode';
  */
 
 export const getLoggedInUser = () => {
-  const cookies = new Cookies()
 
-  const token = cookies.get('jwt')
+  const token =getJWT()
 
   if(!token) return
 
@@ -106,6 +105,11 @@ export const getTrainees = (data: any, dataItems: string[]) => {
  * @returns {Object} An object containing the background color and text color for the chart.
  * 
  */
+
+export const getJWT = () => {
+  const cookies = new Cookies();
+  return cookies.get("jwt");
+};
 
 export const getRandomColorAndTextColor= () => {
    const skyBlueHue = 200;

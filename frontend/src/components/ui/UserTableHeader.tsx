@@ -33,7 +33,9 @@ const UserTableHeader = ({
             <span className="text-base font-normal text-[#5B576A] whitespace-nowrap">
               {userType === "Trainee"
                 ? "Sort trainees by:"
-                : "Sort coaches by:"}
+                : userType === "Coach"
+                ? "Sort coaches by:"
+                : "Sort Cohorts by:"}
             </span>
           </div>
           <select
@@ -54,7 +56,9 @@ const UserTableHeader = ({
           <span className="text-base font-normal text-[#5B576A] whitespace-nowrap">
             {userType === "Trainee"
               ? "Trainees per page:"
-              : "Coaches per page:"}
+              : userType === "Coach"
+              ? "Coaches per page:"
+              : "Cohorts per page:"}
           </span>
           <select
             value={usersPerPage}

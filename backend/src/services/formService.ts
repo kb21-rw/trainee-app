@@ -1,13 +1,17 @@
 import CustomError from "../middlewares/customError";
+import Cohort from "../models/Cohort";
 import Form from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
 import {
-  getApplicationFormQuery,
   getFormQuery,
   getFormsQuery,
 } from "../queries/formQueries";
-import { FORM_NOT_FOUND, INVALID_MONGODB_ID } from "../utils/errorCodes";
+import {
+  COHORT_NOT_FOUND,
+  FORM_NOT_FOUND,
+  INVALID_MONGODB_ID,
+} from "../utils/errorCodes";
 import { CreateFormDto, FormType, UpdateFormDto } from "../utils/types";
 import mongoose from "mongoose";
 const { Types } = mongoose;
@@ -46,14 +50,21 @@ export const updateFormService = async (
 
 export const createFormService = async (formData: CreateFormDto) => {
   const { title, description, type } = formData;
-  if (type === FormType.APPLICANT) {
-    await Form.updateMany(
-      { type: FormType.APPLICANT, isActive: true },
-      { isActive: false }
-    );
-  }
 
   const createdForm = await Form.create({ title, description, type });
+  const currentCohort = await Cohort.findOne({ isActive: true });
+  if (!currentCohort) {
+    throw new CustomError(COHORT_NOT_FOUND, "Not active cohort found!", 404);
+  }
+
+  if (type === FormType.Applicant) {
+    currentCohort.applicationFormId = createdForm.id;
+  } else {
+    currentCohort.forms.push(createdForm.id);
+  }
+
+  await currentCohort.save();
+
   return createdForm;
 };
 
@@ -65,15 +76,6 @@ export const getSingleFormService = async (formId: string) => {
   const form = await getFormQuery(formId);
   if (form === null) {
     throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
-  }
-
-  return form;
-};
-
-export const getApplicationFormService = async () => {
-  const form = await getApplicationFormQuery();
-  if (!form) {
-    throw new CustomError(FORM_NOT_FOUND, "Applications are closed", 404);
   }
 
   return form;

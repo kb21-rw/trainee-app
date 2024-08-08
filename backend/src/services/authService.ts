@@ -6,15 +6,12 @@ import {
   NOT_ALLOWED,
   USER_NOT_FOUND,
 } from "../utils/errorCodes";
-import {
-  generateRandomPassword,
-  generateUserId,
-  sendEmail,
-} from "../utils/helpers";
+import { sendEmail } from "../utils/helpers/email";
+import { generateRandomPassword } from "../utils/helpers/password";
+import { generateUserId } from "../utils/helpers/user";
 import User from "../models/User";
 import { ACCESS_TOKEN_EXPIRATION, secret } from "../constants";
 import jwt from "jsonwebtoken";
-import { Role } from "../utils/types";
 
 export const registerService = async (user: any, body: any) => {
   let newUser;
@@ -23,7 +20,7 @@ export const registerService = async (user: any, body: any) => {
   }
 
   let password: string = "";
-  const name = body.name.trim().replace(/\s+/g, " "); // Remove unnecesary extra spaces in names
+  const name = body.name.trim().replace(/\s+/g, " "); // Remove unnecessary extra spaces in names
   if (body.role === "COACH" || body.role === "ADMIN") {
     password = generateRandomPassword(10);
     const hashedPassword = await hash(password, 10);
@@ -63,14 +60,12 @@ export const applicantRegisterService = async (body: any) => {
     name,
     userId: await generateUserId(),
     password: hashedPassword,
-    role: Role.APPLICANT,
   });
-  if (createdUser) {
-    await sendEmail(createdUser.email, {
-      name: createdUser.name,
-      userId: createdUser.id,
-    });
-  }
+
+  await sendEmail(createdUser.email, {
+    name: createdUser.name,
+    userId: createdUser.id,
+  });
 
   return createdUser;
 };

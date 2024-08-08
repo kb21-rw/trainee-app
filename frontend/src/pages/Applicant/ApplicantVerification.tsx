@@ -41,7 +41,7 @@ const ApplicantVerification = () => {
           {errorMessage}
         </div>
       )}
-      <Button clickHandler={handleVerification}>Verify</Button>
+      <Button onClick={handleVerification}>Verify</Button>
     </div>
   );
 };

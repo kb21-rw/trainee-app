@@ -1,11 +1,11 @@
-import { Schema, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 import { FormType } from "../utils/types";
+import { IQuestion } from "./Question";
 
-export interface FormProperties {
-  _id: string;
+export interface IForm extends Document {
   title: string;
   description: string;
-  questionIds: string[];
+  questionIds: IQuestion["_id"][];
 }
 
 const FormSchema = new Schema(
@@ -25,7 +25,7 @@ const FormSchema = new Schema(
     type: {
       type: String,
       enum: FormType,
-      default: FormType.TRAINEE,
+      default: FormType.Trainee,
     },
     isActive: {
       type: Boolean,

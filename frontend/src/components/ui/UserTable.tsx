@@ -19,7 +19,7 @@ interface PropTypes {
 const UserTable = ({ headers, isLoading, data, actions }: PropTypes) => {
   return (
     <table className="w-full my-8 table-auto object-fit">
-      <thead className="bg-[#0077B6] bg-opacity-20 h-20">
+      <thead className="bg-primary-light bg-opacity-20 h-20">
         <tr>
           {headers.map((header: string, index: number) => (
             <td

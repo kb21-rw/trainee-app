@@ -14,7 +14,7 @@ import {
 } from "../validations/authValidation";
 
 export const register = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {

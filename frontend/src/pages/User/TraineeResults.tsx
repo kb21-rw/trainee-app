@@ -7,16 +7,14 @@ import {
   TableHeader,
   TableRow,
 } from "../../../@/components/ui/table";
-import Cookies from "universal-cookie";
-import { Question, Response, Form } from "../../types";
+import { Question, Response, Form, QuestionType } from "../../utils/types";
 
 import { useGetOverviewForCoachQuery } from "../../features/user/apiSlice";
 import Loader from "../../components/ui/Loader";
-import { getRandomColorAndTextColor } from "../../utils/helper";
+import { getJWT, getRandomColorAndTextColor } from "../../utils/helper";
 import ResponseModal from "../../components/modals/ResponseModal";
 const TraineeResults = () => {
-  const cookies = new Cookies();
-  const jwt = cookies.get("jwt");
+  const jwt:string = getJWT()
   const { data, isLoading, isError } = useGetOverviewForCoachQuery({ jwt });
   
 
@@ -58,7 +56,8 @@ const TraineeResults = () => {
   const formStyles = data.map(() => getRandomColorAndTextColor());
   data.forEach((form: Form) => {
     form.questions.forEach((question: Question) => {
-      const questionType = question.options.length > 0 ? "dropdown" : "text";
+      const questionType = question.options.length > 0 ? QuestionType.SingleSelect
+       : QuestionType.Text;
       question.responses.forEach((response: Response) => {
         if (response.user) {
           if (!traineeMap.has(response.user._id)) {
@@ -141,7 +140,7 @@ const TraineeResults = () => {
                         userId: trainee.id,
                         type: trainee.type,
                         questionType:
-                          question.options.length > 0 ? "dropdown" : "text",
+                          question.options.length > 0 ? QuestionType.SingleSelect : QuestionType.Text,
                         options: question.options,
                         checkedOption: trainee.responses[`${form._id}-${question._id}`] ? trainee.responses[`${form._id}-${question._id}`]: "",
                       });

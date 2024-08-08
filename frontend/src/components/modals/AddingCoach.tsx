@@ -1,12 +1,13 @@
-import React,{useEffect} from "react";
+import React from "react";
 import ModalLayout from "./ModalLayout";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useCreateCoachMutation } from "../../features/user/apiSlice";
 import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
-
+import { CreateCoach, UserRole } from "../../utils/types";
+import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
 const AddingCoachModal = ({
   closePopup,
   jwt,
@@ -20,21 +21,17 @@ const AddingCoachModal = ({
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  const onSubmit = async (data: any) => {
+  } = useForm<CreateCoach>();
+
+  const onSubmit: SubmitHandler<CreateCoach> = async (data) => {
     try {
-      await createCoach({ jwt, body: { ...data, role: "COACH" } }).unwrap();
-    }catch(error){
-      console.error('failed to add this coach:',error)
+      await createCoach({ jwt, body: { ...data, role: UserRole.Coach } }).unwrap();
+    } catch (error) {
+      return "false";
     }
   };
 
-  useEffect(()=>{
-  setTimeout(()=>{
-      closePopup
-   },2000)
-  },[isSuccess,closePopup])
-
+  useAutoCloseModal(isSuccess, closePopup);
   const errorMessage: any =
     errors.name?.message || errors.email?.message || error?.data?.errorMessage;
   return (
@@ -75,7 +72,7 @@ const AddingCoachModal = ({
           }}
         />
         <div className="flex gap-2">
-          <Button outlined clickHandler={closePopup}>
+          <Button outlined onClick={closePopup}>
             Cancel
           </Button>
           <Button>Save</Button>

@@ -3,22 +3,24 @@ import Question from "../models/Question";
 import {
   CreateApplicationResponseDto,
   CreateResponseDto,
-  FormType,
+  QuestionType,
+  Role,
 } from "../utils/types";
-import Response, { ResponseProperties } from "../models/Response";
-import User, { UserProperties } from "../models/User";
+import Response, { IResponse } from "../models/Response";
+import User, { IUser } from "../models/User";
 import {
   NOT_ALLOWED,
   QUESTION_NOT_FOUND,
   USER_NOT_FOUND,
 } from "../utils/errorCodes";
 import Form from "../models/Form";
+import { getCurrentCohort } from "../utils/helpers/cohort";
 
 export const createResponseService = async (
-  loggedInUser: UserProperties,
+  loggedInUser: IUser,
   traineeId: string,
   questionId: string,
-  responseData: CreateResponseDto
+  responseData: CreateResponseDto,
 ) => {
   const { text } = responseData;
 
@@ -37,80 +39,100 @@ export const createResponseService = async (
   }
 
   if (
-    loggedInUser.role !== "ADMIN" &&
+    loggedInUser.role !== Role.Admin &&
     loggedInUser.id !== trainee.coach?.toString()
   ) {
     throw new CustomError(
       NOT_ALLOWED,
-      "Only admin or the coach of a train can provide a response",
-      403
+      "Only admin or the coach of a trainee can provide a response",
+      403,
     );
   }
 
-  if (
-    relatedQuestion.type === "dropdown" &&
-    !relatedQuestion.options.includes(text)
-  ) {
-    throw new CustomError(
-      NOT_ALLOWED,
-      `You can only choose from ${relatedQuestion.options} options`,
-      400
+  const selectedOptions = Array.isArray(text) ? text : [text];
+
+  if (relatedQuestion.type !== QuestionType.Text) {
+    const invalidOptions = selectedOptions.every(
+      (option: string) => !relatedQuestion.options.includes(option),
     );
+
+    if (invalidOptions) {
+      throw new CustomError(
+        NOT_ALLOWED,
+        `You can only choose from ${relatedQuestion.options.join(
+          ", ",
+        )} options`,
+        400,
+      );
+    }
   }
 
   const relatedQuestionPopulated = await relatedQuestion.populate<{
-    responseIds: ResponseProperties[];
+    responseIds: IResponse[];
   }>("responseIds");
 
   const oldResponse = relatedQuestionPopulated.responseIds.find(
-    (response) => response.userId.toString() === traineeId
+    (response) => response.userId.toString() === traineeId,
   );
 
+  const responseText =
+    relatedQuestion.type === QuestionType.MultiSelect ? selectedOptions : text;
+
+  let response;
   if (oldResponse) {
-    const response = await Response.findByIdAndUpdate(
+    response = await Response.findByIdAndUpdate(
       oldResponse._id,
-      { text },
-      { new: true }
+      { text: responseText },
+      { new: true },
     );
-    return response;
+  } else {
+    response = await Response.create({ userId: traineeId, text: responseText });
+    relatedQuestion.responseIds.push(response.id);
+    await relatedQuestion.save();
   }
 
-  const createdResponse = await Response.create({ userId: traineeId, text });
-  relatedQuestion.responseIds.push(createdResponse.id);
-  await relatedQuestion.save();
+  const responseBody = {
+    ...response?.toObject(),
+    text: response?.text,
+  };
 
-  return createdResponse;
+  return responseBody;
 };
 
 export const createApplicantResponseService = async (
-  loggedInUser: UserProperties,
-  responseData: CreateApplicationResponseDto[]
+  loggedInUser: IUser,
+  responseData: CreateApplicationResponseDto[],
 ) => {
-  const applicationForm = await Form.findOne({
-    $and: [{ type: FormType.APPLICANT }, { isActive: true }],
-  });
+  const currentCohort = await getCurrentCohort();
+
+  if (!currentCohort.applicationFormId) {
+    throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
+  }
+
+  const applicationForm = await Form.findById(currentCohort.applicationFormId);
 
   if (!applicationForm)
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
 
   //check if all question in the form are in the responseData
-  const areAllQuestionsAnswered = applicationForm.questionIds.every(
-    (questionId) =>
-      responseData.map((response) => response.questionId).includes(questionId.toString())
-  );
-  
-  if (!areAllQuestionsAnswered )
+  if (
+    !applicationForm.questionIds.every((questionId) =>
+      responseData
+        .map((response) => response.questionId)
+        .includes(questionId.toString()),
+    )
+  )
     throw new CustomError(NOT_ALLOWED, "Some questions are not answered", 401);
 
   return Promise.all(
     responseData.map(async (response) => {
       const question = await Question.findById(response.questionId)
         .populate<{
-          responseIds: ResponseProperties[];
+          responseIds: IResponse[];
         }>("responseIds")
         .exec();
       const oldResponseId = question?.responseIds.find(
-        (oldResponse) => oldResponse.userId.toString() === loggedInUser.id
+        (oldResponse) => oldResponse.userId.toString() === loggedInUser.id,
       )?._id;
 
       if (!oldResponseId)
@@ -119,7 +141,7 @@ export const createApplicantResponseService = async (
       const updatedResponse = await Response.findByIdAndUpdate(
         oldResponseId,
         { text: response.answer },
-        { new: true }
+        { new: true },
       );
 
       if (!updatedResponse)
@@ -130,6 +152,6 @@ export const createApplicantResponseService = async (
         question: question.title,
         response: updatedResponse.text,
       };
-    })
+    }),
   );
 };

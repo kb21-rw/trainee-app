@@ -1,14 +1,19 @@
-import { QuestionProperties } from "../models/Question";
+import { Builder } from ".";
+import { IQuestion } from "../models/Question";
+import { QuestionType } from "../utils/types";
 
+type PartialIQuestionWithRequiredId = { id: IQuestion["id"] } & Partial<
+  Omit<IQuestion, "id">
+>;
 export class Question {
-  public readonly _id: string;
-  public readonly title: string;
-  public readonly type: "text" | "dropdown";
-  public readonly options: string[];
-  public readonly responseIds: string[];
+  public readonly id: string;
+  public readonly title?: string;
+  public readonly type?: QuestionType;
+  public readonly options?: string[];
+  public readonly responseIds?: string[];
 
-  public constructor(data: QuestionProperties) {
-    this._id = data._id;
+  public constructor(data: PartialIQuestionWithRequiredId) {
+    this.id = data.id;
     this.title = data.title;
     this.type = data.type;
     this.options = data.options;
@@ -16,38 +21,26 @@ export class Question {
   }
 }
 
-export class QuestionBuilder {
-  private readonly properties: QuestionProperties = {
-    _id: "66203fa2a3465a4a588d12q1",
+export class QuestionBuilder extends Builder<
+  typeof Question,
+  PartialIQuestionWithRequiredId
+> {
+  protected readonly properties: PartialIQuestionWithRequiredId = {
+    id: "66203fa2a3465a4a588d12q1",
     title: "Test question",
-    type: "text",
+    type: QuestionType.Text,
     options: [],
     responseIds: [],
   };
 
-  public static from(properties: Partial<QuestionProperties>): QuestionBuilder {
+  constructor() {
+    super(Question);
+  }
+
+  public static from(
+    properties: PartialIQuestionWithRequiredId
+  ): QuestionBuilder {
     return new QuestionBuilder().with(properties);
-  }
-
-  public with(properties: Partial<QuestionProperties>): this {
-    let key: keyof QuestionProperties;
-
-    for (key in properties) {
-      const value = properties[key];
-
-      if (value !== undefined) {
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-ignore
-        this.properties[key] = value;
-      }
-    }
-
-    return this;
-  }
-
-  public withId(_id: string): this {
-    this.properties._id = _id;
-    return this;
   }
 
   public withTitle(id: string): this {
@@ -55,7 +48,7 @@ export class QuestionBuilder {
     return this;
   }
 
-  public withType(type: "text" | "dropdown"): this {
+  public withType(type: QuestionType): this {
     this.properties.type = type;
     return this;
   }
@@ -70,7 +63,7 @@ export class QuestionBuilder {
     return this;
   }
 
-  public build(): QuestionProperties {
+  public build(): PartialIQuestionWithRequiredId {
     return new Question({
       ...this.properties,
     });

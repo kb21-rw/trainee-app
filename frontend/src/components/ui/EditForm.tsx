@@ -2,9 +2,9 @@ import React from "react";
 import CheckMark from "../../assets/CheckMarkIcon";
 import AddIcon from "../../assets/AddIcon";
 import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
-import Cookies from "universal-cookie";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { getJWT } from "../../utils/helper";
 import {
   useCreateQuestionMutation,
   useDeleteFormMutation,
@@ -15,13 +15,14 @@ import Delete from "../../assets/DeleteIcon";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
+import { QuestionType } from "../../utils/types";
 
 const FormSchema = yup
   .object({
     title: yup.string().required(),
     description: yup.string().required(),
   })
-  .required()
+  .required();
 
 const EditForm = ({
   title,
@@ -42,29 +43,29 @@ const EditForm = ({
     formState: { isDirty, errors },
   } = useForm({
     defaultValues: { title, description },
-    resolver: yupResolver(FormSchema)
+    resolver: yupResolver(FormSchema),
   });
-  const cookies = new Cookies();
-  const jwt = cookies.get("jwt");
+
+ 
   const [editForm] = useEditFormMutation();
   const navigate = useNavigate();
   const onSubmit = async (data: any) => {
-    await editForm({ jwt, body: data, id });
+    await editForm({ jwt: getJWT(), body: data, id });
   };
 
   const [deleteForm, { isLoading: isDeleteFormLoading }] =
     useDeleteFormMutation();
   const handleDeleteForm = async () => {
-    await deleteForm({ jwt, id });
+    await deleteForm({ jwt: getJWT(), id });
     navigate(`/forms`);
   };
 
   const [createQuestion] = useCreateQuestionMutation();
   const onClickAddQuestion = async () => {
     await createQuestion({
-      jwt,
+      jwt: getJWT(),
       formId: id,
-      body: { title: `Question`, type: "text" },
+      body: { title: `Question`, type: QuestionType.Text },
     });
   };
 
@@ -92,8 +93,12 @@ const EditForm = ({
           defaultValue={description}
           {...register("description")}
         />
-        {errors.description && <Alert type="error">Description shouldn&#39;t be empty</Alert>}
-        {errors.title && <Alert type='error'>Title shouldn&#39;t be empty</Alert>}
+        {errors.description && (
+          <Alert type="error">Description shouldn&#39;t be empty</Alert>
+        )}
+        {errors.title && (
+          <Alert type="error">Title shouldn&#39;t be empty</Alert>
+        )}
       </div>
       <div className="flex flex-col justify-between gap-6 p-4 custom-shadow rounded-xl">
         {isDirty ? (

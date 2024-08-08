@@ -27,7 +27,7 @@ const ApplicantSignup = () => {
     });
     if (result.data.userId) {
       cookies.set("jwt", result.data.userId, { maxAge: 1800 });
-      return navigate("/login");
+      return navigate("/signup/thank-you");
     }
   };
 
@@ -98,9 +98,10 @@ const ApplicantSignup = () => {
           />
         </div>
       </div>
-      <Button>Sign Up</Button>
-      <div>
-        {`Already have an account?  `}
+      <Button type="submit">Sign Up</Button>
+
+      <div className="flex gap-2">
+        <span>Already have an account?</span>
         <Link to="/applicant/signin" className="text-primary-dark">
           Login
         </Link>

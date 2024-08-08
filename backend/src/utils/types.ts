@@ -1,4 +1,4 @@
-import { Date, ObjectId } from "mongoose";
+import { Date } from "mongoose";
 
 interface MetaType {
   _id: string;
@@ -10,6 +10,11 @@ export interface CreateFormDto {
   title: string;
   description: string;
   type: FormType;
+}
+export interface CreateCohortDto {
+  name: string;
+  description?: string;
+  stages: { tile: string; description: string }[];
 }
 export interface UpdateFormDto {
   title: string;
@@ -41,12 +46,35 @@ export interface Search {
 }
 
 export enum FormType {
-  "APPLICANT" = "APPLICANT",
-  "TRAINEE" = "TRAINEE",
+  Applicant = "Applicant",
+  Trainee = "Trainee",
 }
 export enum Role {
-  "ADMIN" = "ADMIN",
-  "COACH" = "COACH",
-  "TRAINEE" = "TRAINEE",
-  "APPLICANT" = "APPLICANT",
+  Admin = "Admin",
+  Coach = "Coach",
+  Trainee = "Trainee",
+  Applicant = "Applicant",
+  Prospect = "Prospect",
+}
+
+export enum ApplicantDecision {
+  Accepted = "Accepted",
+  Rejected = "Rejected",
+}
+export enum QuestionType {
+  Text = "Text",
+  SingleSelect = "SingleSelect",
+  MultiSelect = "MultiSelect",
+}
+
+export interface AcceptedBody {
+  userId: string;
+  decision: ApplicantDecision;
+}
+
+export interface RejectedBody {
+  userId: string;
+  decision: ApplicantDecision;
+  stageId: string;
+  feedback: string;
 }

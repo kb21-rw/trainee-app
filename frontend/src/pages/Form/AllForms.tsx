@@ -1,28 +1,26 @@
 import React, { useState } from "react";
 import SearchInput from "../../components/ui/SearchInput";
-import Plus from "../../assets/PlusIcon";
 import {
   useCreateFormMutation,
   useGetAllFormsQuery,
 } from "../../features/user/apiSlice";
-import Cookies from "universal-cookie";
 import FormCard from "../../components/ui/FormCard";
 import { IFormType } from "../../utils/types";
 import Loader from "../../components/ui/Loader";
 import { useNavigate } from "react-router-dom";
 import NotFound from "../../components/ui/NotFound";
 import Button from "../../components/ui/Button";
-import { ButtonVariant } from "../../types";
+import PlusIcon from "../../assets/PlusIcon";
+import { getJWT } from "../../utils/helper";
 
 const AllForms = () => {
   const [searchString, setSearchString] = useState("");
   const navigate = useNavigate();
-  const cookie = new Cookies();
-  const jwt = cookie.get("jwt");
+  const jwt:string = getJWT()
   const [createForm] = useCreateFormMutation();
   const { data, isFetching } = useGetAllFormsQuery({ searchString, jwt });
   const [clicked, setClick] = useState(false);
-  const onClickAddForm = async (type?: "APPLICANT") => {
+  const onClickAddForm = async (type?: "Applicant") => {
     let requestBody: object;
     requestBody = { title: `Form ${data.length}` };
     if (type) {
@@ -45,9 +43,10 @@ const AllForms = () => {
       <div className="flex justify-between items-center my-5">
         <SearchInput setSearchQuery={setSearchString} />
         <div className="grid gap-1">
-          <Button clickHandler={() => setClick(!clicked)} variant={ButtonVariant.Small}>
-            <Plus />
-            Add Form
+          <Button onClick={() => setClick(!clicked)}>
+            <div className="flex items-center right-0">
+              <PlusIcon /> <span>Add form</span>
+            </div>
           </Button>
           <div
             className={
@@ -56,11 +55,11 @@ const AllForms = () => {
                 : `grid text-white bg bg-primary-dark rounded-lg`
             }
           >
-            <Button clickHandler={() => onClickAddForm("APPLICANT")}>
+            <Button onClick={() => onClickAddForm("Applicant")}>
               Applicants
             </Button>
             <div className="border w-6/6"></div>
-            <Button clickHandler={() => onClickAddForm()}>Trainee</Button>
+            <Button onClick={() => onClickAddForm()}>Trainee</Button>
           </div>
         </div>
       </div>

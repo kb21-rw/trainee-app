@@ -1,16 +1,18 @@
-import React from "react";
+import React, { useState } from "react";
 import Loader from "./Loader";
 import Delete from "../../assets/DeleteIcon";
 import {
   useDeleteQuestionMutation,
   useEditQuestionMutation,
 } from "../../features/user/apiSlice";
-import Cookies from "universal-cookie";
 import SuccessCheckMark from "../../assets/SuccessCheckMarkIcon";
 import { useForm } from "react-hook-form";
 import AddIcon from "../../assets/AddIcon";
 import RemoveIcon from "../../assets/RemoveIcon";
 import Reset from "../../assets/ResetIcon";
+import DeleteModal from "../modals/DeleteModal";
+import { getJWT } from "../../utils/helper";
+import { QuestionType } from "../../utils/types";
 
 const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
   const { title, type, options, _id } = question;
@@ -28,13 +30,14 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
       options,
     },
   });
-  const cookies = new Cookies();
-  const jwt = cookies.get("jwt");
+  const jwt:string = getJWT()
   const [deleteQuestion] = useDeleteQuestionMutation();
   const [editQuestion] = useEditQuestionMutation();
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const handleDeleteQuestion = async () => {
+  const handleDeleteQuestion = async (_id: string) => {
     await deleteQuestion({ jwt, id: _id });
+    setShowDeleteModal(false);
   };
 
   const changeOptionsHandler = (value: string, index: number) => {
@@ -75,8 +78,8 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
             />
             <select className="p-2" {...register("type")} value={selectedType}>
               {[
-                { label: "Text", value: "text" },
-                { label: "Dropdown", value: "dropdown" },
+                { label: "Text", value: QuestionType.Text },
+                { label: "Single Select", value: QuestionType.SingleSelect },
               ].map(
                 (
                   currentType: { label: string; value: string },
@@ -89,7 +92,7 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
               )}
             </select>
           </div>
-          {selectedType === "dropdown" && (
+          {selectedType === QuestionType.SingleSelect && (
             <div>
               <ol className="w-full my-4">
                 {currentOptions.map((option: string, index: number) => (
@@ -142,12 +145,22 @@ const QuestionCard = ({ question, activeQuestion, setActiveQuestion }: any) => {
           </div>
         ) : null}
         <button
-          onClick={handleDeleteQuestion}
+          onClick={()=>setShowDeleteModal(true)}
           className="flex items-center gap-2"
         >
           <Delete />
+          <span>Delete</span>
         </button>
       </div>
+      {
+      showDeleteModal &&
+        <DeleteModal
+          title="a question"
+          name={title}
+          closePopup={() => setShowDeleteModal(false)}
+          onDelete={() => handleDeleteQuestion(_id)}
+        />
+      }
     </div>
   );
 };
