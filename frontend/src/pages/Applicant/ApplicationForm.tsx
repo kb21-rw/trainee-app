@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { useGetFormForApplicantsQuery } from "../../features/user/apiSlice";
 import Loader from "../../components/ui/Loader";
-import { ApplicationFormResponse, ButtonVariant, Question, QuestionType } from "../../utils/types";
+import {
+  ApplicationFormResponse,
+  ButtonVariant,
+  Question,
+  QuestionType,
+} from "../../utils/types";
 import FormInput from "../../components/ui/FormInput";
 import Button from "../../components/ui/Button";
 import { useAddApplicantResponseMutation } from "../../features/user/apiSlice";
@@ -81,7 +86,7 @@ const ApplicationForm = () => {
   }
 
   return (
-    <div className="mt-20 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="mt-5 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl w-full bg-white rounded-lg shadow-lg">
         <div className="border-t-[#673AB7] border-t-8 rounded-xl w-full p-4"></div>
         <div className="px-8 py-6">
@@ -138,7 +143,14 @@ const ApplicationForm = () => {
                 )}
               </div>
             ))}
-            <div className="flex justify-center">
+            <div className="flex justify-center items-center space-x-3">
+              <Button
+                outlined={true}
+                variant={ButtonVariant.Primary}
+                type="submit"
+              >
+                Save
+              </Button>
               <Button variant={ButtonVariant.Primary} type="submit">
                 Submit
               </Button>
