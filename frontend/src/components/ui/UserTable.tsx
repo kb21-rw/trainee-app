@@ -28,16 +28,18 @@ const UserTable = ({
   return (
     <table className="w-full my-8 table-auto object-fit">
       <thead className="bg-primary-light bg-opacity-20 h-20">
-        <tr>
-          {headers.map((header: string, index: number) => (
-            <td
-              key={index}
-              className="first:rounded-l-xl last:rounded-r-xl pl-12 text-center"
-            >
-              {header}
-            </td>
-          ))}
-        </tr>
+       {data && (
+         <tr>
+         {headers.map((header: string, index: number) => (
+           <td
+             key={index}
+             className="first:rounded-l-xl last:rounded-r-xl pl-12 text-center"
+           >
+             {header}
+           </td>
+         ))}
+       </tr>
+       )}
       </thead>
       {isLoading ? (
         <tbody>
@@ -47,10 +49,10 @@ const UserTable = ({
             </td>
           </tr>
         </tbody>
-      ) : data?.length === 0 ? (
+      ) : (data?.length === 0 || data === undefined )? (
         <tbody>
           <tr className="flex w-screen h-[50vh]">
-            <td className="w-full h-auto">
+            <td className="w-full h-full">
               <NotFound type="User" />
             </td>
           </tr>
@@ -91,12 +93,12 @@ const UserTable = ({
                       {action.type == "delete" && <Delete />}
                       {action.type == "edit" && <Edit />}
                       {action.type == "accept" && (
-                        <span className="px-8 py-2 bg-green-400/80 text-white rounded">
+                        <span className="px-8 py-2 bg-primary-dark/70 text-white rounded hover:bg-primary-dark transition-all ease-in-out">
                           Accept
                         </span>
                       )}
                       {action.type == "reject" && (
-                        <span className="px-8 py-2 bg-red-400 text-white rounded">
+                        <span className="px-8 py-2 bg-red-400/70 text-white rounded hover:bg-red-400 transition-all ease-in-out">
                           Reject
                         </span>
                       )}
