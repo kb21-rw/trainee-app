@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import React from "react";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../features/user/apiSlice";
@@ -8,7 +10,7 @@ import Button from "../../components/ui/Button";
 import InputField from "../../components/ui/InputField";
 import Loader from "../../components/ui/Loader";
 import jwt_decode from "jwt-decode";
-import { ButtonSize } from "../../types";
+import { ButtonSize, UserRole } from "../../utils/types";
 
 const Login = () => {
   const [login, { isLoading, error }] = useLoginMutation();
@@ -29,8 +31,8 @@ const Login = () => {
       const decodedToken: any = jwt_decode(result.data.accessToken);
       const userRole = decodedToken.role;
 
-      if (userRole === "APPLICANT") {
-        navigate("/applicant/apply");
+      if (userRole === UserRole.Applicant) {
+        navigate("/home");
       } else {
         navigate(redirectUrl);
       }
@@ -48,7 +50,9 @@ const Login = () => {
       <div className="text-center">
         <H1>Member login</H1>
       </div>
+      <div className="flex items-center justify-center">
       {isLoading && <Loader />}
+      </div>
       <div className="space-y-3 md:space-y-6 lg:space-y-10 w-full">
         {errorMessage && (
           <div className="py-2 bg-error-light text-error-dark flex justify-center items-center rounded-lg">

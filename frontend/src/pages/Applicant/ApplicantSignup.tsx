@@ -27,7 +27,7 @@ const ApplicantSignup = () => {
     });
     if (result.data.userId) {
       cookies.set("jwt", result.data.userId, { maxAge: 1800 });
-      return navigate("/login");
+      return navigate("/signup/thank-you");
     }
   };
 

@@ -20,7 +20,7 @@ export const createResponseService = async (
   loggedInUser: IUser,
   traineeId: string,
   questionId: string,
-  responseData: CreateResponseDto
+  responseData: CreateResponseDto,
 ) => {
   const { text } = responseData;
 
@@ -45,7 +45,7 @@ export const createResponseService = async (
     throw new CustomError(
       NOT_ALLOWED,
       "Only admin or the coach of a trainee can provide a response",
-      403
+      403,
     );
   }
 
@@ -53,16 +53,16 @@ export const createResponseService = async (
 
   if (relatedQuestion.type !== QuestionType.Text) {
     const invalidOptions = selectedOptions.every(
-      (option: string) => !relatedQuestion.options.includes(option)
+      (option: string) => !relatedQuestion.options.includes(option),
     );
 
     if (invalidOptions) {
       throw new CustomError(
         NOT_ALLOWED,
         `You can only choose from ${relatedQuestion.options.join(
-          ", "
+          ", ",
         )} options`,
-        400
+        400,
       );
     }
   }
@@ -72,7 +72,7 @@ export const createResponseService = async (
   }>("responseIds");
 
   const oldResponse = relatedQuestionPopulated.responseIds.find(
-    (response) => response.userId.toString() === traineeId
+    (response) => response.userId.toString() === traineeId,
   );
 
   const responseText =
@@ -83,7 +83,7 @@ export const createResponseService = async (
     response = await Response.findByIdAndUpdate(
       oldResponse._id,
       { text: responseText },
-      { new: true }
+      { new: true },
     );
   } else {
     response = await Response.create({ userId: traineeId, text: responseText });
@@ -101,9 +101,8 @@ export const createResponseService = async (
 
 export const createApplicantResponseService = async (
   loggedInUser: IUser,
-  responseData: CreateApplicationResponseDto[]
+  responseData: CreateApplicationResponseDto[],
 ) => {
-
   const currentCohort = await getCurrentCohort();
 
   if (!currentCohort.applicationFormId) {
@@ -117,10 +116,10 @@ export const createApplicantResponseService = async (
 
   //check if all question in the form are in the responseData
   if (
-    applicationForm.questionIds.every((questionId) =>
+    !applicationForm.questionIds.every((questionId) =>
       responseData
         .map((response) => response.questionId)
-        .includes(questionId.toString())
+        .includes(questionId.toString()),
     )
   )
     throw new CustomError(NOT_ALLOWED, "Some questions are not answered", 401);
@@ -133,7 +132,7 @@ export const createApplicantResponseService = async (
         }>("responseIds")
         .exec();
       const oldResponseId = question?.responseIds.find(
-        (oldResponse) => oldResponse.userId.toString() === loggedInUser.id
+        (oldResponse) => oldResponse.userId.toString() === loggedInUser.id,
       )?._id;
 
       if (!oldResponseId)
@@ -142,7 +141,7 @@ export const createApplicantResponseService = async (
       const updatedResponse = await Response.findByIdAndUpdate(
         oldResponseId,
         { text: response.answer },
-        { new: true }
+        { new: true },
       );
 
       if (!updatedResponse)
@@ -153,6 +152,6 @@ export const createApplicantResponseService = async (
         question: question.title,
         response: updatedResponse.text,
       };
-    })
+    }),
   );
 };

@@ -15,7 +15,8 @@ export const usersApi: any = createApi({
     "response",
     "overview",
     "applicantForm",
-    "applicantResponse"
+    "applicantResponse",
+    "cohorts"
   ],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
@@ -380,7 +381,7 @@ export const usersApi: any = createApi({
     getFormForApplicants: builder.query({
       query: (jwt) => {
         return {
-          url: `/forms/application`,
+          url: `/cohorts/application`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -400,6 +401,21 @@ export const usersApi: any = createApi({
         body,
       }),
       invalidatesTags: ["applicantResponse"],
+    }),
+
+    createCohort: builder.mutation({
+      query: (args) => {
+        const { jwt, body } = args;
+        return {
+          url: "/cohorts",
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["cohorts"],
     }),
   }),
 });
@@ -434,4 +450,5 @@ export const {
   useGetOverviewForCoachQuery,
   useGetFormForApplicantsQuery,
   useAddApplicantResponseMutation,
+  useCreateCohortMutation,
 } = usersApi;

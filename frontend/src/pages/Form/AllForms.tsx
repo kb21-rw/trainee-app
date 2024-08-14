@@ -20,7 +20,7 @@ const AllForms = () => {
   const [createForm] = useCreateFormMutation();
   const { data, isFetching } = useGetAllFormsQuery({ searchString, jwt });
   const [clicked, setClick] = useState(false);
-  const onClickAddForm = async (type?: "APPLICANT") => {
+  const onClickAddForm = async (type?: "Applicant") => {
     let requestBody: object;
     requestBody = { title: `Form ${data.length}` };
     if (type) {
@@ -55,7 +55,7 @@ const AllForms = () => {
                 : `grid text-white bg bg-primary-dark rounded-lg`
             }
           >
-            <Button onClick={() => onClickAddForm("APPLICANT")}>
+            <Button onClick={() => onClickAddForm("Applicant")}>
               Applicants
             </Button>
             <div className="border w-6/6"></div>
