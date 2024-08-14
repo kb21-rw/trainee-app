@@ -1,5 +1,6 @@
 import Cookies from 'universal-cookie'
 import jwtDecode from 'jwt-decode';
+import { ApplicantDetails } from './types';
 
 /**
  * Retrieves the logged-in user's information from a JWT token stored in cookies.
@@ -98,6 +99,12 @@ export const getTrainees = (data: any, dataItems: string[]) => {
   );
   return traineesData;
 };
+
+
+export const getApplicants = (data: ApplicantDetails[], dataItems: string[]) => {
+  return data?.map((item: any) => dataItems.map(key => item[key as keyof ApplicantDetails]));
+}
+
 
 /**
  * Generates a random color and text color for a chart.
