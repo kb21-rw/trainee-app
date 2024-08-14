@@ -83,3 +83,17 @@ export enum UserRole {
   Prospect = "Prospect",
 }
 
+export type ApplicantDetails = {
+  applied: boolean;
+  createdAt: string;
+  email: string;
+  googleId: string | null;
+  name: string;
+  password: string;
+  role: string;
+  updatedAt: string;
+  userId: string;
+  verified: boolean;
+  __v: number;
+  _id: string;
+};
