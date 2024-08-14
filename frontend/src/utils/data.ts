@@ -19,7 +19,7 @@ export const applicantMenu = [
 
 export const usersPerPageValues = [10, 20, 30, 40, 50, 100];
 export const cohortsPerPage = [10, 20, 30, 40, 50, 100];
-export const applicantsPerPage = [5, 10, 20, 30, 40, 50, 100];
+export const applicantsPerPage = [3, 5, 10, 20, 30, 40, 50, 100];
 export const coachTableSortingValues = [
   { title: "Entry", value: "entry" },
   { title: "Name", value: "name" },
