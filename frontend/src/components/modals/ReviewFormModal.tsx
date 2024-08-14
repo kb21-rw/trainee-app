@@ -24,7 +24,7 @@ const ReviewFormModal = ({
 }) => {
   return (
     <ModalLayout title={title} closePopup={closePopup}>
-      <div className="bg-white rounded-lg shadow-sm p-8">
+      <div className="bg-white rounded-lg shadow-sm px-8">
         <div className="mb-8">
           {formQuestions.map((question, index) => (
             <div key={index} className="mb-6">
@@ -37,8 +37,7 @@ const ReviewFormModal = ({
         </div>
         <div className="flex justify-end space-x-4">
           <Button onClick={handleEdit}>
-            <EditIcon />
-            Edit
+            <span className="flex items-center space-x-2"><EditIcon /> Edit</span>
           </Button>
           <Button
             onClick={() => {

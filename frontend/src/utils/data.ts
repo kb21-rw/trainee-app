@@ -14,7 +14,8 @@ export const coachMenu = [
 
 export const applicantMenu = [
   { link: "/home", title: "Home" },
-  { link: "/apply", title: "Application" },
+  { link: "/apply", title: "Apply" },
+  { link: "/saved-application", title: "Saved Application" },
 ]
 
 export const usersPerPageValues = [10, 20, 30, 40, 50, 100];
