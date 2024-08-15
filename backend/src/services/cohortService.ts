@@ -1,13 +1,10 @@
-import { isValidObjectId, Types } from "mongoose";
 import CustomError from "../middlewares/customError";
 import Cohort from "../models/Cohort";
 import Form from "../models/Form";
 import { getCohortsQuery } from "../queries/cohortQueries";
 import {
   COHORT_NOT_FOUND,
-  DUPLICATE_DOCUMENT,
   FORM_NOT_FOUND,
-  INVALID_MONGODB_ID,
   NOT_ALLOWED,
 } from "../utils/errorCodes";
 import {
@@ -21,6 +18,7 @@ import {
   RejectedBody,
   UpdateCohortDto,
 } from "../utils/types";
+import { updateStagesHandler } from "../utils/helpers/cohort";
 
 const isAcceptedBody = (
   body: AcceptedBody | RejectedBody
@@ -50,9 +48,6 @@ export const updateCohortService = async (
   formData: UpdateCohortDto
 ) => {
   const { name, description, stages } = formData;
-  if (!isValidObjectId(cohortId)) {
-    throw new CustomError(INVALID_MONGODB_ID, "Invalid cohort Id", 400);
-  }
 
   const cohort = await Cohort.findById(cohortId);
   if (!cohort) {
@@ -68,37 +63,7 @@ export const updateCohortService = async (
   }
 
   if (stages) {
-    const updatedStages = stages.filter((stage) => stage.id);
-    const addedStages = stages.filter((stage) => !stage.id);
-
-    // update existing stages
-    cohort.stages = cohort.stages.map((stage) => {
-      const updatedStage = updatedStages.find(
-        (updatedStage) => updatedStage.id === stage.id.toString()
-      );
-      return updatedStage ? { ...updatedStage, id: stage.id } : stage;
-    });
-
-    const cohortStageTitles = cohort.stages.map((stage) => stage.title);
-    // check for duplicates
-    addedStages
-      .map((stage) => stage.title)
-      .forEach((addedStageTitle) => {
-        if (cohortStageTitles.includes(addedStageTitle)) {
-          throw new CustomError(
-            DUPLICATE_DOCUMENT,
-            `'${addedStageTitle}' already exists in the stages`,
-            409
-          );
-        }
-      });
-    // add id property to every stage
-    cohort.stages.push(
-      ...addedStages.map((stage) => ({
-        ...stage,
-        id: new Types.ObjectId().toString(),
-      }))
-    );
+    cohort.stages = updateStagesHandler(cohort.stages, stages);
   }
 
   return await cohort.save();
