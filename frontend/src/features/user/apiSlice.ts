@@ -431,6 +431,20 @@ export const usersApi: any = createApi({
       },
       providesTags: ["applicants"],
     }),
+    applicantDecision: builder.mutation({
+      query: (args) => {
+        const { jwt, body} = args;
+        return {
+          url: `/cohorts/decision`,
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: {...body}
+        }
+      },
+      invalidatesTags: ["applicants"],
+    })
   }),
 });
 
@@ -466,4 +480,5 @@ export const {
   useAddApplicantResponseMutation,
   useCreateCohortMutation,
   useGetApplicantsQuery,
+  useApplicantDecisionMutation,
 } = usersApi;
