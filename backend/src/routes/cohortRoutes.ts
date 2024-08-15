@@ -6,6 +6,7 @@ import {
   decision,
   getApplicationFormController,
   getCohortsController,
+  updateCohortController,
 } from "../controllers/cohortControllers";
 
 const router = Router();
@@ -15,6 +16,7 @@ router.get("/", verifyJWT, getCohortsController);
 
 router.post("/", verifyJWT, isAdmin, createCohortController);
 
+router.patch("/:cohortId", verifyJWT, isAdmin, updateCohortController);
 router.patch("/decision", verifyJWT, isAdmin, decision);
 
 export default router;
