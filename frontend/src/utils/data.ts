@@ -46,7 +46,7 @@ export const applicantTableSortingValues = [
 
 export const cohortTableHeaders = ["No", "Cohort Name", "Trainees", "Action"]
 export const cohortTableDataItems = ["_id", "name", "trainees", "action"];
-export const applicantTableHeaders = ["No", "Participant Number", "Applicant Name", "Email", "Response", "Action"];
+export const applicantTableHeaders = ["No", "Applicant Number", "Applicant Name", "Email", "Response", "Action"];
 export const applicantTableDataItems = ["_id","userId", "name", "email"];
 export const traineeTableHeaders = ["No", "Name", "Email", "Coach", "Action"];
 export const editTraineeTableHeaders = ["No", "Name", "Email", ""];
