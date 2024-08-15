@@ -10,27 +10,34 @@ import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
 import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
 
-const RejectOrDropModal = ({
+const DropOrEnrollModal = ({
   closePopup,
   userName,
   userEmail,
-  userToBeRejectedId,
+  decideForUserId,
   jwt,
+  decision,
 }: {
   closePopup: () => void;
   userName: string;
   userEmail: string;
-  userToBeRejectedId: string | null;
+  decideForUserId: string | null;
   jwt: string;
+  decision: ApplicantDecision;
 }) => {
-  const { register, handleSubmit, watch } = useForm();
+  const { register, handleSubmit, watch, formState: {errors} } = useForm();
 
   const [
     rejectUser,
-    { isLoading: isRejectUserLoading, isSuccess: isRejectUserSuccess },
+    { isLoading: isRejectUserLoading, error, isSuccess: isRejectUserSuccess },
   ] = useApplicantDecisionMutation();
 
   // created dummy stages for testing purposes, will be removed soon when we get actual data
+
+  const errorMessage: any =
+  errors?.name?.message ||
+  errors?.email?.message ||
+  error?.data?.errorMessage;
 
   const stages = [
     {
@@ -46,14 +53,14 @@ const RejectOrDropModal = ({
   ];
 
   const handleRejectUser = async () => {
-    if (userToBeRejectedId) {
+    if (decideForUserId) {
       await rejectUser({
         jwt,
         body: {
-          decision: ApplicantDecision.Rejected,
+          decision: decision,
           stageId: watch("StageId"),
           feedback: watch("feedback"),
-          userId: userToBeRejectedId,
+          userId: decideForUserId,
         },
       });
     }
@@ -66,10 +73,17 @@ const RejectOrDropModal = ({
   useAutoCloseModal(isRejectUserSuccess, closePopup);
 
   return (
-    <ModalLayout closePopup={closePopup} title={`Drop ${userName}`}>
-      {/* {errorMessage && <Alert type="error">{errorMessage}</Alert>} */}
+    <ModalLayout
+      closePopup={closePopup}
+      title={`${
+        decision == ApplicantDecision.Rejected
+          ? `Drop ${userName}`
+          : `Enroll ${userName} To the next stage`
+      }`}
+    >
+      {errorMessage && <Alert type="error">{errorMessage}</Alert>}
       {isRejectUserSuccess && (
-        <Alert type="success">{`${userName} Droped`}</Alert>
+        <Alert type="success">{`${decision === ApplicantDecision.Rejected ? `Dropped ${userName}` : `Enrolled ${userName} to the next stage`}`}</Alert>
       )}
       <div>
         {isRejectUserLoading && (
@@ -143,20 +157,34 @@ const RejectOrDropModal = ({
           <Button outlined onClick={closePopup}>
             Cancel
           </Button>
-          <Button variant={ButtonVariant.Danger} type="submit">
-            <span className="flex items-center justify-center">
-              Confirm{" "}
-              {isRejectUserLoading && (
-                <span>
-                  <Loader />
-                </span>
-              )}
-            </span>
-          </Button>
+          {decision === ApplicantDecision.Rejected && (
+            <Button variant={ButtonVariant.Danger} type="submit">
+              <span className="flex items-center justify-center">
+                Confirm{" "}
+                {isRejectUserLoading && (
+                  <span>
+                    <Loader />
+                  </span>
+                )}
+              </span>
+            </Button>
+          )}
+          {decision === ApplicantDecision.Accepted && (
+            <Button variant={ButtonVariant.Primary} type="submit">
+              <span className="flex items-center justify-center">
+                Confirm{" "}
+                {isRejectUserLoading && (
+                  <span>
+                    <Loader />
+                  </span>
+                )}
+              </span>
+            </Button>
+          )}
         </div>
       </form>
     </ModalLayout>
   );
 };
 
-export default RejectOrDropModal;
+export default DropOrEnrollModal;
