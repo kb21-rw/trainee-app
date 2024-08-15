@@ -97,3 +97,8 @@ export type ApplicantDetails = {
   __v: number;
   _id: string;
 };
+
+export enum ApplicantDecision {
+  Accepted = "Accepted",
+  Rejected = "Rejected",
+}
