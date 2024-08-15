@@ -5,7 +5,7 @@ import InputField from "../ui/InputField";
 import Button from "../ui/Button";
 import { ApplicantDecision, ButtonVariant } from "../../utils/types";
 import TextArea from "../ui/TextArea";
-import { useApplicantDecisionMutation} from "../../features/user/apiSlice";
+import { useApplicantDecisionMutation } from "../../features/user/apiSlice";
 import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
 import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
@@ -21,16 +21,14 @@ const RejectOrDropModal = ({
   userName: string;
   userEmail: string;
   userToBeRejectedId: string | null;
-  jwt: string
+  jwt: string;
 }) => {
-  const {
-    register,
-    handleSubmit,
-    watch
-  } = useForm();
+  const { register, handleSubmit, watch } = useForm();
 
-  const [rejectUser, { isLoading: isRejectUserLoading, isSuccess: isRejectUserSuccess }] =
-  useApplicantDecisionMutation();
+  const [
+    rejectUser,
+    { isLoading: isRejectUserLoading, isSuccess: isRejectUserSuccess },
+  ] = useApplicantDecisionMutation();
 
   // created dummy stages for testing purposes, will be removed soon when we get actual data
 
@@ -69,15 +67,17 @@ const RejectOrDropModal = ({
 
   return (
     <ModalLayout closePopup={closePopup} title={`Drop ${userName}`}>
-    {/* {errorMessage && <Alert type="error">{errorMessage}</Alert>} */}
+      {/* {errorMessage && <Alert type="error">{errorMessage}</Alert>} */}
       {isRejectUserSuccess && (
         <Alert type="success">{`${userName} Droped`}</Alert>
       )}
-      {isRejectUserLoading && (
-        <div className="w-full flex justify-center items-center">
-          <Loader />
-        </div>
-      )}
+      <div>
+        {isRejectUserLoading && (
+          <div className="w-full bg-gray-500/60 flex justify-center items-center">
+            <Loader />
+          </div>
+        )}
+      </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="flex flex-col gap-12 w-full"
@@ -143,7 +143,16 @@ const RejectOrDropModal = ({
           <Button outlined onClick={closePopup}>
             Cancel
           </Button>
-          <Button variant={ButtonVariant.Danger} type="submit">Comfirm</Button>
+          <Button variant={ButtonVariant.Danger} type="submit">
+            <span className="flex items-center justify-center">
+              Confirm{" "}
+              {isRejectUserLoading && (
+                <span>
+                  <Loader />
+                </span>
+              )}
+            </span>
+          </Button>
         </div>
       </form>
     </ModalLayout>
