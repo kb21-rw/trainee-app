@@ -1,5 +1,9 @@
 import Cohort, { ICohort } from "../models/Cohort";
 
+export const getCohortQuery = async (cohortId: string) => {
+  return await Cohort.findById(cohortId);
+};
+
 export const getCohortsQuery = async (searchString: string) => {
   const cohorts: ICohort[] = await Cohort.aggregate([
     {
