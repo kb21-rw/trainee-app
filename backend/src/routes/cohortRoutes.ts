@@ -13,8 +13,8 @@ import {
 const router = Router();
 
 router.get("/application", verifyJWT, getApplicationFormController);
-router.get("/", verifyJWT, getCohortsController);
-router.get("/:cohortId", verifyJWT, getCohortController);
+router.get("/", verifyJWT, isAdmin, getCohortsController);
+router.get("/:cohortId", verifyJWT, isAdmin, getCohortController);
 
 router.post("/", verifyJWT, isAdmin, createCohortController);
 
