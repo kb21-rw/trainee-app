@@ -9,7 +9,7 @@ interface PropTypes {
   headers: string[];
   isLoading: boolean;
   data: string[][];
-  response?: boolean;
+  hasResponse?: boolean;
   actions?: {
     type: string;
     actionCaller:
@@ -22,7 +22,7 @@ const UserTable = ({
   headers,
   isLoading,
   data,
-  response,
+  hasResponse,
   actions,
 }: PropTypes) => {
   return (
@@ -72,7 +72,7 @@ const UserTable = ({
                   {item}
                 </td>
               ))}
-              {response && (
+              {hasResponse && (
                 <td className="text-base font-medium pl-28 text-center">
                   <span className="cursor-pointer">
                     <FaFileAlt className="text-2xl hover:text-primary-dark"/>
