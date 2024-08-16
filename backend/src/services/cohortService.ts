@@ -1,6 +1,7 @@
 import CustomError from "../middlewares/customError";
 import Cohort from "../models/Cohort";
 import Form from "../models/Form";
+import { getCohortsQuery } from "../queries/cohortQueries";
 import {
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
@@ -27,6 +28,10 @@ const isRejectedBody = (
   body: AcceptedBody | RejectedBody
 ): body is RejectedBody => {
   return body.decision === ApplicantDecision.Rejected;
+};
+
+export const getCohortsService = async (searchString: string) => {
+  return await getCohortsQuery(searchString);
 };
 
 export const createCohortService = async (cohortData: CreateCohortDto) => {
