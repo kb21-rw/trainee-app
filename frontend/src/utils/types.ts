@@ -26,6 +26,12 @@ export interface CreateCoach {
 export interface CreateCohort {
   name: string;
   description: string;
+  stages: Stage[];
+}
+
+export interface Stage {
+  title: string;
+  description: string;
 }
 
 export interface Response {
@@ -83,3 +89,13 @@ export enum UserRole {
   Prospect = "Prospect",
 }
 
+export interface Cohort {
+  name: string;
+  description: string;
+  isActive: boolean;
+  stages: number;
+  applicants: number;
+  trainees: number;
+  coaches: number;
+  forms: number;
+}
