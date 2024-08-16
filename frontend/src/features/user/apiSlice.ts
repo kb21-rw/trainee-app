@@ -418,9 +418,10 @@ export const usersApi: any = createApi({
       invalidatesTags: ["cohorts"],
     }),
     getAllCohorts: builder.query({
-      query: (jwt) => {
+      query: (args) => {
+        const { jwt, query} = args;
         return {
-          url: `/cohorts`,
+          url: `/cohorts${query}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
