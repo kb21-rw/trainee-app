@@ -3,15 +3,17 @@
 import React, { useState } from "react";
 import UserTableHeader from "../../components/ui/UserTableHeader";
 import {
+  cohortTableDataItems,
   cohortTableHeaders,
   cohortTableSortingValues,
   cohortsPerPage,
 } from "../../utils/data";
 import Button from "../../components/ui/Button";
 import PlusIcon from "../../assets/PlusIcon";
-import { getJWT } from "../../utils/helper";
+import { getCohorts, getJWT } from "../../utils/helper";
 import AddingCohortModal from "../../components/modals/AddingCohort";
 import UserTable from "../../components/ui/UserTable";
+import { useGetAllCohortsQuery } from "../../features/user/apiSlice";
 
 const Cohort = () => {
   const jwt: string = getJWT();
@@ -19,12 +21,11 @@ const Cohort = () => {
   const [isAddingCohort, setIsAddingCohort] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // dumy data for now -> to be removed once we receive the actual ones from the database
+  const {data, isFetching: isGetAllCohorts, error} = useGetAllCohortsQuery(jwt)
 
-  const cohortList = [
-    ["669f736aa9d89e77724c0156", "Cohort 1", "45"],
-    ["669f736aa9d89e77724c0200", "Cohort 2", "50"],
-  ];
+  console.log(data)
+
+  const cohortList = getCohorts(data, cohortTableDataItems)
 
   return (
     <div className="py-12 space-y-5">
@@ -46,7 +47,6 @@ const Cohort = () => {
         data={cohortList}
         actions={[
           { type: "edit", actionCaller: () => {} },
-          { type: "delete", actionCaller: () => {} },
         ]}
         isLoading={isLoading}
       />
