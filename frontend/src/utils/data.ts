@@ -37,8 +37,8 @@ export const cohortTableSortingValues = [
   { title: "Date", value: "date" },
 ];
 
-export const cohortTableHeaders = ["No", "Cohort Name", "Trainees", "Action"]
-export const cohortTableDataItems = ["_id", "name", "trainees", "action"];
+export const cohortTableHeaders = ["No", "Cohort Name", "Stages", "Applicants", "Trainees", "Dropped", "Action"]
+export const cohortTableDataItems = ["_id", "name", "stages", "applicants", "trainees", "rejected"];
 
 export const traineeTableHeaders = ["No", "Name", "Email", "Coach", "Action"];
 export const editTraineeTableHeaders = ["No", "Name", "Email", ""];
