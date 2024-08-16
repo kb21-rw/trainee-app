@@ -11,6 +11,7 @@ import Alert from "../ui/Alert";
 import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
 import TextArea from "../ui/TextArea";
 import { CreateCohort } from "../../utils/types";
+import { H6 } from "../ui/Typography";
 
 const AddingCohortModal = ({
   closePopup,
@@ -70,6 +71,9 @@ const AddingCohortModal = ({
             },
           }}
         />
+        <div>
+          <H6>Add Stage:</H6>
+        </div>
         <TextArea
           name="description"
           label="Cohort Description"
