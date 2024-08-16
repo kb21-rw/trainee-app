@@ -19,9 +19,8 @@ const Cohort = () => {
   const jwt: string = getJWT();
   const [query, setQuery] = useState("");
   const [isAddingCohort, setIsAddingCohort] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const {data, isFetching: isGetAllCohorts, error} = useGetAllCohortsQuery(jwt)
+  const {data, isFetching: isGetAllCohorts, error} = useGetAllCohortsQuery({jwt, query})
 
   console.log(data)
 
@@ -48,7 +47,7 @@ const Cohort = () => {
         actions={[
           { type: "edit", actionCaller: () => {} },
         ]}
-        isLoading={isLoading}
+        isLoading={isGetAllCohorts}
       />
       {isAddingCohort && (
         <AddingCohortModal
