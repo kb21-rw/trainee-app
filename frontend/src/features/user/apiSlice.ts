@@ -417,6 +417,18 @@ export const usersApi: any = createApi({
       },
       invalidatesTags: ["cohorts"],
     }),
+    getAllCohorts: builder.query({
+      query: (jwt) => {
+        return {
+          url: `/cohorts`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          }
+        };
+      },
+      providesTags: ["cohorts"],
+    })
   }),
 });
 
@@ -451,4 +463,5 @@ export const {
   useGetFormForApplicantsQuery,
   useAddApplicantResponseMutation,
   useCreateCohortMutation,
+  useGetAllCohortsQuery,
 } = usersApi;
