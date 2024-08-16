@@ -9,4 +9,4 @@ export const INVALID_CREDENTIAL = "TT0008N";
 export const URL_NOT_FOUND = "ULRN068";
 export const QUESTION_NOT_FOUND = "!F_0404";
 export const NOT_ALLOWED = "!KL_0404";
-export const APPLICATION_DEADLINE_OVERDUE = "APP_DEADLINE_400";
+export const APPLICATION_FORM_ERROR = "APP_FORM_ERROR";

@@ -89,12 +89,10 @@ const CohortSchema = new Schema(
       },
         startDate: {
           type: Date,
-          required: true,
           default: null,
         },
         endDate: {
           type: Date,
-          required: true,
           default: null
         },
     }

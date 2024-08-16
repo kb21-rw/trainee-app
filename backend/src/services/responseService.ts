@@ -12,7 +12,7 @@ import {
   NOT_ALLOWED,
   QUESTION_NOT_FOUND,
   USER_NOT_FOUND,
-  APPLICATION_DEADLINE_OVERDUE
+  APPLICATION_FORM_ERROR
 } from "../utils/errorCodes";
 import Form from "../models/Form";
 import { getCurrentCohort } from "../utils/helpers/cohort";
@@ -118,12 +118,21 @@ export const createApplicantResponseService = async (
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
 
   const now = dayjs();
+  const applicationStartDate = dayjs(new Date(currentCohort.applicationForm.startDate));
   const applicationEndDate = dayjs(new Date(currentCohort.applicationForm.endDate)
   );
 
+  if (now.isBefore(applicationStartDate)) {
+    throw new CustomError(
+      APPLICATION_FORM_ERROR,
+      "Application has not started yet!",
+      400
+    );
+  }
+
   if (now.isAfter(applicationEndDate)) {
     throw new CustomError(
-      APPLICATION_DEADLINE_OVERDUE,
+      APPLICATION_FORM_ERROR,
       "Application deadline has passed!",
       400
     );
