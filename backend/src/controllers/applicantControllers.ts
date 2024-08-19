@@ -7,17 +7,18 @@ export const getApplicants = async (
   next: NextFunction
 ) => {
   try {
-    const nameSearch = req.query.nameSearch ? String(req.query.nameSearch) : "";
-    const applicantsPerPage = req.query.applicantsPerPage
-      ? Number(req.query.applicantsPerPage)
+    const searchString = req.query.searchString ? String(req.query.searchString) : "";
+    const applicantsPerPage = req.query.coachesPerPage
+      ? Number(req.query.coachesPerPage)
       : 10;
     const sortBy = req.query.sortBy ? String(req.query.sortBy) : "userId";
 
     const applicants = await getApplicantsService({
-      nameSearch,
+      searchString,
       applicantsPerPage,
       sortBy,
     });
+
     return res.status(201).send(applicants);
   } catch (error: any) {
     next(error);
