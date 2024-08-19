@@ -1,8 +1,11 @@
-import { NextFunction, Request, Response } from "express";
-import { getApplicantsService } from "../services/applicantService";
+import { NextFunction,Response } from "express";
+import {
+  getApplicantsService,
+} from "../services/applicantService";
+
 
 export const getApplicants = async (
-  req: Request,
+  req: any,
   res: Response,
   next: NextFunction
 ) => {

@@ -66,7 +66,7 @@ export const applicantRegisterService = async (body: any) => {
     name: createdUser.name,
     userId: createdUser.id,
   });
-
+ 
   return createdUser;
 };
 

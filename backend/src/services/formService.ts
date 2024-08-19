@@ -8,6 +8,7 @@ import {
   getFormsQuery,
 } from "../queries/formQueries";
 import {
+  APPLICATION_FORM_ERROR,
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
   INVALID_MONGODB_ID,
@@ -51,14 +52,19 @@ export const updateFormService = async (
 export const createFormService = async (formData: CreateFormDto) => {
   const { title, description, type } = formData;
 
-  const createdForm = await Form.create({ title, description, type });
   const currentCohort = await Cohort.findOne({ isActive: true });
   if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "Not active cohort found!", 404);
+    throw new CustomError(COHORT_NOT_FOUND, "No active cohort found!", 404);
   }
 
+  if (type === FormType.Applicant && currentCohort.applicationForm?.id) {
+    throw new CustomError(APPLICATION_FORM_ERROR, "An application form already exists for the current cohort. Please edit the existing form.", 409);
+  }
+
+  const createdForm = await Form.create({ title, description, type });
+
   if (type === FormType.Applicant) {
-    currentCohort.applicationFormId = createdForm.id;
+    currentCohort.applicationForm.id = createdForm.id;
   } else {
     currentCohort.forms.push(createdForm.id);
   }
