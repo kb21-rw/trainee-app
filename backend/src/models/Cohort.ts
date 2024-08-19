@@ -7,19 +7,14 @@ export interface ICohort extends Document {
   name: string;
   description: string;
   isActive: boolean;
+  applicationFormId: IForm["_id"];
+  potentialApplicants: IUser["_id"][];
   applicants: IUser["_id"][];
   trainees: IUser["_id"][];
   coaches: IUser["_id"][];
   forms: IForm["_id"][];
-
-applicationForm:{
-  id: IForm["_id"];
-    startDate: Date;
-    endDate: Date;
-}
   stages: { id: string; title: string; description: string }[];
   rejected: { userId: IUser["_id"]; stageId: string; feedback: string }[];
-
 }
 
 const CohortSchema = new Schema(
@@ -46,13 +41,16 @@ const CohortSchema = new Schema(
         _id: false,
       },
     ],
+    applicationFormId: {
+      type: Schema.Types.ObjectId,
+      default: null,
+    },
     forms: [
       {
         type: Schema.Types.ObjectId,
         ref: "Form",
       },
     ],
-
     applicants: [
       {
         type: Schema.Types.ObjectId,
@@ -78,24 +76,9 @@ const CohortSchema = new Schema(
         feedback: { type: String, default: "" },
       },
     ],
-    applicationForm:{
-      id: {
-        type: Schema.Types.ObjectId,
-        default: null,
-      },
-        startDate: {
-          type: Date,
-          default: null,
-        },
-        endDate: {
-          type: Date,
-          default: null
-        },
-    }
   },
   { timestamps: {} }
 );
-
 CohortSchema.index({ name: "text", description: "text" });
 
 export default model<ICohort>("Cohort", CohortSchema);
