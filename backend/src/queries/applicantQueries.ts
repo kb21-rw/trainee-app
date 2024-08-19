@@ -2,7 +2,7 @@ import Cohort from "../models/Cohort";
 
 export const getApplicantsQuery = async (
   filters: {
-    nameSearchRegex: string;
+    searchStringRegex: string;
     sortBy: string;
     applicantsPerPage: number;
   },
@@ -39,7 +39,7 @@ export const getApplicantsQuery = async (
     {
       $match: {
         "applicant.name": {
-          $regex: filters.nameSearchRegex,
+          $regex: filters.searchStringRegex,
           $options: "i",
         },
       },

@@ -1,6 +1,7 @@
 export const adminMenu = [
   { link: "/", title: "Overview" },
   { link: "/forms", title: "Forms" },
+  { link: "/applicants", title: "Applicants" },
   { link: "/trainees", title: "Trainees" },
   { link: "/coaches", title: "Coaches" },
   { link: "/cohorts", title: "Cohorts" },
@@ -19,6 +20,7 @@ export const applicantMenu = [
 
 export const usersPerPageValues = [10, 20, 30, 40, 50, 100];
 export const cohortsPerPage = [10, 20, 30, 40, 50, 100];
+export const applicantsPerPage = [3, 5, 10, 20, 30, 40, 50, 100];
 export const coachTableSortingValues = [
   { title: "Entry", value: "entry" },
   { title: "Name", value: "name" },
@@ -34,12 +36,18 @@ export const traineeTableSortingValues = [
 export const cohortTableSortingValues = [
   { title: "Entry", value: "entry" },
   { title: "Name", value: "name" },
-  { title: "Date", value: "date" },
 ];
+
+export const applicantTableSortingValues = [
+  { title: "Entry", value: "entry" },
+  { title: "Name", value: "name" },
+  { title: "Email", value: "email" },
+]
 
 export const cohortTableHeaders = ["No", "Cohort Name", "Stages", "Applicants", "Trainees", "Dropped", "Action"]
 export const cohortTableDataItems = ["_id", "name", "stages", "applicants", "trainees", "rejected"];
-
+export const applicantTableHeaders = ["No", "Applicant Number", "Applicant Name", "Email", "Response", "Action"];
+export const applicantTableDataItems = ["_id","userId", "name", "email"];
 export const traineeTableHeaders = ["No", "Name", "Email", "Coach", "Action"];
 export const editTraineeTableHeaders = ["No", "Name", "Email", ""];
 export const editTraineeTableItems = ["_id", "name", "email"];

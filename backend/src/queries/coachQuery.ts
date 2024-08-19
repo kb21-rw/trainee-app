@@ -1,4 +1,5 @@
 import User from "../models/User";
+import { Role } from "../utils/types";
 
 export const getCoachesQuery = async (
   searchString: string,
@@ -12,7 +13,7 @@ export const getCoachesQuery = async (
           { name: { $regex: new RegExp(searchString, "i") } },
           { email: { $regex: new RegExp(searchString, "i") } },
         ],
-        role: { $in: ["ADMIN", "COACH"] },
+        role: { $in: [Role.Admin, Role.Coach] },
       },
     },
     {

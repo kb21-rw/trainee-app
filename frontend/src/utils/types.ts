@@ -89,7 +89,25 @@ export enum UserRole {
   Prospect = "Prospect",
 }
 
-export interface Cohort {
+export type ApplicantDetails = {
+  applied: boolean;
+  createdAt: string;
+  email: string;
+  googleId: string | null;
+  name: string;
+  password: string;
+  role: string;
+  updatedAt: string;
+  userId: string;
+  verified: boolean;
+  __v: number;
+  _id: string;
+};
+
+export enum ApplicantDecision {
+  Accepted = "Accepted",
+  Rejected = "Rejected",
+}export interface Cohort {
   name: string;
   description: string;
   isActive: boolean;

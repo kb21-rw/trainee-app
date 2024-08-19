@@ -52,7 +52,7 @@ const generateVerificationMessage = (name: string, userId: string) => {
           <div style="font-family: Arial, sans-serif; margin: 20px;">
               <h1>Hello ${name},</h1>
               <div>
-                <p>Click this <a href="${process.env.FRONTEND_URL}/applicant/verify?userId=${userId}">link</a> to verify your email.</p>
+                <p>Click this <a href="${process.env.FRONTEND_URL}/verify?userId=${userId}">link</a> to verify your email.</p>
               </div>
               <p>Sincerely,<br> The gym</p>
           </div>
