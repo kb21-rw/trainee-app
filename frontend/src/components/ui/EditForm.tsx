@@ -15,6 +15,7 @@ import Delete from "../../assets/DeleteIcon";
 import Loader from "./Loader";
 import { useNavigate } from "react-router-dom";
 import Alert from "./Alert";
+import { QuestionType } from "../../utils/types";
 
 const FormSchema = yup
   .object({
@@ -64,7 +65,7 @@ const EditForm = ({
     await createQuestion({
       jwt: getJWT(),
       formId: id,
-      body: { title: `Question`, type: "text" },
+      body: { title: `Question`, type: QuestionType.Text },
     });
   };
 

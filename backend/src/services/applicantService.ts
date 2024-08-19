@@ -2,18 +2,18 @@ import { getApplicantsQuery } from "../queries/applicantQueries";
 
 export const getApplicantsService = async (
   {
-    nameSearch,
+    searchString,
     sortBy,
     applicantsPerPage,
   }: {
-    nameSearch: string;
+    searchString: string;
     sortBy: string;
     applicantsPerPage: number;
   },
   cohortId?: string
 ) => {
   return await getApplicantsQuery(
-    { nameSearchRegex: `.*${nameSearch}.*`, sortBy, applicantsPerPage },
+    { searchStringRegex: `.*${searchString}.*`, sortBy, applicantsPerPage },
     cohortId ? { id: cohortId } : undefined
   );
 };
