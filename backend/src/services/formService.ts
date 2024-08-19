@@ -3,7 +3,7 @@ import Form from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
 import { getFormQuery, getFormsQuery } from "../queries/formQueries";
-import { FORM_NOT_FOUND, INVALID_MONGODB_ID } from "../utils/errorCodes";
+import { APPLICATION_FORM_ERROR, FORM_NOT_FOUND, INVALID_MONGODB_ID } from "../utils/errorCodes";
 import { getCurrentCohort } from "../utils/helpers/cohort";
 import {
   CreateFormDto,
@@ -51,11 +51,16 @@ export const updateFormService = async (
 export const createFormService = async (formData: CreateFormDto) => {
   const { title, description, type } = formData;
 
-  const createdForm = await Form.create({ title, description, type });
   const currentCohort = await getCurrentCohort();
 
+  if (type === FormType.Applicant && currentCohort.applicationForm?.id) {
+    throw new CustomError(APPLICATION_FORM_ERROR, "An application form already exists for the current cohort. Please edit the existing form.", 409);
+  }
+
+  const createdForm = await Form.create({ title, description, type });
+
   if (type === FormType.Applicant) {
-    currentCohort.applicationFormId = createdForm.id;
+    currentCohort.applicationForm.id = createdForm.id;
   } else {
     currentCohort.forms.push(createdForm.id);
   }
