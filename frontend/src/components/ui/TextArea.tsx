@@ -1,29 +1,29 @@
 import React from "react";
 
 const TextArea = ({
- label,
- placeholder,
- name,
- styles,
- defaultValue,
- register,
- options,
- autoFocus,
- disabled,
+  label,
+  placeholder,
+  name,
+  styles,
+  defaultValue,
+  register,
+  options,
+  autoFocus,
+  disabled,
 }: {
- label: string;
- placeholder: string;
- name: string;
- styles?: string;
- defaultValue?: string;
- register?: any;
- options?: any;
- autoFocus?: any;
- disabled?: boolean;
+  label: string;
+  placeholder: string;
+  name: string;
+  styles?: string;
+  defaultValue?: string;
+  register?: any;
+  options?: any;
+  autoFocus?: any;
+  disabled?: boolean;
 }) => {
- return (
+  return (
     <div className={`${styles ? styles : "flex flex-col gap-5"} w-full`}>
-      <label htmlFor={label} className="text-lg font-medium px-3">
+      <label htmlFor={label} className="text-lg font-medium px-1">
         {label} {!styles && ":"}
       </label>
       <div
@@ -42,7 +42,7 @@ const TextArea = ({
         />
       </div>
     </div>
- );
+  );
 };
 
 export default TextArea;
