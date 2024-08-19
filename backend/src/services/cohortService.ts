@@ -5,7 +5,7 @@ import { getCohortsQuery } from "../queries/cohortQueries";
 import {
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
-  NOT_ALLOWED,
+  NOT_ALLOWED
 } from "../utils/errorCodes";
 import {
   acceptUserHandler,
@@ -48,11 +48,11 @@ export const getApplicationFormService = async () => {
     throw new CustomError(COHORT_NOT_FOUND, "Cohort not found!", 404);
   }
 
-  if (!currentCohort.applicationFormId) {
+  if (!currentCohort.applicationForm.id) {
     throw new CustomError(NOT_ALLOWED, "Applications aren't open yet", 401);
   }
 
-  const form = await Form.findById(currentCohort.applicationFormId)
+  const form = await Form.findById(currentCohort.applicationForm.id)
     .select("title descriptions questionIds")
     .populate({
       path: "questionIds",
