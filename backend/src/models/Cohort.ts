@@ -46,10 +46,6 @@ const CohortSchema = new Schema(
         _id: false,
       },
     ],
-    applicationFormId: {
-      type: Schema.Types.ObjectId,
-      default: null,
-    },
     forms: [
       {
         type: Schema.Types.ObjectId,
