@@ -89,6 +89,7 @@ export enum UserRole {
   Prospect = "Prospect",
 }
 
+
 export type ApplicantDetails = {
   applied: boolean;
   createdAt: string;
@@ -117,3 +118,4 @@ export enum ApplicantDecision {
   coaches: number;
   forms: number;
 }
+
