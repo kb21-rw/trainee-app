@@ -29,6 +29,7 @@ import ThankYouNote from "./pages/Applicant/ThankYouNote";
 import Cohort from "./pages/Cohort/Cohort";
 import HomePage from "./pages/Applicant/HomePage";
 import SavedApplication from "./pages/Applicant/SavedApplication";
+
 import Applicants from "./pages/User/Applicants";
 
 export default function App() {

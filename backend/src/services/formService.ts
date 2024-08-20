@@ -1,26 +1,25 @@
 import CustomError from "../middlewares/customError";
-import Cohort from "../models/Cohort";
 import Form from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
+import { getFormQuery, getFormsQuery } from "../queries/formQueries";
+import { APPLICATION_FORM_ERROR, FORM_NOT_FOUND, INVALID_MONGODB_ID } from "../utils/errorCodes";
+import { getCurrentCohort } from "../utils/helpers/cohort";
 import {
-  getFormQuery,
-  getFormsQuery,
-} from "../queries/formQueries";
-import {
-  APPLICATION_FORM_ERROR,
-  COHORT_NOT_FOUND,
-  FORM_NOT_FOUND,
-  INVALID_MONGODB_ID,
-} from "../utils/errorCodes";
-import { CreateFormDto, FormType, UpdateFormDto } from "../utils/types";
+  CreateFormDto,
+  FormType,
+  GetCohortDto,
+  UpdateFormDto,
+} from "../utils/types";
 import mongoose from "mongoose";
 const { Types } = mongoose;
 const { ObjectId } = Types;
 
-export const getFormsService = async (searchString: string) => {
-  const forms = await getFormsQuery(searchString);
-  return forms;
+export const getFormsService = async (
+  searchString: string,
+  cohort: GetCohortDto
+) => {
+  return await getFormsQuery(searchString, cohort);
 };
 
 export const updateFormService = async (
@@ -52,10 +51,7 @@ export const updateFormService = async (
 export const createFormService = async (formData: CreateFormDto) => {
   const { title, description, type } = formData;
 
-  const currentCohort = await Cohort.findOne({ isActive: true });
-  if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "No active cohort found!", 404);
-  }
+  const currentCohort = await getCurrentCohort();
 
   if (type === FormType.Applicant && currentCohort.applicationForm?.id) {
     throw new CustomError(APPLICATION_FORM_ERROR, "An application form already exists for the current cohort. Please edit the existing form.", 409);
