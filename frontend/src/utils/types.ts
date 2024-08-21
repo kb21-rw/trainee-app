@@ -4,7 +4,7 @@ export interface IFormType {
   title: string;
   description: string;
   type: string;
-  questions: { title: string }[];
+  questions: number;
 }
 
 export interface User {
