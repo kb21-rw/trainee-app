@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 export interface IFormType {
   _id: string;
   title: string;
@@ -25,6 +26,12 @@ export interface CreateCoach {
 export interface CreateCohort {
   name: string;
   description: string;
+  stages: Stage[];
+}
+
+export interface Stage {
+  title: string;
+  description: string;
 }
 
 export interface Response {
@@ -42,7 +49,7 @@ export interface Question {
   title: string;
   responses: Response[];
   options: string[];
-  type: "text" | "dropdown" | "multiple-choice";
+  type: QuestionType
 }
 
 export interface Form {
@@ -58,13 +65,57 @@ export interface ApplicationFormResponse {
 }
 
 export enum ButtonVariant {
-  "Primary" = "Primary",
-  "Danger" = "Danger",
+  Primary = "Primary",
+  Danger = "Danger",
 }
 
 export enum ButtonSize {
-  "Small" = "Small",
-  "Medium" = "Medium",
-  "Large" = "Large",
+  Small = "Small",
+  Medium = "Medium",
+  Large = "Large",
+}
+
+export enum QuestionType {
+  Text = "Text",
+  SingleSelect = "SingleSelect",
+  MultiSelect = "MultiSelect",
+}
+
+export enum UserRole {
+  Admin = "Admin",
+  Trainee = "Trainee",
+  Coach = "Coach",
+  Applicant = "Applicant",
+  Prospect = "Prospect",
+}
+
+
+export type ApplicantDetails = {
+  applied: boolean;
+  createdAt: string;
+  email: string;
+  googleId: string | null;
+  name: string;
+  password: string;
+  role: string;
+  updatedAt: string;
+  userId: string;
+  verified: boolean;
+  __v: number;
+  _id: string;
+};
+
+export enum ApplicantDecision {
+  Accepted = "Accepted",
+  Rejected = "Rejected",
+}export interface Cohort {
+  name: string;
+  description: string;
+  isActive: boolean;
+  stages: number;
+  applicants: number;
+  trainees: number;
+  coaches: number;
+  forms: number;
 }
 

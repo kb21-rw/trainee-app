@@ -25,8 +25,13 @@ import ApplicantSignup from "./pages/Applicant/ApplicantSignup";
 import ApplicantSignin from "./pages/Applicant/ApplicantSignin";
 import ApplicantVerification from "./pages/Applicant/ApplicantVerification";
 import ApplicationForm from "./pages/Applicant/ApplicationForm";
+import ThankYouNote from "./pages/Applicant/ThankYouNote";
 import Cohort from "./pages/Cohort/Cohort";
 import HomePage from "./pages/Applicant/HomePage";
+import SavedApplication from "./pages/Applicant/SavedApplication";
+
+import Applicants from "./pages/User/Applicants";
+
 export default function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -37,15 +42,17 @@ export default function App() {
               <Route index element={<OverView />} />
               <Route path="/forms" element={<AllForm />} />
               <Route path="/forms/:id" element={<SingleForm />} />
+              <Route path="/applicants" element={<Applicants />} />
               <Route path="/trainees" element={<TraineesInfo />} />
               <Route path="/coaches" element={<CoachesInfo />} />
               <Route path="/cohorts" element={<Cohort />} />
               <Route path="/my-trainees" element={<EditMyTrainees />} />
               <Route path="/trainees-results" element={<TraineeResults />} />
               <Route path="/profile-settings" element={<Profile />} />
-              <Route>
-                <Route path="/home" element={<HomePage />} />
+              <Route path="/">
+                <Route path="home" element={<HomePage />} />
                 <Route path="apply" element={<ApplicationForm />} />
+                <Route path="saved-application" element={<SavedApplication />} />
               </Route>
             </Route>
           </Route>
@@ -54,6 +61,7 @@ export default function App() {
             <Route path="signin" element={<ApplicantSignin />} />
             <Route path="verify" element={<ApplicantVerification />} />
           </Route>
+          <Route path="/signup/thank-you" element={<ThankYouNote/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
         </Route>

@@ -35,7 +35,9 @@ const UserTableHeader = ({
                 ? "Sort trainees by:"
                 : userType === "Coach"
                 ? "Sort coaches by:"
-                : "Sort Cohorts by:"}
+                : userType === "Cohort"
+                ? "Sort cohorts by:"
+                : "Sort Applicants by"}
             </span>
           </div>
           <select
@@ -58,7 +60,9 @@ const UserTableHeader = ({
               ? "Trainees per page:"
               : userType === "Coach"
               ? "Coaches per page:"
-              : "Cohorts per page:"}
+              : userType === "Cohort"
+              ? "Cohorts per page:"
+              : "Applicants per page:"}
           </span>
           <select
             value={usersPerPage}

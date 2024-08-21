@@ -13,9 +13,11 @@ import {
   QUESTION_NOT_FOUND,
   RESPONSE_NOT_FOUND,
   USER_NOT_FOUND,
+  APPLICATION_FORM_ERROR,
 } from "../utils/errorCodes";
 import Form from "../models/Form";
 import { getCurrentCohort } from "../utils/helpers/cohort";
+import dayjs from "dayjs";
 
 export const createCoachResponseService = async (
   loggedInUser: IUser,
@@ -112,18 +114,42 @@ export const createApplicantResponseService = async (
 ) => {
   const currentCohort = await getCurrentCohort();
 
-  if (!currentCohort.applicationFormId) {
+  if (!currentCohort.applicationForm.id) {
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
   }
 
-  const applicationForm = await Form.findById(currentCohort.applicationFormId);
+  const applicationForm = await Form.findById(currentCohort.applicationForm.id);
 
   if (!applicationForm)
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
 
+  const now = dayjs();
+  const applicationStartDate = dayjs(
+    new Date(currentCohort.applicationForm.startDate)
+  );
+  const applicationEndDate = dayjs(
+    new Date(currentCohort.applicationForm.endDate)
+  );
+
+  if (now.isBefore(applicationStartDate)) {
+    throw new CustomError(
+      APPLICATION_FORM_ERROR,
+      "Application has not started yet!",
+      400
+    );
+  }
+
+  if (now.isAfter(applicationEndDate)) {
+    throw new CustomError(
+      APPLICATION_FORM_ERROR,
+      "Application deadline has passed!",
+      400
+    );
+  }
+
   //check if all question in the form are in the responseData
   if (
-    applicationForm.questionIds.every((questionId) =>
+    !applicationForm.questionIds.every((questionId) =>
       responseData
         .map((response) => response.questionId)
         .includes(questionId.toString())

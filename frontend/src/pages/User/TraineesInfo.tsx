@@ -17,6 +17,7 @@ import {
 import DeleteModal from "../../components/modals/DeleteModal";
 import Button from "../../components/ui/Button";
 import PlusIcon from "../../assets/PlusIcon";
+import { UserRole } from "../../utils/types";
 
 const TraineesInfo = () => {
   const jwt: string = getJWT()
@@ -98,7 +99,7 @@ const TraineesInfo = () => {
           jwt={jwt}
           closePopup={() => setEditTrainee(null)}
           traineeData={editTrainee}
-          role="ADMIN"
+          role={UserRole.Admin}
         />
       )}
     </div>

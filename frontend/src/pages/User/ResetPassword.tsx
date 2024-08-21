@@ -43,7 +43,7 @@ const ResetPassword = () => {
         />
       </div>
 
-      <Button>Reset</Button>
+      <Button type="submit">Reset</Button>
       <div className="">
         Back to{" "}
         <Link to="/login" className="text-primary-dark">

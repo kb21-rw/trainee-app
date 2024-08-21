@@ -7,7 +7,7 @@ import {
    TableHeader,
    TableRow,
  } from "../../../@/components/ui/table";
-import { Question,Response,Form } from '../../utils/types';
+import { Question,Response,Form, QuestionType } from '../../utils/types';
 
 import { useGetOverviewQuery } from "../../features/user/apiSlice";
 import Loader from '../../components/ui/Loader';
@@ -114,7 +114,7 @@ import ResponseModal from "../../components/modals/ResponseModal";
                     response: trainee.responses[`${form._id}-${question._id}`],
                     userId: trainee.id,
                     type: trainee.type,
-                    questionType: question.options.length > 0? "dropdown" : "text",
+                    questionType: question.options.length > 0? QuestionType.SingleSelect : QuestionType.Text,
                     options: question.options,
                     checkedOption: trainee.responses[`${form._id}-${question._id}`] ? trainee.responses[`${form._id}-${question._id}`]: "",
                   });

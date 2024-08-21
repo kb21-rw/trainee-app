@@ -1,30 +1,37 @@
-/* eslint-disable no-unused-vars */
-
 import React, { useState } from "react";
 import UserTableHeader from "../../components/ui/UserTableHeader";
 import {
+  cohortTableDataItems,
   cohortTableHeaders,
   cohortTableSortingValues,
   cohortsPerPage,
 } from "../../utils/data";
 import Button from "../../components/ui/Button";
 import PlusIcon from "../../assets/PlusIcon";
-import { getJWT } from "../../utils/helper";
+import { getCohorts, getJWT } from "../../utils/helper";
 import AddingCohortModal from "../../components/modals/AddingCohort";
 import UserTable from "../../components/ui/UserTable";
+import { useGetAllCohortsQuery } from "../../features/user/apiSlice";
 
 const Cohort = () => {
   const jwt: string = getJWT();
   const [query, setQuery] = useState("");
   const [isAddingCohort, setIsAddingCohort] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  // dumy data for now -> to be removed once we receive the actual ones from the database
+  const {data, isFetching: isGetAllCohorts, error} = useGetAllCohortsQuery({jwt, query})
 
-  const cohortList = [
-    ["669f736aa9d89e77724c0156", "Cohort 1", "45"],
-    ["669f736aa9d89e77724c0200", "Cohort 2", "50"],
-  ];
+  const cohortList = getCohorts(data, cohortTableDataItems)
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center h-[50vh] bg-gray-50 mt-10">
+        <div className="text-center p-6 bg-white shadow-lg rounded-lg">
+          <p className="text-red-600 text-xl font-semibold">Error Getching Cohorts</p>
+          <p className="text-gray-600 mt-2">Something went wrong while trying to load the cohorts.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="py-12 space-y-5">
@@ -46,9 +53,8 @@ const Cohort = () => {
         data={cohortList}
         actions={[
           { type: "edit", actionCaller: () => {} },
-          { type: "delete", actionCaller: () => {} },
         ]}
-        isLoading={isLoading}
+        isLoading={isGetAllCohorts}
       />
       {isAddingCohort && (
         <AddingCohortModal

@@ -6,6 +6,7 @@ import Alert from "../ui/Alert";
 import InputField from "../ui/InputField";
 import Button from "../ui/Button";
 import Loader from "../ui/Loader";
+import { UserRole } from "../../utils/types";
 
 const EditCoachModal = ({
   closePopup,
@@ -16,7 +17,7 @@ const EditCoachModal = ({
   jwt: string;
   coachData: string[];
 }) => {
-  const roles = ["ADMIN", "COACH"];
+  const roles = [UserRole.Admin, UserRole.Coach];
   const [editCoach, { isLoading, isSuccess, error }] = useEditCoachMutation();
 
   const {

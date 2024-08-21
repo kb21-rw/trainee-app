@@ -12,16 +12,17 @@ import { generateUserId } from "../utils/helpers/user";
 import User from "../models/User";
 import { ACCESS_TOKEN_EXPIRATION, secret } from "../constants";
 import jwt from "jsonwebtoken";
+import { Role } from "../utils/types";
 
 export const registerService = async (user: any, body: any) => {
   let newUser;
-  if (user.role !== "ADMIN") {
+  if (user.role !== Role.Admin) {
     throw new CustomError(NOT_ALLOWED, "Only admins can register users", 403);
   }
 
   let password: string = "";
   const name = body.name.trim().replace(/\s+/g, " "); // Remove unnecessary extra spaces in names
-  if (body.role === "COACH" || body.role === "ADMIN") {
+  if (body.role === Role.Coach || body.role === Role.Coach) {
     password = generateRandomPassword(10);
     const hashedPassword = await hash(password, 10);
     newUser = {
@@ -66,7 +67,7 @@ export const applicantRegisterService = async (body: any) => {
     name: createdUser.name,
     userId: createdUser.id,
   });
-
+ 
   return createdUser;
 };
 
@@ -95,7 +96,7 @@ export const loginService = async (body: any) => {
     );
   }
 
-  if (user.role === "TRAINEE") {
+  if (user.role === Role.Trainee) {
     throw new CustomError(
       NOT_ALLOWED,
       "Trainees are not allowed to login yet",

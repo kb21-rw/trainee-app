@@ -1,5 +1,7 @@
 import Cookies from 'universal-cookie'
 import jwtDecode from 'jwt-decode';
+import { ApplicantDetails } from './types';
+import { Cohort } from './types';
 
 /**
  * Retrieves the logged-in user's information from a JWT token stored in cookies.
@@ -99,6 +101,12 @@ export const getTrainees = (data: any, dataItems: string[]) => {
   return traineesData;
 };
 
+
+export const getApplicants = (data: ApplicantDetails[], dataItems: string[]) => {
+  return data?.map((item: any) => dataItems.map(key => item[key as keyof ApplicantDetails]));
+}
+
+
 /**
  * Generates a random color and text color for a chart.
  *
@@ -121,3 +129,18 @@ export const getRandomColorAndTextColor= () => {
  
    return { backgroundColor, textColor };
 };
+
+
+/**
+ * Retrieves specific data items from each cohort in the provided data array.
+ *
+ * @param {Cohort[]} data - An array of cohort objects. Each object represents a cohort and contains various properties.
+ * @param {string[]} dataItems - An array of strings representing the keys of the properties you want to extract from each cohort object.
+ * 
+ * @returns {Array<Array<any>>} - A two-dimensional array where each inner array contains the values corresponding to the keys specified in `dataItems` for each cohort object in `data`.
+ *
+ */
+
+export const getCohorts = (data: Cohort[], dataItems: string[]) => {
+  return data?.map((item: any) => dataItems.map(key => item[key as keyof Cohort]));
+}

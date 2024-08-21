@@ -1,17 +1,18 @@
+import { Role } from "../utils/types";
 import CustomError from "../middlewares/customError";
 import User from "../models/User";
 import { getCoachesQuery } from "../queries/coachQuery";
 import { NOT_ALLOWED, USER_NOT_FOUND } from "../utils/errorCodes";
 
 export const getCoachesService = async (
-  role: "ADMIN" | "COACH" | "TRAINEE",
+  role: Role,
   {
     searchString,
     sortBy,
     coachesPerPage,
   }: { searchString: string; sortBy: string; coachesPerPage: number },
 ) => {
-  if (role !== "ADMIN") {
+  if (role !== Role.Admin) {
     throw new CustomError(NOT_ALLOWED, "Only admins can view coaches", 403);
   }
 
@@ -25,7 +26,7 @@ export const updateCoachOrAdminService = async (
     name,
     email,
     role,
-  }: { name: string; email: string; role: "ADMIN" | "COACH" | "TRAINEE" },
+  }: { name: string; email: string; role: Role },
 ) => {
   const user = await User.findById(userId);
   if (!user) {

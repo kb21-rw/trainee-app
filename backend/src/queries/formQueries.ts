@@ -1,29 +1,72 @@
+import Cohort from "../models/Cohort";
 import Form from "../models/Form";
-import { FormType } from "../utils/types";
+import { GetCohortDto } from "../utils/types";
 
-export const getFormsQuery = async (searchString: string) => {
-  const forms: FormType[] = await Form.aggregate([
+export const getFormsQuery = async (
+  searchString: string,
+  cohort: GetCohortDto
+) => {
+  const cohorts = await Cohort.aggregate([
     {
-      $match: { title: { $regex: new RegExp(searchString, "i") } },
+      $match: cohort,
     },
     {
       $lookup: {
-        from: "questions",
-        localField: "questionIds",
+        from: "forms",
+        localField: "forms",
         foreignField: "_id",
-        as: "questions",
+        as: "forms",
+      },
+    },
+    {
+      $unwind: {
+        path: "$forms",
+        preserveNullAndEmptyArrays: true,
+      },
+    },
+    {
+      $addFields: {
+        formsMatching: {
+          $regexMatch: {
+            input: "$forms.title",
+            regex: searchString,
+            options: "i",
+          },
+        },
+      },
+    },
+    {
+      $group: {
+        _id: "$_id",
+        name: { $first: "$name" },
+        description: { $first: "description" },
+        forms: {
+          $push: {
+            $cond: {
+              if: "$formsMatching",
+              then: "$forms",
+              else: "$$REMOVE",
+            },
+          },
+        },
       },
     },
     {
       $project: {
-        title: 1,
+        name: 1,
         description: 1,
-        type:1,
-        questions: 1,
+        forms: {
+          _id: 1,
+          title: 1,
+          description: 1,
+          type: 1,
+          questions: { $size: "$forms.questionIds" },
+        },
       },
     },
   ]);
-  return forms;
+
+  return cohorts[0];
 };
 
 export const getFormQuery = async (formId: string) => {

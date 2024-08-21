@@ -1,4 +1,4 @@
-import { Date } from "mongoose";
+import { Date, Types } from "mongoose";
 
 interface MetaType {
   _id: string;
@@ -19,6 +19,12 @@ export interface CreateCohortDto {
 export interface UpdateFormDto {
   title: string;
   description: string;
+}
+
+export interface UpdateCohortDto {
+  name?: string;
+  description?: string;
+  stages?: { id?: string, title: string; description: string }[];
 }
 
 export interface CreateQuestionDto {
@@ -44,6 +50,8 @@ export interface Search {
   searchString?: string;
   typeQuery?: string;
 }
+
+export type GetCohortDto = { _id: Types.ObjectId } | { isActive: true };
 
 export enum FormType {
   Applicant = "Applicant",
