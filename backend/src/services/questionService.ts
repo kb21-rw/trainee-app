@@ -1,11 +1,9 @@
 import { Types } from "mongoose";
 import CustomError from "../middlewares/customError";
-import Cohort from "../models/Cohort";
 import Form from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
 import {
-  COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
   QUESTION_NOT_FOUND,
 } from "../utils/errorCodes";
@@ -15,6 +13,7 @@ import {
   IQuestion,
   QuestionType,
 } from "../utils/types";
+import { getCurrentCohort } from "../utils/helpers/cohort";
 
 export const createQuestionService = async (
   formId: string,
@@ -26,10 +25,7 @@ export const createQuestionService = async (
     throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
   }
 
-  const currentCohort = await Cohort.findOne({ isActive: true });
-  if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found", 404);
-  }
+  const currentCohort = await getCurrentCohort();
 
   const createdQuestion = await Question.create({
     title,
@@ -37,29 +33,28 @@ export const createQuestionService = async (
     options,
     responseIds: [],
   });
-  if (createdQuestion) {
-    relatedForm.questionIds.push(createdQuestion.id);
 
-    let userIds: Types.ObjectId[] = [];
+  relatedForm.questionIds.push(createdQuestion.id);
 
-    if (relatedForm.type === FormType.Applicant) {
-      userIds = currentCohort.applicants;
-    }
+  let userIds: Types.ObjectId[] = [];
 
-    if (relatedForm.type === FormType.Trainee) {
-      userIds = currentCohort.trainees;
-    }
-
-    const responseIds = await Promise.all(
-      userIds.map(async (userId) => {
-        const response = new Response({ userId });
-        await response.save();
-        return response._id;
-      })
-    );
-    createdQuestion.responseIds = responseIds;
-    await createdQuestion.save();
+  if (relatedForm.type === FormType.Applicant) {
+    userIds = currentCohort.applicants;
   }
+
+  if (relatedForm.type === FormType.Trainee) {
+    userIds = currentCohort.trainees;
+  }
+
+  const responseIds = await Promise.all(
+    userIds.map(async (userId) => {
+      const response = new Response({ userId });
+      await response.save();
+      return response._id;
+    })
+  );
+  createdQuestion.responseIds = responseIds;
+  await createdQuestion.save();
 
   return await relatedForm.save();
 };

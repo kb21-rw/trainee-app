@@ -11,33 +11,44 @@ import User, { IUser } from "../models/User";
 import {
   NOT_ALLOWED,
   QUESTION_NOT_FOUND,
+  RESPONSE_NOT_FOUND,
   USER_NOT_FOUND,
-  APPLICATION_FORM_ERROR
+  APPLICATION_FORM_ERROR,
 } from "../utils/errorCodes";
 import Form from "../models/Form";
 import { getCurrentCohort } from "../utils/helpers/cohort";
 import dayjs from "dayjs";
 
-export const createResponseService = async (
+export const createCoachResponseService = async (
   loggedInUser: IUser,
   traineeId: string,
   questionId: string,
-  responseData: CreateResponseDto,
+  responseData: CreateResponseDto
 ) => {
   const { text } = responseData;
+
+  const currentCohort = await getCurrentCohort();
 
   const trainee = await User.findOne({
     $and: [{ _id: traineeId }, { role: "TRAINEE" }],
   });
 
-  if (!trainee) {
-    throw new CustomError(USER_NOT_FOUND, "Trainee not found!", 400);
+  if (!trainee || !currentCohort.trainees.includes(trainee.id)) {
+    throw new CustomError(
+      USER_NOT_FOUND,
+      "The trainee does not exist in the current cohort!",
+      400
+    );
   }
 
   const relatedQuestion = await Question.findById(questionId);
 
   if (!relatedQuestion) {
-    throw new CustomError(QUESTION_NOT_FOUND, "Question not found!", 400);
+    throw new CustomError(
+      QUESTION_NOT_FOUND,
+      "The question you're responding to does not exist!",
+      400
+    );
   }
 
   if (
@@ -47,24 +58,24 @@ export const createResponseService = async (
     throw new CustomError(
       NOT_ALLOWED,
       "Only admin or the coach of a trainee can provide a response",
-      403,
+      403
     );
   }
 
-  const selectedOptions = Array.isArray(text) ? text : [text];
+  const selectedOptions = Array.isArray(text) ? [...new Set(text)] : [text];
 
   if (relatedQuestion.type !== QuestionType.Text) {
-    const invalidOptions = selectedOptions.every(
-      (option: string) => !relatedQuestion.options.includes(option),
+    const areOptionsValid = selectedOptions.every((option: string) =>
+      relatedQuestion.options.includes(option)
     );
 
-    if (invalidOptions) {
+    if (!areOptionsValid) {
       throw new CustomError(
         NOT_ALLOWED,
         `You can only choose from ${relatedQuestion.options.join(
-          ", ",
+          ", "
         )} options`,
-        400,
+        400
       );
     }
   }
@@ -74,36 +85,32 @@ export const createResponseService = async (
   }>("responseIds");
 
   const oldResponse = relatedQuestionPopulated.responseIds.find(
-    (response) => response.userId.toString() === traineeId,
+    (response) => response.userId.toString() === traineeId
   );
 
   const responseText =
     relatedQuestion.type === QuestionType.MultiSelect ? selectedOptions : text;
 
-  let response;
-  if (oldResponse) {
-    response = await Response.findByIdAndUpdate(
-      oldResponse._id,
-      { text: responseText },
-      { new: true },
+  if (!oldResponse) {
+    throw new CustomError(
+      RESPONSE_NOT_FOUND,
+      "Responses not found, make sure you're responding to the form in the current cohort",
+      404
     );
-  } else {
-    response = await Response.create({ userId: traineeId, text: responseText });
-    relatedQuestion.responseIds.push(response.id);
-    await relatedQuestion.save();
   }
 
-  const responseBody = {
-    ...response?.toObject(),
-    text: response?.text,
-  };
+  const response = await Response.findByIdAndUpdate(
+    oldResponse._id,
+    { text: responseText },
+    { new: true }
+  );
 
-  return responseBody;
+  return response;
 };
 
 export const createApplicantResponseService = async (
   loggedInUser: IUser,
-  responseData: CreateApplicationResponseDto[],
+  responseData: CreateApplicationResponseDto[]
 ) => {
   const currentCohort = await getCurrentCohort();
 
@@ -117,8 +124,11 @@ export const createApplicantResponseService = async (
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
 
   const now = dayjs();
-  const applicationStartDate = dayjs(new Date(currentCohort.applicationForm.startDate));
-  const applicationEndDate = dayjs(new Date(currentCohort.applicationForm.endDate)
+  const applicationStartDate = dayjs(
+    new Date(currentCohort.applicationForm.startDate)
+  );
+  const applicationEndDate = dayjs(
+    new Date(currentCohort.applicationForm.endDate)
   );
 
   if (now.isBefore(applicationStartDate)) {
@@ -142,7 +152,7 @@ export const createApplicantResponseService = async (
     !applicationForm.questionIds.every((questionId) =>
       responseData
         .map((response) => response.questionId)
-        .includes(questionId.toString()),
+        .includes(questionId.toString())
     )
   )
     throw new CustomError(NOT_ALLOWED, "Some questions are not answered", 401);
@@ -155,7 +165,7 @@ export const createApplicantResponseService = async (
         }>("responseIds")
         .exec();
       const oldResponseId = question?.responseIds.find(
-        (oldResponse) => oldResponse.userId.toString() === loggedInUser.id,
+        (oldResponse) => oldResponse.userId.toString() === loggedInUser.id
       )?._id;
 
       if (!oldResponseId)
@@ -164,7 +174,7 @@ export const createApplicantResponseService = async (
       const updatedResponse = await Response.findByIdAndUpdate(
         oldResponseId,
         { text: response.answer },
-        { new: true },
+        { new: true }
       );
 
       if (!updatedResponse)
@@ -175,6 +185,6 @@ export const createApplicantResponseService = async (
         question: question.title,
         response: updatedResponse.text,
       };
-    }),
+    })
   );
 };
