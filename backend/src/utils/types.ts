@@ -21,6 +21,12 @@ export interface UpdateFormDto {
   description: string;
 }
 
+export interface UpdateCohortDto {
+  name?: string;
+  description?: string;
+  stages?: { id?: string, title: string; description: string }[];
+}
+
 export interface CreateQuestionDto {
   title: string;
   type: "text" | "dropdown";

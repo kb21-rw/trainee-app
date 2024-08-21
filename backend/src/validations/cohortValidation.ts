@@ -20,6 +20,22 @@ export const createCohortValidation = Joi.object({
   ),
 });
 
+export const updateCohortValidation = Joi.object({
+  name: Joi.string().min(3).max(100),
+  description: Joi.string().min(3).max(100),
+  stages: Joi.array().items(
+    Joi.object({
+      id: Joi.string()
+        .hex()
+        .length(24)
+        .message("stageId is not valid")
+        .optional(),
+      title: Joi.string().min(1),
+      description: Joi.string(),
+    })
+  ),
+});
+
 export const applicationDecisionSchema = Joi.object({
   userId: Joi.string()
     .hex()
