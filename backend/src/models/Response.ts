@@ -11,6 +11,7 @@ const ResponseSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      require: true,
     },
     text: {
       type: Schema.Types.Mixed,

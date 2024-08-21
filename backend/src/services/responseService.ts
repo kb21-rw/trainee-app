@@ -120,8 +120,11 @@ export const createApplicantResponseService = async (
 
   const applicationForm = await Form.findById(currentCohort.applicationForm.id);
 
-  if (!applicationForm)
+  if (!applicationForm) {
+    currentCohort.applicationForm.id = null;
+    await currentCohort.save();
     throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
+  }
 
   const now = dayjs();
   const applicationStartDate = dayjs(
@@ -134,8 +137,8 @@ export const createApplicantResponseService = async (
   if (now.isBefore(applicationStartDate)) {
     throw new CustomError(
       APPLICATION_FORM_ERROR,
-      "Application has not started yet!",
-      400
+      "Applications are not open yet!",
+      401
     );
   }
 
@@ -143,48 +146,37 @@ export const createApplicantResponseService = async (
     throw new CustomError(
       APPLICATION_FORM_ERROR,
       "Application deadline has passed!",
-      400
+      401
     );
   }
 
-  //check if all question in the form are in the responseData
-  if (
-    !applicationForm.questionIds.every((questionId) =>
-      responseData
-        .map((response) => response.questionId)
-        .includes(questionId.toString())
-    )
-  )
-    throw new CustomError(NOT_ALLOWED, "Some questions are not answered", 401);
+  // Create or update a response if already exists
+  responseData.forEach(async (response) => {
+    const question = await Question.findById(response.questionId)
+      .populate<{
+        responseIds: IResponse[];
+      }>("responseIds")
+      .exec();
 
-  return Promise.all(
-    responseData.map(async (response) => {
-      const question = await Question.findById(response.questionId)
-        .populate<{
-          responseIds: IResponse[];
-        }>("responseIds")
-        .exec();
-      const oldResponseId = question?.responseIds.find(
-        (oldResponse) => oldResponse.userId.toString() === loggedInUser.id
-      )?._id;
+    if (!question)
+      throw new CustomError(QUESTION_NOT_FOUND, "Question was not found!", 400);
 
-      if (!oldResponseId)
-        throw new CustomError(500, "Can't get a response", 500);
+    const oldResponseId = question.responseIds.find(
+      (oldResponse) => oldResponse.userId.toString() === loggedInUser.id
+    )?._id;
 
-      const updatedResponse = await Response.findByIdAndUpdate(
+    if (!oldResponseId) {
+      const newResponse = await Response.create({ text: response.answer });
+      question.responseIds.push(newResponse.id);
+      await question.save();
+    } else {
+      await Response.findByIdAndUpdate(
         oldResponseId,
         { text: response.answer },
         { new: true }
       );
+    }
+  });
 
-      if (!updatedResponse)
-        throw new CustomError(500, "Couldn't update response", 500);
-
-      return {
-        questionId: response.questionId,
-        question: question.title,
-        response: updatedResponse.text,
-      };
-    })
-  );
+  
 };
