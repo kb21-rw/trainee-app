@@ -218,9 +218,14 @@ export const usersApi: any = createApi({
 
     getAllForms: builder.query({
       query: (args) => {
-        const { jwt, searchString } = args;
+        const { jwt, searchString = "", cohort } = args;
+        const queryParams = new URLSearchParams({
+          searchString,
+          ...(cohort ? { cohort } : {}),  // Only include cohort if it's provided
+        });
+    
         return {
-          url: `/forms?searchString=${searchString}`,
+          url: `/forms?${queryParams.toString()}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
