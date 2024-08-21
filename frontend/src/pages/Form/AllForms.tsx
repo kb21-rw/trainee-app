@@ -19,10 +19,11 @@ const AllForms = () => {
   const jwt:string = getJWT()
   const [createForm] = useCreateFormMutation();
   const { data, isFetching } = useGetAllFormsQuery({ searchString, jwt });
+  const forms=data.forms;
   const [clicked, setClick] = useState(false);
   const onClickAddForm = async (type?: "Applicant") => {
     let requestBody: object;
-    requestBody = { title: `Form ${data.length}` };
+    requestBody = { title: `Form ${forms?.length}` };
     if (type) {
       requestBody = { ...requestBody, type };
     }
@@ -32,7 +33,7 @@ const AllForms = () => {
       body: requestBody,
     });
 
-    const id = result.data._id;
+    const id = result.forms?._id;
     if (clicked) {
       navigate(`/forms/${id}`);
     }
@@ -67,13 +68,13 @@ const AllForms = () => {
         <div className="h-[50vh] flex items-center justify-center">
           <Loader />
         </div>
-      ) : data.length === 0 ? (
+      ) : forms?.length === 0 ? (
         <div className="flex w-screen h-[50vh]">
           <NotFound type="Form" />
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {data.map((form: IFormType, index: number) => (
+          {forms?.map((form: IFormType, index: number) => (
             <FormCard form={form} key={index} />
           ))}
         </div>
