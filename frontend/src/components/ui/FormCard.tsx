@@ -13,7 +13,7 @@ import { getJWT } from "../../utils/helper";
 const FormCard = ({ form }: { form: IFormType }) => {
   const navigate = useNavigate();
   const questions = form.questions;
-    const jwt:string = getJWT()
+  const jwt:string = getJWT()
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const [deleteForm, { isLoading: isDeleteFormLoading }] =

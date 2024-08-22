@@ -224,8 +224,6 @@ getAllForms: builder.query({
       queryString += `&cohort=${cohort}`;
     }
 
-    console.log('cohort',cohort);
-
     return {
       url: `/forms?${queryString}`,
       method: "GET",

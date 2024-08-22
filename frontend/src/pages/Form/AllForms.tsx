@@ -23,9 +23,9 @@ const AllForms = () => {
     jwt,
     searchString: searchQuery,
   });
-
+  const forms=data?.forms;
   const onClickAddForm = async (type?: "Applicant") => {
-    let requestBody: object = { title: `Form ${data?.forms?.length}` };
+    let requestBody: object = { title: `Form ${forms?.length}` };
     if (type) {
       requestBody = { ...requestBody, type };
     }
@@ -35,7 +35,7 @@ const AllForms = () => {
       body: requestBody,
     });
 
-    const id = result?.data?.forms?._id;
+    const id = result?.forms?._id;
     if (clicked) {
       navigate(`/forms/${id}`);
     }
@@ -44,7 +44,7 @@ const AllForms = () => {
   return (
     <div className="py-12">
       <div className="flex justify-between items-center my-5">
-        <SearchInput setSearchQuery={setSearchQuery} />  {/* Set the search query */}
+        <SearchInput setSearchQuery={setSearchQuery} />  
         <div className="grid gap-1">
           <Button onClick={() => setClick(!clicked)}>
             <div className="flex items-center right-0">
@@ -70,13 +70,13 @@ const AllForms = () => {
         <div className="h-[50vh] flex items-center justify-center">
           <Loader />
         </div>
-      ) : data?.forms?.length === 0 ? (
+      ) : forms?.length === 0 ? (
         <div className="flex w-screen h-[50vh]">
           <NotFound type="Form" />
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {data?.forms?.map((form: IFormType, index: number) => (
+          {forms?.map((form: IFormType, index: number) => (
             <FormCard form={form} key={index} />
           ))}
         </div>
