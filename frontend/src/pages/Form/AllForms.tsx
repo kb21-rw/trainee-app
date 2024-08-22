@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useState } from "react";
 import SearchInput from "../../components/ui/SearchInput";
 import {
   useCreateFormMutation,
@@ -14,16 +14,17 @@ import PlusIcon from "../../assets/PlusIcon";
 import { getJWT } from "../../utils/helper";
 
 const AllForms = () => {
-  const [searchString, setSearchString] = useState("");
+  const [query, setQuery] = useState("");
   const navigate = useNavigate();
   const jwt:string = getJWT()
   const [createForm] = useCreateFormMutation();
-  const { data, isFetching } = useGetAllFormsQuery({ searchString, jwt });
-  const forms=data.forms;
+  const { data, isFetching } = useGetAllFormsQuery({ query, jwt });
+  console.log('data',data)
+  // const forms=data.forms;
   const [clicked, setClick] = useState(false);
   const onClickAddForm = async (type?: "Applicant") => {
     let requestBody: object;
-    requestBody = { title: `Form ${forms?.length}` };
+    requestBody = { title: `Form ${data.forms?.length}` };
     if (type) {
       requestBody = { ...requestBody, type };
     }
@@ -33,16 +34,17 @@ const AllForms = () => {
       body: requestBody,
     });
 
-    const id = result.forms?._id;
+    const id = result.data.forms?._id;
     if (clicked) {
       navigate(`/forms/${id}`);
     }
   };
 
+
   return (
     <div className="py-12">
       <div className="flex justify-between items-center my-5">
-        <SearchInput setSearchQuery={setSearchString} />
+        <SearchInput setSearchQuery={setQuery} />
         <div className="grid gap-1">
           <Button onClick={() => setClick(!clicked)}>
             <div className="flex items-center right-0">
@@ -68,13 +70,13 @@ const AllForms = () => {
         <div className="h-[50vh] flex items-center justify-center">
           <Loader />
         </div>
-      ) : forms?.length === 0 ? (
+      ) : data.forms?.length === 0 ? (
         <div className="flex w-screen h-[50vh]">
           <NotFound type="Form" />
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {forms?.map((form: IFormType, index: number) => (
+          {data.forms?.map((form: IFormType, index: number) => (
             <FormCard form={form} key={index} />
           ))}
         </div>

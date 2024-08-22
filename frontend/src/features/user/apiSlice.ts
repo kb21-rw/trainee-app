@@ -220,7 +220,7 @@ export const usersApi: any = createApi({
       query: (args) => {
 
         const { jwt, query , cohort } = args;
-        let queryString = `searchString=${query}`;
+        let queryString = `${query}`;
         if (cohort) {
           console.log('cohort',cohort)
           queryString += `&cohort=${cohort}`;
