@@ -1,4 +1,4 @@
-import React, {useState } from "react";
+import React, { useState } from "react";
 import SearchInput from "../../components/ui/SearchInput";
 import {
   useCreateFormMutation,
@@ -14,17 +14,18 @@ import PlusIcon from "../../assets/PlusIcon";
 import { getJWT } from "../../utils/helper";
 
 const AllForms = () => {
-  const [query, setQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-  const jwt:string = getJWT()
+  const jwt: string = getJWT();
   const [createForm] = useCreateFormMutation();
-  const { data, isFetching } = useGetAllFormsQuery({ query, jwt });
-  console.log('data',data)
-  // const forms=data.forms;
   const [clicked, setClick] = useState(false);
+  const { data, isFetching } = useGetAllFormsQuery({
+    jwt,
+    searchString: searchQuery,
+  });
+
   const onClickAddForm = async (type?: "Applicant") => {
-    let requestBody: object;
-    requestBody = { title: `Form ${data.forms?.length}` };
+    let requestBody: object = { title: `Form ${data?.forms?.length}` };
     if (type) {
       requestBody = { ...requestBody, type };
     }
@@ -34,17 +35,16 @@ const AllForms = () => {
       body: requestBody,
     });
 
-    const id = result.data.forms?._id;
+    const id = result?.data?.forms?._id;
     if (clicked) {
       navigate(`/forms/${id}`);
     }
   };
 
-
   return (
     <div className="py-12">
       <div className="flex justify-between items-center my-5">
-        <SearchInput setSearchQuery={setQuery} />
+        <SearchInput setSearchQuery={setSearchQuery} />  {/* Set the search query */}
         <div className="grid gap-1">
           <Button onClick={() => setClick(!clicked)}>
             <div className="flex items-center right-0">
@@ -70,13 +70,13 @@ const AllForms = () => {
         <div className="h-[50vh] flex items-center justify-center">
           <Loader />
         </div>
-      ) : data.forms?.length === 0 ? (
+      ) : data?.forms?.length === 0 ? (
         <div className="flex w-screen h-[50vh]">
           <NotFound type="Form" />
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {data.forms?.map((form: IFormType, index: number) => (
+          {data?.forms?.map((form: IFormType, index: number) => (
             <FormCard form={form} key={index} />
           ))}
         </div>

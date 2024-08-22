@@ -216,26 +216,27 @@ export const usersApi: any = createApi({
       invalidatesTags: ["profile"],
     }),
 
-    getAllForms: builder.query({      
-      query: (args) => {
+getAllForms: builder.query({
+  query: (args) => {
+    const { jwt, searchString = "", cohort } = args;
+    let queryString = `searchString=${searchString}`;
+    if (cohort) {
+      queryString += `&cohort=${cohort}`;
+    }
 
-        const { jwt, query , cohort } = args;
-        let queryString = `${query}`;
-        if (cohort) {
-          console.log('cohort',cohort)
-          queryString += `&cohort=${cohort}`;
-        }
+    console.log('cohort',cohort);
 
-        return {
-          url: `/forms?${queryString}`,
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        };
+    return {
+      url: `/forms?${queryString}`,
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
       },
-      providesTags: ["forms"],
-    }),
+    };
+  },
+  providesTags: ["forms"],
+}),
+
 
     getForm: builder.query({
       query: (args) => {
