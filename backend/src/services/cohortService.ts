@@ -1,7 +1,7 @@
 import CustomError from "../middlewares/customError";
 import Cohort from "../models/Cohort";
 import Form from "../models/Form";
-import { getCohortsQuery } from "../queries/cohortQueries";
+import { getCohortQuery, getCohortsQuery } from "../queries/cohortQueries";
 import {
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
@@ -16,7 +16,9 @@ import {
   ApplicantDecision,
   CreateCohortDto,
   RejectedBody,
+  UpdateCohortDto,
 } from "../utils/types";
+import { updateStagesHandler } from "../utils/helpers/cohort";
 
 const isAcceptedBody = (
   body: AcceptedBody | RejectedBody
@@ -30,6 +32,15 @@ const isRejectedBody = (
   return body.decision === ApplicantDecision.Rejected;
 };
 
+export const getCohortService = async (cohortId: string) => {
+  const cohort = await getCohortQuery(cohortId);
+  if (!cohort) {
+    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found", 404);
+  }
+
+  return cohort;
+};
+
 export const getCohortsService = async (searchString: string) => {
   return await getCohortsQuery(searchString);
 };
@@ -39,6 +50,32 @@ export const createCohortService = async (cohortData: CreateCohortDto) => {
   const newCohort = await Cohort.create(cohortData);
 
   return newCohort;
+};
+
+export const updateCohortService = async (
+  cohortId: string,
+  formData: UpdateCohortDto
+) => {
+  const { name, description, stages } = formData;
+
+  const cohort = await Cohort.findById(cohortId);
+  if (!cohort) {
+    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found", 404);
+  }
+
+  if (name) {
+    cohort.name = name;
+  }
+
+  if (description) {
+    cohort.description = description;
+  }
+
+  if (stages) {
+    cohort.stages = updateStagesHandler(cohort.stages, stages);
+  }
+
+  return await cohort.save();
 };
 
 export const getApplicationFormService = async () => {

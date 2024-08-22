@@ -56,11 +56,19 @@ export const getFormsQuery = async (
         name: 1,
         description: 1,
         forms: {
-          _id: 1,
-          title: 1,
-          description: 1,
-          type: 1,
-          questions: { $size: "$forms.questionIds" },
+          $map: {
+            input: "$forms",
+            as: "form",
+            in: {
+              _id: "$$form._id",
+              title: "$$form.title",
+              description: "$$form.description",
+              type: "$$form.type",
+              questions: {
+                $size: "$$form.questionIds",
+              },
+            },
+          },
         },
       },
     },
