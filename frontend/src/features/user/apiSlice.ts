@@ -216,16 +216,18 @@ export const usersApi: any = createApi({
       invalidatesTags: ["profile"],
     }),
 
-    getAllForms: builder.query({
+    getAllForms: builder.query({      
       query: (args) => {
-        const { jwt, searchString = "", cohort } = args;
-        const queryParams = new URLSearchParams({
-          searchString,
-          ...(cohort ? { cohort } : {}),  // Only include cohort if it's provided
-        });
-    
+
+        const { jwt, query , cohort } = args;
+        let queryString = `searchString=${query}`;
+        if (cohort) {
+          console.log('cohort',cohort)
+          queryString += `&cohort=${cohort}`;
+        }
+
         return {
-          url: `/forms?${queryParams.toString()}`,
+          url: `/forms?${queryString}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
