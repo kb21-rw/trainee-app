@@ -25,20 +25,19 @@ const AllForms = () => {
   });
   const forms=data?.forms;
   const onClickAddForm = async (type?: "Applicant") => {
-    let requestBody: object = { title: `Form ${forms?.length}` };
+    let requestBody: object = { title: `Form ${forms?.length + 1}`};
     if (type) {
       requestBody = { ...requestBody, type };
     }
 
-    const result = await createForm({
+    const {data:formData} = await createForm({
       jwt,
       body: requestBody,
     });
-
-    const id = result?.forms?._id;
+    const id = formData?._id;
     if (clicked) {
       navigate(`/forms/${id}`);
-    }
+    } 
   };
 
   return (
