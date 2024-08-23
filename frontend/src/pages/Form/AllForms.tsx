@@ -14,34 +14,36 @@ import PlusIcon from "../../assets/PlusIcon";
 import { getJWT } from "../../utils/helper";
 
 const AllForms = () => {
-  const [searchString, setSearchString] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
-  const jwt:string = getJWT()
+  const jwt: string = getJWT();
   const [createForm] = useCreateFormMutation();
-  const { data, isFetching } = useGetAllFormsQuery({ searchString, jwt });
   const [clicked, setClick] = useState(false);
+  const { data, isFetching } = useGetAllFormsQuery({
+    jwt,
+    searchString: searchQuery,
+  });
+  const forms=data?.forms;
   const onClickAddForm = async (type?: "Applicant") => {
-    let requestBody: object;
-    requestBody = { title: `Form ${data.length}` };
+    let requestBody: object = { title: `Form ${forms?.length + 1}`};
     if (type) {
       requestBody = { ...requestBody, type };
     }
 
-    const result = await createForm({
+    const {data:formData} = await createForm({
       jwt,
       body: requestBody,
     });
-
-    const id = result.data._id;
+    const id = formData?._id;
     if (clicked) {
       navigate(`/forms/${id}`);
-    }
+    } 
   };
 
   return (
     <div className="py-12">
       <div className="flex justify-between items-center my-5">
-        <SearchInput setSearchQuery={setSearchString} />
+        <SearchInput setSearchQuery={setSearchQuery} />  
         <div className="grid gap-1">
           <Button onClick={() => setClick(!clicked)}>
             <div className="flex items-center right-0">
@@ -67,13 +69,13 @@ const AllForms = () => {
         <div className="h-[50vh] flex items-center justify-center">
           <Loader />
         </div>
-      ) : data.length === 0 ? (
+      ) : forms?.length === 0 ? (
         <div className="flex w-screen h-[50vh]">
           <NotFound type="Form" />
         </div>
       ) : (
         <div className="flex flex-col gap-4">
-          {data.map((form: IFormType, index: number) => (
+          {forms?.map((form: IFormType, index: number) => (
             <FormCard form={form} key={index} />
           ))}
         </div>

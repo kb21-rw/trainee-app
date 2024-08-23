@@ -41,8 +41,8 @@ const FormCard = ({ form }: { form: IFormType }) => {
           </div>
 
           <div className="flex items-center gap-1 font-bold ">
-            <H7>{questions.length}</H7>
-            <H7>{questions.length === 1 ? "Question" : "Questions"}</H7>
+            <H7>{questions}</H7>
+            <H7>{questions === 1 ? "Question" : "Questions"}</H7>
           </div>
         </div>
         <H6>{form.description}</H6>
