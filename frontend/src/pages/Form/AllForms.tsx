@@ -24,8 +24,27 @@ const AllForms = () => {
     searchString: searchQuery,
   });
   const forms=data?.forms;
+
+const getNextFormTitle = () => {
+  let highestFormNumber = 0;
+  forms.forEach((form: IFormType) => {
+    const match = form.title.match(/^Form (\d+)$/);
+    if (match) {
+      const formNumber = parseInt(match[1], 10); 
+      if (formNumber > highestFormNumber) {
+        highestFormNumber = formNumber; 
+      }
+    }else{
+      highestFormNumber=forms?.length;
+    }
+  });
+  return `Form ${highestFormNumber + 1}`;
+};
+
   const onClickAddForm = async (type?: "Applicant") => {
-    let requestBody: object = { title: `Form ${forms?.length + 1}`};
+    const nextFormTitle = getNextFormTitle();
+    let requestBody: object = { title: nextFormTitle};
+    console.log(requestBody);
     if (type) {
       requestBody = { ...requestBody, type };
     }
@@ -34,6 +53,7 @@ const AllForms = () => {
       jwt,
       body: requestBody,
     });
+    console.log(formData)
     const id = formData?._id;
     if (clicked) {
       navigate(`/forms/${id}`);
