@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import NotFound from "../../components/ui/NotFound";
 import Button from "../../components/ui/Button";
 import PlusIcon from "../../assets/PlusIcon";
-import { getJWT } from "../../utils/helper";
+import { getJWT, getNextFormTitle } from "../../utils/helper";
 
 const AllForms = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,8 +24,10 @@ const AllForms = () => {
     searchString: searchQuery,
   });
   const forms=data?.forms;
+
   const onClickAddForm = async (type?: "Applicant") => {
-    let requestBody: object = { title: `Form ${forms?.length + 1}`};
+    const nextFormTitle = getNextFormTitle(forms);
+    let requestBody: object = { title: nextFormTitle};
     if (type) {
       requestBody = { ...requestBody, type };
     }
