@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie'
 import jwtDecode from 'jwt-decode';
-import { ApplicantDetails } from './types';
+import { ApplicantDetails, IFormType } from './types';
 import { Cohort } from './types';
 
 /**
@@ -144,3 +144,20 @@ export const getRandomColorAndTextColor= () => {
 export const getCohorts = (data: Cohort[], dataItems: string[]) => {
   return data?.map((item: any) => dataItems.map(key => item[key as keyof Cohort]));
 }
+
+// Generates the next form default title...
+export const getNextFormTitle = (forms:IFormType[]) => {
+  let highestFormNumber = 0;
+  forms.forEach((form: IFormType) => {
+    const match = form.title.match(/^Form (\d+)$/);
+    if (match) {
+      const formNumber = parseInt(match[1], 10); 
+      if (formNumber > highestFormNumber) {
+        highestFormNumber = formNumber; 
+      }
+    }else{
+      highestFormNumber=forms?.length;
+    }
+  });
+  return `Form ${highestFormNumber + 1}`;
+};

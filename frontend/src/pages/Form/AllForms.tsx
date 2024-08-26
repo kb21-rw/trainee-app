@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import NotFound from "../../components/ui/NotFound";
 import Button from "../../components/ui/Button";
 import PlusIcon from "../../assets/PlusIcon";
-import { getJWT } from "../../utils/helper";
+import { getJWT, getNextFormTitle } from "../../utils/helper";
 
 const AllForms = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -25,26 +25,9 @@ const AllForms = () => {
   });
   const forms=data?.forms;
 
-const getNextFormTitle = () => {
-  let highestFormNumber = 0;
-  forms.forEach((form: IFormType) => {
-    const match = form.title.match(/^Form (\d+)$/);
-    if (match) {
-      const formNumber = parseInt(match[1], 10); 
-      if (formNumber > highestFormNumber) {
-        highestFormNumber = formNumber; 
-      }
-    }else{
-      highestFormNumber=forms?.length;
-    }
-  });
-  return `Form ${highestFormNumber + 1}`;
-};
-
   const onClickAddForm = async (type?: "Applicant") => {
-    const nextFormTitle = getNextFormTitle();
+    const nextFormTitle = getNextFormTitle(forms);
     let requestBody: object = { title: nextFormTitle};
-    console.log(requestBody);
     if (type) {
       requestBody = { ...requestBody, type };
     }
@@ -53,7 +36,6 @@ const getNextFormTitle = () => {
       jwt,
       body: requestBody,
     });
-    console.log(formData)
     const id = formData?._id;
     if (clicked) {
       navigate(`/forms/${id}`);
