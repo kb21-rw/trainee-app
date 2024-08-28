@@ -38,9 +38,11 @@ export const getFormsController = async (
   next: NextFunction
 ) => {
   try {
-    req.query.cohort && await mongodbIdValidation.validateAsync(req.query.cohort);
+    req.query.cohort &&
+      (await mongodbIdValidation.validateAsync(req.query.cohort));
     const searchString = req.query.searchString ?? "";
-    const cohort: { _id: Types.ObjectId } | { isActive: true } = req.query.cohort
+    const cohort: { _id: Types.ObjectId } | { isActive: true } = req.query
+      .cohort
       ? { _id: new Types.ObjectId(req.query.cohort) }
       : { isActive: true };
     const forms = await getFormsService(searchString, cohort);
@@ -71,7 +73,9 @@ export const deleteFormController = async (
   next: NextFunction
 ) => {
   try {
-    const formId = req.params.formId;
+    const { formId } = req.params;
+    await mongodbIdValidation.validateAsync(formId);
+
     await deleteFormService(formId);
     return res.status(204).json({ message: "Form deleted successfully" });
   } catch (error) {
@@ -86,6 +90,8 @@ export const getSingleFormController = async (
 ) => {
   try {
     const { formId } = req.params;
+    await mongodbIdValidation.validateAsync(formId);
+
     const form = await getSingleFormService(formId);
     return res.status(200).json(form);
   } catch (error) {
