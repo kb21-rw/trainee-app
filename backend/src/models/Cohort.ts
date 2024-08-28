@@ -26,8 +26,8 @@ const CohortSchema = new Schema(
   {
     name: {
       type: String,
-      required: true,
       unique: true,
+      required: true,
     },
     description: {
       type: String,
@@ -41,7 +41,7 @@ const CohortSchema = new Schema(
     stages: [
       {
         id: { type: String, default: () => new Types.ObjectId().toString() },
-        title: { type: String, unique: true, required: true },
+        title: { type: String, required: true },
         description: { type: String, default: "" },
         _id: false,
       },

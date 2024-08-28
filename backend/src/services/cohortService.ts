@@ -5,7 +5,7 @@ import { getCohortQuery, getCohortsQuery } from "../queries/cohortQueries";
 import {
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
-  NOT_ALLOWED
+  NOT_ALLOWED,
 } from "../utils/errorCodes";
 import {
   acceptUserHandler,
@@ -47,7 +47,18 @@ export const getCohortsService = async (searchString: string) => {
 
 export const createCohortService = async (cohortData: CreateCohortDto) => {
   await Cohort.updateOne({ isActive: true }, { isActive: false });
-  const newCohort = await Cohort.create(cohortData);
+
+  const stageTitles = cohortData.stages.map((stage) => stage.title);
+  const uniqueStageTitles = [...new Set(stageTitles)];
+
+  const uniqueStages = uniqueStageTitles.map((stageTitle) =>
+    cohortData.stages.find((stage) => stage.title === stageTitle)
+  );
+
+  const newCohort = await Cohort.create({
+    ...cohortData,
+    stages: uniqueStages,
+  });
 
   return newCohort;
 };
