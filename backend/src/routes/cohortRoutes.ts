@@ -18,7 +18,7 @@ router.get("/:cohortId", verifyJWT, isAdmin, getCohortController);
 
 router.post("/", verifyJWT, isAdmin, createCohortController);
 
-router.patch("/:cohortId", verifyJWT, isAdmin, updateCohortController);
 router.patch("/decision", verifyJWT, isAdmin, decision);
+router.patch("/:cohortId", verifyJWT, isAdmin, updateCohortController);
 
 export default router;

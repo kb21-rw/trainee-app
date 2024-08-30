@@ -18,7 +18,7 @@ import {
   RejectedBody,
   UpdateCohortDto,
 } from "../utils/types";
-import { updateStagesHandler } from "../utils/helpers/cohort";
+import { getCurrentCohort, updateStagesHandler } from "../utils/helpers/cohort";
 
 const isAcceptedBody = (
   body: AcceptedBody | RejectedBody
@@ -125,11 +125,7 @@ export const getApplicationFormService = async () => {
 
 export const decisionService = async (body: AcceptedBody | RejectedBody) => {
   const { userId } = body;
-  const currentCohort = await Cohort.findOne({ isActive: true });
-
-  if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found", 404);
-  }
+  const currentCohort = await getCurrentCohort()
 
   const cohortApplicants = currentCohort.applicants.map((id) => id.toString());
 
