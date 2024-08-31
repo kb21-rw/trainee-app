@@ -14,7 +14,7 @@ export interface CreateFormDto {
 export interface CreateCohortDto {
   name: string;
   description?: string;
-  stages: { tile: string; description: string }[];
+  stages: { title: string; description: string }[];
 }
 export interface UpdateFormDto {
   title: string;
@@ -55,6 +55,7 @@ export interface Search {
 export type GetCohortDto = { _id: Types.ObjectId } | { isActive: true };
 
 export enum FormType {
+  Application = "Application",
   Applicant = "Applicant",
   Trainee = "Trainee",
 }

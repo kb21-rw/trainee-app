@@ -73,7 +73,6 @@ export const getFormsQuery = async (
       },
     },
   ]);
-
   return cohorts[0];
 };
 

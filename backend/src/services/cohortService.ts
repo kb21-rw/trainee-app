@@ -5,7 +5,7 @@ import { getCohortQuery, getCohortsQuery } from "../queries/cohortQueries";
 import {
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
-  NOT_ALLOWED
+  NOT_ALLOWED,
 } from "../utils/errorCodes";
 import {
   acceptUserHandler,
@@ -18,7 +18,7 @@ import {
   RejectedBody,
   UpdateCohortDto,
 } from "../utils/types";
-import { updateStagesHandler } from "../utils/helpers/cohort";
+import { getCurrentCohort, updateStagesHandler } from "../utils/helpers/cohort";
 
 const isAcceptedBody = (
   body: AcceptedBody | RejectedBody
@@ -47,7 +47,18 @@ export const getCohortsService = async (searchString: string) => {
 
 export const createCohortService = async (cohortData: CreateCohortDto) => {
   await Cohort.updateOne({ isActive: true }, { isActive: false });
-  const newCohort = await Cohort.create(cohortData);
+
+  const stageTitles = cohortData.stages.map((stage) => stage.title);
+  const uniqueStageTitles = [...new Set(stageTitles)];
+
+  const uniqueStages = uniqueStageTitles.map((stageTitle) =>
+    cohortData.stages.find((stage) => stage.title === stageTitle)
+  );
+
+  const newCohort = await Cohort.create({
+    ...cohortData,
+    stages: uniqueStages,
+  });
 
   return newCohort;
 };
@@ -114,11 +125,7 @@ export const getApplicationFormService = async () => {
 
 export const decisionService = async (body: AcceptedBody | RejectedBody) => {
   const { userId } = body;
-  const currentCohort = await Cohort.findOne({ isActive: true });
-
-  if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found", 404);
-  }
+  const currentCohort = await getCurrentCohort()
 
   const cohortApplicants = currentCohort.applicants.map((id) => id.toString());
 
