@@ -13,7 +13,6 @@ const FormSchema = new Schema(
     title: {
       type: String,
       required: true,
-      unique: true,
     },
     description: String,
     questionIds: [
@@ -25,7 +24,7 @@ const FormSchema = new Schema(
     type: {
       type: String,
       enum: FormType,
-      default: FormType.Trainee,
+      required: true,
     },
     isActive: {
       type: Boolean,
