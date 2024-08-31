@@ -1,5 +1,5 @@
 import CustomError from "../middlewares/customError";
-import Question from "../models/Question";
+import Question, { IQuestion } from "../models/Question";
 import {
   CreateApplicationResponseDto,
   CreateResponseDto,
@@ -166,17 +166,52 @@ export const createApplicantResponseService = async (
     )?._id;
 
     if (!oldResponseId) {
-      const newResponse = await Response.create({ text: response.answer });
-      question.responseIds.push(newResponse.id);
-      await question.save();
-    } else {
-      await Response.findByIdAndUpdate(
-        oldResponseId,
-        { text: response.answer },
-        { new: true }
-      );
+      throw new CustomError(RESPONSE_NOT_FOUND, "Response was not found", 404);
     }
+
+    await Response.findByIdAndUpdate(
+      oldResponseId,
+      { text: response.answer },
+      { new: true }
+    );
   });
 
-  
+  type PopulatedQuestionIds = Omit<
+    IQuestion,
+    "responseIds" & { responseIds: IResponse[] }
+  >[];
+
+  const { _id, title, description, questionIds, type } =
+    await applicationForm.populate<{ questionIds: PopulatedQuestionIds }>({
+      path: "questionIds",
+      populate: { path: "responseIds" },
+    });
+
+  const questions = questionIds.map(
+    ({ _id, title, type, isRequired, options, responseIds }) => {
+      console.log(responseIds);
+      const response = responseIds.find(
+        (response) => response.userId.toString() === loggedInUser.id
+      );
+
+      if (!response) {
+        throw new CustomError(
+          RESPONSE_NOT_FOUND,
+          "Response was not found",
+          404
+        );
+      }
+
+      const question = { _id, title, type, isRequired, options };
+      return { ...question, response: response.text };
+    }
+  );
+
+  return {
+    _id,
+    title,
+    description,
+    type,
+    questions,
+  };
 };

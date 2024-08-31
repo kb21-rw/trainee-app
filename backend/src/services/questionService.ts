@@ -3,10 +3,7 @@ import CustomError from "../middlewares/customError";
 import Form from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
-import {
-  FORM_NOT_FOUND,
-  QUESTION_NOT_FOUND,
-} from "../utils/errorCodes";
+import { FORM_NOT_FOUND, QUESTION_NOT_FOUND } from "../utils/errorCodes";
 import {
   CreateQuestionDto,
   FormType,
@@ -19,7 +16,6 @@ export const createQuestionService = async (
   formId: string,
   questionData: CreateQuestionDto
 ) => {
-  const { title, type, options } = questionData;
   const relatedForm = await Form.findById(formId);
   if (!relatedForm) {
     throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
@@ -27,12 +23,7 @@ export const createQuestionService = async (
 
   const currentCohort = await getCurrentCohort();
 
-  const createdQuestion = await Question.create({
-    title,
-    type,
-    options,
-    responseIds: [],
-  });
+  const createdQuestion = await Question.create(questionData);
 
   relatedForm.questionIds.push(createdQuestion.id);
 
