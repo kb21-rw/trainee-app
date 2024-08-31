@@ -1,12 +1,14 @@
 import CustomError from "../middlewares/customError";
-import Form from "../models/Form";
+import Form, { IForm } from "../models/Form";
 import Question from "../models/Question";
 import Response from "../models/Response";
 import { getFormQuery, getFormsQuery } from "../queries/formQueries";
 import {
   APPLICATION_FORM_ERROR,
+  DUPLICATE_DOCUMENT,
   FORM_NOT_FOUND,
   INVALID_MONGODB_ID,
+  NOT_ALLOWED,
 } from "../utils/errorCodes";
 import { getCurrentCohort } from "../utils/helpers/cohort";
 import {
@@ -57,7 +59,19 @@ export const createFormService = async (formData: CreateFormDto) => {
 
   const currentCohort = await getCurrentCohort();
 
-  if (type === FormType.Applicant && currentCohort.applicationForm?.id) {
+  const cohortWithPopulatedForms = await currentCohort.populate<{
+    forms: IForm[];
+  }>("forms");
+
+  if (cohortWithPopulatedForms.forms.some((form) => form.title === title)) {
+    throw new CustomError(
+      DUPLICATE_DOCUMENT,
+      "A form with the same name already exists",
+      409
+    );
+  }
+
+  if (type === FormType.Application && currentCohort.applicationForm?.id) {
     throw new CustomError(
       APPLICATION_FORM_ERROR,
       "An application form already exists for the current cohort. Please edit the existing form.",
@@ -67,7 +81,7 @@ export const createFormService = async (formData: CreateFormDto) => {
 
   const createdForm = await Form.create({ title, description, type });
 
-  if (type === FormType.Applicant) {
+  if (type === FormType.Application) {
     currentCohort.applicationForm.id = createdForm.id;
   } else {
     currentCohort.forms.push(createdForm.id);
@@ -94,6 +108,20 @@ export const getSingleFormService = async (formId: string) => {
 export const deleteFormService = async (formId: string) => {
   const currentCohort = await getCurrentCohort();
 
+  const form = await Form.findById(formId);
+
+  if (!form) {
+    throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
+  }
+
+  if (form.type === FormType.Application) {
+    throw new CustomError(
+      NOT_ALLOWED,
+      "Application form can not be deleted",
+      403
+    );
+  }
+
   if (!currentCohort.forms.includes(formId)) {
     throw new CustomError(
       FORM_NOT_FOUND,
@@ -102,10 +130,7 @@ export const deleteFormService = async (formId: string) => {
     );
   }
 
-  const form = await Form.findByIdAndDelete(formId);
-  if (!form) {
-    throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
-  }
+  await Form.deleteOne({ _id: formId });
 
   currentCohort.forms = currentCohort.forms.filter(
     (formIds) => formIds.toString() !== formId

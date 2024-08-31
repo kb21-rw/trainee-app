@@ -54,6 +54,7 @@ export interface Search {
 export type GetCohortDto = { _id: Types.ObjectId } | { isActive: true };
 
 export enum FormType {
+  Application = "Application",
   Applicant = "Applicant",
   Trainee = "Trainee",
 }
