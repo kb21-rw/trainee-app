@@ -6,6 +6,7 @@ export interface IQuestion extends Document {
   id: string;
   title: string;
   type: QuestionType;
+  isRequired: boolean;
   options: string[];
   responseIds: IResponse["_id"][];
 }

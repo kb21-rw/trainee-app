@@ -10,6 +10,7 @@ export const createQuestionValidation = Joi.object({
       QuestionType.MultiSelect
     )
     .required(),
+  isRequired: Joi.boolean(),
   options: Joi.array()
     .items(Joi.string())
     .when("type", {
