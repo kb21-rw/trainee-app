@@ -1,14 +1,25 @@
 import { Document, Schema, Types, model } from "mongoose";
 import { IForm } from "./Form";
 import { IUser } from "./User";
+import { IStage } from "../utils/types";
+
+interface IParticipant {
+  id: IUser["_id"];
+  passedStages: string[];
+  droppedStage: {
+    id: string;
+    isConfirmed: boolean;
+  };
+  feedbacks: { stageId: string; text: string };
+}
 
 export interface ICohort extends Document {
   id: string;
   name: string;
   description: string;
   isActive: boolean;
-  applicants: IUser["_id"][];
-  trainees: IUser["_id"][];
+  applicants: IParticipant[];
+  trainees: IParticipant[];
   coaches: IUser["_id"][];
   forms: IForm["_id"][];
   applicationForm: {
@@ -16,8 +27,7 @@ export interface ICohort extends Document {
     startDate: Date;
     endDate: Date;
   };
-  stages: { id: string; title: string; description: string }[];
-  rejected: { userId: IUser["_id"]; stageId: string; feedback: string }[];
+  stages: IStage[];
 }
 
 const CohortSchema = new Schema(
@@ -39,7 +49,7 @@ const CohortSchema = new Schema(
     stages: [
       {
         id: { type: String, default: () => new Types.ObjectId().toString() },
-        title: { type: String, required: true },
+        name: { type: String, required: true },
         description: { type: String, default: "" },
         _id: false,
       },
@@ -52,14 +62,40 @@ const CohortSchema = new Schema(
     ],
     applicants: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "User",
+        id: { type: Schema.Types.ObjectId, ref: "User" },
+        passedStages: [{ type: String }],
+        droppedStage: {
+          id: { type: String, default: null },
+          isConfirmed: {
+            type: Boolean,
+            default: false,
+          },
+        },
+        feedbacks: [
+          {
+            stageId: { type: String, required: true },
+            text: { type: String, required: true },
+          },
+        ],
       },
     ],
     trainees: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "User",
+        id: { type: Schema.Types.ObjectId, ref: "User" },
+        passedStages: [{ type: String }],
+        droppedStage: {
+          id: { type: String, default: null },
+          isConfirmed: {
+            type: Boolean,
+            default: false,
+          },
+        },
+        feedbacks: [
+          {
+            stageId: { type: String, required: true },
+            text: { type: String, required: true },
+          },
+        ],
       },
     ],
     coaches: [
@@ -68,16 +104,10 @@ const CohortSchema = new Schema(
         ref: "User",
       },
     ],
-    rejected: [
-      {
-        userId: { type: Schema.Types.ObjectId, ref: "User" },
-        stageId: { type: String, required: true },
-        feedback: { type: String, default: "" },
-      },
-    ],
     applicationForm: {
       id: {
         type: Schema.Types.ObjectId,
+        ref: "Form",
         default: null,
       },
       startDate: {
@@ -88,6 +118,14 @@ const CohortSchema = new Schema(
         type: Date,
         default: null,
       },
+      stages: [
+        {
+          id: { type: String, default: () => new Types.ObjectId().toString() },
+          name: { type: String, required: true },
+          description: { type: String, default: "" },
+          _id: false,
+        },
+      ],
     },
   },
   { timestamps: {} }
