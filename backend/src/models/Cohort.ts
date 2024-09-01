@@ -1,4 +1,4 @@
-import { Document, Schema, Types, model } from "mongoose";
+import { Document, Schema, model } from "mongoose";
 import { IForm } from "./Form";
 import { IUser } from "./User";
 import { IStage } from "../utils/types";
@@ -26,6 +26,7 @@ export interface ICohort extends Document {
     id: IForm["_id"];
     startDate: Date;
     endDate: Date;
+    stages: IStage[];
   };
   stages: IStage[];
 }
@@ -48,7 +49,7 @@ const CohortSchema = new Schema(
     },
     stages: [
       {
-        id: { type: String, default: () => new Types.ObjectId().toString() },
+        id: { type: String, required: true },
         name: { type: String, required: true },
         description: { type: String, default: "" },
         _id: false,
@@ -120,7 +121,7 @@ const CohortSchema = new Schema(
       },
       stages: [
         {
-          id: { type: String, default: () => new Types.ObjectId().toString() },
+          id: { type: String, required: true },
           name: { type: String, required: true },
           description: { type: String, default: "" },
           _id: false,

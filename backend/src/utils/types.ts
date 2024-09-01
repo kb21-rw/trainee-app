@@ -17,6 +17,10 @@ export interface CreateFormDto {
   name: string;
   description: string;
   type: FormType;
+  // Form application form
+  startDate?: string;
+  endDate?: string;
+  stages?: Except<IStage, "id">[];
 }
 export interface CreateCohortDto {
   name: string;

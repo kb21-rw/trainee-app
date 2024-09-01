@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import CustomError from "../middlewares/customError";
 import Form, { IForm } from "../models/Form";
 import Question from "../models/Question";
@@ -18,6 +19,7 @@ import {
   UpdateFormDto,
 } from "../utils/types";
 import mongoose from "mongoose";
+import { createStagesHandler } from "../utils/helpers";
 const { Types } = mongoose;
 const { ObjectId } = Types;
 
@@ -55,7 +57,7 @@ export const updateFormService = async (
 };
 
 export const createFormService = async (formData: CreateFormDto) => {
-  const { name, description, type } = formData;
+  const { name, description, type, startDate, endDate, stages } = formData;
 
   const currentCohort = await getCurrentCohort();
 
@@ -79,10 +81,25 @@ export const createFormService = async (formData: CreateFormDto) => {
     );
   }
 
+  const startDateJs = dayjs(startDate);
+  const endDateJs = dayjs(endDate);
+  const nowJs = dayjs();
+
+  if (startDateJs.isBefore(nowJs) || startDateJs.isAfter(endDateJs)) {
+    throw new CustomError(
+      NOT_ALLOWED,
+      "Start date should be sometime after now but before end date",
+      403
+    );
+  }
+
   const createdForm = await Form.create({ name, description, type });
 
   if (type === FormType.Application) {
     currentCohort.applicationForm.id = createdForm.id;
+    currentCohort.applicationForm.startDate = startDateJs.toDate();
+    currentCohort.applicationForm.endDate = endDateJs.toDate();
+    currentCohort.applicationForm.stages = createStagesHandler(stages ?? []);
   } else {
     currentCohort.forms.push(createdForm.id);
   }
