@@ -3,14 +3,14 @@ import { FormType } from "../utils/types";
 import { IQuestion } from "./Question";
 
 export interface IForm extends Document {
-  title: string;
+  name: string;
   description: string;
   questionIds: IQuestion["_id"][];
 }
 
 const FormSchema = new Schema(
   {
-    title: {
+    name: {
       type: String,
       required: true,
     },

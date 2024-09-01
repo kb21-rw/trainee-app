@@ -4,7 +4,7 @@ import { QuestionType } from "../utils/types";
 
 export interface IQuestion extends Document {
   id: string;
-  title: string;
+  prompt: string;
   type: QuestionType;
   isRequired: boolean;
   options: string[];
@@ -13,7 +13,7 @@ export interface IQuestion extends Document {
 
 const QuestionSchema = new Schema(
   {
-    title: {
+    prompt: {
       type: String,
       required: true,
     },
@@ -24,7 +24,7 @@ const QuestionSchema = new Schema(
       required: true,
     },
 
-    required: {
+    isRequired: {
       type: Boolean,
       default: true,
     },
