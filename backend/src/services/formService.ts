@@ -32,7 +32,7 @@ export const updateFormService = async (
   formId: string,
   formData: UpdateFormDto
 ) => {
-  const { title, description } = formData;
+  const { name, description } = formData;
   if (!ObjectId.isValid(formId)) {
     throw new CustomError(INVALID_MONGODB_ID, "Invalid Document ID", 400);
   }
@@ -42,8 +42,8 @@ export const updateFormService = async (
     throw new CustomError(FORM_NOT_FOUND, "Form not found", 404);
   }
 
-  if (title) {
-    form.title = title;
+  if (name) {
+    form.name = name;
   }
 
   if (description) {
@@ -55,7 +55,7 @@ export const updateFormService = async (
 };
 
 export const createFormService = async (formData: CreateFormDto) => {
-  const { title, description, type } = formData;
+  const { name, description, type } = formData;
 
   const currentCohort = await getCurrentCohort();
 
@@ -63,7 +63,7 @@ export const createFormService = async (formData: CreateFormDto) => {
     forms: IForm[];
   }>("forms");
 
-  if (cohortWithPopulatedForms.forms.some((form) => form.title === title)) {
+  if (cohortWithPopulatedForms.forms.some((form) => form.name === name)) {
     throw new CustomError(
       DUPLICATE_DOCUMENT,
       "A form with the same name already exists",
@@ -79,7 +79,7 @@ export const createFormService = async (formData: CreateFormDto) => {
     );
   }
 
-  const createdForm = await Form.create({ title, description, type });
+  const createdForm = await Form.create({ name, description, type });
 
   if (type === FormType.Application) {
     currentCohort.applicationForm.id = createdForm.id;

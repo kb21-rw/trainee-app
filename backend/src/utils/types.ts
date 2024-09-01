@@ -1,4 +1,5 @@
 import { Date, Types } from "mongoose";
+import { Except, SetOptional } from "type-fest";
 
 interface MetaType {
   _id: string;
@@ -6,25 +7,31 @@ interface MetaType {
   updatedAt: Date;
   __v: number;
 }
+
+export interface IStage {
+  id: string;
+  name: string;
+  description: string;
+}
 export interface CreateFormDto {
-  title: string;
+  name: string;
   description: string;
   type: FormType;
 }
 export interface CreateCohortDto {
   name: string;
   description?: string;
-  stages: { title: string; description: string }[];
+  stages: Except<IStage, "id">[];
 }
 export interface UpdateFormDto {
-  title: string;
+  name: string;
   description: string;
 }
 
 export interface UpdateCohortDto {
   name?: string;
   description?: string;
-  stages?: { id?: string; title: string; description: string }[];
+  stages?: SetOptional<IStage, "id">[];
 }
 
 export interface CreateQuestionDto {
@@ -32,6 +39,13 @@ export interface CreateQuestionDto {
   type: QuestionType;
   isRequired: boolean;
   options: string[];
+}
+
+export interface UpdateQuestionDto {
+  prompt?: string;
+  type?: QuestionType;
+  isRequired?: boolean;
+  options?: string[];
 }
 
 export interface CreateResponseDto {

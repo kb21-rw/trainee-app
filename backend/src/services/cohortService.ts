@@ -48,11 +48,11 @@ export const getCohortsService = async (searchString: string) => {
 export const createCohortService = async (cohortData: CreateCohortDto) => {
   await Cohort.updateOne({ isActive: true }, { isActive: false });
 
-  const stageTitles = cohortData.stages.map((stage) => stage.title);
+  const stageTitles = cohortData.stages.map((stage) => stage.name);
   const uniqueStageTitles = [...new Set(stageTitles)];
 
   const uniqueStages = uniqueStageTitles.map((stageTitle) =>
-    cohortData.stages.find((stage) => stage.title === stageTitle)
+    cohortData.stages.find((stage) => stage.name === stageTitle)
   );
 
   const newCohort = await Cohort.create({

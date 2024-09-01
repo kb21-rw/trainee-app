@@ -181,14 +181,14 @@ export const createApplicantResponseService = async (
     "responseIds" & { responseIds: IResponse[] }
   >[];
 
-  const { _id, title, description, questionIds, type } =
+  const { _id, name, description, questionIds, type } =
     await applicationForm.populate<{ questionIds: PopulatedQuestionIds }>({
       path: "questionIds",
       populate: { path: "responseIds" },
     });
 
   const questions = questionIds.map(
-    ({ _id, title, type, isRequired, options, responseIds }) => {
+    ({ _id, prompt, type, isRequired, options, responseIds }) => {
       console.log(responseIds);
       const response = responseIds.find(
         (response) => response.userId.toString() === loggedInUser.id
@@ -202,14 +202,14 @@ export const createApplicantResponseService = async (
         );
       }
 
-      const question = { _id, title, type, isRequired, options };
+      const question = { _id, prompt, type, isRequired, options };
       return { ...question, response: response.text };
     }
   );
 
   return {
     _id,
-    title,
+    name,
     description,
     type,
     questions,

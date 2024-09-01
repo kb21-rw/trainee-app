@@ -2,6 +2,8 @@ import { Types } from "mongoose";
 import CustomError from "../../middlewares/customError";
 import Cohort from "../../models/Cohort";
 import { COHORT_NOT_FOUND, DUPLICATE_DOCUMENT } from "../errorCodes";
+import { IStage } from "../types";
+import { SetOptional } from "type-fest";
 
 export const getCurrentCohort = async () => {
   const currentCohort = await Cohort.findOne({ isActive: true });
@@ -14,21 +16,13 @@ export const getCurrentCohort = async () => {
 };
 
 export const updateStagesHandler = (
-  cohortStages: {
-    id: string;
-    title: string;
-    description: string;
-  }[],
-  receivedStages: {
-    id?: string;
-    title: string;
-    description: string;
-  }[]
+  cohortStages: IStage[],
+  receivedStages: SetOptional<IStage, "id">[]
 ) => {
   // check for duplicates
-  const cohortStageTitles = cohortStages.map((stage) => stage.title);
+  const cohortStageTitles = cohortStages.map((stage) => stage.name);
   receivedStages
-    .map((stage) => stage.title)
+    .map((stage) => stage.name)
     .forEach((addedStageTitle) => {
       if (cohortStageTitles.includes(addedStageTitle)) {
         throw new CustomError(
