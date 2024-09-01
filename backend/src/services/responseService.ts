@@ -3,10 +3,9 @@ import Question, { IQuestion } from "../models/Question";
 import {
   CreateApplicationResponseDto,
   CreateResponseDto,
-  QuestionType,
   Role,
 } from "../utils/types";
-import Response, { IResponse } from "../models/Response";
+import { IResponse } from "../models/Response";
 import User, { IUser } from "../models/User";
 import {
   NOT_ALLOWED,
@@ -18,6 +17,8 @@ import {
 import Form from "../models/Form";
 import { getCurrentCohort } from "../utils/helpers/cohort";
 import dayjs from "dayjs";
+import { Except } from "type-fest";
+import { upsertResponse } from "../utils/helpers/response";
 
 export const createCoachResponseService = async (
   loggedInUser: IUser,
@@ -41,16 +42,6 @@ export const createCoachResponseService = async (
     );
   }
 
-  const relatedQuestion = await Question.findById(questionId);
-
-  if (!relatedQuestion) {
-    throw new CustomError(
-      QUESTION_NOT_FOUND,
-      "The question you're responding to does not exist!",
-      400
-    );
-  }
-
   if (
     loggedInUser.role !== Role.Admin &&
     loggedInUser.id !== trainee.coach?.toString()
@@ -62,60 +53,28 @@ export const createCoachResponseService = async (
     );
   }
 
-  const selectedOptions = Array.isArray(text) ? [...new Set(text)] : [text];
+  const relatedQuestion = await Question.findById<IQuestion>(questionId);
 
-  if (relatedQuestion.type !== QuestionType.Text) {
-    const areOptionsValid = selectedOptions.every((option: string) =>
-      relatedQuestion.options.includes(option)
-    );
-
-    if (!areOptionsValid) {
-      throw new CustomError(
-        NOT_ALLOWED,
-        `You can only choose from ${relatedQuestion.options.join(
-          ", "
-        )} options`,
-        400
-      );
-    }
-  }
-
-  const relatedQuestionPopulated = await relatedQuestion.populate<{
-    responseIds: IResponse[];
-  }>("responseIds");
-
-  const oldResponse = relatedQuestionPopulated.responseIds.find(
-    (response) => response.userId.toString() === traineeId
-  );
-
-  const responseText =
-    relatedQuestion.type === QuestionType.MultiSelect ? selectedOptions : text;
-
-  if (!oldResponse) {
+  if (!relatedQuestion) {
     throw new CustomError(
-      RESPONSE_NOT_FOUND,
-      "Responses not found, make sure you're responding to the form in the current cohort",
-      404
+      QUESTION_NOT_FOUND,
+      "The question you're responding to does not exist!",
+      400
     );
   }
 
-  const response = await Response.findByIdAndUpdate(
-    oldResponse._id,
-    { text: responseText },
-    { new: true }
-  );
-
-  return response;
+  return upsertResponse(relatedQuestion, text, traineeId);
 };
 
 export const createApplicantResponseService = async (
   loggedInUser: IUser,
-  responseData: CreateApplicationResponseDto[]
+  responseData: CreateApplicationResponseDto[],
+  submit: boolean = false
 ) => {
   const currentCohort = await getCurrentCohort();
 
   if (!currentCohort.applicationForm.id) {
-    throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
+    throw new CustomError(NOT_ALLOWED, "There is no open application", 404);
   }
 
   const applicationForm = await Form.findById(currentCohort.applicationForm.id);
@@ -123,16 +82,12 @@ export const createApplicantResponseService = async (
   if (!applicationForm) {
     currentCohort.applicationForm.id = null;
     await currentCohort.save();
-    throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
+    throw new CustomError(NOT_ALLOWED, "There is no open application", 404);
   }
 
   const now = dayjs();
-  const applicationStartDate = dayjs(
-    new Date(currentCohort.applicationForm.startDate)
-  );
-  const applicationEndDate = dayjs(
-    new Date(currentCohort.applicationForm.endDate)
-  );
+  const applicationStartDate = dayjs(currentCohort.applicationForm.startDate);
+  const applicationEndDate = dayjs(currentCohort.applicationForm.endDate);
 
   if (now.isBefore(applicationStartDate)) {
     throw new CustomError(
@@ -150,33 +105,36 @@ export const createApplicantResponseService = async (
     );
   }
 
+  const questionsNotFound = responseData.some(
+    (data) =>
+      !applicationForm.questionIds
+        .map((questionId) => questionId.toString())
+        .includes(data.questionId)
+  );
+
+  if (questionsNotFound) {
+    throw new CustomError(
+      QUESTION_NOT_FOUND,
+      "You can only answer questions in the form",
+      404
+    );
+  }
+
   // Create or update a response if already exists
-  responseData.forEach(async (response) => {
-    const question = await Question.findById(response.questionId)
+  await Promise.all(responseData.map(async (response) => {
+    const question = await Question.findById<IQuestion>(response.questionId)
       .populate<{
         responseIds: IResponse[];
       }>("responseIds")
       .exec();
 
     if (!question)
-      throw new CustomError(QUESTION_NOT_FOUND, "Question was not found!", 400);
+      throw new CustomError(QUESTION_NOT_FOUND, "Question was not found!", 404);
 
-    const oldResponseId = question.responseIds.find(
-      (oldResponse) => oldResponse.userId.toString() === loggedInUser.id
-    )?._id;
+    return await upsertResponse(question, response.answer, loggedInUser.id);
+  }));
 
-    if (!oldResponseId) {
-      throw new CustomError(RESPONSE_NOT_FOUND, "Response was not found", 404);
-    }
-
-    await Response.findByIdAndUpdate(
-      oldResponseId,
-      { text: response.answer },
-      { new: true }
-    );
-  });
-
-  type PopulatedQuestionIds = Omit<
+  type PopulatedQuestionIds = Except<
     IQuestion,
     "responseIds" & { responseIds: IResponse[] }
   >[];
@@ -187,6 +145,7 @@ export const createApplicantResponseService = async (
       populate: { path: "responseIds" },
     });
 
+  // get responses of loggedIn user
   const questions = questionIds.map(
     ({ _id, prompt, type, isRequired, options, responseIds }) => {
       console.log(responseIds);
@@ -194,16 +153,24 @@ export const createApplicantResponseService = async (
         (response) => response.userId.toString() === loggedInUser.id
       );
 
-      if (!response) {
-        throw new CustomError(
-          RESPONSE_NOT_FOUND,
-          "Response was not found",
-          404
-        );
+      if (submit) {
+        if (isRequired && !response) {
+          throw new CustomError(
+            RESPONSE_NOT_FOUND,
+            `'${prompt}' is required`,
+            404
+          );
+        }
       }
 
-      const question = { _id, prompt, type, isRequired, options };
-      return { ...question, response: response.text };
+      return {
+        _id,
+        prompt,
+        type,
+        isRequired,
+        options,
+        response: response?.text ?? null,
+      };
     }
   );
 
