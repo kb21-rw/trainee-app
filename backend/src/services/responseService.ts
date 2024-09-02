@@ -75,6 +75,19 @@ export const createApplicantResponseService = async (
 ) => {
   const currentCohort = await getCurrentCohort();
 
+  // Throw if the an applicant already exists
+  if (
+    currentCohort.applicants.some(
+      (applicant) => applicant.id.toString() === loggedInUser.id
+    )
+  ) {
+    throw new CustomError(
+      APPLICATION_FORM_ERROR,
+      "Your application form has already been received, please wait for a response",
+      409
+    );
+  }
+
   if (!currentCohort.applicationForm.id) {
     throw new CustomError(NOT_ALLOWED, "There is no open application", 404);
   }
