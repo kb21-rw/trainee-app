@@ -96,10 +96,17 @@ export const createFormService = async (formData: CreateFormDto) => {
   const createdForm = await Form.create({ name, description, type });
 
   if (type === FormType.Application) {
+    const applicationStages = stages ?? [];
+    applicationStages.unshift({
+      name: "Application",
+      description: "",
+    });
+
     currentCohort.applicationForm.id = createdForm.id;
     currentCohort.applicationForm.startDate = startDateJs.toDate();
     currentCohort.applicationForm.endDate = endDateJs.toDate();
-    currentCohort.applicationForm.stages = createStagesHandler(stages ?? []);
+    currentCohort.applicationForm.stages =
+      createStagesHandler(applicationStages);
   } else {
     currentCohort.forms.push(createdForm.id);
   }
