@@ -1,8 +1,15 @@
+import { Except } from "type-fest";
 import CustomError from "../../middlewares/customError";
+import { IForm } from "../../models/Form";
 import { IQuestion } from "../../models/Question";
 import Response, { IResponse } from "../../models/Response";
 import { NOT_ALLOWED } from "../errorCodes";
 import { QuestionType } from "../types";
+
+type PopulatedQuestionIds = Except<
+  IQuestion,
+  "responseIds" & { responseIds: IResponse[] }
+>[];
 
 export const upsertResponse = async (
   question: IQuestion,
@@ -62,4 +69,40 @@ export const upsertResponse = async (
   );
 
   return response;
+};
+
+export const getUserFormResponses = async (
+  form: IForm,
+  userId: string
+) => {
+  const { id, name, type, description, questionIds } = await form.populate<{
+    questionIds: PopulatedQuestionIds;
+  }>({
+    path: "questionIds",
+    populate: { path: "responseIds" },
+  });
+
+  const questions = questionIds.map(
+    ({ _id, prompt, type, isRequired, options, responseIds }) => {
+      const response = responseIds.find(
+        (response) => response.userId.toString() === userId
+      );
+
+      return {
+        _id,
+        prompt,
+        type,
+        isRequired,
+        options,
+        response: response?.value ?? null,
+      };
+    }
+  );
+  return {
+    id,
+    name,
+    description,
+    type,
+    questions,
+  };
 };
