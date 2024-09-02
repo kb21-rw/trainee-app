@@ -5,6 +5,7 @@ import { IQuestion } from "./Question";
 export interface IForm extends Document {
   name: string;
   description: string;
+  type: FormType;
   questionIds: IQuestion["_id"][];
 }
 

@@ -41,7 +41,7 @@ export const createApplicantResponse = async (
     const createdResponse = await createApplicantResponseService(
       loggedInUser,
       req.body,
-      req.query.submit == true
+      req.query.action === "submit"
     );
     return res.status(201).json(createdResponse);
   } catch (error) {

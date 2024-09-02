@@ -10,15 +10,17 @@ import User, { IUser } from "../models/User";
 import {
   NOT_ALLOWED,
   QUESTION_NOT_FOUND,
-  RESPONSE_NOT_FOUND,
   USER_NOT_FOUND,
   APPLICATION_FORM_ERROR,
+  RESPONSE_NOT_FOUND,
 } from "../utils/errorCodes";
-import Form from "../models/Form";
+import Form, { IForm } from "../models/Form";
 import { getCurrentCohort } from "../utils/helpers/cohort";
 import dayjs from "dayjs";
-import { Except } from "type-fest";
-import { upsertResponse } from "../utils/helpers/response";
+import {
+  getUserFormResponses,
+  upsertResponse,
+} from "../utils/helpers/response";
 
 export const createCoachResponseService = async (
   loggedInUser: IUser,
@@ -77,7 +79,9 @@ export const createApplicantResponseService = async (
     throw new CustomError(NOT_ALLOWED, "There is no open application", 404);
   }
 
-  const applicationForm = await Form.findById(currentCohort.applicationForm.id);
+  const applicationForm = await Form.findById<IForm>(
+    currentCohort.applicationForm.id
+  );
 
   if (!applicationForm) {
     currentCohort.applicationForm.id = null;
@@ -121,64 +125,42 @@ export const createApplicantResponseService = async (
   }
 
   // Create or update a response if already exists
-  await Promise.all(responseData.map(async (response) => {
-    const question = await Question.findById<IQuestion>(response.questionId)
-      .populate<{
-        responseIds: IResponse[];
-      }>("responseIds")
-      .exec();
+  await Promise.all(
+    responseData.map(async (response) => {
+      const question = await Question.findById<IQuestion>(response.questionId)
+        .populate<{
+          responseIds: IResponse[];
+        }>("responseIds")
+        .exec();
 
-    if (!question)
-      throw new CustomError(QUESTION_NOT_FOUND, "Question was not found!", 404);
+      if (!question)
+        throw new CustomError(
+          QUESTION_NOT_FOUND,
+          "Question was not found!",
+          404
+        );
 
-    return await upsertResponse(question, response.answer, loggedInUser.id);
-  }));
-
-  type PopulatedQuestionIds = Except<
-    IQuestion,
-    "responseIds" & { responseIds: IResponse[] }
-  >[];
-
-  const { _id, name, description, questionIds, type } =
-    await applicationForm.populate<{ questionIds: PopulatedQuestionIds }>({
-      path: "questionIds",
-      populate: { path: "responseIds" },
-    });
-
-  // get responses of loggedIn user
-  const questions = questionIds.map(
-    ({ _id, prompt, type, isRequired, options, responseIds }) => {
-      console.log(responseIds);
-      const response = responseIds.find(
-        (response) => response.userId.toString() === loggedInUser.id
-      );
-
-      if (submit) {
-        if (isRequired && !response) {
-          throw new CustomError(
-            RESPONSE_NOT_FOUND,
-            `'${prompt}' is required`,
-            404
-          );
-        }
-      }
-
-      return {
-        _id,
-        prompt,
-        type,
-        isRequired,
-        options,
-        response: response?.text ?? null,
-      };
-    }
+      return await upsertResponse(question, response.answer, loggedInUser.id);
+    })
   );
 
-  return {
-    _id,
-    name,
-    description,
-    type,
-    questions,
-  };
+  // get responses of loggedIn user
+  const userFormResponses = await getUserFormResponses(
+    applicationForm,
+    loggedInUser.id
+  );
+
+  if (submit) {
+    userFormResponses.questions.forEach(({ isRequired, response, prompt }) => {
+      if (isRequired && !response) {
+        throw new CustomError(
+          RESPONSE_NOT_FOUND,
+          `'${prompt}' is required`,
+          404
+        );
+      }
+    });
+  }
+
+  return userFormResponses;
 };
