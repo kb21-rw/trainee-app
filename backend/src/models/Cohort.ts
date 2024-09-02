@@ -10,7 +10,7 @@ interface IParticipant {
     id: string;
     isConfirmed: boolean;
   };
-  feedbacks: { stageId: string; text: string };
+  feedbacks: { stageId: string; text: string }[];
 }
 
 export interface ICohort extends Document {
@@ -78,6 +78,7 @@ const CohortSchema = new Schema(
             text: { type: String, required: true },
           },
         ],
+        _id: false,
       },
     ],
     trainees: [
@@ -97,6 +98,7 @@ const CohortSchema = new Schema(
             text: { type: String, required: true },
           },
         ],
+        _id: false,
       },
     ],
     coaches: [

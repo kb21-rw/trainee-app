@@ -160,6 +160,27 @@ export const createApplicantResponseService = async (
         );
       }
     });
+
+    const prospect = await User.findById(loggedInUser.id);
+    // This should not be possible because loggedInUser is from the middleware that fetched the user
+    if (!prospect) {
+      throw new CustomError(USER_NOT_FOUND, "User not found", 404);
+    }
+
+    prospect.role = Role.Applicant;
+
+    currentCohort.applicants.push({
+      id: loggedInUser.id,
+      passedStages: [],
+      droppedStage: {
+        id: currentCohort.applicationForm.stages[0].id,
+        isConfirmed: false,
+      },
+      feedbacks: [],
+    });
+
+    await prospect.save();
+    await currentCohort.save();
   }
 
   return userFormResponses;
