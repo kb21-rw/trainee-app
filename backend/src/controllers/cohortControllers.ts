@@ -10,6 +10,7 @@ import {
   getApplicationFormService,
   getCohortService,
   getCohortsService,
+  getMyApplicationService,
   updateCohortService,
 } from "../services/cohortService";
 
@@ -30,7 +31,7 @@ export const createCohortController = async (
 export const getCohortController = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { cohortId } = req.params;
@@ -59,7 +60,7 @@ export const getCohortsController = async (
 export const updateCohortController = async (
   req: Request,
   res: Response,
-  next: NextFunction,
+  next: NextFunction
 ) => {
   try {
     const { cohortId } = req.params;
@@ -79,6 +80,20 @@ export const getApplicationFormController = async (
   try {
     const form = await getApplicationFormService();
     return res.status(200).json(form);
+  } catch (error) {
+    return next(error);
+  }
+};
+
+export const getMyApplicationController = async (
+  req: any,
+  res: Response,
+  next: NextFunction
+) => {
+  const { user } = req;
+  try {
+    const application = await getMyApplicationService(user.id);
+    return res.status(200).json(application);
   } catch (error) {
     return next(error);
   }

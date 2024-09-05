@@ -18,9 +18,14 @@ import {
   RejectedBody,
   UpdateCohortDto,
 } from "../utils/types";
-import { getCurrentCohort, updateStagesHandler } from "../utils/helpers/cohort";
+import {
+  getApplicationForm,
+  getCurrentCohort,
+  updateStagesHandler,
+} from "../utils/helpers/cohort";
 import { createStagesHandler } from "../utils/helpers";
 import { getCompleteForm } from "../utils/helpers/forms";
+import { getUserFormResponses } from "../utils/helpers/response";
 
 const isAcceptedBody = (
   body: AcceptedBody | RejectedBody
@@ -85,7 +90,7 @@ export const updateCohortService = async (
 };
 
 export const getApplicationFormService = async () => {
-  const currentCohort = await getCurrentCohort()
+  const currentCohort = await getCurrentCohort();
 
   if (!currentCohort.applicationForm.id) {
     throw new CustomError(NOT_ALLOWED, "Applications aren't open yet", 401);
@@ -108,6 +113,14 @@ export const getApplicationFormService = async () => {
   const completeApplicationFrom = await getCompleteForm(applicationForm);
 
   return { ...completeApplicationFrom, startDate, endDate, stages };
+};
+
+export const getMyApplicationService = async (loggedInUserId: string) => {
+  const currentCohort = await getCurrentCohort();
+
+  const applicationForm = await getApplicationForm(currentCohort);
+
+  return await getUserFormResponses(applicationForm, loggedInUserId);
 };
 
 export const decisionService = async (body: AcceptedBody | RejectedBody) => {

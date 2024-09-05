@@ -7,12 +7,14 @@ import {
   getApplicationFormController,
   getCohortController,
   getCohortsController,
+  getMyApplicationController,
   updateCohortController,
 } from "../controllers/cohortControllers";
 
 const router = Router();
 
-router.get("/application", verifyJWT, isProspect ,getApplicationFormController);
+router.get("/application", verifyJWT, isAdmin, getApplicationFormController);
+router.get("/my-application", verifyJWT, isProspect, getMyApplicationController);
 router.get("/", verifyJWT, isAdmin, getCohortsController);
 router.get("/:cohortId", verifyJWT, isAdmin, getCohortController);
 
