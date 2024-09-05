@@ -83,7 +83,7 @@ export const getUserFormResponses = async (
   });
 
   const questions = questionIds.map(
-    ({ _id, prompt, type, isRequired, options, responseIds }) => {
+    ({ _id, prompt, type, required, options, responseIds }) => {
       const response = responseIds.find(
         (response) => response.userId.toString() === userId
       );
@@ -92,7 +92,7 @@ export const getUserFormResponses = async (
         _id,
         prompt,
         type,
-        isRequired,
+        required,
         options,
         response: response?.value ?? null,
       };

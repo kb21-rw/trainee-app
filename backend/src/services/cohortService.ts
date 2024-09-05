@@ -1,6 +1,6 @@
 import CustomError from "../middlewares/customError";
 import Cohort from "../models/Cohort";
-import Form from "../models/Form";
+import Form, { IForm } from "../models/Form";
 import { getCohortQuery, getCohortsQuery } from "../queries/cohortQueries";
 import {
   COHORT_NOT_FOUND,
@@ -20,6 +20,7 @@ import {
 } from "../utils/types";
 import { getCurrentCohort, updateStagesHandler } from "../utils/helpers/cohort";
 import { createStagesHandler } from "../utils/helpers";
+import { getCompleteForm } from "../utils/helpers/forms";
 
 const isAcceptedBody = (
   body: AcceptedBody | RejectedBody
@@ -94,17 +95,9 @@ export const getApplicationFormService = async () => {
     throw new CustomError(NOT_ALLOWED, "Applications aren't open yet", 401);
   }
 
-  const form = await Form.findById(currentCohort.applicationForm.id)
-    .select("title descriptions questionIds")
-    .populate({
-      path: "questionIds",
-      select: "title type options",
-    })
-    .lean()
-    .exec();
+  const form = await Form.findById<IForm>(currentCohort.applicationForm.id);
 
   if (!form) {
-    console.log("Form is referencing to a document that doesn't exist");
     throw new CustomError(
       FORM_NOT_FOUND,
       "Something wrong, our team is trying to fix it",
@@ -112,14 +105,12 @@ export const getApplicationFormService = async () => {
     );
   }
 
-  const { questionIds, ...rest } = form;
-
-  return { ...rest, questions: questionIds };
+  return await getCompleteForm(form);
 };
 
 export const decisionService = async (body: AcceptedBody | RejectedBody) => {
   const { userId } = body;
-  const currentCohort = await getCurrentCohort()
+  const currentCohort = await getCurrentCohort();
 
   const cohortApplicants = currentCohort.applicants.map((id) => id.toString());
 

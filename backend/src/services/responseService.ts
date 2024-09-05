@@ -164,8 +164,8 @@ export const createApplicantResponseService = async (
   );
 
   if (submit) {
-    userFormResponses.questions.forEach(({ isRequired, response, prompt }) => {
-      if (isRequired && !response) {
+    userFormResponses.questions.forEach(({ required, response, prompt }) => {
+      if (required && !response) {
         throw new CustomError(
           RESPONSE_NOT_FOUND,
           `'${prompt}' is required`,

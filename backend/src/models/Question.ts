@@ -6,7 +6,7 @@ export interface IQuestion extends Document {
   id: string;
   prompt: string;
   type: QuestionType;
-  isRequired: boolean;
+  required: boolean;
   options: string[];
   responseIds: IResponse["_id"][];
 }
@@ -24,7 +24,7 @@ const QuestionSchema = new Schema(
       required: true,
     },
 
-    isRequired: {
+    required: {
       type: Boolean,
       default: true,
     },
