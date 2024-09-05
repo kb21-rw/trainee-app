@@ -85,19 +85,17 @@ export const updateCohortService = async (
 };
 
 export const getApplicationFormService = async () => {
-  const currentCohort = await Cohort.findOne({ isActive: true });
-
-  if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found!", 404);
-  }
+  const currentCohort = await getCurrentCohort()
 
   if (!currentCohort.applicationForm.id) {
     throw new CustomError(NOT_ALLOWED, "Applications aren't open yet", 401);
   }
 
-  const form = await Form.findById<IForm>(currentCohort.applicationForm.id);
+  const applicationForm = await Form.findById<IForm>(
+    currentCohort.applicationForm.id
+  );
 
-  if (!form) {
+  if (!applicationForm) {
     throw new CustomError(
       FORM_NOT_FOUND,
       "Something wrong, our team is trying to fix it",
@@ -105,7 +103,11 @@ export const getApplicationFormService = async () => {
     );
   }
 
-  return await getCompleteForm(form);
+  const { startDate, endDate, stages } = currentCohort.applicationForm;
+
+  const completeApplicationFrom = await getCompleteForm(applicationForm);
+
+  return { ...completeApplicationFrom, startDate, endDate, stages };
 };
 
 export const decisionService = async (body: AcceptedBody | RejectedBody) => {
