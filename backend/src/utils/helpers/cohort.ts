@@ -45,9 +45,12 @@ export const updateStagesHandler = (
   cohortStages: IStage[],
   receivedStages: SetOptional<IStage, "id">[]
 ) => {
-  // check for duplicates
+  const updatedStages = receivedStages.filter((stage) => stage.id);
+  const addedStages = receivedStages.filter((stage) => !stage.id);
+
+  // check for duplicates in new stages and throw if any
   const cohortStageTitles = cohortStages.map((stage) => stage.name);
-  receivedStages
+  addedStages
     .map((stage) => stage.name)
     .forEach((addedStageTitle) => {
       if (cohortStageTitles.includes(addedStageTitle)) {
@@ -58,9 +61,6 @@ export const updateStagesHandler = (
         );
       }
     });
-
-  const updatedStages = receivedStages.filter((stage) => stage.id);
-  const addedStages = receivedStages.filter((stage) => !stage.id);
 
   // update existing stages
   const updatedCohortStages = cohortStages.map((stage) => {
