@@ -30,7 +30,7 @@ export interface CreateCohort {
 }
 
 export interface Stage {
-  title: string;
+  name: string;
   description: string;
 }
 
