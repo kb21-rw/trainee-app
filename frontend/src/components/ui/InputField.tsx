@@ -41,7 +41,7 @@ const InputField = ({
       <div
         className={`${
           styles && "!w-2/3"
-        } w-full border border-gray-200 flex justify-between rounded-xl px-3 h-[58px]`}
+        } w-full border border-gray-200 flex justify-between rounded-xl px-3 h-[58px] relative`}
       >
         <input
           type={show ? "text" : type}
@@ -52,7 +52,7 @@ const InputField = ({
           {...(register && { ...register(name, options) })}
         />
         {(fieldErrorMessage || errorMessage) && (
-          <div className="absolute text-red-500">
+          <div className="w-full text-sm text-red-500 absolute -top-7">
             {(fieldErrorMessage || errorMessage).toString()}
           </div>
         )}
