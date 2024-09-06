@@ -16,7 +16,7 @@ import CustomError from "./middlewares/customError";
 import { URL_NOT_FOUND } from "./utils/errorCodes";
 
 const PORT = process.env.PORT || 3000;
-const mongodb_url = process.env.MONGODB_URL_LOCAL || "";
+const mongodb_url = process.env.MONGODB_URL || "";
 const app = express();
 
 mongoose.connect(mongodb_url);

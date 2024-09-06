@@ -75,12 +75,11 @@ export const createApplicantResponseService = async (
 ) => {
   const currentCohort = await getCurrentCohort();
 
-  // Throw if the an applicant already exists
-  if (
-    currentCohort.applicants.some(
-      (applicant) => applicant.id.toString() === loggedInUser.id
-    )
-  ) {
+  const applicantExists = currentCohort.applicants.some(
+    (applicant) => applicant.id.toString() === loggedInUser.id
+  );
+
+  if (applicantExists) {
     throw new CustomError(
       APPLICATION_FORM_ERROR,
       "Your application form has already been received, please wait for a response",
