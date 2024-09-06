@@ -13,6 +13,7 @@ import {
 } from "../utils/errorCodes";
 import { getCurrentCohort } from "../utils/helpers/cohort";
 import {
+  CreateApplicationFormDto,
   CreateFormDto,
   FormType,
   GetCohortDto,
@@ -20,6 +21,7 @@ import {
 } from "../utils/types";
 import mongoose from "mongoose";
 import { createStagesHandler } from "../utils/helpers";
+import { ICohort } from "../models/Cohort";
 const { Types } = mongoose;
 const { ObjectId } = Types;
 
@@ -56,27 +58,16 @@ export const updateFormService = async (
   return form;
 };
 
-export const createFormService = async (formData: CreateFormDto) => {
-  const { name, description, type, startDate, endDate, stages } = formData;
+export const createApplicationFormService = async (
+  form: CreateApplicationFormDto,
+  cohort: ICohort
+) => {
+  const { name, description, type, startDate, endDate, stages } = form;
 
-  const currentCohort = await getCurrentCohort();
-
-  const cohortWithPopulatedForms = await currentCohort.populate<{
-    forms: IForm[];
-  }>("forms");
-
-  if (cohortWithPopulatedForms.forms.some((form) => form.name === name)) {
-    throw new CustomError(
-      DUPLICATE_DOCUMENT,
-      "A form with the same name already exists",
-      409
-    );
-  }
-
-  if (type === FormType.Application && currentCohort.applicationForm?.id) {
+  if (cohort.applicationForm.id) {
     throw new CustomError(
       APPLICATION_FORM_ERROR,
-      "An application form already exists for the current cohort. Please edit the existing form.",
+      "An application form already exists. Please edit the existing form.",
       409
     );
   }
@@ -93,27 +84,51 @@ export const createFormService = async (formData: CreateFormDto) => {
     );
   }
 
-  const createdForm = await Form.create({ name, description, type });
+  const applicationForm = await Form.create({ name, description, type });
 
-  if (type === FormType.Application) {
-    const applicationStages = stages ?? [];
-    applicationStages.unshift({
-      name: "Application",
-      description: "",
-    });
+  const applicationStages = stages ?? [];
+  applicationStages.unshift({
+    name: "Application",
+    description: "",
+  });
 
-    currentCohort.applicationForm.id = createdForm.id;
-    currentCohort.applicationForm.startDate = startDateJs.toDate();
-    currentCohort.applicationForm.endDate = endDateJs.toDate();
-    currentCohort.applicationForm.stages =
-      createStagesHandler(applicationStages);
-  } else {
-    currentCohort.forms.push(createdForm.id);
+  cohort.applicationForm.id = applicationForm.id;
+  cohort.applicationForm.startDate = startDateJs.toDate();
+  cohort.applicationForm.endDate = endDateJs.toDate();
+  cohort.applicationForm.stages = createStagesHandler(applicationStages);
+
+  await cohort.save();
+
+  return applicationForm;
+};
+
+export const createFormService = async (formData: CreateFormDto) => {
+  const { name, description, type } = formData;
+
+  const currentCohort = await getCurrentCohort();
+
+  if (formData.type === FormType.Application) {
+    return await createApplicationFormService(formData, currentCohort);
   }
 
+  const cohortWithPopulatedForms = await currentCohort.populate<{
+    forms: IForm[];
+  }>("forms");
+
+  if (cohortWithPopulatedForms.forms.some((form) => form.name === name)) {
+    throw new CustomError(
+      DUPLICATE_DOCUMENT,
+      "A form with the same name already exists",
+      409
+    );
+  }
+
+  const form = await Form.create({ name, description, type });
+
+  currentCohort.forms.push(form.id);
   await currentCohort.save();
 
-  return createdForm;
+  return form;
 };
 
 export const getSingleFormService = async (formId: string) => {

@@ -13,15 +13,25 @@ export interface IStage {
   name: string;
   description: string;
 }
-export interface CreateFormDto {
+export interface CreateApplicantTraineeFormDto {
+  type: FormType.Applicant | FormType.Trainee;
   name: string;
   description: string;
-  type: FormType;
-  // Form application form
-  startDate?: string;
-  endDate?: string;
-  stages?: Except<IStage, "id">[];
 }
+
+export interface CreateApplicationFormDto {
+  type: FormType.Application;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  stages: Except<IStage, "id">[];
+}
+
+export type CreateFormDto =
+  | CreateApplicationFormDto
+  | CreateApplicantTraineeFormDto;
+
 export interface CreateCohortDto {
   name: string;
   description?: string;
