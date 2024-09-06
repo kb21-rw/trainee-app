@@ -93,7 +93,7 @@ const Login = () => {
         </span>
         <span>
           Don&apos;t have an account ?{" "}
-          <Link to="/applicant/signup" className="text-primary-dark">
+          <Link to="/signup" className="text-primary-dark">
             Sign up
           </Link>
         </span>
