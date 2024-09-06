@@ -1,4 +1,5 @@
 import { Date, Types } from "mongoose";
+import { Except, SetOptional } from "type-fest";
 
 interface MetaType {
   _id: string;
@@ -6,31 +7,59 @@ interface MetaType {
   updatedAt: Date;
   __v: number;
 }
-export interface CreateFormDto {
-  title: string;
+
+export interface IStage {
+  id: string;
+  name: string;
   description: string;
-  type: FormType;
 }
+export interface CreateApplicantTraineeFormDto {
+  type: FormType.Applicant | FormType.Trainee;
+  name: string;
+  description: string;
+}
+
+export interface CreateApplicationFormDto {
+  type: FormType.Application;
+  name: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  stages: Except<IStage, "id">[];
+}
+
+export type CreateFormDto =
+  | CreateApplicationFormDto
+  | CreateApplicantTraineeFormDto;
+
 export interface CreateCohortDto {
   name: string;
   description?: string;
-  stages: { tile: string; description: string }[];
+  stages: Except<IStage, "id">[];
 }
 export interface UpdateFormDto {
-  title: string;
+  name: string;
   description: string;
 }
 
 export interface UpdateCohortDto {
   name?: string;
   description?: string;
-  stages?: { id?: string, title: string; description: string }[];
+  stages?: SetOptional<IStage, "id">[];
 }
 
 export interface CreateQuestionDto {
   title: string;
-  type: "text" | "dropdown";
+  type: QuestionType;
+  isRequired: boolean;
   options: string[];
+}
+
+export interface UpdateQuestionDto {
+  prompt?: string;
+  type?: QuestionType;
+  isRequired?: boolean;
+  options?: string[];
 }
 
 export interface CreateResponseDto {
@@ -54,6 +83,7 @@ export interface Search {
 export type GetCohortDto = { _id: Types.ObjectId } | { isActive: true };
 
 export enum FormType {
+  Application = "Application",
   Applicant = "Applicant",
   Trainee = "Trainee",
 }

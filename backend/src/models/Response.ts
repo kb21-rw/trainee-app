@@ -3,7 +3,7 @@ import { IUser } from "./User";
 
 export interface IResponse extends Document {
   userId: IUser["_id"];
-  text: null | string | string[];
+  value: string | string[];
 }
 
 const ResponseSchema = new Schema(
@@ -11,14 +11,14 @@ const ResponseSchema = new Schema(
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      require: true,
     },
-    text: {
+    value: {
       type: Schema.Types.Mixed,
-      default: null,
+      required: true,
       validate: {
-        validator: function (value: null | string | string[]) {
+        validator: function (value: string | string[]) {
           return (
-            value === null ||
             typeof value === "string" ||
             (Array.isArray(value) &&
               value.every((item) => typeof item === "string"))

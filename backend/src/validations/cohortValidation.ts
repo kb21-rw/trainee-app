@@ -16,7 +16,7 @@ export const createCohortValidation = Joi.object({
     }),
 
   stages: Joi.array().items(
-    Joi.object({ title: Joi.string().min(1), description: Joi.string() })
+    Joi.object({ name: Joi.string().min(1), description: Joi.string() })
   ),
 });
 
@@ -30,7 +30,7 @@ export const updateCohortValidation = Joi.object({
         .length(24)
         .message("stageId is not valid")
         .optional(),
-      title: Joi.string().min(1),
+      name: Joi.string().min(1),
       description: Joi.string(),
     })
   ),

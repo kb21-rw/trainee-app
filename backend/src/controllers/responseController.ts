@@ -40,7 +40,8 @@ export const createApplicantResponse = async (
     await createApplicantResponseValidation.validateAsync(req.body);
     const createdResponse = await createApplicantResponseService(
       loggedInUser,
-      req.body
+      req.body,
+      req.query.action === "submit"
     );
     return res.status(201).json(createdResponse);
   } catch (error) {

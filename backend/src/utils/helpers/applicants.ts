@@ -1,4 +1,3 @@
-import { Types } from "mongoose";
 import { ICohort } from "../../models/Cohort";
 import Response from "../../models/Response";
 import { RejectedBody } from "../types";
@@ -11,8 +10,8 @@ export const acceptUserHandler = async (
   currentCohort: ICohort,
   userId: string
 ) => {
-  currentCohort.trainees.push(new Types.ObjectId(userId));
-  await currentCohort.save();
+  // currentCohort.trainees.push(new Types.ObjectId(userId));
+  // await currentCohort.save();
 
   type PopulatedForm = Omit<IForm, "questionIds"> & {
     questionIds: IQuestion[];
@@ -41,6 +40,7 @@ export const rejectUserHandler = async (
   currentCohort: ICohort,
   { userId, stageId, feedback }: RejectedBody
 ) => {
+  console.log(feedback);
   if (!currentCohort.stages.map((stage) => stage.id).includes(stageId)) {
     throw new CustomError(
       STAGE_NOT_FOUND,
@@ -49,8 +49,8 @@ export const rejectUserHandler = async (
     );
   }
 
-  currentCohort.rejected.push({ userId, stageId, feedback });
-  await currentCohort.save();
+  // currentCohort.rejected.push({ userId, stageId, feedback });
+  // await currentCohort.save();
 
   return { user: userId, message: "The user was rejected successfully!" };
 };

@@ -1,7 +1,15 @@
 import { Types } from "mongoose";
 import CustomError from "../../middlewares/customError";
-import Cohort from "../../models/Cohort";
-import { COHORT_NOT_FOUND, DUPLICATE_DOCUMENT } from "../errorCodes";
+import Cohort, { ICohort } from "../../models/Cohort";
+import {
+  COHORT_NOT_FOUND,
+  DUPLICATE_DOCUMENT,
+  FORM_NOT_FOUND,
+  NOT_ALLOWED,
+} from "../errorCodes";
+import { IStage } from "../types";
+import { SetOptional } from "type-fest";
+import Form, { IForm } from "../../models/Form";
 
 export const getCurrentCohort = async () => {
   const currentCohort = await Cohort.findOne({ isActive: true });
@@ -13,22 +21,37 @@ export const getCurrentCohort = async () => {
   return currentCohort;
 };
 
+export const getApplicationForm = async (currentCohort: ICohort) => {
+  if (!currentCohort.applicationForm.id) {
+    throw new CustomError(NOT_ALLOWED, "Applications aren't open yet", 401);
+  }
+
+  const applicationForm = await Form.findById<IForm>(
+    currentCohort.applicationForm.id
+  );
+
+  if (!applicationForm) {
+    throw new CustomError(
+      FORM_NOT_FOUND,
+      "Something wrong, our team is trying to fix it",
+      500
+    );
+  }
+
+  return applicationForm;
+};
+
 export const updateStagesHandler = (
-  cohortStages: {
-    id: string;
-    title: string;
-    description: string;
-  }[],
-  receivedStages: {
-    id?: string;
-    title: string;
-    description: string;
-  }[]
+  cohortStages: IStage[],
+  receivedStages: SetOptional<IStage, "id">[]
 ) => {
-  // check for duplicates
-  const cohortStageTitles = cohortStages.map((stage) => stage.title);
-  receivedStages
-    .map((stage) => stage.title)
+  const updatedStages = receivedStages.filter((stage) => stage.id);
+  const addedStages = receivedStages.filter((stage) => !stage.id);
+
+  // check for duplicates in new stages and throw if any
+  const cohortStageTitles = cohortStages.map((stage) => stage.name);
+  addedStages
+    .map((stage) => stage.name)
     .forEach((addedStageTitle) => {
       if (cohortStageTitles.includes(addedStageTitle)) {
         throw new CustomError(
@@ -38,9 +61,6 @@ export const updateStagesHandler = (
         );
       }
     });
-
-  const updatedStages = receivedStages.filter((stage) => stage.id);
-  const addedStages = receivedStages.filter((stage) => !stage.id);
 
   // update existing stages
   const updatedCohortStages = cohortStages.map((stage) => {

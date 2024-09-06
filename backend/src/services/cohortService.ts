@@ -1,11 +1,11 @@
 import CustomError from "../middlewares/customError";
 import Cohort from "../models/Cohort";
-import Form from "../models/Form";
+import Form, { IForm } from "../models/Form";
 import { getCohortQuery, getCohortsQuery } from "../queries/cohortQueries";
 import {
   COHORT_NOT_FOUND,
   FORM_NOT_FOUND,
-  NOT_ALLOWED
+  NOT_ALLOWED,
 } from "../utils/errorCodes";
 import {
   acceptUserHandler,
@@ -18,7 +18,14 @@ import {
   RejectedBody,
   UpdateCohortDto,
 } from "../utils/types";
-import { updateStagesHandler } from "../utils/helpers/cohort";
+import {
+  getApplicationForm,
+  getCurrentCohort,
+  updateStagesHandler,
+} from "../utils/helpers/cohort";
+import { createStagesHandler } from "../utils/helpers";
+import { getCompleteForm } from "../utils/helpers/forms";
+import { getUserFormResponses } from "../utils/helpers/response";
 
 const isAcceptedBody = (
   body: AcceptedBody | RejectedBody
@@ -47,7 +54,11 @@ export const getCohortsService = async (searchString: string) => {
 
 export const createCohortService = async (cohortData: CreateCohortDto) => {
   await Cohort.updateOne({ isActive: true }, { isActive: false });
-  const newCohort = await Cohort.create(cohortData);
+
+  const newCohort = await Cohort.create({
+    ...cohortData,
+    stages: createStagesHandler(cohortData.stages),
+  });
 
   return newCohort;
 };
@@ -79,27 +90,17 @@ export const updateCohortService = async (
 };
 
 export const getApplicationFormService = async () => {
-  const currentCohort = await Cohort.findOne({ isActive: true });
-
-  if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found!", 404);
-  }
+  const currentCohort = await getCurrentCohort();
 
   if (!currentCohort.applicationForm.id) {
     throw new CustomError(NOT_ALLOWED, "Applications aren't open yet", 401);
   }
 
-  const form = await Form.findById(currentCohort.applicationForm.id)
-    .select("title descriptions questionIds")
-    .populate({
-      path: "questionIds",
-      select: "title type options",
-    })
-    .lean()
-    .exec();
+  const applicationForm = await Form.findById<IForm>(
+    currentCohort.applicationForm.id
+  );
 
-  if (!form) {
-    console.log("Form is referencing to a document that doesn't exist");
+  if (!applicationForm) {
     throw new CustomError(
       FORM_NOT_FOUND,
       "Something wrong, our team is trying to fix it",
@@ -107,18 +108,24 @@ export const getApplicationFormService = async () => {
     );
   }
 
-  const { questionIds, ...rest } = form;
+  const { startDate, endDate, stages } = currentCohort.applicationForm;
 
-  return { ...rest, questions: questionIds };
+  const completeApplicationFrom = await getCompleteForm(applicationForm);
+
+  return { ...completeApplicationFrom, startDate, endDate, stages };
+};
+
+export const getMyApplicationService = async (loggedInUserId: string) => {
+  const currentCohort = await getCurrentCohort();
+
+  const applicationForm = await getApplicationForm(currentCohort);
+
+  return await getUserFormResponses(applicationForm, loggedInUserId);
 };
 
 export const decisionService = async (body: AcceptedBody | RejectedBody) => {
   const { userId } = body;
-  const currentCohort = await Cohort.findOne({ isActive: true });
-
-  if (!currentCohort) {
-    throw new CustomError(COHORT_NOT_FOUND, "Cohort not found", 404);
-  }
+  const currentCohort = await getCurrentCohort();
 
   const cohortApplicants = currentCohort.applicants.map((id) => id.toString());
 
