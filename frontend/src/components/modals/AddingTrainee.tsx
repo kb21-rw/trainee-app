@@ -9,6 +9,8 @@ import {
 } from "../../features/user/apiSlice";
 import Loader from "../ui/Loader";
 import Alert from "../ui/Alert";
+import useAutoCloseModal from "../../utils/hooks/useAutoCloseModal";
+import { UserRole } from "../../utils/types";
 
 const AddingTraineeModal = ({
   closePopup,
@@ -32,9 +34,11 @@ const AddingTraineeModal = ({
 
     await createTrainee({
       jwt,
-      body: { ...data, role: "TRAINEE" },
+      body: { ...data, role: UserRole.Trainee },
     });
   };
+
+  useAutoCloseModal(isSuccess, closePopup);
 
   const errorMessage: any =
     errors?.name?.message ||
@@ -49,10 +53,12 @@ const AddingTraineeModal = ({
         </div>
       )}
       {errorMessage && <Alert type="error">{errorMessage}</Alert>}
-      {isSuccess && <Alert type="success">Trainee was added succesfully</Alert>}
+      {isSuccess && (
+        <Alert type="success">Trainee was added successfully</Alert>
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="flex flex-col gap-12 w-full"
+        className="flex flex-col gap-6 w-full"
       >
         <InputField
           type="text"
@@ -98,10 +104,10 @@ const AddingTraineeModal = ({
           </select>
         </div>
         <div className="flex gap-2">
-          <Button outlined clickHandler={closePopup}>
+          <Button outlined onClick={closePopup}>
             Cancel
           </Button>
-          <Button>Save</Button>
+          <Button type="submit">Save</Button>
         </div>
       </form>
     </ModalLayout>

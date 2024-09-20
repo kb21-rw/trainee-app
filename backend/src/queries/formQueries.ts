@@ -9,7 +9,7 @@ export const getFormsQuery = async (searchString: string) => {
     {
       $lookup: {
         from: "questions",
-        localField: "questionsId",
+        localField: "questionIds",
         foreignField: "_id",
         as: "questions",
       },
@@ -18,9 +18,15 @@ export const getFormsQuery = async (searchString: string) => {
       $project: {
         title: 1,
         description: 1,
+        type:1,
         questions: 1,
       },
     },
   ]);
+  return forms;
+};
+
+export const getFormQuery = async (formId: string) => {
+  const forms: any = await Form.findById(formId).populate("questionIds").exec();
   return forms;
 };

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Cookies from "universal-cookie";
 import {
   useDeleteTraineeMutation,
   useGetAllTraineesQuery,
@@ -8,18 +7,20 @@ import AddingTraineeModal from "../../components/modals/AddingTrainee";
 import EditTrainee from "../../components/modals/EditTrainee";
 import UserTable from "../../components/ui/UserTable";
 import UserTableHeader from "../../components/ui/UserTableHeader";
-import { getTrainees } from "../../utils/helper";
+import { getJWT, getTrainees } from "../../utils/helper";
 import {
   usersPerPageValues,
   traineeTableDataItems,
   traineeTableHeaders,
   traineeTableSortingValues,
 } from "../../utils/data";
-import AddUserButton from "../../components/ui/AddUserButton";
+import DeleteModal from "../../components/modals/DeleteModal";
+import Button from "../../components/ui/Button";
+import PlusIcon from "../../assets/PlusIcon";
+import { UserRole } from "../../utils/types";
 
 const TraineesInfo = () => {
-  const cookies = new Cookies();
-  const jwt: string = cookies.get("jwt");
+  const jwt: string = getJWT()
   const [query, setQuery] = useState("");
   const [editTrainee, setEditTrainee] = useState<string[] | null>(null);
   const { data, isFetching: isGetAllTraineesLoading } = useGetAllTraineesQuery({
@@ -29,31 +30,64 @@ const TraineesInfo = () => {
   const [isAddingTrainee, setIsAddingTrainee] = useState(false);
   const [deleteTrainee, { isFetching: isDeleteTraineeLoading }] =
     useDeleteTraineeMutation();
-  const handleDeleteTrainee = async (id: string) => {
-    await deleteTrainee({ jwt, id });
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [traineeTobeDeletedId, setTraineeTobeDeletedId] = useState<
+    string | null
+  >(null);
+
+  const handleDeleteTrainee = async () => {
+    if (traineeTobeDeletedId)
+      await deleteTrainee({ jwt, id: traineeTobeDeletedId });
+    setShowDeleteModal(false);
   };
 
   const traineesList: string[][] = getTrainees(data, traineeTableDataItems);
 
+  const traineeTobeDeleted = traineesList?.find(
+    (trainee) => trainee[0] == traineeTobeDeletedId
+  );
+  const traineeTobeDeletedName = traineeTobeDeleted
+    ? traineeTobeDeleted[1]
+    : "";
+
   return (
     <div className="py-8">
-      <AddUserButton addUserHandler={() => setIsAddingTrainee(true)}>
-        Add trainee
-      </AddUserButton>
+      <div className="flex justify-end mb-4">
+        <Button onClick={() => setIsAddingTrainee(true)}>
+          <div className="flex items-center right-0">
+            <PlusIcon /> <span>Add trainee</span>
+          </div>
+        </Button>
+      </div>
       <UserTableHeader
         setQuery={setQuery}
         sortingValues={traineeTableSortingValues}
         usersPerPageValues={usersPerPageValues}
+        userType="Trainee"
       />
       <UserTable
         headers={traineeTableHeaders}
         data={traineesList}
         actions={[
           { type: "edit", actionCaller: setEditTrainee },
-          { type: "delete", actionCaller: handleDeleteTrainee },
+          {
+            type: "delete",
+            actionCaller: async (id: string) => {
+              await setTraineeTobeDeletedId(id);
+              setShowDeleteModal(true);
+            },
+          },
         ]}
         isLoading={isDeleteTraineeLoading || isGetAllTraineesLoading}
       />
+      {showDeleteModal && (
+        <DeleteModal
+          title="a Trainee"
+          name={traineeTobeDeletedName}
+          closePopup={() => setShowDeleteModal(false)}
+          onDelete={handleDeleteTrainee}
+        />
+      )}
       {isAddingTrainee && (
         <AddingTraineeModal
           jwt={jwt}
@@ -65,7 +99,7 @@ const TraineesInfo = () => {
           jwt={jwt}
           closePopup={() => setEditTrainee(null)}
           traineeData={editTrainee}
-          role="ADMIN"
+          role={UserRole.Admin}
         />
       )}
     </div>

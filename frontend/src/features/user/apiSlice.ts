@@ -5,7 +5,19 @@ const api_url = import.meta.env.VITE_API_URL;
 export const usersApi: any = createApi({
   reducerPath: "usersApi",
   baseQuery: fetchBaseQuery({ baseUrl: api_url }),
-  tagTypes: ["coaches", "trainees", "myTrainees", "profile"],
+  tagTypes: [
+    "coaches",
+    "trainees",
+    "myTrainees",
+    "profile",
+    "forms",
+    "questions",
+    "response",
+    "overview",
+    "applicantForm",
+    "applicantResponse",
+    "cohorts"
+  ],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
       query: (args) => {
@@ -148,6 +160,25 @@ export const usersApi: any = createApi({
       invalidatesTags: ["profile"],
     }),
 
+    signup: builder.mutation({
+      query: (body)=>{
+        return {
+          url: "auth/register/applicant",
+          method: "POST",
+          body: {...body},
+        };
+      }
+    }),
+    verifyApplicant: builder.mutation({
+      query: (userId) => {
+        return {
+          url: `/auth/applicant/verify?userId=${userId}`,
+          method: "PATCH",
+          
+        };
+      },
+    }),
+
     resetPassword: builder.mutation({
       query: (body) => {
         return {
@@ -183,6 +214,209 @@ export const usersApi: any = createApi({
       },
       invalidatesTags: ["profile"],
     }),
+
+    getAllForms: builder.query({
+      query: (args) => {
+        const { jwt, searchString } = args;
+        return {
+          url: `/forms?searchString=${searchString}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      providesTags: ["forms"],
+    }),
+
+    getForm: builder.query({
+      query: (args) => {
+        const { jwt, id } = args;
+        return {
+          url: `/forms/${id}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      providesTags: ["forms"],
+    }),
+
+    createForm: builder.mutation({
+      query: (args) => {
+        const { jwt, body } = args;
+        return {
+          url: "/forms",
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["forms"],
+    }),
+
+    editForm: builder.mutation({
+      query: (args) => {
+        const { jwt, body, id } = args;
+        return {
+          url: `/forms/${id}`,
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["forms"],
+    }),
+
+    deleteForm: builder.mutation({
+      query: (args) => {
+        const { jwt, id } = args;
+        return {
+          url: `/forms/${id}`,
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      invalidatesTags: ["forms"],
+    }),
+
+    getAllQuestionsForForm: builder.query({
+      query: (args) => {
+        const { jwt, formId } = args;
+        return {
+          url: `/questions/${formId}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      providesTags: ["questions"],
+    }),
+
+    createQuestion: builder.mutation({
+      query: (args) => {
+        const { jwt, formId, body } = args;
+        return {
+          url: `/questions/${formId}`,
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["forms"],
+    }),
+
+    deleteQuestion: builder.mutation({
+      query: (args) => {
+        const { jwt, id } = args;
+        return {
+          url: `/questions/${id}`,
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      invalidatesTags: ["forms"],
+    }),
+
+    editQuestion: builder.mutation({
+      query: (args) => {
+        const { jwt, body, id } = args;
+        return {
+          url: `/questions/${id}`,
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["forms"],
+    }),
+    getOverview: builder.query({
+      query: ({ jwt }) => ({
+        url: "/overview",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      }),
+      providesTags: ["overview"],
+    }),
+
+    getOverviewForCoach: builder.query({
+      query: ({ jwt }) => ({
+        url: "/overview/my-trainees",
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+      }),
+      providesTags: ["overview"],
+    }),
+
+    addResponse: builder.mutation({
+      query: ({ jwt, body, userId, questionId }) => ({
+        url: `/responses/${questionId}?userId=${userId}`,
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+        body: { ...body },
+      }),
+      invalidatesTags: ["overview", "response"],
+    }),
+
+    getFormForApplicants: builder.query({
+      query: (jwt) => {
+        return {
+          url: `/cohorts/application`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          }
+        };
+      },
+      providesTags: ["applicantForm"],
+    }),
+
+    addApplicantResponse: builder.mutation({
+      query: ({jwt, body}) => ({
+        url: '/responses/application',
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${jwt}`,
+        },
+        body,
+      }),
+      invalidatesTags: ["applicantResponse"],
+    }),
+
+    createCohort: builder.mutation({
+      query: (args) => {
+        const { jwt, body } = args;
+        return {
+          url: "/cohorts",
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: { ...body },
+        };
+      },
+      invalidatesTags: ["cohorts"],
+    }),
   }),
 });
 
@@ -192,6 +426,8 @@ export const {
   useCreateCoachMutation,
   useCreateTraineeMutation,
   useLoginMutation,
+  useSignupMutation,
+  useVerifyApplicantMutation,
   useGetProfileQuery,
   useUpdateProfileMutation,
   useResetPasswordMutation,
@@ -200,4 +436,19 @@ export const {
   useGetTraineesForCoachQuery,
   useEditCoachMutation,
   useEditTraineeMutation,
+  useGetAllFormsQuery,
+  useDeleteFormMutation,
+  useGetFormQuery,
+  useCreateFormMutation,
+  useEditFormMutation,
+  useEditQuestionMutation,
+  useGetAllQuestionsForFormQuery,
+  useCreateQuestionMutation,
+  useDeleteQuestionMutation,
+  useGetOverviewQuery,
+  useAddResponseMutation,
+  useGetOverviewForCoachQuery,
+  useGetFormForApplicantsQuery,
+  useAddApplicantResponseMutation,
+  useCreateCohortMutation,
 } = usersApi;

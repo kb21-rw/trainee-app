@@ -5,15 +5,17 @@ import {
   updateFormController,
   getSingleFormController,
   deleteFormController,
-} from "../controllers/formContoller";
+} from "../controllers/formController";
 import { verifyJWT } from "../middlewares/authenticate";
 import { isAdmin } from "../middlewares/authorization";
 
 const router = Router();
 
+router.get("/", verifyJWT, isAdmin, getFormsController);
+router.get("/:formId", verifyJWT, isAdmin, getSingleFormController);
+
 router.post("/", verifyJWT, isAdmin, createFormController);
-router.get("/", verifyJWT, getFormsController);
-router.get("/:formId", verifyJWT, getSingleFormController);
 router.patch("/:formId", verifyJWT, isAdmin, updateFormController);
 router.delete("/:formId", verifyJWT, isAdmin, deleteFormController);
+
 export default router;
