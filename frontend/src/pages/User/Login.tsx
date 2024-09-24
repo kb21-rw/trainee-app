@@ -68,6 +68,7 @@ const Login = () => {
           options={{
             required: { value: true, message: "Email is required field" },
           }}
+          errors={errors}
         />
         <InputField
           name="password"
@@ -78,6 +79,7 @@ const Login = () => {
           options={{
             required: { value: true, message: "Password is required field" },
           }}
+          errors={errors}
         />
       </div>
 
@@ -93,7 +95,7 @@ const Login = () => {
         </span>
         <span>
           Don&apos;t have an account ?{" "}
-          <Link to="/applicant/signup" className="text-primary-dark">
+          <Link to="/signup" className="text-primary-dark">
             Sign up
           </Link>
         </span>
