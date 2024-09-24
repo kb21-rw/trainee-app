@@ -68,6 +68,7 @@ const Login = () => {
           options={{
             required: { value: true, message: "Email is required field" },
           }}
+          errors={errors}
         />
         <InputField
           name="password"
@@ -78,6 +79,7 @@ const Login = () => {
           options={{
             required: { value: true, message: "Password is required field" },
           }}
+          errors={errors}
         />
       </div>
 

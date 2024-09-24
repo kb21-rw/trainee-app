@@ -44,12 +44,14 @@ const ApplicantSignup = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex flex-col h-screen justify-center gap-5 md:gap-16  px-5 sm:px-10 md:p-0 max-w-xl mx-auto"
+      className="flex flex-col h-screen justify-center gap-5 md:gap-8  px-5 sm:px-10 md:p-0 max-w-xl mx-auto"
     >
       <div className="text-center">
         <H2>Sign Up</H2>
       </div>
-      <div className="w-full flex text-center justify-center">{isLoading && <Loader />}</div>
+      <div className="w-full flex text-center justify-center">
+        {isLoading && <Loader />}
+      </div>
       <div className="space-y-3 md:space-y-6 lg:space-y-7 w-full">
         {errorMessage && (
           <div className="py-2 bg-error-light text-error-dark flex justify-center items-center rounded-lg">
@@ -124,7 +126,7 @@ const ApplicantSignup = () => {
       <Button size={ButtonSize.Large} type="submit">
         Sign Up
       </Button>
-      <div className="flex gap-2">
+      <div className="flex items-center justify-center gap-2">
         <span>Already have an account?</span>
         <Link to="/login" className="text-primary-dark">
           Login
