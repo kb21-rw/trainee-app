@@ -7,25 +7,16 @@ import {
   useCreateFormMutation,
 } from "../../features/user/apiSlice";
 import { useNavigate } from "react-router-dom";
+import { FormType } from "../../utils/types";
+import { menuItems } from "../../utils/data";
 
-type FormType = "Applicant" | "Trainee";
-
-interface MenuItemProps {
-    label: string;
-    type?: FormType;
-    link?: string;
-}
 
 export default function CreateFormDropdown() {
     const navigate = useNavigate();
     const jwt: string = getJWT();
     const [createForm] = useCreateFormMutation();
   
-    const menuItems: MenuItemProps[] = [
-      { label: "Create a new Trainee form", type: "Trainee" },
-      { label: "Create a new Applicant form", type: "Applicant" },
-      { label: "Create a new Application form", link: "/forms/create/application-form" },
-    ];
+
 
   const onClickAddForm = async (type: FormType) => {
     try {

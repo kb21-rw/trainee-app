@@ -119,3 +119,10 @@ export enum ApplicantDecision {
   forms: number;
 }
 
+export type FormType = "Applicant" | "Trainee";
+
+export interface MenuItemProps {
+  label: string;
+  type?: FormType;
+  link?: string;
+}
