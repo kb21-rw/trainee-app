@@ -49,9 +49,9 @@ export interface UpdateCohortDto {
 }
 
 export interface CreateQuestionDto {
-  title: string;
+  prompt: string;
   type: QuestionType;
-  isRequired: boolean;
+  required: boolean;
   options: string[];
 }
 
@@ -95,7 +95,7 @@ export enum Role {
   Prospect = "Prospect",
 }
 
-export enum ApplicantDecision {
+export enum Decision {
   Accepted = "Accepted",
   Rejected = "Rejected",
 }
@@ -105,14 +105,8 @@ export enum QuestionType {
   MultiSelect = "MultiSelect",
 }
 
-export interface AcceptedBody {
+export interface DecisionDto {
   userId: string;
-  decision: ApplicantDecision;
-}
-
-export interface RejectedBody {
-  userId: string;
-  decision: ApplicantDecision;
-  stageId: string;
+  decision: Decision;
   feedback: string;
 }
