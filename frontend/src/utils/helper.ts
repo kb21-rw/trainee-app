@@ -145,12 +145,23 @@ export const getCohorts = (data: Cohort[], dataItems: string[]) => {
   return data?.map((item: any) => dataItems.map(key => item[key as keyof Cohort]));
 }
 
-// Generates the next form title based on time of creation...
-export const getNextFormTitle = (type: "Applicant" | "Trainee") => {
-const currentDate = new Date();
-const minutes = currentDate.getMinutes().toString().padStart(2, '0');
-const seconds = currentDate.getSeconds().toString().padStart(2, '0');
+/**
+ * Generates a formatted string indicating the type of form and the time it was created.
+ *
+ * @param {string} type - A string representing the type of form ("Applicant" or "Trainee").
+ *
+ * @returns {string} - A string in the format: `"<Type> Form created at - <Formatted Time>"`.
+ */
 
-const formattedTime = `${minutes}:${seconds}`;
-  return `${type} Form - ${formattedTime}`;
+export const getNextFormTitle = (type: "Applicant" | "Trainee") => {
+  const currentDate = new Date();
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  });
+  const formattedTime = formatter.format(currentDate);
+
+  return `${type} Form created at - ${formattedTime}`;
 };
