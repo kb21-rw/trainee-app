@@ -1,10 +1,10 @@
 import { hash } from "bcryptjs";
 import CustomError from "../middlewares/customError";
-import User from "../models/User";
+import User, { IUser } from "../models/User";
 import { USER_NOT_FOUND } from "../utils/errorCodes";
 
-export const getProfileService = async (userId: string) => {
-  const user = await User.findById(userId, { password: 0 });
+export const getUserService = async (userId: string) => {
+  const user = await User.findById<IUser>(userId, { password: 0 });
   if (!user) {
     throw new CustomError(USER_NOT_FOUND, "User not found", 404);
   }
@@ -12,7 +12,7 @@ export const getProfileService = async (userId: string) => {
   return user;
 };
 
-export const updateProfileService = async (
+export const updateUserService = async (
   userId: string,
   {
     name,
