@@ -19,19 +19,19 @@ import { QuestionType } from "../../utils/types";
 
 const FormSchema = yup
   .object({
-    title: yup.string().required(),
+    name: yup.string().required(),
     description: yup.string().required(),
   })
   .required();
 
 const EditForm = ({
-  title,
+  name,
   description,
   id,
   activeQuestion,
   setActiveQuestion,
 }: {
-  title: string;
+  name: string;
   description: string;
   id: string;
   activeQuestion: string;
@@ -42,7 +42,7 @@ const EditForm = ({
     handleSubmit,
     formState: { isDirty, errors },
   } = useForm({
-    defaultValues: { title, description },
+    defaultValues: { name, description },
     resolver: yupResolver(FormSchema),
   });
 
@@ -84,8 +84,8 @@ const EditForm = ({
         <input
           placeholder="Enter title"
           className="outline-none text-[42px] font-bold border-b border-black"
-          defaultValue={title}
-          {...register("title")}
+          defaultValue={name}
+          {...register("name")}
         />
         <input
           placeholder="Enter description"
@@ -96,7 +96,7 @@ const EditForm = ({
         {errors.description && (
           <Alert type="error">Description shouldn&#39;t be empty</Alert>
         )}
-        {errors.title && (
+        {errors.name && (
           <Alert type="error">Title shouldn&#39;t be empty</Alert>
         )}
       </div>

@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 export interface IFormType {
   _id: string;
-  title: string;
+  name: string;
   description: string;
   type: string;
   questions: number;
@@ -119,3 +119,10 @@ export enum ApplicantDecision {
   forms: number;
 }
 
+export type FormType = "Applicant" | "Trainee";
+
+export interface MenuItemProps {
+  label: string;
+  type?: FormType;
+  link?: string;
+}

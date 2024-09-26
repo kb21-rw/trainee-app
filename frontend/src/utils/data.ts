@@ -1,3 +1,5 @@
+import { MenuItemProps } from "./types";
+
 export const adminMenu = [
   { link: "/", title: "Overview" },
   { link: "/forms", title: "Forms" },
@@ -17,6 +19,12 @@ export const applicantMenu = [
   { link: "/apply", title: "Apply" },
   { link: "/saved-application", title: "Saved Application" },
 ]
+
+export const menuItems: MenuItemProps[] = [
+  { label: "Create a new Trainee form", type: "Trainee" },
+  { label: "Create a new Applicant form", type: "Applicant" },
+  { label: "Create a new Application form", link: "/forms/create/application-form" },
+];
 
 export const usersPerPageValues = [10, 20, 30, 40, 50, 100];
 export const cohortsPerPage = [10, 20, 30, 40, 50, 100];

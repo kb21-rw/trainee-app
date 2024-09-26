@@ -1,6 +1,6 @@
 import Cookies from 'universal-cookie'
 import jwtDecode from 'jwt-decode';
-import { ApplicantDetails, IFormType } from './types';
+import { ApplicantDetails } from './types';
 import { Cohort } from './types';
 
 /**
@@ -145,19 +145,23 @@ export const getCohorts = (data: Cohort[], dataItems: string[]) => {
   return data?.map((item: any) => dataItems.map(key => item[key as keyof Cohort]));
 }
 
-// Generates the next form default title...
-export const getNextFormTitle = (forms:IFormType[]) => {
-  let highestFormNumber = 0;
-  forms.forEach((form: IFormType) => {
-    const match = form.title.match(/^Form (\d+)$/);
-    if (match) {
-      const formNumber = parseInt(match[1], 10); 
-      if (formNumber > highestFormNumber) {
-        highestFormNumber = formNumber; 
-      }
-    }else{
-      highestFormNumber=forms?.length;
-    }
+/**
+ * Generates a formatted string indicating the type of form and the time it was created.
+ *
+ * @param {string} type - A string representing the type of form ("Applicant" or "Trainee").
+ *
+ * @returns {string} - A string in the format: `"<Type> Form created at - <Formatted Time>"`.
+ */
+
+export const getNextFormTitle = (type: "Applicant" | "Trainee") => {
+  const currentDate = new Date();
+  const formatter = new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
   });
-  return `Form ${highestFormNumber + 1}`;
+  const formattedTime = formatter.format(currentDate);
+
+  return `${type} Form created at - ${formattedTime}`;
 };

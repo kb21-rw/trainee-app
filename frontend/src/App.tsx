@@ -41,6 +41,7 @@ export default function App() {
             <Route element={<Layout />}>
               <Route index element={<OverView />} />
               <Route path="/forms" element={<AllForm />} />
+              <Route path="/forms/create/application-form" element={<h1>Create application form page</h1>} />
               <Route path="/forms/:id" element={<SingleForm />} />
               <Route path="/applicants" element={<Applicants />} />
               <Route path="/trainees" element={<TraineesInfo />} />
