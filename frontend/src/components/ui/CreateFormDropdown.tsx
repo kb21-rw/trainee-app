@@ -24,8 +24,6 @@ export default function CreateFormDropdown() {
   
       let requestBody: object = { name: nextFormTitle, type };
   
-      console.log("Request Body:", requestBody);
-  
       const { data: formData } = await createForm({
         jwt,
         body: requestBody,
