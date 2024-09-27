@@ -10,13 +10,13 @@ export const createQuestionValidation = Joi.object({
       QuestionType.MultiSelect
     )
     .required(),
-  isRequired: Joi.boolean(),
+  required: Joi.boolean(),
   options: Joi.array()
     .items(Joi.string())
     .when("type", {
       is: Joi.valid(QuestionType.SingleSelect, QuestionType.MultiSelect),
       then: Joi.array().items(Joi.string()).min(1).required(),
-      otherwise: Joi.array().items(Joi.string()).optional(),
+      otherwise: Joi.forbidden(),
     }),
 });
 
