@@ -127,6 +127,15 @@ export const decisionService = async (body: DecisionDto) => {
 
     return await acceptUserHandler(currentCohort, user, feedback, "trainees");
   } else {
-    return await rejectUserHandler(currentCohort, user, feedback);
+    if (user.role === Role.Applicant) {
+      return await rejectUserHandler(
+        currentCohort,
+        user,
+        feedback,
+        "applicants"
+      );
+    }
+
+    return await rejectUserHandler(currentCohort, user, feedback, "trainees");
   }
 };

@@ -148,11 +148,42 @@ export const acceptUserHandler = async (
 };
 
 export const rejectUserHandler = async (
-  _cohort: ICohort,
-  _user: IUser,
-  _feedback: string
+  cohort: ICohort,
+  user: IUser,
+  feedback: string,
+  cohortProperty: "trainees" | "applicants"
 ) => {
-  throw new Error("This feature is not implemented yet!");
+  const participantIndex = indexOfParticipant(user.id, cohort[cohortProperty]);
+  const participant = cohort[cohortProperty][participantIndex];
+  const droppedStageId = participant.droppedStage.id;
+
+  if (participant.droppedStage.isConfirmed) {
+    throw new CustomError(
+      NOT_ALLOWED,
+      `The ${user.name} was rejected already`,
+      403
+    );
+  }
+
+  if (participant.passedStages.includes(droppedStageId)) {
+    throw new CustomError(
+      NOT_ALLOWED,
+      `${user.name} had already passed the last stage of '${cohort.name}' cohort`,
+      403
+    );
+  }
+
+  participant.droppedStage.isConfirmed = true;
+  participant.feedbacks.push({ stageId: droppedStageId, text: feedback });
+
+  cohort[cohortProperty][participantIndex] = participant;
+
+  await cohort.save();
+
+  return {
+    user: user.id,
+    message: `${user.name} was rejected successfully!`,
+  };
 };
 
 export const indexOfParticipant = (userId: string, users: IParticipant[]) => {
