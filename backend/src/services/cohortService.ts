@@ -11,6 +11,7 @@ import {
   CreateCohortDto,
   Decision,
   DecisionDto,
+  Role,
   UpdateCohortDto,
 } from "../utils/types";
 import {
@@ -114,22 +115,17 @@ export const decisionService = async (body: DecisionDto) => {
   const currentCohort = await getCurrentCohort();
   const user = await getUserService(userId);
 
-  const cohortApplicants = currentCohort.applicants.map((id) => id.toString());
-
-  if (!cohortApplicants.includes(userId)) {
-    throw new CustomError(
-      NOT_ALLOWED,
-      "Applicant is not in the current cohort!",
-      401
-    );
-  }
-
-  currentCohort.applicants = currentCohort.applicants.filter(
-    (id) => id.toString() !== userId
-  );
-
   if (decision === Decision.Accepted) {
-    return await acceptUserHandler(currentCohort, user, feedback);
+    if (user.role === Role.Applicant) {
+      return await acceptUserHandler(
+        currentCohort,
+        user,
+        feedback,
+        "applicants"
+      );
+    }
+
+    return await acceptUserHandler(currentCohort, user, feedback, "trainees");
   } else {
     return await rejectUserHandler(currentCohort, user, feedback);
   }
