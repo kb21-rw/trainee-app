@@ -13,11 +13,7 @@ import {
   applicantRegisterSchema,
 } from "../validations/authValidation";
 
-export const register = async (
-  req: any,
-  res: Response,
-  next: NextFunction
-) => {
+export const register = async (req: any, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
     const body = req.body;
@@ -88,8 +84,10 @@ export const resetPassword = async (
   try {
     const body = req.body;
     await resetPasswordSchema.validateAsync(body);
-    const password = await resetPasswordService(req.body);
-    return res.status(200).json({ password });
+    await resetPasswordService(req.body);
+    return res
+      .status(200)
+      .json({ message: "Password updated successfully, check your email." });
   } catch (error: any) {
     next(error);
   }

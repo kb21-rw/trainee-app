@@ -131,5 +131,4 @@ export const resetPasswordService = async (body: any) => {
   user.password = hashedPassword;
   await user.save();
   await sendEmail(user.email, { name: user.name, password });
-  return password;
 };
