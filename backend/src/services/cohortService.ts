@@ -8,36 +8,23 @@ import {
   NOT_ALLOWED,
 } from "../utils/errorCodes";
 import {
-  acceptUserHandler,
-  rejectUserHandler,
-} from "../utils/helpers/applicants";
-import {
-  AcceptedBody,
-  ApplicantDecision,
   CreateCohortDto,
-  RejectedBody,
+  Decision,
+  DecisionDto,
+  Role,
   UpdateCohortDto,
 } from "../utils/types";
 import {
+  acceptUserHandler,
   getApplicationForm,
   getCurrentCohort,
+  rejectUserHandler,
   updateStagesHandler,
 } from "../utils/helpers/cohort";
 import { createStagesHandler } from "../utils/helpers";
 import { getCompleteForm } from "../utils/helpers/forms";
 import { getUserFormResponses } from "../utils/helpers/response";
-
-const isAcceptedBody = (
-  body: AcceptedBody | RejectedBody
-): body is AcceptedBody => {
-  return body.decision === ApplicantDecision.Accepted;
-};
-
-const isRejectedBody = (
-  body: AcceptedBody | RejectedBody
-): body is RejectedBody => {
-  return body.decision === ApplicantDecision.Rejected;
-};
+import { getUserService } from "./userService";
 
 export const getCohortService = async (cohortId: string) => {
   const cohort = await getCohortQuery(cohortId);
@@ -123,29 +110,32 @@ export const getMyApplicationService = async (loggedInUserId: string) => {
   return await getUserFormResponses(applicationForm, loggedInUserId);
 };
 
-export const decisionService = async (body: AcceptedBody | RejectedBody) => {
-  const { userId } = body;
+export const decisionService = async (body: DecisionDto) => {
+  const { userId, decision, feedback } = body;
   const currentCohort = await getCurrentCohort();
+  const user = await getUserService(userId);
 
-  const cohortApplicants = currentCohort.applicants.map((id) => id.toString());
+  if (decision === Decision.Accepted) {
+    if (user.role === Role.Applicant) {
+      return await acceptUserHandler(
+        currentCohort,
+        user,
+        feedback,
+        "applicants"
+      );
+    }
 
-  if (!cohortApplicants.includes(userId)) {
-    throw new CustomError(
-      NOT_ALLOWED,
-      "Applicant is not in the current cohort!",
-      401
-    );
-  }
+    return await acceptUserHandler(currentCohort, user, feedback, "trainees");
+  } else {
+    if (user.role === Role.Applicant) {
+      return await rejectUserHandler(
+        currentCohort,
+        user,
+        feedback,
+        "applicants"
+      );
+    }
 
-  currentCohort.applicants = currentCohort.applicants.filter(
-    (id) => id.toString() !== userId
-  );
-
-  if (isAcceptedBody(body)) {
-    return await acceptUserHandler(currentCohort, userId);
-  }
-
-  if (isRejectedBody(body)) {
-    return await rejectUserHandler(currentCohort, body);
+    return await rejectUserHandler(currentCohort, user, feedback, "trainees");
   }
 };

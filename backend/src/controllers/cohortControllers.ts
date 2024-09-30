@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import {
-  applicationDecisionSchema,
   createCohortValidation,
+  DecisionSchema,
   updateCohortValidation,
 } from "../validations/cohortValidation";
 import {
@@ -99,14 +99,14 @@ export const getMyApplicationController = async (
   }
 };
 
-export const decision = async (
+export const decisionController = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const body = req.body;
-    await applicationDecisionSchema.validateAsync(body);
+    await DecisionSchema.validateAsync(body);
     const decision = await decisionService(body);
     return res.status(201).send(decision);
   } catch (error: any) {
