@@ -6,10 +6,11 @@ import { Control, Controller } from "react-hook-form";
 
 export interface FormInputProps {
   name: string;
+  label: string;
   control: Control<any>;
 }
 
-const FormDateInput = ({ name, control }: FormInputProps) => {
+const FormDateInput = ({ name, control, label }: FormInputProps) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
     <Controller
@@ -17,6 +18,8 @@ const FormDateInput = ({ name, control }: FormInputProps) => {
       control={control}
       render={({ field: { onChange, value } }) => (
         <DatePicker
+          disablePast
+          label={label}
           value={value || null}
           onChange={(newValue) => onChange(newValue)}
         />
