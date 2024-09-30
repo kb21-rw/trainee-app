@@ -8,7 +8,6 @@ import SuccessCheckMarkIcon from "../../assets/SuccessCheckMarkIcon";
 import CheckMarkIcon from "../../assets/CheckMarkIcon";
 import AddIcon from "../../assets/AddIcon";
 import DeleteIcon from "../../assets/DeleteIcon";
-import Alert from "../../components/ui/Alert";
 
 const schema = yup.object().shape({
   title: yup.string().required("Name is required"),
@@ -33,8 +32,8 @@ interface FormDateInputValues {
   endDate: Date | null;
 }
 
-const MyForm = () => {
-  const [activeQuestion, setActiveQuestion] = useState("");
+const CreateApplicationForm = () => {
+  const [activeInput, setActiveInput] = useState("");
 
   const {
     register,
@@ -42,6 +41,7 @@ const MyForm = () => {
     handleSubmit,
     formState: { isDirty, errors },
   } = useForm<FormDateInputValues>({
+    defaultValues: {title: "", description: "", startDate: null, endDate: null},
     resolver: yupResolver(schema),
   });
 
@@ -58,12 +58,12 @@ const MyForm = () => {
       </H1>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        onFocus={() => setActiveQuestion("title")}
+        onFocus={() => setActiveInput("title")}
         className="w-full flex gap-5 mt-10"
       >
         <div
           className={`p-8 custom-shadow border-t-[#673AB7] border-t-8  rounded-xl ${
-            activeQuestion === "title" && "border-l-8 border-l-[#4285F4]"
+            activeInput === "title" && "border-l-8 border-l-[#4285F4]"
           }  flex flex-col gap-5 flex-1`}
         >
           <input
@@ -71,39 +71,41 @@ const MyForm = () => {
             className="outline-none text-[42px] font-bold border-b border-black"
             {...register("title")}
           />
+          {errors.title && (
+            <p className="text-red-400">Title shouldn&#39;t be empty</p>
+          )}
           <input
             placeholder="Enter description"
             className="outline-none border-b border-black"
             {...register("description")}
           />
+          {errors.description && (
+            <p className="text-red-400">Description shouldn&#39;t be empty</p>
+          )}
           <div className="flex items-center gap-x-56">
-            <div className="space-y-3">
-              <p>Start Date</p>
+            <div>
               <FormDateInput
                 name="startDate"
+                label="Application open date"
                 control={control}
               />
+              {errors.startDate && (
+                <p className="text-red-400">
+                  Start date shouldn&#39;t be empty
+                </p>
+              )}
             </div>
-            <div className="space-y-3">
-              <p>End Date</p>
+            <div>
               <FormDateInput
                 name="endDate"
+                label="Application close date"
                 control={control}
               />
+              {errors.endDate && (
+                <p className="text-red-400">End date shouldn&#39;t be empty</p>
+              )}
             </div>
           </div>
-          {errors.description && (
-            <Alert type="error">Description shouldn&#39;t be empty</Alert>
-          )}
-          {errors.title && (
-            <Alert type="error">Title shouldn&#39;t be empty</Alert>
-          )}
-          {errors.startDate && (
-            <Alert type="error">Start date shouldn&#39;t be empty</Alert>
-          )}
-          {errors.endDate && (
-            <Alert type="error">End date shouldn&#39;t be empty</Alert>
-          )}
         </div>
         <div className="flex flex-col gap-6  p-4 custom-shadow rounded-xl h-1/2">
           {isDirty ? (
@@ -125,4 +127,4 @@ const MyForm = () => {
   );
 };
 
-export default MyForm;
+export default CreateApplicationForm ;
