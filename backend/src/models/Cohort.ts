@@ -3,7 +3,7 @@ import { IForm } from "./Form";
 import { IUser } from "./User";
 import { IStage } from "../utils/types";
 
-interface IParticipant {
+export interface IParticipant {
   id: IUser["_id"];
   passedStages: string[];
   droppedStage: {

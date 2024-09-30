@@ -2,8 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import { ProfileSchema } from "../validations/userValidation";
 import {
   deleteUserService,
-  getProfileService,
-  updateProfileService,
+  getUserService,
+  updateUserService,
 } from "../services/userService";
 
 export const getProfile = async (
@@ -13,7 +13,7 @@ export const getProfile = async (
 ) => {
   try {
     const userId = req.user.id;
-    const user = await getProfileService(userId);
+    const user = await getUserService(userId);
     return res.status(200).send(user);
   } catch (error) {
     next(error);
@@ -29,7 +29,7 @@ export const updateProfile = async (
     const userId = req.user.id;
     await ProfileSchema.validateAsync(req.body);
 
-    const user = await updateProfileService(userId, req.body);
+    const user = await updateUserService(userId, req.body);
     return res.status(200).send(user);
   } catch (error) {
     next(error);

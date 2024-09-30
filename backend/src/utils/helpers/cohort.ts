@@ -1,15 +1,17 @@
 import { Types } from "mongoose";
 import CustomError from "../../middlewares/customError";
-import Cohort, { ICohort } from "../../models/Cohort";
+import Cohort, { ICohort, IParticipant } from "../../models/Cohort";
 import {
   COHORT_NOT_FOUND,
   DUPLICATE_DOCUMENT,
   FORM_NOT_FOUND,
   NOT_ALLOWED,
+  USER_NOT_FOUND,
 } from "../errorCodes";
-import { IStage } from "../types";
+import { IStage, Role } from "../types";
 import { SetOptional } from "type-fest";
 import Form, { IForm } from "../../models/Form";
+import { IUser } from "../../models/User";
 
 export const getCurrentCohort = async () => {
   const currentCohort = await Cohort.findOne({ isActive: true });
@@ -79,4 +81,121 @@ export const updateStagesHandler = (
   );
 
   return updatedCohortStages;
+};
+
+export const acceptUserHandler = async (
+  cohort: ICohort,
+  user: IUser,
+  feedback: string,
+  cohortProperty: "trainees" | "applicants"
+) => {
+  const participantIndex = indexOfParticipant(user.id, cohort[cohortProperty]);
+  const participant = cohort[cohortProperty][participantIndex];
+  const droppedStageId = participant.droppedStage.id;
+  const stages =
+    cohortProperty === "applicants"
+      ? cohort.applicationForm.stages
+      : cohort.stages;
+  const numberOfStages = stages.length;
+
+  if (participant.droppedStage.isConfirmed) {
+    throw new CustomError(
+      NOT_ALLOWED,
+      `The ${user.name} was rejected already`,
+      403
+    );
+  }
+
+  // If user is on the last stage
+  if (stages[numberOfStages - 1].id === droppedStageId) {
+    if (user.role === Role.Applicant) {
+      cohort.trainees.push({
+        id: user.id,
+        passedStages: [],
+        droppedStage: { id: cohort.stages[0].id, isConfirmed: false },
+        feedbacks: [],
+      });
+      user.role = Role.Trainee;
+      await user.save();
+    } else {
+      // if participant is a trainee
+      if (participant.passedStages.includes(droppedStageId)) {
+        throw new CustomError(
+          NOT_ALLOWED,
+          `${user.name} had already passed the last stage of '${cohort.name}' cohort`,
+          403
+        );
+      }
+    }
+  } else {
+    const currentStageIndex = stages.findIndex(
+      (stage) => stage.id === droppedStageId
+    );
+    participant.droppedStage.id = stages[currentStageIndex + 1].id;
+  }
+
+  participant.passedStages.push(droppedStageId);
+  participant.feedbacks.push({ stageId: droppedStageId, text: feedback });
+
+  cohort[cohortProperty][participantIndex] = participant;
+
+  await cohort.save();
+
+  return {
+    user: user.id,
+    message: `${user.name} was accepted successfully!`,
+  };
+};
+
+export const rejectUserHandler = async (
+  cohort: ICohort,
+  user: IUser,
+  feedback: string,
+  cohortProperty: "trainees" | "applicants"
+) => {
+  const participantIndex = indexOfParticipant(user.id, cohort[cohortProperty]);
+  const participant = cohort[cohortProperty][participantIndex];
+  const droppedStageId = participant.droppedStage.id;
+
+  if (participant.droppedStage.isConfirmed) {
+    throw new CustomError(
+      NOT_ALLOWED,
+      `The ${user.name} was rejected already`,
+      403
+    );
+  }
+
+  if (participant.passedStages.includes(droppedStageId)) {
+    throw new CustomError(
+      NOT_ALLOWED,
+      `${user.name} had already passed the last stage of '${cohort.name}' cohort`,
+      403
+    );
+  }
+
+  participant.droppedStage.isConfirmed = true;
+  participant.feedbacks.push({ stageId: droppedStageId, text: feedback });
+
+  cohort[cohortProperty][participantIndex] = participant;
+
+  await cohort.save();
+
+  return {
+    user: user.id,
+    message: `${user.name} was rejected successfully!`,
+  };
+};
+
+export const indexOfParticipant = (userId: string, users: IParticipant[]) => {
+  const userIndex = users.findIndex((user) => user.id.toString() === userId);
+
+  if (userIndex === -1) {
+    throw new CustomError(
+      USER_NOT_FOUND,
+      `Can't find that applicant/trainee in the current cohort`,
+      404
+    );
+  }
+
+  return userIndex;
 };
