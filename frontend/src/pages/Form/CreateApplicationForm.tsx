@@ -5,12 +5,12 @@ import SuccessCheckMarkIcon from "../../assets/SuccessCheckMarkIcon";
 import CheckMarkIcon from "../../assets/CheckMarkIcon";
 import AddIcon from "../../assets/AddIcon";
 import DeleteIcon from "../../assets/DeleteIcon";
-import { ApplicationFormProps } from "../../utils/types";
+import { ApplicationFormType } from "../../utils/types";
 import { useApplicationForm } from "../../utils/hooks/useApplicationForm";
 import { FormInputsSection } from "../../components/ui/FormInputsSection";
 import { StagesSection } from "../../components/ui/StagesSection";
 import { useCreateFormMutation } from "../../features/user/apiSlice";
-import  FormDateInputs  from "../../components/ui/FormDateInput";
+import FormDateInputs from "../../components/ui/FormDateInput";
 
 import moment from "moment";
 
@@ -31,7 +31,7 @@ const CreateApplicationForm = () => {
     removeStage,
   } = useApplicationForm();
 
-  const onSubmit = async (data: ApplicationFormProps) => {
+  const onSubmit = async (data: ApplicationFormType) => {
     const requestBody = {
       name: data.title,
       description: data.description,

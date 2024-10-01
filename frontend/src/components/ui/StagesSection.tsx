@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 import { UseFormRegister } from "react-hook-form";
-import { ApplicationFormProps, Stage } from "../../utils/types";
+import { ApplicationFormType, Stage } from "../../utils/types";
 import RemoveIcon from "../../assets/RemoveIcon";
 import AddIcon from "../../assets/AddIcon";
 
@@ -14,7 +14,7 @@ interface Props {
   ) => void;
   addNewStage: () => void;
   removeStage: (index: number) => void;
-  register: UseFormRegister<ApplicationFormProps>;
+  register: UseFormRegister<ApplicationFormType>;
 }
 
 export const StagesSection: React.FC<Props> = ({

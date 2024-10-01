@@ -1,11 +1,11 @@
 import React from "react";
 import { UseFormRegister, FieldErrors, Control } from "react-hook-form";
-import { ApplicationFormProps } from "../../utils/types";
+import { ApplicationFormType } from "../../utils/types";
 
 interface Props {
-  register: UseFormRegister<ApplicationFormProps>;
-  errors: FieldErrors<ApplicationFormProps>;
-  control:  Control<ApplicationFormProps>;
+  register: UseFormRegister<ApplicationFormType>;
+  errors: FieldErrors<ApplicationFormType>;
+  control: Control<ApplicationFormType>;
   activeInput: string;
 }
 
@@ -36,7 +36,6 @@ export const FormInputsSection: React.FC<Props> = ({
       {errors.description && (
         <p className="text-red-400">Description should not be empty</p>
       )}
-      
     </div>
   );
-}
+};

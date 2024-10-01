@@ -1,11 +1,11 @@
 import React from "react";
 import { Control, FieldErrors } from "react-hook-form";
 import FormDateInput from "./FormDateInput";
-import { ApplicationFormProps } from "../../utils/types";
+import { ApplicationFormType } from "../../utils/types";
 
 interface Props {
-  control: Control<ApplicationFormProps>;
-  errors: FieldErrors<ApplicationFormProps>;
+  control: Control<ApplicationFormType>;
+  errors: FieldErrors<ApplicationFormType>;
 }
 
 export const DateSection: React.FC<Props> = ({ control, errors }) => (

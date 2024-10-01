@@ -4,15 +4,14 @@ import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
 import { Controller } from "react-hook-form";
 import moment from "moment";
-import { ApplicationFormProps } from "../../utils/types";
+import { ApplicationFormType } from "../../utils/types";
 
 interface DateSectionProps {
-  control: Control<ApplicationFormProps>;
-  errors: FieldErrors<ApplicationFormProps>;
+  control: Control<ApplicationFormType>;
+  errors: FieldErrors<ApplicationFormType>;
 }
 
 const FormDateInputs: React.FC<DateSectionProps> = ({ control, errors }) => {
-
   const renderDatePicker = (name: "startDate" | "endDate", label: string) => (
     <LocalizationProvider dateAdapter={AdapterMoment}>
       <Controller
@@ -33,7 +32,6 @@ const FormDateInputs: React.FC<DateSectionProps> = ({ control, errors }) => {
       />
     </LocalizationProvider>
   );
-
 
   return (
     <div className="flex items-center gap-20">
