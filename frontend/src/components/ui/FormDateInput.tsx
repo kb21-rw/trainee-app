@@ -1,32 +1,56 @@
 import React from "react";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs'
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { Control, Controller } from "react-hook-form";
+import { Control, FieldErrors } from "react-hook-form";
+import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterMoment } from "@mui/x-date-pickers/AdapterMoment";
+import { Controller } from "react-hook-form";
+import moment from "moment";
+import { ApplicationFormProps } from "../../utils/types";
 
-export interface FormInputProps {
-  name: string;
-  label: string;
-  control: Control<any>;
+interface DateSectionProps {
+  control: Control<ApplicationFormProps>;
+  errors: FieldErrors<ApplicationFormProps>;
 }
 
-const FormDateInput = ({ name, control, label }: FormInputProps) => {
-  return (
-    <LocalizationProvider dateAdapter={AdapterDayjs}>
-    <Controller
-      name={name}
-      control={control}
-      render={({ field: { onChange, value } }) => (
-        <DatePicker
-          disablePast
-          label={label}
-          value={value || null}
-          onChange={(newValue) => onChange(newValue)}
-        />
-      )}
-    />
+const FormDateInputs: React.FC<DateSectionProps> = ({ control, errors }) => {
+
+  const renderDatePicker = (name: "startDate" | "endDate", label: string) => (
+    <LocalizationProvider dateAdapter={AdapterMoment}>
+      <Controller
+        name={name}
+        control={control}
+        defaultValue={null}
+        render={({ field, ...props }) => (
+          <DatePicker
+            value={field.value ? moment(field.value) : null}
+            onChange={(date) => {
+              console.log({ date });
+              field.onChange(date);
+            }}
+            label={label}
+            {...props}
+          />
+        )}
+      />
     </LocalizationProvider>
+  );
+
+
+  return (
+    <div className="flex items-center gap-20">
+      <div>
+        {renderDatePicker("startDate", "Application open date")}
+        {errors.startDate && (
+          <p className="text-red-400">{errors.startDate.message}</p>
+        )}
+      </div>
+      <div>
+        {renderDatePicker("endDate", "Application close date")}
+        {errors.endDate && (
+          <p className="text-red-400">{errors.endDate.message}</p>
+        )}
+      </div>
+    </div>
   );
 };
 
-export default FormDateInput;
+export default FormDateInputs;
