@@ -15,10 +15,11 @@ import FormDateInputs from "../../components/ui/FormDateInput";
 import moment from "moment";
 
 import { getJWT } from "../../utils/helper";
+import Alert from "../../components/ui/Alert";
 
 const CreateApplicationForm = () => {
   const [activeInput, setActiveInput] = useState("");
-  const [createForm] = useCreateFormMutation();
+  const [createForm, { error }] = useCreateFormMutation();
   const {
     register,
     handleSubmit,
@@ -46,10 +47,18 @@ const CreateApplicationForm = () => {
     });
   };
 
+  const errorMessage: string =
+    errors?.endDate?.message || error?.data?.errorMessage;
+
   return (
     <>
+      {errorMessage && (
+        <div className="flex items-center justify-center">
+          <Alert type="error">{errorMessage}</Alert>
+        </div>
+      )}
       <H1>
-        <div className="text-center">
+        <div className="text-center py-3">
           <span>Application Form </span>
         </div>
       </H1>
