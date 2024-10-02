@@ -22,7 +22,6 @@ const FormDateInputs: React.FC<DateSectionProps> = ({ control, errors }) => {
           <DatePicker
             value={field.value ? moment(field.value) : null}
             onChange={(date) => {
-              console.log({ date });
               field.onChange(date);
             }}
             label={label}
