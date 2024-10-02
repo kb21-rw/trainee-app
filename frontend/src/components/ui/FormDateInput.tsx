@@ -34,16 +34,16 @@ const FormDateInputs: React.FC<DateSectionProps> = ({ control, errors }) => {
 
   return (
     <div className="flex items-center gap-20">
-      <div>
+      <div className="relative">
         {renderDatePicker("startDate", "Application open date")}
         {errors.startDate && (
-          <p className="text-red-400">{errors.startDate.message}</p>
+          <p className="text-red-400 text-sm absolute">{errors.startDate.message}</p>
         )}
       </div>
-      <div>
+      <div className="relative">
         {renderDatePicker("endDate", "Application close date")}
         {errors.endDate && (
-          <p className="text-red-400">{errors.endDate.message}</p>
+          <p className="text-red-400 text-sm absolute">{errors.endDate.message}</p>
         )}
       </div>
     </div>
