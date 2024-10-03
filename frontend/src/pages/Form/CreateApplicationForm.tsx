@@ -1,4 +1,3 @@
-// CreateApplicationForm.tsx
 import React, { useState } from "react";
 import { H1 } from "../../components/ui/Typography";
 import SuccessCheckMarkIcon from "../../assets/SuccessCheckMarkIcon";
@@ -19,7 +18,7 @@ import Alert from "../../components/ui/Alert";
 
 const CreateApplicationForm = () => {
   const [activeInput, setActiveInput] = useState("");
-  const [createForm, { error }] = useCreateFormMutation();
+  const [createForm, { error, isSuccess }] = useCreateFormMutation();
   const {
     register,
     handleSubmit,
@@ -31,6 +30,7 @@ const CreateApplicationForm = () => {
     addNewStage,
     removeStage,
   } = useApplicationForm();
+
 
   const onSubmit = async (data: ApplicationFormType) => {
     const requestBody = {
@@ -55,6 +55,11 @@ const CreateApplicationForm = () => {
       {errorMessage && (
         <div className="flex items-center justify-center">
           <Alert type="error">{errorMessage}</Alert>
+        </div>
+      )}
+      {isSuccess && (
+        <div className="flex items-center justify-center">
+          <Alert type="success">Form created successfully</Alert>
         </div>
       )}
       <H1>
