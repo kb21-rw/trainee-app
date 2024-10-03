@@ -20,6 +20,7 @@ const FormDateInputs: React.FC<DateSectionProps> = ({ control, errors }) => {
         defaultValue={null}
         render={({ field, ...props }) => (
           <DatePicker
+            disablePast
             value={field.value ? moment(field.value) : null}
             onChange={(date) => {
               field.onChange(date);
