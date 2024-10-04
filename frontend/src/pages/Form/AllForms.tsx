@@ -8,7 +8,7 @@ import { IFormType } from "../../utils/types";
 import Loader from "../../components/ui/Loader";
 import NotFound from "../../components/ui/NotFound";
 import { getJWT } from "../../utils/helper";
-import CreateFormDropdown from "../../components/ui/createFormDropdown";
+import CreateFormDropdown from "../../components/ui/CreateFormDropdown";
 
 const AllForms = () => {
   const [searchQuery, setSearchQuery] = useState("");
