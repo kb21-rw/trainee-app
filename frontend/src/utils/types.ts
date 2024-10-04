@@ -30,7 +30,7 @@ export interface CreateCohort {
 }
 
 export interface Stage {
-  title: string;
+  name: string;
   description: string;
 }
 
@@ -49,7 +49,7 @@ export interface Question {
   title: string;
   responses: Response[];
   options: string[];
-  type: QuestionType
+  type: QuestionType;
 }
 
 export interface Form {
@@ -89,7 +89,6 @@ export enum UserRole {
   Prospect = "Prospect",
 }
 
-
 export type ApplicantDetails = {
   applied: boolean;
   createdAt: string;
@@ -108,7 +107,8 @@ export type ApplicantDetails = {
 export enum ApplicantDecision {
   Accepted = "Accepted",
   Rejected = "Rejected",
-}export interface Cohort {
+}
+export interface Cohort {
   name: string;
   description: string;
   isActive: boolean;
@@ -121,8 +121,16 @@ export enum ApplicantDecision {
 
 export type FormType = "Applicant" | "Trainee";
 
-export interface MenuItemProps {
+export interface MenuItemType {
   label: string;
   type?: FormType;
   link?: string;
+}
+
+export interface ApplicationFormType {
+  title: string;
+  description: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  stages: { name: string; description: string }[] | [];
 }
