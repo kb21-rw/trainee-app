@@ -18,9 +18,10 @@ const Layout = () => {
     (data?.role === UserRole.Applicant && applicantMenu) ||
     (data?.role === UserRole.Prospect && applicantMenu) ||
     [];
+
   return (
-    <div className="flex flex-col font-lato px-16 py-4 max-w-[1920px] mx-auto overflow-x-hidden">
-      <nav className="flex items-center justify-between gap-20 py-6 border-b-2 border-b-gray-200 shadow-b">
+    <div className="h-screen flex flex-col justify-between font-lato px-4 md:px-16 py-4 max-w-[1920px] md:mx-auto overflow-x-hidden">
+      <nav className="flex items-center justify-between gap-20 py-6 bg-white border-b-2 border-b-gray-200 shadow-b">
         <div className="flex items-center gap-10">
           {menu.map((element, index) => (
             <NavLink
@@ -64,25 +65,22 @@ const Layout = () => {
       <div className="flex-1">
         <Outlet />
       </div>
-      {data?.role === UserRole.Prospect ||
-        (data?.role === UserRole.Applicant && (
-          <footer className="container w-screen fixed bottom-0 py-4 flex justify-between items-center">
-            <div>
-              <p>
-                &copy;<span className="font-bold">The GYM</span>{" "}
-                {new Date().getFullYear()} <span></span>, All rights reserved
-              </p>
-            </div>
-            <div className="flex items-center space-x-5">
-              <Link to="#" className="hover:text-primary-dark">
-                Privacy Policy
-              </Link>
-              <Link to="#" className="hover:text-primary-dark">
-                Terms and Conditions
-              </Link>
-            </div>
-          </footer>
-        ))}
+      <footer className="w-full py-4 bg-white flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4 px-4">
+        <div className="text-center sm:text-left">
+          <p>
+            &copy;<span className="font-bold">The GYM</span>{" "}
+            {new Date().getFullYear()}, All rights reserved
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-5 text-center sm:text-left">
+          <Link to="#" className="hover:text-primary-dark">
+            Privacy Policy
+          </Link>
+          <Link to="#" className="hover:text-primary-dark">
+            Terms and Conditions
+          </Link>
+        </div>
+      </footer>
     </div>
   );
 };
