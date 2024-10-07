@@ -455,7 +455,7 @@ getAllForms: builder.query({
       query: (args) => {
         const { jwt, query} = args;
         return {
-          url: `/cohorts${query}`,
+          url: `/cohorts?${query}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
