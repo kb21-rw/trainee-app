@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const CohortInfo = () => {
   return (
     <>
-      <div className="text-center flex items-center flex-col space-y-6 md:space-y-10 px-4 sm:px-0 w-full">
+      <div className="text-center flex items-center flex-col space-y-6 md:space-y-10 px-4 sm:px-0 w-full mt-10 md:mt-20">
         <div>
           <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-4">
             {"Welcome to The GYM's Application Portal"}
