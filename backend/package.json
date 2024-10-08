@@ -29,8 +29,10 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.1",
     "nodemailer": "^6.9.5",
+    "swagger-ui-express": "^5.0.1",
     "ts-node": "^10.9.1",
-    "type-fest": "^4.26.0"
+    "type-fest": "^4.26.0",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.4",
