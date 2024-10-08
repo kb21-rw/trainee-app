@@ -19,6 +19,7 @@ import YAML from 'yamljs'
 import { responseHTML } from './utils/helpers/responseHTML'
 
 const swaggerDocumentation = YAML.load('./swagger.yaml')
+
 const PORT = process.env.PORT || 3000
 const mongodb_url = process.env.MONGODB_URL || ''
 const app = express()
@@ -48,7 +49,7 @@ app.use('/responses', responseRoute)
 app.use('/overview', overviewRoute)
 app.use('/applicants', applicantRoutes)
 
-app.all('*', (req, res, next) => {
+app.all('*', (req, _res, next) => {
   const err = new CustomError(
     URL_NOT_FOUND,
     `Can't find ${req.originalUrl} on the server`,
