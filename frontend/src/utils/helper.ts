@@ -2,6 +2,7 @@ import Cookies from 'universal-cookie'
 import jwtDecode from 'jwt-decode';
 import { ApplicantDetails } from './types';
 import { Cohort } from './types';
+import moment from 'moment';
 
 /**
  * Retrieves the logged-in user's information from a JWT token stored in cookies.
@@ -165,3 +166,23 @@ export const getNextFormTitle = (type: "Applicant" | "Trainee") => {
 
   return `${type} Form created at - ${formattedTime}`;
 };
+
+
+/**
+ * Checks if the current date and time fall within the application window.
+ *
+ * @param {string} applicationStartDate - A string representing the start date of the application window in the format "YYYY-MM-DD".
+ * @param {string} applicationEndDate - A string representing the end date of the application window in the format "YYYY-MM-DD".
+ *
+ * @returns {Object} - An object containing two boolean values:
+ *   - `isApplicationOpen`: A boolean indicating whether the current date and time fall within the application window.
+ *   - `isDeadlineExceeded`: A boolean indicating whether the end date of the application window has passed.
+ */
+
+export const  applicationStatusHandler = (applicationStartDate: string,   applicationEndDate: string) =>{
+  const now = moment();
+  const isApplicationOpen = now.isBetween(moment(applicationStartDate), moment(applicationEndDate));
+  const isDeadlineExceeded = now.isAfter(moment(applicationEndDate));
+
+  return { isApplicationOpen, isDeadlineExceeded }
+}
