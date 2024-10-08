@@ -23,7 +23,12 @@ describe("createQuestionService", () => {
     const question = new QuestionBuilder().build();
 
     await expect(
-      createQuestionService("66203fa2a3465a4a588d126e", question)
+      createQuestionService("66203fa2a3465a4a588d126e", {
+        prompt: question.prompt!,
+        type: question.type!,
+        required: question.required!,
+        options: question.options!,
+      })
     ).rejects.toThrow("Invalid Document ID");
   });
 
@@ -47,7 +52,12 @@ describe("createQuestionService", () => {
     (Form.prototype.save as jest.Mock).mockReturnValue(null);
 
     await expect(
-      createQuestionService("66203fa2a3465a4a588d126e", question)
+      createQuestionService("66203fa2a3465a4a588d126e", {
+        prompt: question.prompt!,
+        type: question.type!,
+        required: question.required!,
+        options: question.options!,
+      })
     ).resolves.toEqual({
       _id: "66203fa2a3465a4a588d12f1",
       description: "form description",
@@ -79,7 +89,7 @@ describe("updateQuestionService", () => {
   test("Should return updated question", async () => {
     const question = new QuestionBuilder().build();
     const updatedQuestion = new QuestionBuilder()
-      .withTitle("Updated Question")
+      .withPrompt("Updated Question")
       .withOptions(["true", "false"])
       .build();
 
@@ -93,7 +103,7 @@ describe("updateQuestionService", () => {
 
     await expect(
       updateQuestionService(question._id, {
-        title: "Updated Question",
+        prompt: "Updated Question",
         options: ["true", "false"],
       })
     ).resolves.toEqual(updatedQuestion);
@@ -120,7 +130,7 @@ describe("deleteQuestionService", () => {
     await deleteQuestionService(question._id);
 
     expect(Response.deleteMany).toHaveBeenCalledWith({
-      _id: { $in: question.responseIds } },
-    );
+      _id: { $in: question.responseIds },
+    });
   });
 });
