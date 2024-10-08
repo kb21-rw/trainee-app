@@ -7,14 +7,14 @@ type PartialIQuestionWithRequiredId = { id: IQuestion["id"] } & Partial<
 >;
 export class Question {
   public readonly id: string;
-  public readonly title?: string;
+  public readonly prompt?: string;
   public readonly type?: QuestionType;
   public readonly options?: string[];
   public readonly responseIds?: string[];
 
   public constructor(data: PartialIQuestionWithRequiredId) {
     this.id = data.id;
-    this.title = data.title;
+    this.prompt = data.prompt;
     this.type = data.type;
     this.options = data.options;
     this.responseIds = data.responseIds;
@@ -27,7 +27,7 @@ export class QuestionBuilder extends Builder<
 > {
   protected readonly properties: PartialIQuestionWithRequiredId = {
     id: "66203fa2a3465a4a588d12q1",
-    title: "Test question",
+    prompt: "Test question",
     type: QuestionType.Text,
     options: [],
     responseIds: [],
@@ -43,8 +43,8 @@ export class QuestionBuilder extends Builder<
     return new QuestionBuilder().with(properties);
   }
 
-  public withTitle(id: string): this {
-    this.properties.title = id;
+  public withPrompt(prompt: string): this {
+    this.properties.prompt = prompt;
     return this;
   }
 
