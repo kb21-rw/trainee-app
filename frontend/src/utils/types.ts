@@ -134,3 +134,25 @@ export interface ApplicationFormType {
   endDate: Date | null;
   stages: { name: string; description: string }[] | [];
 }
+
+export enum ApplicationFormStatus {
+  OPEN = 'open',
+  CLOSED = 'closed',
+  DEADLINE_PASSED = 'deadline-passed',
+  NO_APPLICATION = 'no-application',
+}
+
+export type ApplicationStatus = {
+  isOpen: boolean;
+  status: ApplicationFormStatus;
+};
+
+export type ApplicationForm = {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  questions: any[];
+  startDate: string | Date;
+  endDate: string | Date;
+};
