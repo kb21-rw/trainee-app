@@ -107,7 +107,7 @@ export const createFormService = async (formData: CreateFormDto) => {
 
   const currentCohort = await getCurrentCohort();
 
-  if (formData.type === FormType.Application) {
+  if (type === FormType.Application) {
     return await createApplicationFormService(formData, currentCohort);
   }
 
