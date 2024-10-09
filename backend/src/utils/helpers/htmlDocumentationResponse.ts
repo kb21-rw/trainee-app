@@ -1,4 +1,4 @@
-export const responseHTML = `
+export const htmlDocumentationResponse = `
 <html>
 <head>
   <style>

@@ -16,7 +16,7 @@ import CustomError from './middlewares/customError'
 import { URL_NOT_FOUND } from './utils/errorCodes'
 import swaggerUI from 'swagger-ui-express'
 import YAML from 'yamljs'
-import { responseHTML } from './utils/helpers/responseHTML'
+import { htmlDocumentationResponse } from './utils/helpers/htmlDocumentationResponse'
 
 const swaggerDocumentation = YAML.load('./swagger.yaml')
 
@@ -32,7 +32,7 @@ mongoose.connection.once('open', () => {
 })
 
 app.get('/', (_req: Request, res: Response) => {
-  res.status(200).send(responseHTML)
+  res.status(200).send(htmlDocumentationResponse)
 })
 app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocumentation))
 
