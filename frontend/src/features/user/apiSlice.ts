@@ -388,7 +388,7 @@ getAllForms: builder.query({
     getFormForApplicants: builder.query({
       query: (jwt) => {
         return {
-          url: `/cohorts/application`,
+          url: `/cohorts/my-application`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
