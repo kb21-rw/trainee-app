@@ -1,0 +1,380 @@
+openapi: 3.0.0
+info:
+  title: Trainee-App Documentation
+  contact: {}
+  version: '1.0'
+servers:
+  - url: https://trainee-app-production-8b75.up.railway.app
+    variables: {}
+paths:
+  /forms:
+    post:
+      tags:
+        - Forms
+      summary: Create Form
+      description: "This endpoint can create three types of forms \n- Application form \n- Applicant form\n- Trainee form"
+      operationId: CreateForm
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/CreateApplicationFormRequest'
+                - example:
+                    name: Application Form 2025
+                    type: Application
+                    startDate: 2024-09-12
+                    endDate: 2024-10-12
+                    stages:
+                      - name: stage1
+                      - name: stage2
+            example:
+              name: Application Form 2025
+              type: Application
+              startDate: 2024-09-12
+              endDate: 2024-10-12
+              stages:
+                - name: stage1
+                - name: stage2
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /questions/{formId}:
+    post:
+      tags:
+        - Questions
+      summary: Create a question
+      operationId: Createaquestion
+      parameters:
+        - in: path
+          name: formId
+          schema:
+            type: string
+          required: true
+          description: The From ID.
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/CreateQuestionRequest'
+                - example:
+                    prompt: Provide your github username
+                    type: Text
+                    isRequired: 'true'
+                    options: []
+            example:
+              prompt: Provide your github username
+              type: Text
+              isRequired: 'true'
+              options: []
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /cohorts/application:
+    get:
+      tags:
+        - Cohorts
+      summary: get application form
+      operationId: getapplicationform
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Create User
+      description: This is a route that an admin can use to create a user manually
+      operationId: CreateUser
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/CreateUserRequest'
+                - example:
+                    name: Junior ADMIN
+                    email: iamhirwejr@gmail.com
+                    role: ADMIN
+            example:
+              name: Junior ADMIN
+              email: iamhirwejr@gmail.com
+              role: ADMIN
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+  /auth/register/applicant:
+    post:
+      tags:
+        - Auth
+      summary: signup
+      operationId: signup
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/signuprequest'
+                - example:
+                    name: ''
+                    email: mugisha221022348@gmail.com
+                    password: Test@123
+            example:
+              name: ''
+              email: mugisha221022348@gmail.com
+              password: Test@123
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: login
+      operationId: login
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/loginrequest'
+                - example:
+                    email: iamhirwejr@gmail.com
+                    password: Test@123
+            example:
+              email: iamhirwejr@gmail.com
+              password: Test@123
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security: []
+  /responses/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+        description: The Question ID
+    put:
+      tags:
+        - Responses
+      summary: Response Submission
+      operationId: ResponseSubmission
+      parameters:
+        - name: ?userId
+          in: query
+          description: ''
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            example: 65faba6ca5b9d957968fd488
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/ResponseSubmissionRequest'
+                - example:
+                    text: this trainee is having a good progress with when it comes to solving codewars and they are having a very good understanding of javascript fundamentals and dom especially with the basic tailwind and html
+            example:
+              text: this trainee is having a good progress with when it comes to solving codewars and they are having a very good understanding of javascript fundamentals and dom especially with the basic tailwind and html
+        required: true
+      responses:
+        '200':
+          description: ''
+          headers: {}
+      deprecated: false
+      security:
+        - bearer: []
+components:
+  schemas:
+    createformrequest:
+      title: createformrequest
+      required:
+        - name
+        - type
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+      example:
+        name: New Applicant form 5000
+        type: Trainee
+    CreateApplicationFormRequest:
+      title: CreateApplicationFormRequest
+      required:
+        - name
+        - type
+        - startDate
+        - endDate
+        - stages
+      type: object
+      properties:
+        name:
+          type: string
+        type:
+          type: string
+        startDate:
+          type: string
+        endDate:
+          type: string
+        stages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Stage'
+          description: ''
+      example:
+        name: Application Form 2025
+        type: Application
+        startDate: 2024-09-12
+        endDate: 2024-10-12
+        stages:
+          - name: stage1
+          - name: stage2
+    Stage:
+      title: Stage
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          type: string
+      example:
+        name: stage1
+    CreateQuestionRequest:
+      title: CreateQuestionRequest
+      required:
+        - prompt
+        - type
+        - isRequired
+        - options
+      type: object
+      properties:
+        prompt:
+          type: string
+        type:
+          type: string
+        isRequired:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+          description: ''
+      example:
+        prompt: Provide your github username
+        type: Text
+        isRequired: 'true'
+        options: []
+    CreateUserRequest:
+      title: CreateUserRequest
+      required:
+        - name
+        - email
+        - role
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+      example:
+        name: Junior ADMIN
+        email: iamhirwejr@gmail.com
+        role: ADMIN
+    ResponseSubmissionRequest:
+      title: ResponseSubmissionRequest
+      required:
+        - text
+      type: object
+      properties:
+        text:
+          type: string
+      example:
+        text: this trainee is having a good progress with when it comes to solving codewars and they are having a very good understanding of javascript fundamentals and dom especially with the basic tailwind and html
+    signuprequest:
+      title: signuprequest
+      required:
+        - name
+        - email
+        - password
+      type: object
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        name: ''
+        email: mugisha221022348@gmail.com
+        password: Test@123
+    loginrequest:
+      title: loginrequest
+      required:
+        - email
+        - password
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+      example:
+        email: iamhirwejr@gmail.com
+        password: Test@123
+  securitySchemes:
+    bearer:
+      type: http
+      scheme: bearer
+security: []
+tags:
+  - name: Auth
+    description: ''
+  - name: Forms
+    description: ''
+  - name: Questions
+    description: ''
+  - name: Cohorts
+    description: ''
+  - name: Responses
+    description: ''
