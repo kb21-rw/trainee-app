@@ -107,7 +107,13 @@ export const getMyApplicationService = async (loggedInUserId: string) => {
 
   const applicationForm = await getApplicationForm(currentCohort);
 
-  return await getUserFormResponses(applicationForm, loggedInUserId);
+  const completeForm = await getUserFormResponses(
+    applicationForm,
+    loggedInUserId
+  );
+  const { startDate, endDate } = currentCohort.applicationForm;
+
+  return { ...completeForm, startDate, endDate };
 };
 
 export const decisionService = async (body: DecisionDto) => {
