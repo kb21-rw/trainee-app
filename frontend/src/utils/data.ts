@@ -91,7 +91,7 @@ export const noOpenApplicationInfo = {
 };
 
 export const deadLineExceededInfo = {
-  heading: "Application deadline exceeded",
+  heading: "Application deadline passed",
   description:
     "Dear applicant, the application deadline has been exceeded, click on the button bellow to join our waiting list to be notified when the next application opens.",
   buttonText: "Join waiting list",
