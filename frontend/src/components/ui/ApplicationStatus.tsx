@@ -17,7 +17,7 @@ const ApplicationStatus: React.FC<ApplicationStatusProps> = ({
 }) => {
   return (
     <div>
-      <div className="text-center flex items-center flex-col md:mt-32">
+      <div className="text-center flex items-center flex-col">
         <div>
           <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
             {heading}
@@ -35,12 +35,12 @@ const ApplicationStatus: React.FC<ApplicationStatusProps> = ({
 
         <div className="text-gray-600 text-sm">
           Learn more about The Gym software developer trainee program{" "}
-          <Link
-            to="https://www.the-gym.rw/"
+          <a
+            href="https://www.the-gym.rw/"
             className="text-blue-600 underline"
           >
             here
-          </Link>
+          </a>
           .
         </div>
       </div>
