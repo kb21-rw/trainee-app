@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { verify } from "jsonwebtoken";
 import dotenv from "dotenv";
+import { getUserService } from "../services/userService";
 
 dotenv.config();
 
@@ -13,12 +14,13 @@ export const verifyJWT = (req: any, res: Response, next: () => void) => {
   }
 
   const token = authHeader.split(" ")[1];
-  verify(token, accessKey, (err: any, decoded: any) => {
+  verify(token, accessKey, async (err: any, decoded: any) => {
     if (err) {
       return res.status(403).send("access token not valid");
     }
 
-    req.user = decoded;
+    
+    req.user = await getUserService(decoded.id);
     next();
   });
 };
