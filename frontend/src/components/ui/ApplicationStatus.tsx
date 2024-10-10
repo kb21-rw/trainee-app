@@ -30,7 +30,7 @@ const ApplicationStatus: React.FC<ApplicationStatusProps> = ({
           {buttonText}
         </a>
 
-        <div className="text-gray-600 text-sm">
+        <div className="text-gray-600 text-sm text-center">
           Learn more about The Gym software developer trainee program{" "}
           <a href="https://www.the-gym.rw/" className="text-blue-600 underline">
             here

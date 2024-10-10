@@ -17,12 +17,10 @@ const HomePage = () => {
   const jwt: string = getJWT();
   const { data: applicationForm, isLoading } = useGetMyApplicationQuery(jwt);
 
-  const applicationStatus = applicationStatusHandler(applicationForm);
-  console.log(applicationStatus);
-  console.log("application form", applicationForm);
+  const { status } = applicationStatusHandler(applicationForm);
 
   return (
-    <div className="h-full flex flex-col items-center justify-center w-full mt-5">
+    <div className="flex flex-col items-center justify-center mt-5 md:mt-20">
       <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-4 text-center">
         {"Welcome to The GYM's Application Portal"}
       </h1>
@@ -31,7 +29,7 @@ const HomePage = () => {
           <Loader />
         </div>
       )}
-      {applicationStatus.status === ApplicationFormStatus.OPEN && (
+      {status === ApplicationFormStatus.OPEN && (
         <div className="md:container md:mx-auto px-6 flex flex-col items-center justify-center">
           <CohortInfo
             cohortTitle="The Gym Cohort 5 2025"
@@ -64,7 +62,7 @@ const HomePage = () => {
           </div>
         </div>
       )}
-      {applicationStatus.status === ApplicationFormStatus.DEADLINE_PASSED && (
+      {status === ApplicationFormStatus.DEADLINE_PASSED && (
         <ApplicationStatus
           heading={deadLineExceededInfo.heading}
           description={deadLineExceededInfo.description}
@@ -72,7 +70,7 @@ const HomePage = () => {
           buttonText={deadLineExceededInfo.buttonText}
         />
       )}
-      {applicationStatus.status === ApplicationFormStatus.NO_APPLICATION && (
+      {status === ApplicationFormStatus.NO_APPLICATION && (
         <ApplicationStatus
           heading={noOpenApplicationInfo.heading}
           description={noOpenApplicationInfo.description}
