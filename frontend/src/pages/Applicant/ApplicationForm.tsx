@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useGetFormForApplicantsQuery } from "../../features/user/apiSlice";
+import { useGetMyApplicationQuery} from "../../features/user/apiSlice";
 import Loader from "../../components/ui/Loader";
 import {
   ApplicationFormResponse,
@@ -24,7 +24,7 @@ const ApplicationForm = () => {
 
   const jwt: string = getJWT();
 
-  const { data, isFetching } = useGetFormForApplicantsQuery(jwt);
+  const { data, isFetching } = useGetMyApplicationQuery(jwt);
   const [addApplicantResponse, { isSuccess }] =
     useAddApplicantResponseMutation();
 

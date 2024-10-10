@@ -385,7 +385,7 @@ getAllForms: builder.query({
       invalidatesTags: ["overview", "response"],
     }),
 
-    getFormForApplicants: builder.query({
+    getMyApplication: builder.query({
       query: (jwt) => {
         return {
           url: `/cohorts/my-application`,
@@ -495,7 +495,7 @@ export const {
   useGetOverviewQuery,
   useAddResponseMutation,
   useGetOverviewForCoachQuery,
-  useGetFormForApplicantsQuery,
+  useGetMyApplicationQuery,
   useAddApplicantResponseMutation,
   useCreateCohortMutation,
   useGetApplicantsQuery,

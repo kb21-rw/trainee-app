@@ -5,14 +5,14 @@ import Button from "../../components/ui/Button";
 import CohortInfo from "../../components/ui/CohortInfo";
 import ApplicationStatus from "../../components/ui/ApplicationStatus";
 import { deadLineExceededInfo, noOpenApplicationInfo } from "../../utils/data";
-import { useGetFormForApplicantsQuery } from "../../features/user/apiSlice";
+import { useGetMyApplicationQuery } from "../../features/user/apiSlice";
 import { applicationStatusHandler, getJWT } from "../../utils/helper";
 import Loader from "../../components/ui/Loader";
 
 const HomePage = () => {
   const jwt: string = getJWT();
   const { data: applicationForm, isLoading } =
-    useGetFormForApplicantsQuery(jwt);
+    useGetMyApplicationQuery(jwt);
 
   const applicationStatus = applicationStatusHandler(applicationForm);
   console.log(applicationStatus);
