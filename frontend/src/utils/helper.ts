@@ -1,8 +1,22 @@
 import Cookies from "universal-cookie";
 import jwtDecode from "jwt-decode";
-import { ApplicantDetails, ApplicationForm, ApplicationFormStatus, ApplicationStatus } from "./types";
+import {
+  ApplicantDetails,
+  ApplicationForm,
+  ApplicationFormStatus,
+  ApplicationStatus,
+} from "./types";
 import { Cohort } from "./types";
-import moment from "moment";
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import advancedFormat from "dayjs/plugin/advancedFormat";
+
+/**
+ * extend dayjs to use necessary plugins
+ */
+
+dayjs.extend(isBetween);
+dayjs.extend(advancedFormat);
 
 /**
  * Retrieves the logged-in user's information from a JWT token stored in cookies.
@@ -112,10 +126,9 @@ export const getApplicants = (
   );
 };
 
-
 /**
  * retrieve the JWT token.
- * 
+ *
  * @returns {string} - The JWT token.
  */
 
@@ -161,12 +174,11 @@ export const getNextFormTitle = (type: "Applicant" | "Trainee") => {
   return `${type} Form created at - ${formattedTime}`;
 };
 
-
 /**
  * Determines the current status of an application based on the provided dates.
  *
- * This function checks whether an application is open, if its deadline has passed, or if there is no active application. 
- * Additionally, it adds a 10-day grace period after the application deadline, during which it indicates that the application 
+ * This function checks whether an application is open, if its deadline has passed, or if there is no active application.
+ * Additionally, it adds a 10-day grace period after the application deadline, during which it indicates that the application
  * deadline has passed but still recognizes the application as recently closed.
  *
  * @param {ApplicationForm | undefined} application - An object representing the application form, which includes:
@@ -181,10 +193,11 @@ export const getNextFormTitle = (type: "Applicant" | "Trainee") => {
  *     - `ApplicationFormStatus.NO_APPLICATION`: Either no application exists, or more than 10 days have passed since the application deadline.
  */
 
+export const applicationStatusHandler = (
+  application: ApplicationForm | undefined,
+): ApplicationStatus => {
+  const currentDate = dayjs();
 
-export const applicationStatusHandler = (application: ApplicationForm | undefined): ApplicationStatus => {
-  const currentDate = moment();
-  
   if (!application) {
     return {
       isOpen: false,
@@ -192,8 +205,8 @@ export const applicationStatusHandler = (application: ApplicationForm | undefine
     };
   }
 
-  const startDate = moment(application.startDate);
-  const endDate = moment(application.endDate);
+  const startDate = dayjs(application.startDate);
+  const endDate = dayjs(application.endDate);
   const tenDaysAfterDeadline = endDate.clone().add(10, "days");
 
   if (currentDate.isBetween(startDate, endDate, undefined, "[]")) {
@@ -203,22 +216,25 @@ export const applicationStatusHandler = (application: ApplicationForm | undefine
     };
   }
 
-  if(currentDate.isAfter(endDate) && currentDate.isBefore(tenDaysAfterDeadline)) {
+  if (
+    currentDate.isAfter(endDate) &&
+    currentDate.isBefore(tenDaysAfterDeadline)
+  ) {
     return {
       isOpen: false,
-      status: ApplicationFormStatus.DEADLINE_PASSED
-    }
+      status: ApplicationFormStatus.DEADLINE_PASSED,
+    };
   }
 
-  if(currentDate.isAfter(tenDaysAfterDeadline)) {
+  if (currentDate.isAfter(tenDaysAfterDeadline)) {
     return {
       isOpen: false,
-      status: ApplicationFormStatus.NO_APPLICATION
-    }
+      status: ApplicationFormStatus.NO_APPLICATION,
+    };
   }
 
   return {
     isOpen: false,
-    status: ApplicationFormStatus.NO_APPLICATION
-  }
+    status: ApplicationFormStatus.NO_APPLICATION,
+  };
 };
