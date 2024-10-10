@@ -113,6 +113,11 @@ export const getApplicants = (
 };
 
 
+/**
+ * retrieve the JWT token.
+ * 
+ * @returns {string} - The JWT token.
+ */
 
 export const getJWT = () => {
   const cookies = new Cookies();
