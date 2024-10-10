@@ -31,7 +31,7 @@ const Login = () => {
       const decodedToken: any = jwt_decode(result.data.accessToken);
       const userRole = decodedToken.role;
 
-      if (userRole === UserRole.Applicant) {
+      if (userRole === UserRole.Applicant || UserRole.Prospect) {
         navigate("/home");
       } else {
         navigate(redirectUrl);

@@ -385,10 +385,10 @@ getAllForms: builder.query({
       invalidatesTags: ["overview", "response"],
     }),
 
-    getFormForApplicants: builder.query({
+    getMyApplication: builder.query({
       query: (jwt) => {
         return {
-          url: `/cohorts/application`,
+          url: `/cohorts/my-application`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -455,7 +455,7 @@ getAllForms: builder.query({
       query: (args) => {
         const { jwt, query} = args;
         return {
-          url: `/cohorts${query}`,
+          url: `/cohorts?${query}`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -495,7 +495,7 @@ export const {
   useGetOverviewQuery,
   useAddResponseMutation,
   useGetOverviewForCoachQuery,
-  useGetFormForApplicantsQuery,
+  useGetMyApplicationQuery,
   useAddApplicantResponseMutation,
   useCreateCohortMutation,
   useGetApplicantsQuery,

@@ -1,52 +1,83 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ButtonVariant } from "../../utils/types";
+import {
+  ApplicationFormStatus,
+  ButtonSize,
+  ButtonVariant,
+} from "../../utils/types";
 import Button from "../../components/ui/Button";
+import CohortInfo from "../../components/ui/CohortInfo";
+import ApplicationStatus from "../../components/ui/ApplicationStatus";
+import { deadLineExceededInfo, noOpenApplicationInfo } from "../../utils/data";
+import { useGetMyApplicationQuery } from "../../features/user/apiSlice";
+import { applicationStatusHandler, getJWT } from "../../utils/helper";
+import Loader from "../../components/ui/Loader";
 
 const HomePage = () => {
+  const jwt: string = getJWT();
+  const { data: applicationForm, isLoading } = useGetMyApplicationQuery(jwt);
+
+  const { status } = applicationStatusHandler(applicationForm);
+
   return (
-    <div className="h-full flex flex-col items-center justify-between mt-12">
-      <div className="container mx-auto px-6">
-        <div className="text-center flex items-center flex-col space-y-10">
-          <div>
-            <h1 className="text-4xl font-bold text-gray-800 mb-4 text-center">
-              {"Welcome to The GYM's Application Portal"}
-            </h1>
-            <p className="text-gray-600 mb-8 flex flex-col">
-              <span>
-                <Link
-                  to="/apply"
-                  className="text-primary-dark hover:underline transition ease-in"
-                >
-                  Apply
-                </Link>{" "}
-                for our various training programs and enhance your skills.
-              </span>
-              <span>Start your journey with us today!</span>
-            </p>
+    <div className="flex flex-col items-center justify-center mt-5 md:mt-20">
+      <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-4 text-center">
+        {"Welcome to The GYM's Application Portal"}
+      </h1>
+      {isLoading && (
+        <div className="flex items-center justify-center w-full h-screen">
+          <Loader />
+        </div>
+      )}
+      {status === ApplicationFormStatus.OPEN && (
+        <div className="md:container md:mx-auto px-6 flex flex-col items-center justify-center">
+          <CohortInfo
+            cohortTitle="The Gym Cohort 5 2025"
+            applicationDeadline="4th October 2024"
+            trainingStartDate="22nd November 2024"
+            programBenefits={[
+              {
+                title: "Hands-On Projects",
+                description:
+                  "Work on real-world projects to build your portfolio.",
+              },
+              {
+                title: "Expert Instructors",
+                description:
+                  "Learn from industry professionals with years of experience.",
+              },
+              {
+                title: "Career Support",
+                description:
+                  "Get assistance with job placement, resume building, and interview preparation.",
+              },
+            ]}
+          />
+          <div className="my-10 flex items-center justify-center">
+            <div>
+              <Button variant={ButtonVariant.Primary} size={ButtonSize.Large}>
+                <Link to="/apply">Apply now</Link>
+              </Button>
+            </div>
           </div>
         </div>
-        <div className="mt-12 grid place-items-center">
-          <div className="bg-white p-6 rounded-lg border shadow-md w-2/5">
-            <h2 className="text-3xl font-semibold mb-2">
-              The GYM Software Developer Trainee Program
-            </h2>
-            <p className="text-gray-600 mb-4">
-              Rwanda&apos;s most intense software developer trainee program.
-              This Training focuses on equiping young developers with the
-              knowledge of software development on european standards and....
-              <span className="text-primary-dark px-1 rounded-md transition hover:cursor-pointer hover:underline">
-                Learn more
-              </span>
-            </p>
-          </div>
-        </div>
-        <div className="w-full my-20 flex items-center justify-center animate-bounce">
-          <Button variant={ButtonVariant.Primary}>
-            <Link to="/apply">Apply now</Link>
-          </Button>
-        </div>
-      </div>
+      )}
+      {status === ApplicationFormStatus.DEADLINE_PASSED && (
+        <ApplicationStatus
+          heading={deadLineExceededInfo.heading}
+          description={deadLineExceededInfo.description}
+          buttonLink={deadLineExceededInfo.buttonLink}
+          buttonText={deadLineExceededInfo.buttonText}
+        />
+      )}
+      {status === ApplicationFormStatus.NO_APPLICATION && (
+        <ApplicationStatus
+          heading={noOpenApplicationInfo.heading}
+          description={noOpenApplicationInfo.description}
+          buttonLink={noOpenApplicationInfo.buttonLink}
+          buttonText={noOpenApplicationInfo.buttonText}
+        />
+      )}
     </div>
   );
 };
