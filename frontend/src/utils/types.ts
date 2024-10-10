@@ -136,10 +136,10 @@ export interface ApplicationFormType {
 }
 
 export enum ApplicationFormStatus {
-  OPEN = 'open',
-  CLOSED = 'closed',
-  DEADLINE_PASSED = 'deadline-passed',
-  NO_APPLICATION = 'no-application',
+  OPEN = 'Open',
+  CLOSED = 'Closed',
+  DEADLINE_PASSED = 'DeadlinePassed',
+  NO_APPLICATION = 'NoApplication',
 }
 
 export type ApplicationStatus = {
