@@ -1,10 +1,10 @@
 /* eslint-disable no-unused-vars */
 export interface IFormType {
   _id: string;
-  title: string;
+  name: string;
   description: string;
   type: string;
-  questions: { title: string }[];
+  questions: number;
 }
 
 export interface User {
@@ -26,6 +26,12 @@ export interface CreateCoach {
 export interface CreateCohort {
   name: string;
   description: string;
+  stages: Stage[];
+}
+
+export interface Stage {
+  name: string;
+  description: string;
 }
 
 export interface Response {
@@ -43,7 +49,7 @@ export interface Question {
   title: string;
   responses: Response[];
   options: string[];
-  type: QuestionType
+  type: QuestionType;
 }
 
 export interface Form {
@@ -83,3 +89,70 @@ export enum UserRole {
   Prospect = "Prospect",
 }
 
+export type ApplicantDetails = {
+  applied: boolean;
+  createdAt: string;
+  email: string;
+  googleId: string | null;
+  name: string;
+  password: string;
+  role: string;
+  updatedAt: string;
+  userId: string;
+  verified: boolean;
+  __v: number;
+  _id: string;
+};
+
+export enum ApplicantDecision {
+  Accepted = "Accepted",
+  Rejected = "Rejected",
+}
+export interface Cohort {
+  name: string;
+  description: string;
+  isActive: boolean;
+  stages: number;
+  applicants: number;
+  trainees: number;
+  coaches: number;
+  forms: number;
+}
+
+export type FormType = "Applicant" | "Trainee";
+
+export interface MenuItemType {
+  label: string;
+  type?: FormType;
+  link?: string;
+}
+
+export interface ApplicationFormType {
+  title: string;
+  description: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  stages: { name: string; description: string }[] | [];
+}
+
+export enum ApplicationFormStatus {
+  OPEN = 'Open',
+  CLOSED = 'Closed',
+  DEADLINE_PASSED = 'DeadlinePassed',
+  NO_APPLICATION = 'NoApplication',
+}
+
+export type ApplicationStatus = {
+  isOpen: boolean;
+  status: ApplicationFormStatus;
+};
+
+export type ApplicationForm = {
+  id: string;
+  name: string;
+  description: string;
+  type: string;
+  questions: any[];
+  startDate: string | Date;
+  endDate: string | Date;
+};

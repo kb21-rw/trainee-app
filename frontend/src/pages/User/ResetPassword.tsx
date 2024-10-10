@@ -7,6 +7,7 @@ import Button from "../../components/ui/Button";
 import Alert from "../../components/ui/Alert";
 import { useForm } from "react-hook-form";
 import { useResetPasswordMutation } from "../../features/user/apiSlice";
+import { ButtonSize } from "../../utils/types";
 
 const ResetPassword = () => {
   const [resetPassword, { isLoading, error, isSuccess }] =
@@ -43,7 +44,7 @@ const ResetPassword = () => {
         />
       </div>
 
-      <Button type="submit">Reset</Button>
+      <Button size={ButtonSize.Large} type="submit">Reset</Button>
       <div className="">
         Back to{" "}
         <Link to="/login" className="text-primary-dark">

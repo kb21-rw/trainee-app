@@ -1,7 +1,7 @@
 import Joi from "joi";
 
-export const createResponseValidation = Joi.object({
-  text: Joi.alternatives().try(
+export const createCoachResponseValidation = Joi.object({
+  value: Joi.alternatives().try(
     Joi.array().items(Joi.string().min(1).required()),
     Joi.string().min(1).required()
   ),

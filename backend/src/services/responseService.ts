@@ -1,43 +1,47 @@
 import CustomError from "../middlewares/customError";
-import Question from "../models/Question";
+import Question, { IQuestion } from "../models/Question";
 import {
   CreateApplicationResponseDto,
   CreateResponseDto,
-  QuestionType,
   Role,
 } from "../utils/types";
-import Response, { IResponse } from "../models/Response";
+import { IResponse } from "../models/Response";
 import User, { IUser } from "../models/User";
 import {
   NOT_ALLOWED,
   QUESTION_NOT_FOUND,
   USER_NOT_FOUND,
-  APPLICATION_FORM_ERROR
+  APPLICATION_FORM_ERROR,
+  RESPONSE_NOT_FOUND,
 } from "../utils/errorCodes";
-import Form from "../models/Form";
+import Form, { IForm } from "../models/Form";
 import { getCurrentCohort } from "../utils/helpers/cohort";
 import dayjs from "dayjs";
+import {
+  getUserFormResponses,
+  upsertResponse,
+} from "../utils/helpers/response";
 
-export const createResponseService = async (
+export const createCoachResponseService = async (
   loggedInUser: IUser,
   traineeId: string,
   questionId: string,
-  responseData: CreateResponseDto,
+  responseData: CreateResponseDto
 ) => {
   const { text } = responseData;
+
+  const currentCohort = await getCurrentCohort();
 
   const trainee = await User.findOne({
     $and: [{ _id: traineeId }, { role: "TRAINEE" }],
   });
 
-  if (!trainee) {
-    throw new CustomError(USER_NOT_FOUND, "Trainee not found!", 400);
-  }
-
-  const relatedQuestion = await Question.findById(questionId);
-
-  if (!relatedQuestion) {
-    throw new CustomError(QUESTION_NOT_FOUND, "Question not found!", 400);
+  if (!trainee || !currentCohort.trainees.includes(trainee.id)) {
+    throw new CustomError(
+      USER_NOT_FOUND,
+      "The trainee does not exist in the current cohort!",
+      400
+    );
   }
 
   if (
@@ -47,85 +51,65 @@ export const createResponseService = async (
     throw new CustomError(
       NOT_ALLOWED,
       "Only admin or the coach of a trainee can provide a response",
-      403,
+      403
     );
   }
 
-  const selectedOptions = Array.isArray(text) ? text : [text];
+  const relatedQuestion = await Question.findById<IQuestion>(questionId);
 
-  if (relatedQuestion.type !== QuestionType.Text) {
-    const invalidOptions = selectedOptions.every(
-      (option: string) => !relatedQuestion.options.includes(option),
+  if (!relatedQuestion) {
+    throw new CustomError(
+      QUESTION_NOT_FOUND,
+      "The question you're responding to does not exist!",
+      400
     );
-
-    if (invalidOptions) {
-      throw new CustomError(
-        NOT_ALLOWED,
-        `You can only choose from ${relatedQuestion.options.join(
-          ", ",
-        )} options`,
-        400,
-      );
-    }
   }
 
-  const relatedQuestionPopulated = await relatedQuestion.populate<{
-    responseIds: IResponse[];
-  }>("responseIds");
-
-  const oldResponse = relatedQuestionPopulated.responseIds.find(
-    (response) => response.userId.toString() === traineeId,
-  );
-
-  const responseText =
-    relatedQuestion.type === QuestionType.MultiSelect ? selectedOptions : text;
-
-  let response;
-  if (oldResponse) {
-    response = await Response.findByIdAndUpdate(
-      oldResponse._id,
-      { text: responseText },
-      { new: true },
-    );
-  } else {
-    response = await Response.create({ userId: traineeId, text: responseText });
-    relatedQuestion.responseIds.push(response.id);
-    await relatedQuestion.save();
-  }
-
-  const responseBody = {
-    ...response?.toObject(),
-    text: response?.text,
-  };
-
-  return responseBody;
+  return upsertResponse(relatedQuestion, text, traineeId);
 };
 
 export const createApplicantResponseService = async (
   loggedInUser: IUser,
   responseData: CreateApplicationResponseDto[],
+  submit: boolean = false
 ) => {
   const currentCohort = await getCurrentCohort();
 
-  if (!currentCohort.applicationForm.id) {
-    throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
+  const applicantExists = currentCohort.applicants.some(
+    (applicant) => applicant.id.toString() === loggedInUser.id
+  );
+
+  if (applicantExists) {
+    throw new CustomError(
+      APPLICATION_FORM_ERROR,
+      "Your application form has already been received, please wait for a response",
+      409
+    );
   }
 
-  const applicationForm = await Form.findById(currentCohort.applicationForm.id);
+  if (!currentCohort.applicationForm.id) {
+    throw new CustomError(NOT_ALLOWED, "There is no open application", 404);
+  }
 
-  if (!applicationForm)
-    throw new CustomError(NOT_ALLOWED, "There is no open application", 401);
+  const applicationForm = await Form.findById<IForm>(
+    currentCohort.applicationForm.id
+  );
+
+  if (!applicationForm) {
+    currentCohort.applicationForm.id = null;
+    await currentCohort.save();
+    throw new CustomError(NOT_ALLOWED, "There is no open application", 404);
+  }
 
   const now = dayjs();
-  const applicationStartDate = dayjs(new Date(currentCohort.applicationForm.startDate));
-  const applicationEndDate = dayjs(new Date(currentCohort.applicationForm.endDate)
-  );
+  const applicationStartDate = dayjs(currentCohort.applicationForm.startDate);
+  const applicationEndDate = dayjs(currentCohort.applicationForm.endDate);
 
   if (now.isBefore(applicationStartDate)) {
     throw new CustomError(
       APPLICATION_FORM_ERROR,
-      "Application has not started yet!",
-      400
+      "Applications are not open yet!",
+      401
     );
   }
 
@@ -133,48 +117,83 @@ export const createApplicantResponseService = async (
     throw new CustomError(
       APPLICATION_FORM_ERROR,
       "Application deadline has passed!",
-      400
+      401
     );
   }
 
-  //check if all question in the form are in the responseData
-  if (
-    !applicationForm.questionIds.every((questionId) =>
-      responseData
-        .map((response) => response.questionId)
-        .includes(questionId.toString()),
-    )
-  )
-    throw new CustomError(NOT_ALLOWED, "Some questions are not answered", 401);
+  const questionsNotFound = responseData.some(
+    (data) =>
+      !applicationForm.questionIds
+        .map((questionId) => questionId.toString())
+        .includes(data.questionId)
+  );
 
-  return Promise.all(
+  if (questionsNotFound) {
+    throw new CustomError(
+      QUESTION_NOT_FOUND,
+      "You can only answer questions in the form",
+      404
+    );
+  }
+
+  // Create or update a response if already exists
+  await Promise.all(
     responseData.map(async (response) => {
-      const question = await Question.findById(response.questionId)
+      const question = await Question.findById<IQuestion>(response.questionId)
         .populate<{
           responseIds: IResponse[];
         }>("responseIds")
         .exec();
-      const oldResponseId = question?.responseIds.find(
-        (oldResponse) => oldResponse.userId.toString() === loggedInUser.id,
-      )?._id;
 
-      if (!oldResponseId)
-        throw new CustomError(500, "Can't get a response", 500);
+      if (!question)
+        throw new CustomError(
+          QUESTION_NOT_FOUND,
+          "Question was not found!",
+          404
+        );
 
-      const updatedResponse = await Response.findByIdAndUpdate(
-        oldResponseId,
-        { text: response.answer },
-        { new: true },
-      );
-
-      if (!updatedResponse)
-        throw new CustomError(500, "Couldn't update response", 500);
-
-      return {
-        questionId: response.questionId,
-        question: question.title,
-        response: updatedResponse.text,
-      };
-    }),
+      return await upsertResponse(question, response.answer, loggedInUser.id);
+    })
   );
+
+  // get responses of loggedIn user
+  const userFormResponses = await getUserFormResponses(
+    applicationForm,
+    loggedInUser.id
+  );
+
+  if (submit) {
+    userFormResponses.questions.forEach(({ required, response, prompt }) => {
+      if (required && !response) {
+        throw new CustomError(
+          RESPONSE_NOT_FOUND,
+          `'${prompt}' is required`,
+          404
+        );
+      }
+    });
+
+    const prospect = await User.findById(loggedInUser.id);
+    // This should not be possible because loggedInUser is from the middleware that fetched the user
+    if (!prospect) {
+      throw new CustomError(USER_NOT_FOUND, "User not found", 404);
+    }
+
+    prospect.role = Role.Applicant;
+
+    currentCohort.applicants.push({
+      id: loggedInUser.id,
+      passedStages: [],
+      droppedStage: {
+        id: currentCohort.applicationForm.stages[0].id,
+        isConfirmed: false,
+      },
+      feedbacks: [],
+    });
+
+    await prospect.save();
+    await currentCohort.save();
+  }
+
+  return userFormResponses;
 };

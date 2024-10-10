@@ -11,7 +11,7 @@ import { Question, Response, Form, QuestionType } from "../../utils/types";
 
 import { useGetOverviewForCoachQuery } from "../../features/user/apiSlice";
 import Loader from "../../components/ui/Loader";
-import { getJWT, getRandomColorAndTextColor } from "../../utils/helper";
+import { getJWT } from "../../utils/helper";
 import ResponseModal from "../../components/modals/ResponseModal";
 const TraineeResults = () => {
   const jwt:string = getJWT()
@@ -53,7 +53,6 @@ const TraineeResults = () => {
 
   const traineeMap = new Map();
 
-  const formStyles = data.map(() => getRandomColorAndTextColor());
   data.forEach((form: Form) => {
     form.questions.forEach((question: Question) => {
       const questionType = question.options.length > 0 ? QuestionType.SingleSelect
@@ -95,10 +94,9 @@ const TraineeResults = () => {
                 key={form._id}
                 scope="col"
                 colSpan={form.questions.length}
-                className={`px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider ${
+                className={`px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider bg-primary-dark/30 ${
                   index !== data.length - 1 ? "border-r border-black" : ""
                 }`}
-                style={{ backgroundColor: formStyles[index].backgroundColor }}
               >
                 {form.title}
               </TableHead>

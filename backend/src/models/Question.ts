@@ -3,16 +3,17 @@ import { IResponse } from "./Response";
 import { QuestionType } from "../utils/types";
 
 export interface IQuestion extends Document {
-  id: string,
-  title: string;
+  id: string;
+  prompt: string;
   type: QuestionType;
+  required: boolean;
   options: string[];
   responseIds: IResponse["_id"][];
 }
 
 const QuestionSchema = new Schema(
   {
-    title: {
+    prompt: {
       type: String,
       required: true,
     },
@@ -23,7 +24,15 @@ const QuestionSchema = new Schema(
       required: true,
     },
 
-    options: [String],
+    required: {
+      type: Boolean,
+      default: true,
+    },
+
+    options: {
+      type: [String],
+      default: [],
+    },
 
     responseIds: {
       type: [Schema.Types.ObjectId],

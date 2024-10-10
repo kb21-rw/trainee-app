@@ -34,15 +34,15 @@ const FormCard = ({ form }: { form: IFormType }) => {
       <div className="flex flex-col gap-4 w-full">
         <div className="flex justify-between">
           <div className="flex gap-2">
-            <H2>{form.title}</H2>
+            <H2>{form.name}</H2>
             <div className="flex items-center gap-1 font-bold text-primary-dark border-primary-dark border rounded-lg px-6 ">
               <H7>{form.type}</H7>
             </div>
           </div>
 
           <div className="flex items-center gap-1 font-bold ">
-            <H7>{questions.length}</H7>
-            <H7>{questions.length === 1 ? "Question" : "Questions"}</H7>
+            <H7>{questions}</H7>
+            <H7>{questions === 1 ? "Question" : "Questions"}</H7>
           </div>
         </div>
         <H6>{form.description}</H6>
@@ -73,7 +73,7 @@ const FormCard = ({ form }: { form: IFormType }) => {
       {showDeleteModal && (
         <DeleteModal
           title="a form"
-          name={form.title}
+          name={form.name}
           closePopup={() => setShowDeleteModal(false)}
           onDelete={() => handleDeleteForm(form._id)}
         />

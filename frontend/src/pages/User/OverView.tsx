@@ -11,7 +11,7 @@ import { Question,Response,Form, QuestionType } from '../../utils/types';
 
 import { useGetOverviewQuery } from "../../features/user/apiSlice";
 import Loader from '../../components/ui/Loader';
-import { getJWT, getRandomColorAndTextColor } from "../../utils/helper";
+import { getJWT } from "../../utils/helper";
 import ResponseModal from "../../components/modals/ResponseModal";
  const  OverView = () => {
    const jwt:string = getJWT()
@@ -48,7 +48,6 @@ import ResponseModal from "../../components/modals/ResponseModal";
 
   const traineeMap = new Map();
 
-    const formStyles = data.map(() => getRandomColorAndTextColor()); 
     data.forEach((form:Form) => {
      form.questions.forEach((question:Question) => {
        question.responses.forEach((response:Response) => {
@@ -81,7 +80,7 @@ import ResponseModal from "../../components/modals/ResponseModal";
                Coach
              </TableHead>
              {data.map((form, index) => (
-               <TableHead key={form._id} scope="col" colSpan={form.questions.length} className={`px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider ${index !== data.length - 1 ? "border-r border-black" : ""}`}  style={{ backgroundColor: formStyles[index].backgroundColor  }} >
+               <TableHead key={form._id} scope="col" colSpan={form.questions.length} className={`px-6 py-3 text-center text-sm font-extrabold uppercase tracking-wider bg-primary-dark/30 ${index !== data.length - 1 ? "border-r border-black" : ""}`}  >
                  {form.title}
                </TableHead>
              ))}

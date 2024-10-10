@@ -16,7 +16,8 @@ export const usersApi: any = createApi({
     "overview",
     "applicantForm",
     "applicantResponse",
-    "cohorts"
+    "cohorts",
+    "applicants"
   ],
   endpoints: (builder) => ({
     getAllTrainees: builder.query({
@@ -215,19 +216,25 @@ export const usersApi: any = createApi({
       invalidatesTags: ["profile"],
     }),
 
-    getAllForms: builder.query({
-      query: (args) => {
-        const { jwt, searchString } = args;
-        return {
-          url: `/forms?searchString=${searchString}`,
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${jwt}`,
-          },
-        };
+getAllForms: builder.query({
+  query: (args) => {
+    const { jwt, searchString = "", cohort } = args;
+    let queryString = `searchString=${searchString}`;
+    if (cohort) {
+      queryString += `&cohort=${cohort}`;
+    }
+
+    return {
+      url: `/forms?${queryString}`,
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${jwt}`,
       },
-      providesTags: ["forms"],
-    }),
+    };
+  },
+  providesTags: ["forms"],
+}),
+
 
     getForm: builder.query({
       query: (args) => {
@@ -378,10 +385,10 @@ export const usersApi: any = createApi({
       invalidatesTags: ["overview", "response"],
     }),
 
-    getFormForApplicants: builder.query({
+    getMyApplication: builder.query({
       query: (jwt) => {
         return {
-          url: `/cohorts/application`,
+          url: `/cohorts/my-application`,
           method: "GET",
           headers: {
             Authorization: `Bearer ${jwt}`,
@@ -417,6 +424,46 @@ export const usersApi: any = createApi({
       },
       invalidatesTags: ["cohorts"],
     }),
+    getApplicants: builder.query({
+      query: (args) => {
+        const { jwt, query } = args;
+        return {
+          url: `/applicants${query}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      providesTags: ["applicants"],
+    }),
+    applicantDecision: builder.mutation({
+      query: (args) => {
+        const { jwt, body} = args;
+        return {
+          url: `/cohorts/decision`,
+          method: "PATCH",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+          body: {...body}
+        }
+      },
+      invalidatesTags: ["applicants"],
+    }),
+    getAllCohorts: builder.query({
+      query: (args) => {
+        const { jwt, query} = args;
+        return {
+          url: `/cohorts?${query}`,
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${jwt}`,
+          },
+        };
+      },
+      providesTags: ["cohorts"],
+    })
   }),
 });
 
@@ -448,7 +495,10 @@ export const {
   useGetOverviewQuery,
   useAddResponseMutation,
   useGetOverviewForCoachQuery,
-  useGetFormForApplicantsQuery,
+  useGetMyApplicationQuery,
   useAddApplicantResponseMutation,
   useCreateCohortMutation,
+  useGetApplicantsQuery,
+  useApplicantDecisionMutation,
+  useGetAllCohortsQuery,
 } = usersApi;

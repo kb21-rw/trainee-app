@@ -1,5 +1,6 @@
 import { Types } from "mongoose";
 import User from "../models/User";
+import { Role } from "../utils/types";
 
 export const getTraineesQuery = async (
   searchString: string,
@@ -10,7 +11,7 @@ export const getTraineesQuery = async (
     {
       $match: {
         $or: [{ name: { $regex: new RegExp(searchString, "i") } }],
-        role: "TRAINEE",
+        role: Role.Trainee,
       },
     },
     {
@@ -69,7 +70,7 @@ export const getTraineesForCoachQuery = async (
     {
       $match: {
         coach: coachId,
-        role: "TRAINEE",
+        role: Role.Trainee,
         $or: [{ name: { $regex: new RegExp(searchString, "i") } }],
       },
     },

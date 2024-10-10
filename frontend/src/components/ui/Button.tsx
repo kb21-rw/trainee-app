@@ -30,7 +30,7 @@ const getSizeStyles = (size: ButtonSize) => {
     case ButtonSize.Small:
       return "px-4 py-2";
     case ButtonSize.Large:
-      return "px-7 py-4 text-xl";
+      return "px-7 py-4 text-xl w-full";
 
     default:
       return "px-4 py-3";

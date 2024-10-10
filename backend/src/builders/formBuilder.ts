@@ -2,13 +2,13 @@ import { IForm } from "../models/Form";
 
 export class Form {
   public readonly _id: string;
-  public readonly title?: string;
+  public readonly name?: string;
   public readonly description?: string;
   public readonly questionIds?: string[];
 
   public constructor(data: Partial<IForm>) {
     this._id = data._id;
-    this.title = data.title;
+    this.name = data.name;
     this.description = data.description;
     this.questionIds = data.questionIds;
   }
@@ -17,7 +17,7 @@ export class Form {
 export class FormBuilder {
   private readonly properties: Partial<IForm> = {
     _id: "66203fa2a3465a4a588d12f1",
-    title: "Test form",
+    name: "Test form",
     description: "form description",
     questionIds: [],
   };
@@ -47,8 +47,8 @@ export class FormBuilder {
     return this;
   }
 
-  public withTitle(title: string): this {
-    this.properties.title = title;
+  public withName(name: string): this {
+    this.properties.name = name;
     return this;
   }
 

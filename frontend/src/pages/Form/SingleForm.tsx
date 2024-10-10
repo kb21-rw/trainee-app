@@ -12,7 +12,7 @@ const SingleForm = () => {
   const id = useParams().id || "";
   const jwt:string = getJWT()
   const { data, isFetching } = useGetFormQuery({ id, jwt });
-  const title = data?.title;
+  const name = data?.name;
   const description = data?.description || "";
   const questions = data?.questionIds || [];
   const [activeQuestion, setActiveQuestion] = useState("");
@@ -29,12 +29,11 @@ const SingleForm = () => {
       ) : (
         <div className="flex flex-col gap-4">
           <EditForm
-            title={title}
+            name={name}
             description={description}
             id={id}
             activeQuestion={activeQuestion}
             setActiveQuestion={setActiveQuestion}
-            
           />
           <div className="flex flex-col gap-4">
             {questions?.map((question: any) => (
