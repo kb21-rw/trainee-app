@@ -30,6 +30,6 @@ const FormSchema = new Schema(
   },
   { timestamps: {} }
 );
-FormSchema.index({ title: "text", description: "text", type: "text" });
+FormSchema.index({ name: "text", description: "text", type: "text" });
 
 export default model("Form", FormSchema);
