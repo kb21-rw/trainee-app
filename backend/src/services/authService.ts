@@ -110,7 +110,7 @@ export const loginService = async (body: any) => {
   }
 
   const accessToken = jwt.sign(
-    { id: user._id, name: user.name, email: user.email, role: user.role },
+    { id: user._id },
     secret,
     {
       expiresIn: ACCESS_TOKEN_EXPIRATION,
