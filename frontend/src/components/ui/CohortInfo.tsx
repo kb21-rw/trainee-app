@@ -1,25 +1,35 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const CohortInfo = () => {
+interface CohortInfoProps {
+  cohortTitle: string;
+  applicationDeadline: string;
+  trainingStartDate: string;
+  programBenefits: {
+    title: string;
+    description: string;
+  }[];
+}
+
+const CohortInfo: React.FC<CohortInfoProps> = ({
+  cohortTitle,
+  applicationDeadline,
+  trainingStartDate,
+  programBenefits,
+}) => {
   return (
     <>
-      <div className="text-center flex items-center flex-col space-y-6 md:space-y-10 px-4 sm:px-0 w-full mt-10 md:mt-20">
-        <div>
-          <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-4">
-            {"Welcome to The GYM's Application Portal"}
-          </h1>
-          <p className="text-gray-600 mb-4 sm:mb-8 flex flex-col text-sm sm:text-base">
-            <span>
-              Apply for our various training programs and enhance your skills.
-            </span>
-            <span>Start your journey with us today!</span>
-          </p>
-        </div>
+      <div className="text-center flex items-center flex-col md:space-y-10 px-4 sm:px-0 w-full md:mt-5">
+        <p className="text-gray-600 mb-4 sm:mb-8 flex flex-col text-sm sm:text-base space-y-3">
+          <span>
+            Apply for our various training programs and enhance your skills.
+          </span>
+          <span>Start your journey with us today!</span>
+        </p>
       </div>
       <div className="max-w-2xl mx-auto border border-gray-300 rounded-lg p-4 sm:p-6 shadow-lg">
         <h1 className="text-xl sm:text-3xl font-bold text-gray-800 mb-4">
-          The Gym Cohort 5 2025
+          {cohortTitle}
         </h1>
 
         <div className="w-full sm:w-3/4 mb-4 flex items-center justify-between">
@@ -27,7 +37,7 @@ const CohortInfo = () => {
             Application Deadline:
           </p>
           <p className="text-sm sm:text-lg text-gray-800 font-semibold underline">
-            4th October 2024
+            {applicationDeadline}
           </p>
         </div>
 
@@ -36,7 +46,7 @@ const CohortInfo = () => {
             Training Start Date:
           </p>
           <p className="text-sm sm:text-lg text-gray-800 font-semibold underline">
-            22nd November 2024
+            {trainingStartDate}
           </p>
         </div>
 
@@ -45,18 +55,11 @@ const CohortInfo = () => {
             What you will gain:
           </p>
           <ul className="list-disc list-inside mt-2 space-y-2 text-gray-700 text-sm sm:text-base">
-            <li>
-              <strong>Hands-On Projects:</strong> Work on real-world projects to
-              build your portfolio.
-            </li>
-            <li>
-              <strong>Expert Instructors:</strong> Learn from industry
-              professionals with years of experience.
-            </li>
-            <li>
-              <strong>Career Support:</strong> Get assistance with job
-              placement, resume building, and interview preparation.
-            </li>
+            {programBenefits.map((benefit, index) => (
+              <li key={index}>
+                <strong>{benefit.title}:</strong> {benefit.description}
+              </li>
+            ))}
           </ul>
         </div>
 

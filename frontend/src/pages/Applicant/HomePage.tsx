@@ -1,6 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { ApplicationFormStatus, ButtonSize, ButtonVariant } from "../../utils/types";
+import {
+  ApplicationFormStatus,
+  ButtonSize,
+  ButtonVariant,
+} from "../../utils/types";
 import Button from "../../components/ui/Button";
 import CohortInfo from "../../components/ui/CohortInfo";
 import ApplicationStatus from "../../components/ui/ApplicationStatus";
@@ -11,15 +15,17 @@ import Loader from "../../components/ui/Loader";
 
 const HomePage = () => {
   const jwt: string = getJWT();
-  const { data: applicationForm, isLoading } =
-    useGetMyApplicationQuery(jwt);
+  const { data: applicationForm, isLoading } = useGetMyApplicationQuery(jwt);
 
   const applicationStatus = applicationStatusHandler(applicationForm);
   console.log(applicationStatus);
-  console.log('application form', applicationForm)
+  console.log("application form", applicationForm);
 
   return (
-    <div className="h-full flex flex-col items-center justify-center w-full">
+    <div className="h-full flex flex-col items-center justify-center w-full mt-5">
+      <h1 className="text-2xl sm:text-4xl font-bold text-gray-800 mb-4 text-center">
+        {"Welcome to The GYM's Application Portal"}
+      </h1>
       {isLoading && (
         <div className="flex items-center justify-center w-full h-screen">
           <Loader />
@@ -27,7 +33,28 @@ const HomePage = () => {
       )}
       {applicationStatus.status === ApplicationFormStatus.OPEN && (
         <div className="md:container md:mx-auto px-6 flex flex-col items-center justify-center">
-          <CohortInfo />
+          <CohortInfo
+            cohortTitle="The Gym Cohort 5 2025"
+            applicationDeadline="4th October 2024"
+            trainingStartDate="22nd November 2024"
+            programBenefits={[
+              {
+                title: "Hands-On Projects",
+                description:
+                  "Work on real-world projects to build your portfolio.",
+              },
+              {
+                title: "Expert Instructors",
+                description:
+                  "Learn from industry professionals with years of experience.",
+              },
+              {
+                title: "Career Support",
+                description:
+                  "Get assistance with job placement, resume building, and interview preparation.",
+              },
+            ]}
+          />
           <div className="my-10 flex items-center justify-center">
             <div>
               <Button variant={ButtonVariant.Primary} size={ButtonSize.Large}>
