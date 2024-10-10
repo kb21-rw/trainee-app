@@ -1,10 +1,11 @@
 import React from "react";
-import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { adminMenu, applicantMenu, coachMenu } from "../../utils/data";
 import { useGetProfileQuery } from "../../features/user/apiSlice";
 import { getJWT } from "../../utils/helper";
 import Cookies from "universal-cookie";
 import { UserRole } from "../../utils/types";
+import Footer from "../ui/Footer";
 
 const Layout = () => {
   const jwt: string = getJWT();
@@ -65,22 +66,7 @@ const Layout = () => {
       <div className="flex-1">
         <Outlet />
       </div>
-      <footer className="py-4 bg-white flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-4 px-4">
-        <div className="text-center sm:text-left">
-          <p>
-            &copy;<span className="font-bold">The GYM</span>{" "}
-            {new Date().getFullYear()}, All rights reserved
-          </p>
-        </div>
-        <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-5 text-center sm:text-left">
-          <Link to="#" className="hover:text-primary-dark">
-            Privacy Policy
-          </Link>
-          <Link to="#" className="hover:text-primary-dark">
-            Terms and Conditions
-          </Link>
-        </div>
-      </footer>
+     <Footer/>
     </div>
   );
 };
