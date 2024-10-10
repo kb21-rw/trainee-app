@@ -1,9 +1,9 @@
 import React from "react";
 
 interface ApplicationStatusProps {
-  heading?: string;
-  description?: string;
-  buttonText?: string;
+  heading: string;
+  description: string;
+  buttonText: string;
   buttonLink: string;
 }
 
